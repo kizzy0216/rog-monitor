@@ -1,0 +1,156 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Icon, Modal, Button, Badge, Row, Col, message } from 'antd';
+import moment from 'moment';
+import { acceptInvite, rejectInvite } from '../../redux/invites/actions';
+
+const GuardInvites = (props) => (
+  <Modal
+    title='Guard Invitations'
+    visible={props.visible}
+    style={styles.modal}
+    onCancel={props.onCancel}
+    footer={[null, null]}
+  >
+    {props.invites.map(invite => (
+      <Row key={invite.id} type='flex' justify='start' style={styles.invitesListContainer}>
+        <Col xs={{span: 11, offset: 1}} style={styles.adminNameContainer}>
+          <Col xs={{span: 24}} style={styles.adminName}>
+            {invite.inviterName}
+            <p style={styles.date}>{moment(invite.timestamp).format('MMM D')}</p>
+          </Col>
+          <Col xs={{span: 24}}>
+            Invited to guard: {invite.location.name}
+          </Col>
+        </Col>
+        <Col xs={{span: 11}} style={styles.acceptRejectButtons}>
+          <Col xs={{span: 12}} onClick={() => props.acceptInviteInProcess ? '' : props.acceptInvite(props.user, invite)}>
+            <Col xs={{span: 24}}>
+              <Button style={styles.button}>Accept</Button>
+            </Col>
+            <Col xs={{span: 24}}>
+              <Icon type='check' />
+            </Col>
+          </Col>
+          <Col xs={{span: 12}} style={styles.buttonBorder} onClick={() => props.rejectInviteInProcess ? '' : props.rejectInvite(props.user, invite)}>
+            <Col xs={{span: 24}}>
+              <Button style={styles.button}>Reject</Button>
+            </Col>
+            <Col xs={{span: 24}}>
+              <Icon type='close' />
+            </Col>
+          </Col>
+        </Col>
+      </Row>
+    ))}
+  </Modal>
+);
+
+class GuardInvitesModal extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      visible: false
+    }
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.acceptInviteError && nextProps.acceptInviteError !== this.props.acceptInviteError) {
+      message.error(acceptInviteError);
+    }
+    if (nextProps.rejectInviteError && nextProps.rejectInviteError !== this.props.rejectInviteError) {
+      message.error(rejectInviteError);
+    }
+  };
+
+  showModal = () => {
+    this.setState({visible: true});
+  };
+
+  handleCancel = () => {
+    this.setState({visible: false});
+  };
+
+  render() {
+    return (
+      <Badge count={this.props.receivedInvites.length}>
+        <div onClick={this.showModal}>
+          <Icon type='mail'/>
+          &nbsp;&nbsp;
+          <span>Guard Invites</span>
+        </div>
+        <GuardInvites
+          visible={this.state.visible}
+          onCancel={this.handleCancel}
+          user={this.props.user}
+          invites={this.props.receivedInvites}
+          acceptInvite={this.props.acceptInvite}
+          rejectInvite={this.props.rejectInvite}
+          acceptInviteInProcess={this.props.acceptInviteInProcess}
+          rejectInviteInProcess={this.props.rejectInviteInProcess}
+        />
+      </Badge>
+    );
+  }
+}
+
+const styles = {
+  modal: {
+    textAlign: 'center',
+  },
+  invitesListContainer: {
+    paddingTop: 15,
+    paddingBottom: 15
+  },
+  adminNameContainer: {
+    textAlign: 'left',
+    borderLeft: '5px solid blue',
+    paddingLeft: 15,
+    color: 'grey'
+  },
+  adminName: {
+    color: 'grey',
+    fontSize: 18
+  },
+  acceptRejectButtons: {
+    backgroundColor: 'grey',
+    color: '#fff',
+    fontSize: 24,
+  },
+  button: {
+    fontSize: 16,
+    fontWeight: 400,
+    color: '#fff',
+    backgroundColor: 'transparent',
+  },
+  buttonBorder: {
+    borderLeft: '1px solid #fff',
+    height: 93
+  },
+  date: {
+    textAlign: 'right',
+    marginTop: -26,
+    marginRight: 15
+  }
+};
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user,
+    receivedInvites: state.invites.receivedInvites,
+    acceptInviteInProcess: state.invites.acceptInviteInProcess,
+    acceptInviteError: state.invites.acceptInviteError,
+    rejectInviteInProcess: state.invites.rejectInviteInProcess,
+    rejectInviteError: state.invites.rejectInviteError
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    acceptInvite: (user, invite) => dispatch(acceptInvite(user, invite)),
+    rejectInvite: (user, invite) => dispatch(rejectInvite(user, invite))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GuardInvitesModal);

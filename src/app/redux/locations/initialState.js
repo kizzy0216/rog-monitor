@@ -1,0 +1,20 @@
+export default {
+  locations: [],
+  selectedLocation: {id: null, name: null, cameras: []},
+  fetchInProcess: false,
+  fetchError: false,
+  addLocationCameraInProcess: false,
+  addLocationCameraError: '',
+  addLocationCameraSuccess: false,
+  addLocationInProcess: false,
+  addLocationError: '',
+  addLocationSuccess: false,
+  shareLocationInProcess: false,
+  shareLocationError: '',
+  shareLocationSuccess: false,
+  editLocationInProcess: false,
+  editLocationSuccess: false,
+  editLocationError: '',
+  removeGuardInProcess: false,
+  removeGuardError: ''
+}

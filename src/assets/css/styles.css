@@ -1,0 +1,111 @@
+/* GLOBAL STYLES */
+.nav-icon {
+  margin: 0;
+  font-size: 16px;
+    color: white !important;
+}
+.hidden{
+  display: none !important;
+}
+body{
+  background-color: #ececec !important;
+}
+.ant-layout-sider{
+  background: #fff !important;
+  height: calc(100vh - 50px);
+}
+
+/* GLOBAL ANT STYLE OVERRIDES */
+.ant-btn{
+  border-radius: 0px !important;
+  border: none !important;
+}
+.ant-form-item{
+  margin-bottom: 17.4px !important;
+}
+.ant-form-item-with-help{
+  margin-bottom: 0px !important;
+}
+.ant-modal-content{
+  text-align: center;
+  border-radius: 0px !important;
+}
+.ant-modal-header{
+  border-bottom: none !important;
+}
+.ant-modal-title{
+  font-size: 24px !important;
+  padding: 16px 16px !important;
+}
+.ant-modal-body{
+  padding: 5px !important;
+}
+.ant-modal-body input{
+  width: 60%;
+  text-align: center;
+  border-radius: 0px;
+}
+.ant-modal-body .has-error.has-feedback:after, .ant-modal-body .has-success.has-feedback:after, .ant-modal-body .has-warning.has-feedback:after, .ant-modal-body .is-validating.has-feedback:after{
+  right: 20%;
+}
+.ant-modal-body .ant-input-affix-wrapper .ant-input-prefix{
+  left: 22% !important;
+}
+.ant-modal-body .ant-btn-primary{
+  background-color: orange !important;
+}
+.ant-modal-body .cameraLicensesFormInput:disabled{
+  border: none;
+  background-color: #fff;
+  color: black;
+}
+.ant-modal-body .formInput:disabled{
+  border: none;
+  background-color: #fff;
+  color: black;
+}
+.ant-modal-body .saveLicensesBtn{
+  background-color: transparent !important;
+}
+.ant-modal-body .saveBtn{
+  background-color: transparent !important;
+}
+.ant-modal-footer{
+  text-align: center !important;
+  border-top: none !important;
+}
+.ant-modal-footer .ant-btn, .ant-modal-footer .ant-btn:hover, .ant-modal-footer .ant-btn:focus, .ant-modal-footer .ant-btn:visited{
+  background-color: transparent !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  border: 1px solid #d9d9d9 !important;
+}
+.ant-menu-item .anticon, .ant-menu-submenu-title .anticon {
+  margin-right: 0 !important;
+}
+.ant-menu-dark {
+  background-color: #404040 !important;
+}
+.ant-menu-dark.ant-menu-horizontal {
+  border-bottom: 0;
+}
+@media only screen and (max-width: 640px) {
+  .ant-modal-body .cameraLicensesModal input{
+    width: 80%;
+  }
+  .ant-modal-body .has-error.has-feedback:after, .ant-modal-body .has-success.has-feedback:after, .ant-modal-body .has-warning.has-feedback:after, .ant-modal-body .is-validating.has-feedback:after{
+    right: 10%;
+  }
+  .ant-modal-body .ant-input-affix-wrapper .ant-input-prefix{
+    left: 13% !important;
+  }
+  .ant-modal-body .saveBtn, .ant-modal-body .cancelBtn{
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+@media only screen and (max-width: 380px){
+  .ant-modal-body .saveLicensesBtn, .ant-modal-body .cancelLicensesBtn{
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}

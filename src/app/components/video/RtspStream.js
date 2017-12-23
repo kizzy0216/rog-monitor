@@ -51,15 +51,19 @@ export default class RtspStream extends Component {
     if (error) return onError(error);
 
     function setIceCandidateCallbacks(webRtcEndpoint, webRtcPeer, onError) {
-      webRtcPeer.on('icecandidate', function(candidate) {
-        candidate = kurentoClient.register.complexTypes.IceCandidate(candidate);
-        webRtcEndpoint.addIceCandidate(candidate, onError);
-      });
+      if (webRtcPeer) {
+        webRtcPeer.on('icecandidate', function(candidate) {
+          candidate = kurentoClient.register.complexTypes.IceCandidate(candidate);
+          webRtcEndpoint.addIceCandidate(candidate, onError);
+        });
+      }
 
-      webRtcEndpoint.on('OnIceCandidate', function(event) {
-        var candidate = event.candidate;
-        webRtcPeer.addIceCandidate(candidate, onError);
-      });
+      if (webRtcEndpoint) {
+        webRtcEndpoint.on('OnIceCandidate', function(event) {
+          var candidate = event.candidate;
+          webRtcPeer.addIceCandidate(candidate, onError);
+        });
+      }
     }
 
     kurentoClient(process.env.REACT_APP_KURENTO_WS_URL, function(error, kurentoClient) {

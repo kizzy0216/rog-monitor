@@ -75,8 +75,11 @@ const styles = {
   },
   cameraCardImgContainer: {
     backgroundColor: 'black',
-    height: 300,
-    position: 'relative'
+    height: 170,
+    position: 'relative',
+    margin: '0 auto',
+    paddingLeft: 0,
+    paddingRight: 0
   },
   cameraCardImg: {
     position: 'absolute',

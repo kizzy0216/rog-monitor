@@ -39,9 +39,11 @@ class CameraCard extends Component {
           </div>
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<span></span>) :
-            (<Row type='flex' justify='flex-end'>
-              <Col offset={22}>
+            (<Row type='flex' justify="flex-end">
+              <Col span={2} offset={18}>
                 <EditCamera data={this.props} />
+              </Col>
+              <Col span={2} offset={2}>
                 <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
                   <Icon type='delete' />
                 </Popconfirm>

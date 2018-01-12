@@ -74,7 +74,7 @@ const styles = {
     textAlign: 'center'
   },
   cameraCardImgContainer: {
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     height: 170,
     position: 'relative',
     margin: '0 auto',

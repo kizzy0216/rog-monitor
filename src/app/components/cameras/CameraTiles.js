@@ -10,7 +10,7 @@ class CameraTiles extends Component {
       return (
         <Row type='flex' justify='start' style={styles.cameraListContainer}>
           {this.props.location.cameras.map(camera => (
-            <Col key={`camera-${camera.id}`} xs={24} sm={12} md={8} lg={6}>
+            <Col key={`camera-${camera.id}`} xs={24} sm={12} md={8} lg={6} xl={4}>
               <CameraCard
                 {...camera}
                 style={styles.cameraCard}

@@ -57,6 +57,27 @@ function addLocationSuccess(bool) {
   }
 }
 
+function removeLocationInProcess(bool) {
+  return {
+    type: types.REMOVE_LOCATION_IN_PROCESS,
+    removeLocationInProcess: bool
+  }
+}
+
+function removeLocationError(error) {
+  return {
+    type: types.REMOVE_LOCATION_ERROR,
+    removeLocationError: error
+  }
+}
+
+function removeLocationSuccess(bool) {
+  return {
+    type: types.REMOVE_LOCATION_SUCCESS,
+    removeLocationSuccess: bool
+  }
+}
+
 function addLocationCameraInProcess(bool) {
   return {
     type: types.ADD_LOCATION_CAMERA_IN_PROCESS,
@@ -151,7 +172,7 @@ export function selectLocation(location) {
 function parseLocations(locations, user) {
   locations = locations.map(location => {
     let myRole = location.guards.find(guard => guard.user.id == user.id).role;
-    
+
     return {
       ...location,
       myRole
@@ -275,6 +296,32 @@ export function addNewLocation(user, location) {
       .finally(() => {
         dispatch(addLocationError(''));
         dispatch(addLocationInProcess(false));
+      });
+  }
+}
+
+export function removeLocation(user, location) {
+  return (dispatch) => {
+    dispatch(removeLocationError(''));
+    dispatch(removeLocationInProcess(true));
+
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/locations/${location.id}`;
+    let config = {headers: {Authorization: user.jwt}};
+
+    axios.delete(url, config)
+      .then((response) => {
+        dispatch(fetchLocations(user));
+        dispatch(removeLocationSuccess(true));
+        dispatch(removeLocationSuccess(false));
+        dispatch(clearLocationData());
+      })
+      .catch((error) => {
+        let errMessage = 'Error removing location. Please try again later.';
+        dispatch(removeLocationError(errMessage));
+      })
+      .finally(() => {
+        dispatch(removeLocationError(''));
+        dispatch(removeLocationInProcess(false));
       });
   }
 }

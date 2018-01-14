@@ -9,7 +9,7 @@ import AddLocationModal from '../components/modals/AddLocationModal';
 import CameraOptionButtons from '../components/cameras/CameraOptionButtons';
 
 import * as locationActions from '../redux/locations/actions';
-import { trackEventAnalytics } from '../redux/auth/actions'
+import { trackEventAnalytics } from '../redux/auth/actions';
 
 class CameraList extends Component {
   constructor(props) {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Modal, Form, Input, Icon } from 'antd';
+import { Button, Spin, Input, Icon } from 'antd';
 
 class CustomInput extends Component {
   constructor(props) {
@@ -38,11 +38,33 @@ class CustomInput extends Component {
   };
 
   render() {
-    return (
-      <div style={styles.inputContainer}>
-        <Input value={this.state.value} type={this.props.inputType} onChange={this.handleChange} disabled={!this.state.inEditMode} style={styles.input} className='formInput' />
-        {!this.state.inEditMode && <Icon type='edit' onClick={this.toggleEditing} style={styles.edit} />}
-        {this.state.inEditMode &&
+    if(this.props.alert === true){
+        return (
+          <div>
+            {this.props.fetchAletInProcess &&
+            <div>
+              <Spin tip="Fetching Alerts..." />
+            </div>
+            }
+            {
+             !this.props.visibility && <Button key='add_alert' type='primary' size='large'>
+                Add Alert
+              </Button>
+            }
+            {
+             this.props.visibility && <Button key='cancel' size='large' style={styles.cancelBtn}>
+                Cancel
+              </Button>
+            }
+          </div>
+        )
+    }else {
+      return (
+        <div style={styles.inputContainer}>
+          <Input value={this.state.value} type={this.props.inputType} onChange={this.handleChange}
+                 disabled={!this.state.inEditMode} style={styles.input} className='formInput'/>
+          {!this.state.inEditMode && <Icon type='edit' onClick={this.toggleEditing} style={styles.edit}/>}
+          {this.state.inEditMode &&
           <span style={styles.cancelSaveBtn}>
             <Button
               onClick={this.toggleEditing}
@@ -64,9 +86,10 @@ class CustomInput extends Component {
               Save
             </Button>
           </span>
-        }
-      </div>
-    )
+          }
+        </div>
+      )
+    }
   }
 }
 
@@ -94,6 +117,9 @@ const styles = {
   cancelBtn: {
     color: 'red',
     marginLeft: 2
+  },
+  spin: {
+    float: 'left'
   }
 };
 export default CustomInput;

@@ -77,7 +77,43 @@ const alerts = (state = initialState, action) => {
         ...state,
         alerts: []
       }
-      
+
+    case types.CREATE_ALERT_ERROR:
+      return {
+        ...state,
+        createAlertError:action.createAlertError
+      }
+
+    case types.CREATE_ALERT_SUCCESS:
+      return {
+        ...state,
+        createAlertSuccess:action.createAlertSuccess
+      }
+    case types.CREATE_ALERT_IN_PROCESS:
+      return {
+        ...state,
+        createAlertInProcess: action.bool
+      }
+    case types.FETCH_POLYGON_ALERT_SUCCESS:
+      return {
+        ...state,
+        polygonData: action.polygonData
+      }
+    case types.DELETE_POLYGON_ALERT_SUCCESS:
+      return {
+        ...state,
+        deleteAlertSuccess: action.bool
+      }
+    case types.DELETE_POLYGON_ALERT_IN_PROCESS:
+      return {
+        ...state,
+        deleteAlertInProcess: action.bool
+      }
+    case types.FETCH_POLYGON_ALERT_IN_PROCESS:
+      return {
+        ...state,
+        fetchPolygonAlertInProcess: action.bool
+      }
     default:
       return state;
   }

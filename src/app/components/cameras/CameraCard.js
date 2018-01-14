@@ -8,8 +8,20 @@ import EditCamera from '../cameras/EditCamera';
 
 import { deleteCamera } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
+import AddAlertModal from '../modals/AddAlertModal';
+import CustomCanvas from '../formitems/CustomCanvas';
 
 class CameraCard extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      imageDimensions: {},
+    }
+    this.onImgLoad = this.onImgLoad.bind(this);
+
+  }
   deleteCamera = () => {
     this.props.deleteCamera(this.props.user, this.props.id)
   };
@@ -27,6 +39,15 @@ class CameraCard extends Component {
     this.props.history.push(`/cameras/${this.props.id}/stream`);
   }
 
+  onImgLoad({target: img}) {
+    this.setState({
+      imageDimensions: {
+        height: img.offsetHeight,
+        width: img.offsetWidth
+      }
+    });
+  }
+
   render() {
     if (this.props.liveView) {
       return (
@@ -40,6 +61,9 @@ class CameraCard extends Component {
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<span></span>) :
             (<Row type='flex' justify='flex-end'>
+              <Col offset={1}>
+                <AddAlertModal data={this.props} />
+              </Col>
               <Col offset={22}>
                 <EditCamera data={this.props} />
                 <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
@@ -91,7 +115,11 @@ const styles = {
     margin: 'auto'
   }
 }
-
+const mapStateToProps = (state) => {
+  return {
+    polygonData: state.alerts.polygonData
+  }
+};
 const mapDispatchToProps = (dispatch) => {
   return {
     deleteCamera: (user, cameraId) => dispatch(deleteCamera(user, cameraId)),
@@ -99,4 +127,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(CameraCard));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CameraCard));

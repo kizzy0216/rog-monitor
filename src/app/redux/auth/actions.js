@@ -93,6 +93,27 @@ function getInvitationError(error) {
   }
 }
 
+function bvcAuthSuccess(token) {
+  return {
+    type: types.BVC_AUTH_SUCCESS,
+    token
+  }
+}
+
+function bvcAuthInProcess(bool) {
+  return {
+    type: types.BVC_INTERACTION_IN_PROCESS,
+    bool
+  }
+}
+
+function bvcAuthError(error) {
+  return {
+    type: types.BVC_AUTH_ERROR,
+    error
+  }
+}
+
 export function loginMissing() {
   return {
     type: types.LOGIN_MISSING,
@@ -347,6 +368,55 @@ export function getInvitation(token) {
       });
   }
 }
+
+export function checkBVCAuthToken() {
+  return (dispatch) => {
+    const jwt = localStorage.getItem('bvc_jwt');
+    if (jwt) {
+      dispatch(loginSuccess(jwt));
+    }
+    else {
+      dispatch(loginMissing());
+    }
+  }
+}
+
+export function authenticateBVCServer() {
+  return (dispatch) => {
+    dispatch(bvcAuthInProcess(true));
+    dispatch(bvcAuthError(''));
+
+    let url = `${process.env.REACT_APP_BVC_SERVER}/api/auth`;
+    let data ={username: 'rog', password: 'rogpassword'};
+    axios.post(url, data)
+      .then((resp) => {
+        const bvc_authToken = resp.data.access_token;
+
+        localStorage.setItem('bvc_jwt', bvc_authToken);
+
+        dispatch(bvcAuthSuccess(bvc_authToken));
+        dispatch(bvcAuthInProcess(true));
+      })
+      .catch((error) => {
+        let errorMessage;
+        if (error.response) {
+          if (error.response.status === 500) {
+            errorMessage = 'Server error';
+          }
+          else if (error.response.status === 422) {
+            errorMessage = error.response.data.errors.detail;
+          }
+        }
+        else {
+          errorMessage = 'Error Authorizing. Please try again later.';
+        }
+
+        dispatch(bvcAuthError(errorMessage));
+        dispatch(bvcAuthInProcess(false));
+      });
+  }
+}
+
 
 export function initialiseAnalyticsEngine() {
   return (dispatch) => {

@@ -9,5 +9,7 @@ export default {
   sendInvitationError: '',
   getInvitationInProcess: false,
   getInvitationSuccess: false,
-  getInvitationError: ''
+  getInvitationError: '',
+  bvcInteractionInProcess: false,
+  bvcAuthError: false
 }

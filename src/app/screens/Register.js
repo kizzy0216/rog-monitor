@@ -167,7 +167,7 @@ class Register extends Component {
                             {required: true, message: 'Please agree to our terms of use'}
                           ]
                         })(
-                        <Checkbox>By clicking Sign Up, you acknowledge you have read and agree to the <a href='https://www.gorog.co/tc.html' target='_blank'>Terms of Use</a></Checkbox>
+                        <Checkbox>By clicking Sign Up, you acknowledge you have read and agree to the <a href='https://www.gorog.co/tc.html' target='_blank'>Terms of Use</a>.</Checkbox>
                         )}
                       </FormItem>
                     </Form>

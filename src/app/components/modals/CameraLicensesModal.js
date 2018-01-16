@@ -65,6 +65,9 @@ const CameraLicensesForm = Form.create()(
             )}
           </FormItem>
         </Form>
+        <div style={styles.subscriptionAgreement}>
+          <a target='_blank' href='https://www.gorog.co/license.html'>Subscription Agreement</a>
+        </div>
       </Modal>
     );
   }
@@ -180,6 +183,11 @@ const styles = {
   cancelLicensesBtn: {
     color: 'red',
     marginLeft: 2
+  },
+  subscriptionAgreement: {
+    float: 'right',
+    marginTop: -10,
+    marginRight: 15
   }
 };
 

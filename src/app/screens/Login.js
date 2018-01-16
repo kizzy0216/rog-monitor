@@ -135,7 +135,7 @@ class Login extends Component {
                     <div style={styles.licenseAgreement}>
                       <p>
                         By clicking Sign In, you agree to our <br />
-                        <a target='_blank' href='https://www.gorog.co/license.html'>License Agreement</a>
+                        <a target='_blank' href='https://www.gorog.co/tc.html'>Terms of Use</a>
                       </p>
                     </div>
                     <div style={styles.forgotPassword}>

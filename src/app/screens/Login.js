@@ -247,7 +247,7 @@ const styles = {
     border: 'none',
     fontSize: 20,
     fontWeight: 500,
-    padding: '10px 20px 40px',
+    padding: '10px 20px 35px',
     marginTop: 20
   },
   howItWorksLink: {

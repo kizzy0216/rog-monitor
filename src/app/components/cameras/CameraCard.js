@@ -39,7 +39,7 @@ class CameraCard extends Component {
           </div>
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<span></span>) :
-            (<Row type='flex' justify="flex-end">
+            (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
               <Col span={2} offset={18}>
                 <EditCamera data={this.props} />
               </Col>
@@ -67,14 +67,6 @@ class CameraCard extends Component {
 }
 
 const styles = {
-  editCamera: {
-    float: 'right',
-    fontSize: 18
-  },
-  cameraCardOptions: {
-    marginTop: 10,
-    textAlign: 'center'
-  },
   cameraCardImgContainer: {
     backgroundColor: 'white',
     height: 170,
@@ -94,6 +86,9 @@ const styles = {
     left: 0,
     right: 0,
     margin: 'auto'
+  },
+  cameraCardButtons: {
+    marginTop: 10
   }
 }
 

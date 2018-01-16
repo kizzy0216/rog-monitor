@@ -49,7 +49,7 @@ class Register extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.register(values.email, values.firstName, values.lastName, values.phone, values.password, values.confirmPassword, this.props.match.params.token);
+        this.props.register(values.email, values.firstName, values.lastName, values.phone, values.password, values.confirmPassword, values.termsOfUse, this.props.match.params.token);
       }
 
     });
@@ -160,12 +160,17 @@ class Register extends Component {
                           &nbsp;Sign Up
                         </Button>
                       </FormItem>
+                      <FormItem>
+                        {getFieldDecorator('termsOfUse', {
+                          valuePropName: 'checked',
+                          rules: [
+                            {required: true, message: 'Please agree to our terms of use'}
+                          ]
+                        })(
+                        <Checkbox>By clicking Sign Up, you acknowledge you have read and agree to the <a href='https://www.gorog.co/tc.html' target='_blank'>Terms of Use</a></Checkbox>
+                        )}
+                      </FormItem>
                     </Form>
-                  </Col>
-                </Row>
-                <Row type='flex' justify='center' align='bottom' style={styles.termsOfServiceText}>
-                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}}>
-                    <p>By clicking Sign Up, you acknowledge you have read and agree to the <a href='https://www.gorog.co/legal.html' target='_blank'>Terms of Service</a></p>
                   </Col>
                 </Row>
               </Col>

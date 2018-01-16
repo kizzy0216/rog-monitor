@@ -58,9 +58,12 @@ const styles = {
     paddingTop: 5
   },
   alertCardImgContainer: {
-    backgroundColor: 'black',
-    height: 300,
-    position: 'relative'
+    backgroundColor: 'white',
+    height: 170,
+    position: 'relative',
+    margin: '0 auto',
+    paddingLeft: 0,
+    paddingRight: 0
   },
   alertCardImg: {
     position: 'absolute',

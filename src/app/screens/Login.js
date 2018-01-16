@@ -62,7 +62,7 @@ class Login extends Component {
                       <a href='https://www.gorog.co/download.html' target='_blank' style={{textDecoration: 'none'}}>Download it free</a>
                     </Button>
                     <div style={styles.howItWorksLink}>
-                      <a href=''>Learn how it works.</a>
+                      <a href='https://www.gorog.co/faststart.html' target="_blank">Learn how it works.</a>
                     </div>
                   </Col>
                 </Row>
@@ -247,7 +247,7 @@ const styles = {
     border: 'none',
     fontSize: 20,
     fontWeight: 500,
-    padding: '10px 20px 35px',
+    padding: '10px 20px 40px',
     marginTop: 20
   },
   howItWorksLink: {

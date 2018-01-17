@@ -32,7 +32,7 @@
     "jquery": "^1.8.0",
     "moment": "^2.19.4",
     "node": "^8.9.1",
-    "npm": "5.5.1",
+    "npm": "^5.5.1",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",

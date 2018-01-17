@@ -242,7 +242,7 @@ export function createAlert(alertCoordinates, alertType, cameraId, duration, dir
   }
 }
 
-export function fecthPolygonAlert(cameraId) {
+export function fetchPolygonAlert(cameraId) {
   return (dispatch) => {
     dispatch(fetchPolygonAlertInProcess(true));
     const bvc_jwt = localStorage.getItem('bvc_jwt');

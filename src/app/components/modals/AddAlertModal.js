@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom';
 import {Icon, Modal, Form, Spin, Button, Popover, message, Slider, Row, Col} from 'antd';
 import CustomCanvas from '../../components/formitems/CustomCanvas';
 import CustomInput from "../formitems/CustomInput";
-import {createAlert, fecthPolygonAlert, deletePolygonAlert} from '../../redux/alerts/actions';
+import {createAlert, fetchPolygonAlert, deletePolygonAlert} from '../../redux/alerts/actions';
 import {connect} from 'react-redux';
 import moment from 'moment';
 
@@ -173,12 +173,12 @@ class AddAlertModal extends Component {
   }
 
   onImgLoad({target: img}) {
-    this.setState({
-      imageDimensions: {
-        height: img.offsetHeight,
-        width: img.offsetWidth
-      }
-    });
+      this.setState({
+        imageDimensions: {
+          height: img.offsetHeight,
+          width: img.offsetWidth
+        }
+      });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -188,7 +188,7 @@ class AddAlertModal extends Component {
     if (nextProps.deleteAlertSuccess !== this.props.deleteAlertSuccess) {
       this.setState({canvasMode: false});
       this.setState({deleteButton: false});
-      this.props.fecthPolygonAlert(this.props.data.id);
+      this.props.fetchPolygonAlert(this.props.data.id);
     }
     if (nextProps.createAlertSuccess !== this.props.createAlertSuccess) {
       this.setState({saveCancel: false});
@@ -197,13 +197,14 @@ class AddAlertModal extends Component {
 
   showModal = () => {
     this.setState({visible: true});
+    this.setState({saveCancel: false});
     this.setState({canvasMode: !this.state.canvasMode});
     this.fetchAlerts(true);
   };
 
   handleCancel = () => {
+    this.setState({canvasMode: true});
     this.setState({visible: false});
-    this.setState({canvasMode: false});
     this.alertDetails.currentAlertType = '';
   };
 
@@ -290,7 +291,7 @@ class AddAlertModal extends Component {
     if (checked === true) {
       this.setState({alerts: true});
       this.setState({deleteButton: false});
-      this.props.fecthPolygonAlert(this.props.data.id);
+      this.props.fetchPolygonAlert(this.props.data.id);
     }
     else {
       this.setState({canvasMode: false});
@@ -409,7 +410,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     createAlert: (alertCoordinates, alertType, cameraId, duration, direction) => dispatch(createAlert(alertCoordinates, alertType, cameraId, duration, direction)),
-    fecthPolygonAlert: (cameraId) => dispatch(fecthPolygonAlert(cameraId)),
+    fetchPolygonAlert: (cameraId) => dispatch(fetchPolygonAlert(cameraId)),
     deletePolygonAlert: (cameraId, alertId) => dispatch(deletePolygonAlert(cameraId, alertId))
 
   }

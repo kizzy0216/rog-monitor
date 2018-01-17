@@ -40,7 +40,7 @@ class CustomInput extends Component {
   render() {
     if(this.props.alert === true){
         return (
-          <div>
+          <span>
             {this.props.fetchAletInProcess &&
             <div>
               <Spin tip="Fetching Alerts..." />
@@ -56,7 +56,7 @@ class CustomInput extends Component {
                 Cancel
               </Button>
             }
-          </div>
+          </span>
         )
     }else {
       return (

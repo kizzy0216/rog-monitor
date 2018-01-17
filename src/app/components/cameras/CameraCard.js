@@ -39,9 +39,11 @@ class CameraCard extends Component {
           </div>
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<span></span>) :
-            (<Row type='flex' justify='flex-end'>
-              <Col offset={22}>
+            (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
+              <Col span={2} offset={18}>
                 <EditCamera data={this.props} />
+              </Col>
+              <Col span={2} offset={2}>
                 <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
                   <Icon type='delete' />
                 </Popconfirm>
@@ -65,18 +67,13 @@ class CameraCard extends Component {
 }
 
 const styles = {
-  editCamera: {
-    float: 'right',
-    fontSize: 18
-  },
-  cameraCardOptions: {
-    marginTop: 10,
-    textAlign: 'center'
-  },
   cameraCardImgContainer: {
-    backgroundColor: 'black',
-    height: 300,
-    position: 'relative'
+    backgroundColor: 'white',
+    height: 170,
+    position: 'relative',
+    margin: '0 auto',
+    paddingLeft: 0,
+    paddingRight: 0
   },
   cameraCardImg: {
     position: 'absolute',
@@ -89,6 +86,9 @@ const styles = {
     left: 0,
     right: 0,
     margin: 'auto'
+  },
+  cameraCardButtons: {
+    marginTop: 10
   }
 }
 

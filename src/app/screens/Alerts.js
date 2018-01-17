@@ -45,7 +45,7 @@ class Alerts extends Component {
           <Row><Col>&nbsp;</Col></Row>
           <Row type='flex' justify='start'>
             {this.props.alerts.map(alert => (
-              <Col key={`alert-${alert.id}`} xs={24} sm={12} md={8} lg={6} xl={4}>
+              <Col key={`alert-${alert.id}`} xs={24} sm={12} md={8} lg={6}>
                 <AlertCard {...alert} />
               </Col>
             ))}

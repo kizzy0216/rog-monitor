@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Modal, Form, Input, Button, message } from 'antd';
+import { Icon, Modal, Form, Input, Button, Popconfirm, message } from 'antd';
 import CustomInput from '../../components/formitems/CustomInput';
 
 import { editLocation } from '../../redux/locations/actions';
+import { removeLocation } from '../../redux/locations/actions';
 
 const FormItem = Form.Item;
 const EditLocationForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, location, editLocationInProcess, editLocationSuccess} = props;
+    const {onCancel, visible, onCreate, removeLocation, form, location, editLocationInProcess, editLocationSuccess, removeLocationInProcess, removeLocationSuccess} = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -98,6 +99,9 @@ const EditLocationForm = Form.create()(
               />
             )}
           </FormItem>
+          <Popconfirm title="Are you sure you want to remove this location? This action cannot be undone." onConfirm={removeLocation} okText="Yes, remove location" cancelText="Nevermind">
+            <Button type="danger" icon="close" loading={removeLocationInProcess} disabled={removeLocationInProcess}>Remove Location</Button>
+          </Popconfirm>
         </Form>
       </Modal>
     );
@@ -141,6 +145,10 @@ class EditLocationModal extends Component {
     });
   };
 
+  handleDelete = (e) => {
+    this.props.removeLocation(this.props.user, this.props.selectedLocation);
+  };
+
   render() {
     return (
       <div>
@@ -154,10 +162,13 @@ class EditLocationModal extends Component {
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
+          removeLocation={this.handleDelete}
           error={this.state.error}
           location={this.props.selectedLocation}
           editLocationInProcess={this.props.editLocationInProcess}
           editLocationSuccess={this.props.editLocationSuccess}
+          removeLocationInProcess={this.props.removeLocationInProcess}
+          removeLocationSuccess={this.props.removeLocationSuccess}
         />
       </div>
     );
@@ -183,12 +194,16 @@ const mapStateToProps = (state) => {
     editLocationInProcess: state.locations.editLocationInProcess,
     editLocationError: state.locations.editLocationError,
     editLocationSuccess: state.locations.editLocationSuccess,
+    removeLocationInProcess: state.locations.removeLocationInProcess,
+    removeLocationError: state.locations.removeLocationError,
+    removeLocationSuccess: state.locations.removeLocationSuccess,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    editLocation: (user, location, locationData) => dispatch(editLocation(user, location, locationData))
+    editLocation: (user, location, locationData) => dispatch(editLocation(user, location, locationData)),
+    removeLocation: (user, location) => dispatch(removeLocation(user, location))
   }
 }
 

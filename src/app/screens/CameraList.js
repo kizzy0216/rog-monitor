@@ -89,10 +89,15 @@ class CameraList extends Component {
                 )
               }
             </Col>
-            <CameraOptionButtons
-              user={this.props.user}
-              selectedLocation={this.props.selectedLocation}
-              visible={this.state.locationButtonsVisible} />
+            {this.props.selectedLocation.myRole === 'viewer' ?
+              (<span></span>) :
+              (
+                <CameraOptionButtons
+                  user={this.props.user}
+                  selectedLocation={this.props.selectedLocation}
+                  visible={this.state.locationButtonsVisible} />
+              )
+            }
           </Row>
 
           <CameraTiles user={this.props.user} location={this.props.selectedLocation} liveView={this.state.liveView} />

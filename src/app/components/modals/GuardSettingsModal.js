@@ -16,29 +16,43 @@ const GuardSettings = (props) => {
         footer={[null, null]}
       >
         {props.invites.map(invite => (
-          <Row key={invite.id}>
-            <Col span={6}>{invite.inviteeEmail}</Col>
-            <Col span={6}>Invited</Col>
-            <Col span={12}>
-              <Button
-                disabled={props.rescindInviteInProcess}
-                onClick={() => props.rescindInvite(props.user, invite)}>
-                Rescind
-              </Button>
+          <Row key={invite.id} style={styles.inviteContainer}>
+            <Col xs={{span: 11, offset: 1}} style={styles.guardNameContainer}>
+              <Col xs={{span: 24}} style={styles.guardName}>
+                {invite.inviteeEmail}
+              </Col>
+              <Col xs={{span: 24}} style={styles.guardAction}>
+                Invited
+              </Col>
+            </Col>
+            <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.rescindInviteInProcess ? '' : props.rescindInvite(props.user, invite)}>
+              <Col xs={{span: 24}}>
+                <Button style={styles.button}>Rescind</Button>
+              </Col>
+              <Col xs={{span: 24}}>
+                <Icon type='close' />
+              </Col>
             </Col>
           </Row>
         ))}
 
         {props.guards.map(guard => (
-          <Row key={guard.id}>
-            <Col span={6}>{guard.user.firstName} {guard.user.lastName}</Col>
-            <Col span={6}>Role: {guard.role}</Col>
-            <Col span={12}>
-              <Button
-                disabled={props.removeGuardInProcess}
-                onClick={() => props.removeGuard(props.user, guard)}>
-                Remove
-              </Button>
+          <Row key={guard.id} style={styles.inviteContainer}>
+            <Col xs={{span: 11, offset: 1}} style={styles.guardNameContainer}>
+              <Col xs={{span: 24}} style={styles.guardName}>
+                {guard.user.firstName} {guard.user.lastName}
+              </Col>
+              <Col xs={{span: 24}} style={styles.guardAction}>
+                Role: {guard.role}
+              </Col>
+            </Col>
+            <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.removeGuardInProcess ? '' : props.removeGuard(props.user, guard)}>
+              <Col xs={{span: 24}}>
+                <Button style={styles.button}>Remove</Button>
+              </Col>
+              <Col xs={{span: 24}}>
+                <Icon type='close' />
+              </Col>
             </Col>
           </Row>
         ))}
@@ -113,7 +127,36 @@ class GuardSettingsModal extends Component {
 
 const styles = {
   modal: {
-    textAlign: 'center',
+    textAlign: 'center'
+  },
+  inviteContainer: {
+    marginTop: 10,
+    marginBottom: 10
+  },
+  button: {
+    fontSize: 16,
+    fontWeight: 400,
+    color: '#fff',
+    backgroundColor: 'transparent',
+  },
+  rescindRemoveButtons: {
+    backgroundColor: 'grey',
+    color: '#fff',
+    fontSize: 24,
+  },
+  guardNameContainer: {
+    textAlign: 'left',
+    borderLeft: '5px solid blue',
+    paddingLeft: 15,
+    color: 'grey'
+  },
+  guardName: {
+    color: 'grey',
+    fontSize: 18
+  },
+  guardAction: {
+    marginTop: 15,
+    marginBottom: 10
   }
 };
 

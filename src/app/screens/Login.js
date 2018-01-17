@@ -64,7 +64,7 @@ class Login extends Component {
                       <a href='https://www.gorog.co/download.html' target='_blank' style={{textDecoration: 'none'}}>Download it free</a>
                     </Button>
                     <div style={styles.howItWorksLink}>
-                      <a href=''>Learn how it works.</a>
+                      <a href='https://www.gorog.co/faststart.html' target="_blank">Learn how it works.</a>
                     </div>
                   </Col>
                 </Row>
@@ -136,8 +136,7 @@ class Login extends Component {
                     </Form>
                     <div style={styles.licenseAgreement}>
                       <p>
-                        By clicking Sign In, you agree to our <br />
-                        <a target='_blank' href='https://www.gorog.co/legal.html'>License Agreement</a>
+                        By clicking Sign In, you agree to our <a target='_blank' href='https://www.gorog.co/tc.html'>Terms of Use</a>
                       </p>
                     </div>
                     <div style={styles.forgotPassword}>

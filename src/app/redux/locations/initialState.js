@@ -16,5 +16,8 @@ export default {
   editLocationSuccess: false,
   editLocationError: '',
   removeGuardInProcess: false,
-  removeGuardError: ''
+  removeGuardError: '',
+  removeLocationInProcess: false,
+  removeLocationError: '',
+  removeLocationSuccess: false
 }

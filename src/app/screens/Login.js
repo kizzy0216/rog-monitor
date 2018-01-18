@@ -138,7 +138,7 @@ class Login extends Component {
                       </p>
                     </div>
                     <div style={styles.forgotPassword}>
-                      <a href=''>I forgot my user ID or Password</a>
+                      <a href=''>I forgot my User ID or Password</a>
                     </div>
                   </Col>
                 </Row>

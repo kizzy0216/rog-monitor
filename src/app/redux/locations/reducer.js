@@ -138,6 +138,12 @@ const locations = (state = initialState, action) => {
         removeGuardError: action.removeGuardError
       }
 
+    case types.ADD_CAMERA_DATA:
+      return {
+        ...state,
+        addedCameraData: action.cameraData
+      }
+
     default:
       return state;
   }

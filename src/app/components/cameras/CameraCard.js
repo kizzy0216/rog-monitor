@@ -9,19 +9,9 @@ import EditCamera from '../cameras/EditCamera';
 import { deleteCamera } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
-import CustomCanvas from '../formitems/CustomCanvas';
+import { registerCamera } from '../../redux/alerts/actions'
 
 class CameraCard extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      imageDimensions: {},
-    }
-    this.onImgLoad = this.onImgLoad.bind(this);
-
-  }
   deleteCamera = () => {
     this.props.deleteCamera(this.props.user, this.props.id)
   };
@@ -39,13 +29,8 @@ class CameraCard extends Component {
     this.props.history.push(`/cameras/${this.props.id}/stream`);
   }
 
-  onImgLoad({target: img}) {
-    this.setState({
-      imageDimensions: {
-        height: img.offsetHeight,
-        width: img.offsetWidth
-      }
-    });
+  componentWillMount = () => {
+    this.props.registerCamera(this.props.user.id, this.props.cameraLocation.cameras);
   }
 
   render() {
@@ -124,7 +109,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     deleteCamera: (user, cameraId) => dispatch(deleteCamera(user, cameraId)),
-    trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data))
+    trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
+    registerCamera: (userId, cameraId) => dispatch(registerCamera(userId, cameraId)),
   }
 }
 

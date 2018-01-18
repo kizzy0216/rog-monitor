@@ -387,7 +387,7 @@ export function authenticateBVCServer() {
     dispatch(bvcAuthError(''));
 
     let url = `${process.env.REACT_APP_BVC_SERVER}/api/auth`;
-    let data ={username: 'rog', password: 'rogpassword'};
+    let data ={username: 'rogt-1', password: 'qwerty1'};
     axios.post(url, data)
       .then((resp) => {
         const bvc_authToken = resp.data.access_token;

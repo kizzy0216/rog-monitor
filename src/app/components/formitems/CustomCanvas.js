@@ -51,29 +51,29 @@ class CustomCanvas extends Component {
           alertedPolygonAtrributes['id'] = (entry.id !== undefined) ? entry.id : '';
           alertedPolygonAtrributes['type'] = entry.type;
           alertedPolygonAtrributes['duration'] = entry.duration;
-          if(entry.type === 'VW'){
+          if (entry.type === 'VW') {
             this.generateVirtualWall(fabricCanvas, points, entry.direction, entry.id);
-          }else {
+          } else {
             let polygon = this.generatePolygon(fabricCanvas, points, this.lineArray, alertedPolygonAtrributes);
           }
-          })
+        })
       }
 
       fabricCanvas.on('mouse:down', function (options) {
         if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
 
           fabricCanvas.getObjects().forEach((entry) => {
-            if(entry.type === 'RA') {
+            if (entry.type === 'RA') {
               entry.setColor('#FF0000');
             }
-            if(entry.type === 'LD') {
+            if (entry.type === 'LD') {
               entry.setColor('#0092f8');
             }
-            if(entry.type === 'VW'){
+            if (entry.type === 'VW') {
               entry.set({fill: '#FF0000', stroke: '#FF0000'});
             }
-            if(entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id){
-             entry.set({fill:'#36d850', stroke: '#36d850'});
+            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+              entry.set({fill: '#36d850', stroke: '#36d850'});
             }
           });
 
@@ -84,7 +84,7 @@ class CustomCanvas extends Component {
     }
     else {
       fabricCanvas.on('mouse:down', function (options) {
-        if(nThis.props.alertType === 'RA' || nThis.props.alertType === 'LD') {
+        if (nThis.props.alertType === 'RA' || nThis.props.alertType === 'LD') {
           if (nThis.pointArray.length > 0) {
             if (options.target && options.target.id === nThis.pointArray[0].id) {
               let points = [];
@@ -117,7 +117,7 @@ class CustomCanvas extends Component {
         }
 
 
-        if(nThis.props.alertType === 'VW'){
+        if (nThis.props.alertType === 'VW') {
           if (nThis.pointArray.length === 2) {
             let points = [];
 
@@ -136,7 +136,7 @@ class CustomCanvas extends Component {
             nThis.pointArray.length = 0;
             nThis.props.alertPointDirection(nThis.canvasPointArray, 'rightLeft');
           }
-          if(fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null ) {
+          if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
             let virtualWallDetails = {
               id: fabricCanvas.getActiveObject().id,
               left: fabricCanvas.getActiveObject().left,
@@ -145,22 +145,25 @@ class CustomCanvas extends Component {
             };
 
             let directionCircle;
-            switch(fabricCanvas.getActiveObject().id){
-              case 'rightLeft': virtualWallDetails.id = 'right';
+            switch (fabricCanvas.getActiveObject().id) {
+              case 'rightLeft':
+                virtualWallDetails.id = 'right';
                 fabricCanvas.getActiveObject().remove();
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
-              case 'right': virtualWallDetails.id = 'left';
+              case 'right':
+                virtualWallDetails.id = 'left';
                 fabricCanvas.getActiveObject().remove();
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, Math.PI, 0, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
-              case 'left': virtualWallDetails.id = 'rightLeft';
+              case 'left':
+                virtualWallDetails.id = 'rightLeft';
                 fabricCanvas.getActiveObject().remove();
-                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2*Math.PI, virtualWallDetails.rotateAngle);
+                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2 * Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
@@ -172,7 +175,7 @@ class CustomCanvas extends Component {
       });
 
       fabricCanvas.on('touch:gesture', function (options) {
-        if(nThis.props.alertType === 'RA' || nThis.props.alertType === 'LD') {
+        if (nThis.props.alertType === 'RA' || nThis.props.alertType === 'LD') {
           if (nThis.pointArray.length > 0) {
             if (options.target && options.target.id === nThis.pointArray[0].id) {
               let points = [];
@@ -205,7 +208,7 @@ class CustomCanvas extends Component {
         }
 
 
-        if(nThis.props.alertType === 'VW'){
+        if (nThis.props.alertType === 'VW') {
           if (nThis.pointArray.length === 2) {
             let points = [];
 
@@ -224,7 +227,7 @@ class CustomCanvas extends Component {
             nThis.pointArray.length = 0;
             nThis.props.alertPointDirection(nThis.canvasPointArray, 'rightLeft');
           }
-          if(fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null ) {
+          if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
             let virtualWallDetails = {
               id: fabricCanvas.getActiveObject().id,
               left: fabricCanvas.getActiveObject().left,
@@ -233,22 +236,25 @@ class CustomCanvas extends Component {
             };
 
             let directionCircle;
-            switch(fabricCanvas.getActiveObject().id){
-              case 'rightLeft': virtualWallDetails.id = 'right';
+            switch (fabricCanvas.getActiveObject().id) {
+              case 'rightLeft':
+                virtualWallDetails.id = 'right';
                 fabricCanvas.getActiveObject().remove();
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
-              case 'right': virtualWallDetails.id = 'left';
+              case 'right':
+                virtualWallDetails.id = 'left';
                 fabricCanvas.getActiveObject().remove();
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, Math.PI, 0, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
-              case 'left': virtualWallDetails.id = 'rightLeft';
+              case 'left':
+                virtualWallDetails.id = 'rightLeft';
                 fabricCanvas.getActiveObject().remove();
-                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2*Math.PI, virtualWallDetails.rotateAngle);
+                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2 * Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
@@ -258,7 +264,6 @@ class CustomCanvas extends Component {
           }
         }
       });
-
 
 
       fabricCanvas.on('mouse:up', function (options) {
@@ -347,7 +352,7 @@ class CustomCanvas extends Component {
     let random = Math.floor(Math.random() * (max - min + 1)) + min;
     let id = new Date().getTime() + random;
 
-    let circle = CustomCanvas.circleObject(id, 5, (options.e.layerX / canvas.getZoom()), (options.e.layerY / canvas.getZoom()));
+    let circle = CustomCanvas.circleObject(id, 5, (options.e.offsetX / canvas.getZoom()), (options.e.offsetY / canvas.getZoom()));
 
     if (pointArray.length === 0) {
       circle.set({
@@ -355,7 +360,7 @@ class CustomCanvas extends Component {
       })
     }
 
-    let points = [(options.e.layerX / canvas.getZoom()), (options.e.layerY / canvas.getZoom()), (options.e.layerX / canvas.getZoom()), (options.e.layerY / canvas.getZoom())];
+    let points = [(options.e.offsetX / canvas.getZoom()), (options.e.offsetY / canvas.getZoom()), (options.e.offsetX / canvas.getZoom()), (options.e.offsetY / canvas.getZoom())];
 
     let line = CustomCanvas.lineObject(points, (this.props.alertType === 'VW') ? '#FF0000' : '#FFFFFF');
 
@@ -381,8 +386,8 @@ class CustomCanvas extends Component {
     }
     else {
       let polyPoint = [{
-        x: (options.e.layerX / canvas.getZoom()),
-        y: (options.e.layerY / canvas.getZoom())
+        x: (options.e.offsetX / canvas.getZoom()),
+        y: (options.e.offsetY / canvas.getZoom())
       }];
 
       const polygon = CustomCanvas.polygonObject(polyPoint);
@@ -399,26 +404,26 @@ class CustomCanvas extends Component {
   }
 
   generateVirtualWall(canvas, points, direction, identity) {
-    let slope = (points[1].y - points[0].y)/(points[1].x - points[0].x);
+    let slope = (points[1].y - points[0].y) / (points[1].x - points[0].x);
     let angle = Math.atan(slope);
     let angleDeg = angle * 180 / Math.PI;
-    let midPointY =  (points[1].y + points[0].y)/2;
-    let midPointX =  (points[1].x + points[0].x)/2;
+    let midPointY = (points[1].y + points[0].y) / 2;
+    let midPointX = (points[1].x + points[0].x) / 2;
     const radius = 15;
     let id = 'rightLeft';
     let startAngle = 0;
-    let endAngle = 2*Math.PI;
+    let endAngle = 2 * Math.PI;
 
-    if(this.props.getAlerts === true){
-      const line  = CustomCanvas.lineObject([points[0].x, points[0].y, points[1].x, points[1].y], '#FF0000');
-      line.set({id:identity});
+    if (this.props.getAlerts === true) {
+      const line = CustomCanvas.lineObject([points[0].x, points[0].y, points[1].x, points[1].y], '#FF0000');
+      line.set({id: identity});
       line['type'] = 'VW';
 
       canvas.add(line);
 
       id = identity;
 
-      switch(direction){
+      switch (direction) {
         case 'R':
           endAngle = Math.PI;
           startAngle = 0;
@@ -471,14 +476,14 @@ class CustomCanvas extends Component {
     });
   }
 
-  static circleObject(id, radius, left, right) {
+  static circleObject(id, radius, left, top) {
     return new fabric.Circle({
       radius: radius,
       fill: '#ffffff',
       stroke: '#333333',
       strokeWidth: 0.5,
       left: left,
-      top: right,
+      top: top,
       selectable: false,
       hasBorders: false,
       hasControls: false,
@@ -488,7 +493,7 @@ class CustomCanvas extends Component {
     });
   }
 
-  static directionCircleObject(id, radius, left, top, startAngle, endAngle, rotateAngle){
+  static directionCircleObject(id, radius, left, top, startAngle, endAngle, rotateAngle) {
     return new fabric.Circle({
       radius: radius,
       fill: '#FF0000',
@@ -512,32 +517,12 @@ class CustomCanvas extends Component {
     });
   }
 
-  static triangleObject(points) {
-    return new fabric.Polygon([{
-      x: (points[0].x + (points[1].x - points[0].x) / 2) - 2,
-      y: points[1].y - 5
-    }, {
-      x: (points[0].x + (points[1].x - points[0].x) / 2) + 5,
-      y: points[1].y - 25
-    }, {x: (points[0].x + (points[1].x - points[0].x) / 2) + 10, y: points[1].y - 5}], {
-      stroke: '#333333',
-      strokeWidth: 1,
-      fill: '#cccccc',
-      opacity: 1,
-      selectable: false,
-      hasBorders: false,
-      hasControls: false,
-      evented: false
-    });
-  }
-
   canvas() {
     let canvas = new fabric.Canvas('canvas');
     canvas.backgroundColor = 'transparent';
     canvas.setHeight(this.props.height);
     canvas.setWidth(this.props.width);
     canvas.selection = false;
-
     return canvas;
   }
 

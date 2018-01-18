@@ -78,6 +78,36 @@ const auth = (state = initialState, action) => {
         ...state,
         getInvitationError: action.getInvitationError
       }
+      case types.SEND_NEW_PASSWORD_REQUEST_IN_PROCESS:
+        return {
+          ...state,
+          sendNewPasswordRequestInProcess: action.sendNewPasswordRequestInProcess
+        }
+      case types.SEND_NEW_PASSWORD_REQUEST_SUCCESS:
+        return {
+          ...state,
+          sendNewPasswordRequestSuccess: action.sendNewPasswordRequestSuccess
+        }
+      case types.SEND_NEW_PASSWORD_REQUEST_ERROR:
+        return {
+          ...state,
+          sendNewPasswordRequestError: action.sendNewPasswordRequestError
+        }
+      case types.GET_NEW_PASSWORD_REQUEST_IN_PROCESS:
+        return {
+          ...state,
+          getNewPasswordRequestInProcess: action.getNewPasswordRequestInProcess
+        }
+      case types.GET_NEW_PASSWORD_REQUEST_SUCCESS:
+        return {
+          ...state,
+          invitation: action.invitation
+        }
+      case types.GET_NEW_PASSWORD_REQUEST_ERROR:
+        return {
+          ...state,
+          getNewPasswordRequestError: action.getNewPasswordRequestError
+        }
     default:
       return state;
   }

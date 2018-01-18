@@ -93,6 +93,48 @@ function getInvitationError(error) {
   }
 }
 
+function sendNewPasswordRequestInProcess(bool) {
+  return {
+    type: types.SEND_NEW_PASSWORD_REQUEST_IN_PROCESS,
+    sendNewPasswordRequestInProcess: bool
+  }
+}
+
+function sendNewPasswordRequestSuccess(bool) {
+  return {
+    type: types.SEND_NEW_PASSWORD_REQUEST_SUCCESS,
+    sendNewPasswordRequestSuccess: bool
+  }
+}
+
+function sendNewPasswordRequestError(error) {
+  return {
+    type: types.SEND_NEW_PASSWORD_REQUEST_ERROR,
+    sendNewPasswordRequestError: error
+  }
+}
+
+function getNewPasswordRequestInProcess(bool) {
+  return {
+    type: types.GET_NEW_PASSWORD_REQUEST_IN_PROCESS,
+    getNewPasswordRequestInProcess: bool
+  }
+}
+
+function getNewPasswordRequestSuccess(invitation) {
+  return {
+    type: types.GET_NEW_PASSWORD_REQUEST_SUCCESS,
+    invitation
+  }
+}
+
+function getNewPasswordRequestError(error) {
+  return {
+    type: types.GET_NEW_PASSWORD_REQUEST_ERROR,
+    getNewPasswordRequestError: error
+  }
+}
+
 export function loginMissing() {
   return {
     type: types.LOGIN_MISSING,
@@ -348,6 +390,73 @@ export function getInvitation(token) {
   }
 }
 
+export function sendNewPasswordRequestEmail(email) {
+  return (dispatch) => {
+    dispatch(sendNewPasswordRequestError(''));
+    dispatch(sendNewPasswordRequestInProcess(true));
+
+    const newPasswordRequestEmail = email.trim();
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset`;
+    let data = {newPasswordRequest: {email: newPasswordRequestEmail}};
+
+    const newPasswordRequestEvent = {
+      email: newPasswordRequestEmail,
+      new_password_request_status: 'NewPasswordRequest Sent',
+      new_password_request_date: new Date().toString().split(' ').splice(1, 4).join(' ')
+    };
+
+    dispatch(trackEventAnalytics('newPasswordRequest', newPasswordRequestEvent));
+
+
+    /*-- Needed for Woopra Trigger event --*/
+    newPasswordRequestEvent.invite_status = 'NewPasswordRequest Received';
+    setInterval(dispatch(trackEventAnalytics('newPasswordRequest', newPasswordRequestEvent)), 1000);
+
+    axios.post(url, data)
+      .then(resp => {
+        dispatch(sendNewPasswordRequestSuccess(true));
+        dispatch(sendNewPasswordRequestSuccess(false));
+      })
+      .catch(error => {
+        let errMessage = 'Error sending request. Please try again later.';
+        if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.email) {
+          errMessage = 'A request has already been sent to this email.';
+        }
+
+        dispatch(sendNewPasswordRequestError(errMessage));
+      })
+      .finally(() => {
+        dispatch(sendNewPasswordRequestError(''));
+        dispatch(sendNewPasswordRequestInProcess(false));
+      })
+  }
+}
+
+export function getNewPasswordRequest(token) {
+  return (dispatch) => {
+    dispatch(getNewPasswordRequestError(''));
+    dispatch(getNewPasswordRequestInProcess(true));
+
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset/${token}`;
+    axios.get(url)
+      .then(resp => {
+        dispatch(getNewPasswordRequestSuccess(resp.data.data));
+      })
+      .catch(error => {
+        let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
+        if (error.response.status === 404) {
+          errMessage = 'Invalid request';
+        }
+
+        dispatch(getNewPasswordRequestError(errMessage));
+      })
+      .finally(() => {
+        dispatch(getNewPasswordRequestError(''));
+        dispatch(getNewPasswordRequestInProcess(false));
+      });
+  }
+}
+
 export function initialiseAnalyticsEngine() {
   return (dispatch) => {
     // initialiseGoogleAnalytics();
@@ -394,4 +503,3 @@ function initialiseWoopraAnalytics() {
   });
   woopra.track();
 }
-

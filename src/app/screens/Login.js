@@ -8,6 +8,7 @@ import logoFull from '../../assets/img/logo-full.png';
 import { login } from '../redux/auth/actions';
 import RegisterBtn from '../components/navigation/RegisterBtn';
 import RequestInviteModal from '../components/modals/RequestInviteModal';
+import RequestNewPasswordModal from '../components/modals/RequestNewPasswordModal';
 
 const FormItem = Form.Item;
 
@@ -16,7 +17,8 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      inviteModalVisible: false
+      inviteModalVisible: false,
+      requestNewPasswordModal: false
     }
   }
 
@@ -32,6 +34,10 @@ class Login extends Component {
 
   toggleInviteModalVisibility = () => {
     this.setState({inviteModalVisible: !this.state.inviteModalVisible});
+  }
+
+  toggleRequestNewPasswordModalVisibility = () => {
+    this.setState({requestNewPasswordModalVisible: !this.state.requestNewPasswordModalVisible});
   }
 
   render() {
@@ -138,8 +144,9 @@ class Login extends Component {
                       </p>
                     </div>
                     <div style={styles.forgotPassword}>
-                      <a href=''>I forgot my User ID or Password</a>
+                      <a href='javascript:;' onClick={this.toggleRequestNewPasswordModalVisibility}>I forgot my Password</a>
                     </div>
+                    <RequestNewPasswordModal visible={this.state.requestNewPasswordModalVisible} toggleRequestNewPasswordModalVisibility={this.toggleRequestNewPasswordModalVisibility.bind(this)} />
                   </Col>
                 </Row>
               </Col>

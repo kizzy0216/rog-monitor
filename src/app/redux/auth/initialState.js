@@ -9,5 +9,11 @@ export default {
   sendInvitationError: '',
   getInvitationInProcess: false,
   getInvitationSuccess: false,
-  getInvitationError: ''
+  getInvitationError: '',
+  sendNewPasswordRequestInProcess: false,
+  sendNewPasswordRequestSuccess: false,
+  sendNewPasswordRequestError: '',
+  getNewPasswordRequestInProcess: false,
+  getNewPasswordRequestSuccess: false,
+  getNewPasswordRequestError: ''
 }

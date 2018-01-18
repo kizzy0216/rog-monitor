@@ -94,7 +94,6 @@ class AddCameraModal extends Component {
     }
     if(nextProps.addedCameraData !== '' && nextProps.addedCameraData !== this.props.addedCameraData) {
       this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data.data);
-      console.log(nextProps.addedCameraData);
     }
 
   };
@@ -190,7 +189,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addLocationCamera: (user, location, name, rtspUrl, username, password) => dispatch(addLocationCamera(user, location, name, rtspUrl, username, password)),
-    registerCamera: (userId, cameraId) => dispatch(registerCamera(userId, cameraId)),
+    registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
   }
 }
 

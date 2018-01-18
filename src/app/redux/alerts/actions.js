@@ -3,7 +3,7 @@ require('promise.prototype.finally').shim();
 
 import initialState from './initialState';
 
-import {Socket} from '../../../lib/phoenix/phoenix';
+import { Socket } from '../../../lib/phoenix/phoenix';
 
 import * as types from './actionTypes';
 
@@ -52,7 +52,7 @@ function deleteSuccess(alertId) {
 function createAlertInProcess(bool) {
   return {
     type: types.CREATE_ALERT_IN_PROCESS,
-    bool
+   bool
   }
 }
 
@@ -71,14 +71,14 @@ function createAlertSuccess(bool) {
 }
 
 function fetchPolygonAlertSuccess(polygonData) {
-  return {
+  return{
     type: types.FETCH_POLYGON_ALERT_SUCCESS,
     polygonData
   }
 }
 
 function fetchPolygonAlertInProcess(bool) {
-  return {
+  return{
     type: types.FETCH_POLYGON_ALERT_IN_PROCESS,
     bool
   }
@@ -215,13 +215,13 @@ export function createAlert(alertCoordinates, alertType, cameraId, duration, dir
     const bvc_jwt = localStorage.getItem('bvc_jwt');
 
     let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/` + cameraId + `/alerts`;
-    let config = {headers: {Authorization: 'JWT' + ' ' + bvc_jwt}};
+    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
 
     let alertData = {type: alertType, points: alertCoordinates};
-    if (duration !== undefined) {
+    if(duration !== undefined){
       alertData['duration'] = duration;
     }
-    if (direction !== undefined) {
+    if(direction !== undefined){
       alertData['direction'] = direction;
     }
 
@@ -248,7 +248,7 @@ export function fetchPolygonAlert(cameraId) {
     const bvc_jwt = localStorage.getItem('bvc_jwt');
 
     let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/` + cameraId + `/alerts`;
-    let config = {headers: {Authorization: 'JWT' + ' ' + bvc_jwt}};
+    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
 
     axios.get(urlAlert, config)
       .then((resp) => {
@@ -288,49 +288,39 @@ export function deletePolygonAlert(cameraId, alertId) {
   }
 }
 
-export function registerCamera(userId, cameraDetails) {
-  return (dispatch) => {
-    // dispatch(registerCameraInProcess(true));
+  export function registerCamera(userId, cameraDetails) {
+    return (dispatch) => {
+      // dispatch(registerCameraInProcess(true));
 
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
-    console.log(cameraDetails);
+      const bvc_jwt = localStorage.getItem('bvc_jwt');
 
-    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/user/` + userId + `/cameras`;
-    let config = {headers: {Authorization: 'JWT' + ' ' + bvc_jwt}};
-    let cameraData = [];
-    for (let i = 0; i < cameraDetails.length; i++) {
-      cameraData.push({
-        id: cameraDetails[i].id,
-        name: cameraDetails[i].name,
-        url: cameraDetails[i].rtspUrl,
-        enabled: true
-      });
-    }
-    axios.get(urlAlert, config)
+      let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/user/` + userId + `/cameras`;
+      let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+      let cameraData = [];
+      for(let i = 0; i < cameraDetails.length; i++) {
+        cameraData.push({id: cameraDetails[i].id, name: cameraDetails[i].name, url: cameraDetails[i].rtspUrl, enabled: true});
+      }
+      axios.get(urlAlert, config)
 
-      .then((resp) => {
+        .then((resp) => {
 
-        for (let i = 0; i < resp.data.cameras.length; i++) {
-          if (resp.data.cameras[i].id !== cameraData[i].id) {
-            axios.post(urlAlert, cameraData, config)
-              .then((resp) => {
-                console.log(resp);
-                // dispatch(registerCameraSuccess(true));
-              })
-              .catch((error) => {
-                console.log(error);
-                // dispatch(registerCameraSuccess(true));
-              })
-              .finally(() => {
-                // dispatch(registerCameraInProcess(false));
-                // dispatch(registerCameraSuccess(false));
-              })
+          // Issue with BVC API. It needs all the camera ids to be sent again, else it would delete the not sent ones.
+          for(let i = 0; i < resp.data.cameras.length; i++ ) {
+            if (resp.data.cameras[i].id !== cameraData[i].id) {
+              axios.post(urlAlert, cameraData, config)
+                .then((resp) => {
+                  // dispatch(registerCameraSuccess(true));
+                })
+                .catch((error) => {
+                  // dispatch(registerCameraSuccess(true));
+                })
+
+
+            }
           }
-        }
 
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-  }
+        })
+        .catch((error) => {
+        })
+    }
 }

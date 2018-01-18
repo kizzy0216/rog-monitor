@@ -110,7 +110,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     deleteCamera: (user, cameraId) => dispatch(deleteCamera(user, cameraId)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
-    registerCamera: (userId, cameraId) => dispatch(registerCamera(userId, cameraId)),
+    registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
   }
 }
 

@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import { Button, Modal, Form, Input, Icon, message } from 'antd';
 const FormItem = Form.Item;
 
-import { sendNewPasswordRequestEmail } from '../../redux/auth/actions';
+import { sendPasswordResetRequestEmail } from '../../redux/auth/actions';
 
-const NewPasswordForm = Form.create()(
+const PasswordResetForm = Form.create()(
   (props) => {
-    const {visible, onCancel, onCreate, form, sendNewPasswordInProcess} = props;
+    const {visible, onCancel, onCreate, form, sendPasswordResetInProcess} = props;
     const {getFieldDecorator} = form;
 
     return (
-      <Modal title='Request a New Password'
+      <Modal title='Request to Reset Password'
         visible={visible}
         okText='Send'
         onCancel={onCancel}
@@ -30,7 +30,7 @@ const NewPasswordForm = Form.create()(
             )}
           </FormItem>
           <FormItem>
-            <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={sendNewPasswordInProcess}>
+            <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={sendPasswordResetInProcess}>
               Request
             </Button>
           </FormItem>
@@ -40,22 +40,22 @@ const NewPasswordForm = Form.create()(
   }
 );
 
-class RequestNewPasswordModal extends Component {
+class RequestPasswordResetModal extends Component {
   componentWillReceiveProps(nextProps) {
-    if (nextProps.sendNewPasswordSuccess && this.props.sendNewPasswordSuccess !== nextProps.sendNewPasswordSuccess) {
-      message.success('New password request sent. Please check your email.');
+    if (nextProps.sendPasswordResetSuccess && this.props.sendPasswordResetSuccess !== nextProps.sendPasswordResetSuccess) {
+      message.success('Password reset request sent. Please check your email.');
       this.form.resetFields();
-      this.props.toggleRequestNewPasswordModalVisibility();
+      this.props.toggleRequestPasswordResetModalVisibility();
     }
 
-    if (nextProps.sendNewPasswordError && this.props.sendNewPasswordError !== nextProps.sendNewPasswordError) {
-      message.error(nextProps.sendNewPasswordError);
+    if (nextProps.sendPasswordResetError && this.props.sendPasswordResetError !== nextProps.sendPasswordResetError) {
+      message.error(nextProps.sendPasswordResetError);
     }
   }
 
   handleCancel = () => {
     this.form.resetFields();
-    this.props.toggleRequestNewPasswordModalVisibility();
+    this.props.toggleRequestPasswordResetModalVisibility();
   };
 
   handleCreate = () => {
@@ -65,7 +65,7 @@ class RequestNewPasswordModal extends Component {
         return;
       }
 
-      this.props.sendNewPasswordRequestEmail(values.email);
+      this.props.sendPasswordResetRequestEmail(values.email);
     });
   };
 
@@ -76,12 +76,12 @@ class RequestNewPasswordModal extends Component {
   render() {
     return (
       <div>
-        <NewPasswordForm
+        <PasswordResetForm
           ref={this.saveFormRef}
           visible={this.props.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
-          sendNewPasswordRequestInProcess={this.props.sendNewPasswordRequestInProcess}
+          sendPasswordResetRequestInProcess={this.props.sendPasswordResetRequestInProcess}
         />
       </div>
     );
@@ -98,16 +98,16 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    sendNewPasswordInProcess: state.auth.sendNewPasswordInProcess,
-    sendNewPasswordError: state.auth.sendNewPasswordError,
-    sendNewPasswordSuccess: state.auth.sendNewPasswordSuccess
+    sendPasswordResetInProcess: state.auth.sendPasswordResetInProcess,
+    sendPasswordResetError: state.auth.sendPasswordResetError,
+    sendPasswordResetSuccess: state.auth.sendPasswordResetSuccess
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    sendNewPasswordRequestEmail: (email) => dispatch(sendNewPasswordRequestEmail(email))
+    sendPasswordResetRequestEmail: (email) => dispatch(sendPasswordResetRequestEmail(email))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RequestNewPasswordModal);
+export default connect(mapStateToProps, mapDispatchToProps)(RequestPasswordResetModal);

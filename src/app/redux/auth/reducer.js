@@ -78,35 +78,35 @@ const auth = (state = initialState, action) => {
         ...state,
         getInvitationError: action.getInvitationError
       }
-      case types.SEND_NEW_PASSWORD_REQUEST_IN_PROCESS:
+      case types.SEND_PASSWORD_RESET_REQUEST_IN_PROCESS:
         return {
           ...state,
-          sendNewPasswordRequestInProcess: action.sendNewPasswordRequestInProcess
+          sendPasswordResetRequestInProcess: action.sendPasswordResetRequestInProcess
         }
-      case types.SEND_NEW_PASSWORD_REQUEST_SUCCESS:
+      case types.SEND_PASSWORD_RESET_REQUEST_SUCCESS:
         return {
           ...state,
-          sendNewPasswordRequestSuccess: action.sendNewPasswordRequestSuccess
+          sendPasswordResetRequestSuccess: action.sendPasswordResetRequestSuccess
         }
-      case types.SEND_NEW_PASSWORD_REQUEST_ERROR:
+      case types.SEND_PASSWORD_RESET_REQUEST_ERROR:
         return {
           ...state,
-          sendNewPasswordRequestError: action.sendNewPasswordRequestError
+          sendPasswordResetRequestError: action.sendPasswordResetRequestError
         }
-      case types.GET_NEW_PASSWORD_REQUEST_IN_PROCESS:
+      case types.GET_PASSWORD_RESET_REQUEST_IN_PROCESS:
         return {
           ...state,
-          getNewPasswordRequestInProcess: action.getNewPasswordRequestInProcess
+          getPasswordResetRequestInProcess: action.getPasswordResetRequestInProcess
         }
-      case types.GET_NEW_PASSWORD_REQUEST_SUCCESS:
+      case types.GET_PASSWORD_RESET_REQUEST_SUCCESS:
         return {
           ...state,
           invitation: action.invitation
         }
-      case types.GET_NEW_PASSWORD_REQUEST_ERROR:
+      case types.GET_PASSWORD_RESET_REQUEST_ERROR:
         return {
           ...state,
-          getNewPasswordRequestError: action.getNewPasswordRequestError
+          getPasswordResetRequestError: action.getPasswordResetRequestError
         }
     default:
       return state;

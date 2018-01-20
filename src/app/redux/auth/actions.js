@@ -93,45 +93,45 @@ function getInvitationError(error) {
   }
 }
 
-function sendNewPasswordRequestInProcess(bool) {
+function sendPasswordResetRequestInProcess(bool) {
   return {
-    type: types.SEND_NEW_PASSWORD_REQUEST_IN_PROCESS,
-    sendNewPasswordRequestInProcess: bool
+    type: types.SEND_PASSWORD_RESET_REQUEST_IN_PROCESS,
+    sendPasswordResetRequestInProcess: bool
   }
 }
 
-function sendNewPasswordRequestSuccess(bool) {
+function sendPasswordResetRequestSuccess(bool) {
   return {
-    type: types.SEND_NEW_PASSWORD_REQUEST_SUCCESS,
-    sendNewPasswordRequestSuccess: bool
+    type: types.SEND_PASSWORD_RESET_REQUEST_SUCCESS,
+    sendPasswordResetRequestSuccess: bool
   }
 }
 
-function sendNewPasswordRequestError(error) {
+function sendPasswordResetRequestError(error) {
   return {
-    type: types.SEND_NEW_PASSWORD_REQUEST_ERROR,
-    sendNewPasswordRequestError: error
+    type: types.SEND_PASSWORD_RESET_REQUEST_ERROR,
+    sendPasswordResetRequestError: error
   }
 }
 
-function getNewPasswordRequestInProcess(bool) {
+function getPasswordResetRequestInProcess(bool) {
   return {
-    type: types.GET_NEW_PASSWORD_REQUEST_IN_PROCESS,
-    getNewPasswordRequestInProcess: bool
+    type: types.GET_PASSWORD_RESET_REQUEST_IN_PROCESS,
+    getPasswordResetRequestInProcess: bool
   }
 }
 
-function getNewPasswordRequestSuccess(invitation) {
+function getPasswordResetRequestSuccess(invitation) {
   return {
-    type: types.GET_NEW_PASSWORD_REQUEST_SUCCESS,
+    type: types.GET_PASSWORD_RESET_REQUEST_SUCCESS,
     invitation
   }
 }
 
-function getNewPasswordRequestError(error) {
+function getPasswordResetRequestError(error) {
   return {
-    type: types.GET_NEW_PASSWORD_REQUEST_ERROR,
-    getNewPasswordRequestError: error
+    type: types.GET_PASSWORD_RESET_REQUEST_ERROR,
+    getPasswordResetRequestError: error
   }
 }
 
@@ -390,32 +390,32 @@ export function getInvitation(token) {
   }
 }
 
-export function sendNewPasswordRequestEmail(email) {
+export function sendPasswordResetRequestEmail(email) {
   return (dispatch) => {
-    dispatch(sendNewPasswordRequestError(''));
-    dispatch(sendNewPasswordRequestInProcess(true));
+    dispatch(sendPasswordResetRequestError(''));
+    dispatch(sendPasswordResetRequestInProcess(true));
 
-    const newPasswordRequestEmail = email.trim();
+    const passwordResetRequestEmail = email.trim();
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset`;
-    let data = {newPasswordRequest: {email: newPasswordRequestEmail}};
+    let data = {passwordResetRequest: {email: passwordResetRequestEmail}};
 
-    const newPasswordRequestEvent = {
-      email: newPasswordRequestEmail,
-      new_password_request_status: 'NewPasswordRequest Sent',
-      new_password_request_date: new Date().toString().split(' ').splice(1, 4).join(' ')
+    const passwordResetRequestEvent = {
+      email: passwordResetRequestEmail,
+      password_reset_request_status: 'PasswordResetRequest Sent',
+      password_reset_request_date: new Date().toString().split(' ').splice(1, 4).join(' ')
     };
 
-    dispatch(trackEventAnalytics('newPasswordRequest', newPasswordRequestEvent));
+    dispatch(trackEventAnalytics('passwordResetRequest', passwordResetRequestEvent));
 
 
     /*-- Needed for Woopra Trigger event --*/
-    newPasswordRequestEvent.invite_status = 'NewPasswordRequest Received';
-    setInterval(dispatch(trackEventAnalytics('newPasswordRequest', newPasswordRequestEvent)), 1000);
+    passwordResetRequestEvent.invite_status = 'PasswordResetRequest Received';
+    setInterval(dispatch(trackEventAnalytics('passwordResetRequest', passwordResetRequestEvent)), 1000);
 
     axios.post(url, data)
       .then(resp => {
-        dispatch(sendNewPasswordRequestSuccess(true));
-        dispatch(sendNewPasswordRequestSuccess(false));
+        dispatch(sendPasswordResetRequestSuccess(true));
+        dispatch(sendPasswordResetRequestSuccess(false));
       })
       .catch(error => {
         let errMessage = 'Error sending request. Please try again later.';
@@ -423,24 +423,24 @@ export function sendNewPasswordRequestEmail(email) {
           errMessage = 'A request has already been sent to this email.';
         }
 
-        dispatch(sendNewPasswordRequestError(errMessage));
+        dispatch(sendPasswordResetRequestError(errMessage));
       })
       .finally(() => {
-        dispatch(sendNewPasswordRequestError(''));
-        dispatch(sendNewPasswordRequestInProcess(false));
+        dispatch(sendPasswordResetRequestError(''));
+        dispatch(sendPasswordResetRequestInProcess(false));
       })
   }
 }
 
-export function getNewPasswordRequest(token) {
+export function getPasswordResetRequest(token) {
   return (dispatch) => {
-    dispatch(getNewPasswordRequestError(''));
-    dispatch(getNewPasswordRequestInProcess(true));
+    dispatch(getPasswordResetRequestError(''));
+    dispatch(getPasswordResetRequestInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset/${token}`;
     axios.get(url)
       .then(resp => {
-        dispatch(getNewPasswordRequestSuccess(resp.data.data));
+        dispatch(getPasswordResetRequestSuccess(resp.data.data));
       })
       .catch(error => {
         let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
@@ -448,11 +448,11 @@ export function getNewPasswordRequest(token) {
           errMessage = 'Invalid request';
         }
 
-        dispatch(getNewPasswordRequestError(errMessage));
+        dispatch(getPasswordResetRequestError(errMessage));
       })
       .finally(() => {
-        dispatch(getNewPasswordRequestError(''));
-        dispatch(getNewPasswordRequestInProcess(false));
+        dispatch(getPasswordResetRequestError(''));
+        dispatch(getPasswordResetRequestInProcess(false));
       });
   }
 }

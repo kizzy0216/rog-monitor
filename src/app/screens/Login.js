@@ -8,7 +8,7 @@ import logoFull from '../../assets/img/logo-full.png';
 import { login } from '../redux/auth/actions';
 import RegisterBtn from '../components/navigation/RegisterBtn';
 import RequestInviteModal from '../components/modals/RequestInviteModal';
-import RequestNewPasswordModal from '../components/modals/RequestNewPasswordModal';
+import RequestPasswordResetModal from '../components/modals/RequestPasswordResetModal';
 
 const FormItem = Form.Item;
 
@@ -18,7 +18,7 @@ class Login extends Component {
 
     this.state = {
       inviteModalVisible: false,
-      requestNewPasswordModal: false
+      requestPasswordResetModal: false
     }
   }
 
@@ -36,8 +36,8 @@ class Login extends Component {
     this.setState({inviteModalVisible: !this.state.inviteModalVisible});
   }
 
-  toggleRequestNewPasswordModalVisibility = () => {
-    this.setState({requestNewPasswordModalVisible: !this.state.requestNewPasswordModalVisible});
+  toggleRequestPasswordResetModalVisibility = () => {
+    this.setState({requestPasswordResetModalVisible: !this.state.requestPasswordResetModalVisible});
   }
 
   render() {
@@ -144,9 +144,9 @@ class Login extends Component {
                       </p>
                     </div>
                     <div style={styles.forgotPassword}>
-                      <a href='javascript:;' onClick={this.toggleRequestNewPasswordModalVisibility}>I forgot my Password</a>
+                      <a href='javascript:;' onClick={this.toggleRequestPasswordResetModalVisibility}>I forgot my Password</a>
                     </div>
-                    <RequestNewPasswordModal visible={this.state.requestNewPasswordModalVisible} toggleRequestNewPasswordModalVisibility={this.toggleRequestNewPasswordModalVisibility.bind(this)} />
+                    <RequestPasswordResetModal visible={this.state.requestPasswordResetModalVisible} toggleRequestPasswordResetModalVisibility={this.toggleRequestPasswordResetModalVisibility.bind(this)} />
                   </Col>
                 </Row>
               </Col>

@@ -10,10 +10,10 @@ export default {
   getInvitationInProcess: false,
   getInvitationSuccess: false,
   getInvitationError: '',
-  sendNewPasswordRequestInProcess: false,
-  sendNewPasswordRequestSuccess: false,
-  sendNewPasswordRequestError: '',
-  getNewPasswordRequestInProcess: false,
-  getNewPasswordRequestSuccess: false,
-  getNewPasswordRequestError: ''
+  sendpasswordResetRequestInProcess: false,
+  sendpasswordResetRequestSuccess: false,
+  sendpasswordResetRequestError: '',
+  getpasswordResetRequestInProcess: false,
+  getpasswordResetRequestSuccess: false,
+  getpasswordResetRequestError: ''
 }

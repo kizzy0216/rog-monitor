@@ -389,10 +389,7 @@ export function authenticateBVCServer() {
 
     let url = `${process.env.REACT_APP_BVC_SERVER}/api/auth`;
     let data ={username: 'rogt-1', password: 'qwerty1'};
-    let options = {
-      rejectUnauthorized: false
-    };
-    axios.post(url, data, {httpsAgent: options})
+    axios.post(url, data)
       .then((resp) => {
         const bvc_authToken = resp.data.access_token;
 

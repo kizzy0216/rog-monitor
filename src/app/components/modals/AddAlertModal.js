@@ -34,8 +34,7 @@ const AddAlertForm = Form.create()(
       >
         <Form>
           <FormItem style={styles.alertsHideSHow}>
-            <div>
-              <img src={alertImg} style={styles.image} onLoad={onImgLoad}/>
+              <img src={alertImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad}/>
               {canvasMode &&
               <CustomCanvas width={imageDimensions.width} height={imageDimensions.height} alertPointDirection={alertPointDirection}
                             getAlerts={alerts} direction={direction} alertExtras={alertExtras} alertType={currentAlertDetails.currentAlertType}/>}
@@ -67,7 +66,6 @@ const AddAlertForm = Form.create()(
                 </Button>
               </div>
               }
-            </div>
           </FormItem>
           <FormItem>
             <Popover title='Select Alert Type to Add'
@@ -199,11 +197,14 @@ class AddAlertModal extends Component {
     this.setState({visible: true});
     this.setState({saveCancel: false});
     this.setState({canvasMode: !this.state.canvasMode});
+    console.log(this.state.visible);
+    console.log(this.state.saveCancel);
+    console.log(this.state.canvasMode);
     this.fetchAlerts(true);
   };
 
   handleCancel = () => {
-    this.setState({canvasMode: true});
+    this.setState({canvasMode: !this.state.canvasMode});
     this.setState({visible: false});
     this.alertDetails.currentAlertType = '';
   };

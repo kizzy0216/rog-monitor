@@ -397,7 +397,7 @@ export function sendPasswordResetRequestEmail(email) {
 
     const passwordResetRequestEmail = email.trim();
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset_request`;
-    let data = {passwordResetRequest: {email: passwordResetRequestEmail}};
+    let data = {request: {email: passwordResetRequestEmail}};
 
     const passwordResetRequestEvent = {
       email: passwordResetRequestEmail,

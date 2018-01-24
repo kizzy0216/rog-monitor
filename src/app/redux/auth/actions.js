@@ -121,10 +121,10 @@ function getPasswordResetRequestInProcess(bool) {
   }
 }
 
-function getPasswordResetRequestSuccess(invitation) {
+function getPasswordResetRequestSuccess(request) {
   return {
     type: types.GET_PASSWORD_RESET_REQUEST_SUCCESS,
-    invitation
+    request
   }
 }
 
@@ -396,7 +396,7 @@ export function sendPasswordResetRequestEmail(email) {
     dispatch(sendPasswordResetRequestInProcess(true));
 
     const passwordResetRequestEmail = email.trim();
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset_request`;
     let data = {passwordResetRequest: {email: passwordResetRequestEmail}};
 
     const passwordResetRequestEvent = {

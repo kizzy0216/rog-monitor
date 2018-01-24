@@ -101,7 +101,7 @@ const auth = (state = initialState, action) => {
       case types.GET_PASSWORD_RESET_REQUEST_SUCCESS:
         return {
           ...state,
-          invitation: action.invitation
+          request: action.request
         }
       case types.GET_PASSWORD_RESET_REQUEST_ERROR:
         return {

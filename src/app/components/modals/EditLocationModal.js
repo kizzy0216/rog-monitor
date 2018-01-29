@@ -121,6 +121,14 @@ class EditLocationModal extends Component {
     if (nextProps.editLocationError && this.props.editLocationError !== nextProps.editLocationError) {
       message.error(nextProps.editLocationError);
     }
+
+    if (nextProps.removeLocationSuccess && this.props.removeLocationSuccess !== nextProps.removeLocationSuccess) {
+      message.success('Location removed.');
+    }
+
+    if (nextProps.removeLocationError && this.props.removeLocationError !== nextProps.removeLocationError) {
+      message.error(nextProps.removeLocationError);
+    }
   };
 
   showModal = () => {

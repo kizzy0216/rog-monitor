@@ -99,6 +99,11 @@ const alerts = (state = initialState, action) => {
         ...state,
         polygonData: action.polygonData
       }
+    case types.FETCH_POLYGON_ALERT_IN_SUCCESS:
+      return {
+        ...state,
+        fetchAlertSuccess: action.bool
+      }
     case types.DELETE_POLYGON_ALERT_SUCCESS:
       return {
         ...state,

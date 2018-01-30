@@ -77,6 +77,13 @@ function fetchPolygonAlertSuccess(polygonData) {
   }
 }
 
+function fetchPolygonAlertInSuccess(bool) {
+  return{
+    type: types.FETCH_POLYGON_ALERT_IN_SUCCESS,
+    bool
+  }
+}
+
 function fetchPolygonAlertInProcess(bool) {
   return{
     type: types.FETCH_POLYGON_ALERT_IN_PROCESS,
@@ -243,6 +250,8 @@ export function createAlert(alertCoordinates, alertType, cameraId, duration, dir
 export function fetchPolygonAlert(cameraId) {
   return (dispatch) => {
     dispatch(fetchPolygonAlertInProcess(true));
+    dispatch(fetchPolygonAlertInSuccess(false));
+
     const bvc_jwt = localStorage.getItem('bvc_jwt');
 
     let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/` + cameraId + `/alerts`;
@@ -251,6 +260,7 @@ export function fetchPolygonAlert(cameraId) {
     axios.get(urlAlert, config)
       .then((resp) => {
         dispatch(fetchPolygonAlertSuccess(resp.data));
+        dispatch(fetchPolygonAlertInSuccess(true));
       })
       .catch((error) => {
       })

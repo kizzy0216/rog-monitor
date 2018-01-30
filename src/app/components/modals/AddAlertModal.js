@@ -34,38 +34,40 @@ const AddAlertForm = Form.create()(
       >
         <Form>
           <FormItem style={styles.alertsHideSHow}>
-              <img src={alertImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad}/>
-              {canvasMode &&
-              <CustomCanvas width={imageDimensions.width} height={imageDimensions.height} alertPointDirection={alertPointDirection}
-                            getAlerts={alerts} direction={direction} alertExtras={alertExtras} alertType={currentAlertDetails.currentAlertType}/>}
+            <img src={alertImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad}/>
+            {canvasMode &&
+            <CustomCanvas width={imageDimensions.width} height={imageDimensions.height}
+                          alertPointDirection={alertPointDirection}
+                          getAlerts={alerts} direction={direction} alertExtras={alertExtras}
+                          alertType={currentAlertDetails.currentAlertType}/>}
 
-              {canvasMode && (currentAlertDetails.currentAlertType === 'LD') &&
-              <Row>
-                <Col span={4}>
-                  {(convertToMilitaryFormat(loiteringSeconds) === undefined) ? '00:00:00' : convertToMilitaryFormat(loiteringSeconds)}
-                </Col>
-                <Col span={16}>
-                  <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={86400}
-                          step={1} onChange={sliderValue} value={loiteringSeconds}/>
-                </Col>
-                <Col span={4}>
-                  24:00:00
-                </Col>
-              </Row>}
-              {deleteButton && canvasMode &&
-              <div>
+            {canvasMode && (currentAlertDetails.currentAlertType === 'LD') &&
+            <Row>
+              <Col span={4}>
+                {(convertToMilitaryFormat(loiteringSeconds) === undefined) ? '00:00:00' : convertToMilitaryFormat(loiteringSeconds)}
+              </Col>
+              <Col span={16}>
+                <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={86400}
+                        step={1} onChange={sliderValue} value={loiteringSeconds}/>
+              </Col>
+              <Col span={4}>
+                24:00:00
+              </Col>
+            </Row>}
+            {deleteButton && canvasMode &&
+            <div>
                 <span style={styles.currentalertDetails}>
                 Alert Id: {currentAlertDetails.currentAlertId}
                 </span>
-                <br/>
-                <span style={styles.currentalertDetails}>
+              <br/>
+              <span style={styles.currentalertDetails}>
                 Alert Type: {(currentAlertDetails.currentAlertType === 'RA') ? 'Restricted Area' : ((currentAlertDetails.currentAlertType === 'LD') ? 'Loitering Detection' : 'Virtual Wall')}
                 </span>
-                <Button style={styles.deleteButton} onClick={deleteAlert} loading={deleteStatus}>
-                  Delete
-                </Button>
-              </div>
-              }
+              <Button style={styles.deleteButton} onClick={deleteAlert} loading={deleteStatus}>
+                Delete
+              </Button>
+            </div>
+            }
           </FormItem>
           <FormItem>
             <Popover title='Select Alert Type to Add'
@@ -158,12 +160,15 @@ class AddAlertModal extends Component {
 
   alertPointDirection(points, direction) {
     this.alertDetails.polygonPoints.push(points);
-    switch(direction){
-      case 'right': direction = 'R';
+    switch (direction) {
+      case 'right':
+        direction = 'R';
         break;
-      case 'left': direction = 'L';
+      case 'left':
+        direction = 'L';
         break;
-      case 'rightLeft': direction = 'B';
+      case 'rightLeft':
+        direction = 'B';
         break;
     }
 
@@ -171,44 +176,48 @@ class AddAlertModal extends Component {
   }
 
   onImgLoad({target: img}) {
-      this.setState({
-        imageDimensions: {
-          height: img.offsetHeight,
-          width: img.offsetWidth
-        }
-      });
+    this.setState({
+      imageDimensions: {
+        height: img.offsetHeight,
+        width: img.offsetWidth
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.polygonData !== undefined) {
-      if (this.props.polygonData.alerts.length !== nextProps.polygonData.alerts.length) {
+    if (this.props.polygonData !== undefined) {
+      if (nextProps.fetchAlertSuccess === true) {
         this.setState({canvasMode: true});
       }
-      else if (nextProps.deleteAlertSuccess !== this.props.deleteAlertSuccess && this.alertDetails['id'] !== undefined) {
+      if (nextProps.createAlertSuccess !== this.props.createAlertSuccess && this.alertDetails['id'] !== undefined) {
         this.setState({canvasMode: false});
         this.props.fetchPolygonAlert(this.alertDetails['id']);
-        this.setState({deleteButton: false});
-      }
-      else if (nextProps.createAlertSuccess !== this.props.createAlertSuccess && this.alertDetails['id'] !== undefined) {
-        this.setState({canvasMode: false});
-        this.props.fetchPolygonAlert(this.alertDetails['id']);
+        this.alertDetails['id'] = undefined;
         this.setState({saveCancel: false});
       }
+      if (nextProps.deleteAlertSuccess !== this.props.deleteAlertSuccess && this.alertDetails['id'] !== undefined) {
+        this.setState({canvasMode: false});
+        this.props.fetchPolygonAlert(this.alertDetails['id']);
+        this.alertDetails['id'] = undefined;
+        this.setState({deleteButton: false});
+      }
+      this.setState({saveCancel: false});
     }
-    else if (this.props.polygonData !== nextProps.polygonData){
+    else if (this.props.polygonData !== nextProps.polygonData) {
       this.setState({canvasMode: true});
     }
   }
 
   showModal = () => {
     this.setState({visible: true});
+    this.alertDetails['id'] = this.props.data.id;
     this.setState({saveCancel: false});
     this.setState({canvasMode: !this.state.canvasMode});
     this.fetchAlerts(true);
   };
 
   handleCancel = () => {
-    this.setState({canvasMode: !this.state.canvasMode});
+    this.setState({canvasMode: false});
     this.setState({visible: false});
     this.alertDetails.currentAlertType = '';
   };
@@ -275,11 +284,11 @@ class AddAlertModal extends Component {
             break;
 
           case 'LD':
-            this.props.createAlert(this.alertDetails.polygonPoints[0], this.state.alertType,  this.props.data.id, this.state.loiteringSeconds);
+            this.props.createAlert(this.alertDetails.polygonPoints[0], this.state.alertType, this.props.data.id, this.state.loiteringSeconds);
             break;
 
           case 'VW':
-            this.props.createAlert(this.alertDetails.polygonPoints[0], this.state.alertType,  this.props.data.id, undefined, this.alertDetails.direction);
+            this.props.createAlert(this.alertDetails.polygonPoints[0], this.state.alertType, this.props.data.id, undefined, this.alertDetails.direction);
             break;
 
         }
@@ -411,7 +420,8 @@ const mapStateToProps = (state) => {
     polygonData: state.alerts.polygonData,
     deleteAlertSuccess: state.alerts.deleteAlertSuccess,
     deleteAlertInProcess: state.alerts.deleteAlertInProcess,
-    fetchPolygonAlertInProcess: state.alerts.fetchPolygonAlertInProcess
+    fetchPolygonAlertInProcess: state.alerts.fetchPolygonAlertInProcess,
+    fetchAlertSuccess: state.alerts.fetchAlertSuccess
   }
 };
 const mapDispatchToProps = (dispatch) => {

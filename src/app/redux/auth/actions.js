@@ -30,6 +30,26 @@ function registerSuccess() {
   }
 }
 
+function resetPasswordInProcess(bool) {
+  return {
+    type: types.RESET_PASSWORD_IN_PROCESS,
+    resetPasswordInProcess: bool
+  }
+}
+
+function resetPasswordError(error) {
+  return {
+    type: types.RESET_PASSWORD_ERROR,
+    resetPasswordError: error
+  }
+}
+
+function resetPasswordSuccess() {
+  return {
+    type: types.RESET_PASSWORD_SUCCESS
+  }
+}
+
 function loginInProcess(bool) {
   return {
     type: types.LOGIN_IN_PROCESS,
@@ -155,6 +175,12 @@ export function resetRegisterSuccess() {
   }
 }
 
+export function resetResetPasswordSuccess() {
+  return {
+    type: types.RESET_RESET_PASSWORD_SUCCESS
+  }
+}
+
 export function checkLogin() {
   return (dispatch) => {
     const jwt = localStorage.getItem('jwt');
@@ -231,6 +257,54 @@ export function register(email, firstName, lastName, phone, password, confirmPas
       .finally(() => {
         dispatch(registerError(''));
         dispatch(registerInProcess(false));
+      });
+  }
+}
+
+export function resetPassword(password, confirmPassword, token) {
+  return (dispatch) => {
+    dispatch(resetPasswordError(''));
+    dispatch(resetPasswordInProcess(true));
+
+    const url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/reset_password`;
+    const data = {
+      invitation_token: token,
+      user: {
+        password_confirm: confirmPassword,
+        password
+      }
+    };
+
+    axios.post(url, data)
+      .then((resp) => {
+        dispatch(resetPasswordSuccess());
+
+        const registrationEvent = {
+          reset_password_status: 'Password Reset Successful',
+          reset_password_date: new Date().toString().split(' ').splice(1, 4).join(' ')
+        };
+
+        dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent));
+
+        /*-- Needed for Woopra Trigger event --*/
+        resetPasswordEvent.reset_password_status = 'Password Reset Completed';
+        setInterval(dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent)), 1000);
+      })
+      .catch((error) => {
+        let errMessage = 'Error resetting your password. Please try again later';
+        if (error.response && error.response.data && error.response.data.errors) {
+          if (error.response.data.errors.password) {
+            errMessage = error.response.data.errors.password;
+          }
+          else if (error.response.data.errors.token) {
+            errMessage = 'Invalid request';
+          }
+        }
+        dispatch(resetPasswordError(errMessage));
+      })
+      .finally(() => {
+        dispatch(resetPasswordError(''));
+        dispatch(resetPasswordInProcess(false));
       });
   }
 }

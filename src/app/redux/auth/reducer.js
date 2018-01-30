@@ -33,6 +33,26 @@ const auth = (state = initialState, action) => {
         ...state,
         registerSuccess: false
       }
+      case types.RESET_PASSWORD_IN_PROCESS:
+        return {
+          ...state,
+          resetPasswordInProcess: action.resetPasswordInProcess
+        }
+      case types.RESET_PASSWORD_ERROR:
+        return {
+          ...state,
+          resetPasswordError: action.resetPasswordError
+        }
+      case types.RESET_PASSWORD_SUCCESS:
+        return {
+          ...state,
+          resetPasswordSuccess: true
+        }
+        case types.RESET_RESET_PASSWORD_SUCCESS:
+          return {
+            ...state,
+            resetPasswordSuccess: false
+          }
     case types.LOGIN_IN_PROCESS:
       return {
         ...state,

@@ -8,7 +8,7 @@ import axios from 'axios';
 
 import logoFull from '../../assets/img/logo-full.png';
 
-import { getPasswordRequest, register } from '../redux/auth/actions';
+import { getPasswordRequest, resetPassword } from '../redux/auth/actions';
 import SignInLink from '../components/navigation/SignInLink';
 
 const FormItem = Form.Item;
@@ -27,14 +27,14 @@ class ResetPassword extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.registerSuccess && this.props.registerSuccess !== nextProps.registerSuccess) {
+    if (nextProps.resetPasswordSuccess && this.props.resetPasswordSuccess !== nextProps.resetPasswordSuccess) {
       message.success('Registration complete! Please log in.');
       this.props.history.push('/login');
     }
 
-    if (nextProps.registerError && this.props.registerError !== nextProps.registerError) {
-      message.error(nextProps.registerError);
-      if (nextProps.registerError === 'Invalid invitation') {
+    if (nextProps.resetPasswordError && this.props.resetPasswordError !== nextProps.resetPasswordError) {
+      message.error(nextProps.resetPasswordError);
+      if (nextProps.resetPasswordError === 'Invalid request') {
         this.props.history.push('/login');
       }
     }
@@ -49,7 +49,7 @@ class ResetPassword extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.register(values.email, values.firstName, values.lastName, values.phone, values.password, values.confirmPassword, this.props.match.params.token);
+        this.props.resetPassword(values.password, values.confirmPassword, this.props.match.params.token);
       }
 
     });
@@ -90,50 +90,15 @@ class ResetPassword extends Component {
             <Row type='flex' justify='center' align='middle'>
               <Col xs={{span: 24}} sm={{span: 12}} style={styles.leftContainer}>
                 <Row type='flex' justify='center' align='top'>
-                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}} style={styles.registerFormHeadText}>
-                    <h1>Sign Up</h1>
+                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}} style={styles.resetPasswordFormHeadText}>
+                    <h1>Reset Your Password</h1>
                     {/* <p style={styles.signInLinkCaption}>Already have an account?&nbsp;<SignInLink /></p> */}
-                    <p style={{color: 'red'}}>{this.props.registerError}</p>
+                    <p style={{color: 'red'}}>{this.props.resetPasswordError}</p>
                   </Col>
                 </Row>
                 <Row type='flex' justify='center' align='middle'>
                   <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}}>
-                    <Form onSubmit={this.handleSubmit} className='register-form'>
-                      <FormItem label='Email Address' hasFeedback>
-                        {getFieldDecorator('email', {
-                          initialValue: this.props.invitation ? this.props.invitation.email : ''
-                        })(
-                          <Input onBlur={this.validateStatus} readOnly />
-                        )}
-                      </FormItem>
-                      <FormItem label='First Name' hasFeedback>
-                        {getFieldDecorator('firstName', {
-                          rules: [
-                            {required: true, message: 'Please enter your first name'}
-                          ],
-                        })(
-                          <Input onBlur={this.validateStatus} />
-                        )}
-                      </FormItem>
-                      <FormItem label='Last Name' hasFeedback>
-                        {getFieldDecorator('lastName', {
-                          rules: [
-                            {required: true, message: 'Please enter your last name'}
-                          ],
-                        })(
-                          <Input onBlur={this.validateStatus} />
-                        )}
-                      </FormItem>
-                      <FormItem label='Phone' hasFeedback>
-                        {getFieldDecorator('phone', {
-                          rules: [
-                            {required: true, message: 'Please enter your phone number'}
-                          ],
-                        })(
-                          <Input onBlur={this.validateStatus} />
-                        )}
-                        <div style={styles.phoneCaption}>Standard call, messaging or data rates may apply</div>
-                      </FormItem>
+                    <Form onSubmit={this.handleSubmit} className='resetPassword-form'>
                       <FormItem label='Password' hasFeedback>
                         {getFieldDecorator('password', {
                           rules: [
@@ -155,19 +120,10 @@ class ResetPassword extends Component {
                         )}
                       </FormItem>
                       <FormItem>
-                        <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.registerInProcess}>
-                          <Icon type={this.props.registerInProcess ? 'loading' : 'lock'} style={styles.font13} />
+                        <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.resetPasswordInProcess}>
+                          <Icon type={this.props.resetPasswordInProcess ? 'loading' : 'lock'} style={styles.font13} />
                           &nbsp;Sign Up
                         </Button>
-                      </FormItem>
-                      <FormItem>
-                        {getFieldDecorator('termsOfUse', {
-                          rules: [
-                            {required: true, message: 'Please agree to our terms of use'}
-                          ]
-                        })(
-                        <Checkbox>By clicking Sign Up, you acknowledge you have read and agree to the <a href='https://www.gorog.co/tc.html' target='_blank'>Terms of Use</a>.</Checkbox>
-                        )}
                       </FormItem>
                     </Form>
                   </Col>
@@ -226,7 +182,7 @@ const styles = {
   signUpBtn: {
     backgroundColor: 'green'
   },
-  registerFormHeadText: {
+  resetPasswordFormHeadText: {
     marginTop: 30,
     marginBottom: 10
   },
@@ -257,21 +213,21 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    invitation: state.auth.invitation,
+    resetPassword: state.auth.resetPassword,
     getPasswordRequestInProcess: state.auth.getPasswordRequestInProcess,
     getPasswordRequestError: state.auth.getPasswordRequestError,
-    registerInProcess: state.auth.registerInProcess,
-    registerError: state.auth.registerError,
-    registerSuccess: state.auth.registerSuccess
+    resetPasswordInProcess: state.auth.resetPasswordInProcess,
+    resetPasswordError: state.auth.resetPasswordError,
+    resetPasswordSuccess: state.auth.resetPasswordSuccess
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getPasswordRequest: (token) => dispatch(getPasswordRequest(token)),
-    register: (email, firstName, lastName, phone, password, passwordConfirm, token) => dispatch(register(email, firstName, lastName, phone, password, passwordConfirm, token))
+    resetPassword: (password, passwordConfirm, token) => dispatch(resetPassword(password, passwordConfirm, token))
   }
 }
 
-const WrappedRegisterForm = Form.create()(Register);
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WrappedRegisterForm));
+const WrappedResetPasswordForm = Form.create()(ResetPassword);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WrappedResetPasswordForm));

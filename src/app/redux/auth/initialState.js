@@ -4,6 +4,8 @@ export default {
   loginError: false,
   registerInProcess: false,
   registerError: false,
+  resetPasswordInProcess: false,
+  resetPasswordError: false,
   sendInvitationInProcess: false,
   sendInvitationSuccess: false,
   sendInvitationError: '',

@@ -49,7 +49,7 @@ class Register extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.register(values.email, values.firstName, values.lastName, values.phone, values.password, values.confirmPassword, values.termsOfUse, this.props.match.params.token);
+        this.props.register(values.email, values.firstName, values.lastName, values.phone, values.password, values.confirmPassword, this.props.match.params.token);
       }
 
     });

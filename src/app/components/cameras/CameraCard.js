@@ -9,7 +9,7 @@ import EditCamera from '../cameras/EditCamera';
 import { deleteCamera } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
-import { registerCamera } from '../../redux/alerts/actions'
+import { registerCamera } from '../../redux/alerts/actions';
 
 class CameraCard extends Component {
   deleteCamera = () => {
@@ -40,6 +40,15 @@ class CameraCard extends Component {
           <Row type='flex' justify='center'>
             <Col>{this.props.name}</Col>
           </Row>
+          <div style={styles.refreshImage}>
+             <Icon type="loading-3-quarters" />
+            <span style={styles.alertModal}>
+            <AddAlertModal data={this.props}/>
+            </span>
+          </div>
+          <div>
+
+          </div>
           <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
             <img src={this.props.image.original} style={styles.cameraCardImg} />
           </div>
@@ -47,13 +56,10 @@ class CameraCard extends Component {
             (<span></span>) :
 
             (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
-              <Col offset={1}>
-                <AddAlertModal data={this.props} />
-              </Col>
-              <Col span={2} offset={18}>
+              <Col span={2}>
                 <EditCamera data={this.props} />
               </Col>
-              <Col span={2} offset={2}>
+              <Col span={2} offset={20}>
                 <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
                   <Icon type='delete' />
                 </Popconfirm>
@@ -99,6 +105,13 @@ const styles = {
   },
   cameraCardButtons: {
     marginTop: 10
+  },
+  refreshImage: {
+    textAlign: 'right',
+    padding: '0 15px'
+  },
+  alertModal: {
+    float: 'left'
   }
 }
 const mapStateToProps = (state) => {

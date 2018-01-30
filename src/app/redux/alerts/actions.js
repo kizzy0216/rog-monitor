@@ -228,11 +228,9 @@ export function createAlert(alertCoordinates, alertType, cameraId, duration, dir
 
     axios.post(urlAlert, alertData, config)
       .then((resp) => {
-        console.log(resp);
         dispatch(createAlertSuccess(true));
       })
       .catch((error) => {
-        console.log(error);
         dispatch(createAlertError(true));
       })
       .finally(() => {
@@ -252,11 +250,9 @@ export function fetchPolygonAlert(cameraId) {
 
     axios.get(urlAlert, config)
       .then((resp) => {
-        console.log(resp);
         dispatch(fetchPolygonAlertSuccess(resp.data));
       })
       .catch((error) => {
-        console.log(error);
       })
       .finally(() => {
         dispatch(fetchPolygonAlertInProcess(false));
@@ -275,11 +271,9 @@ export function deletePolygonAlert(cameraId, alertId) {
 
     axios.delete(urlAlert, config)
       .then((resp) => {
-        console.log(resp);
         dispatch(deletePolygonAlertSuccess(true));
       })
       .catch((error) => {
-        console.log(error);
       })
       .finally(() => {
         dispatch(deletePolygonAlertInProcess(false));

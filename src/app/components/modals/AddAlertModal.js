@@ -180,16 +180,23 @@ class AddAlertModal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.polygonData !== nextProps.polygonData) {
+    if(this.props.polygonData !== undefined) {
+      if (this.props.polygonData.alerts.length !== nextProps.polygonData.alerts.length) {
+        this.setState({canvasMode: true});
+      }
+      else if (nextProps.deleteAlertSuccess !== this.props.deleteAlertSuccess && this.alertDetails['id'] !== undefined) {
+        this.setState({canvasMode: false});
+        this.props.fetchPolygonAlert(this.alertDetails['id']);
+        this.setState({deleteButton: false});
+      }
+      else if (nextProps.createAlertSuccess !== this.props.createAlertSuccess && this.alertDetails['id'] !== undefined) {
+        this.setState({canvasMode: false});
+        this.props.fetchPolygonAlert(this.alertDetails['id']);
+        this.setState({saveCancel: false});
+      }
+    }
+    else if (this.props.polygonData !== nextProps.polygonData){
       this.setState({canvasMode: true});
-    }
-    if (nextProps.deleteAlertSuccess !== this.props.deleteAlertSuccess) {
-      this.setState({canvasMode: false});
-      this.setState({deleteButton: false});
-      this.props.fetchPolygonAlert(this.props.data.id);
-    }
-    if (nextProps.createAlertSuccess !== this.props.createAlertSuccess) {
-      this.setState({saveCancel: false});
     }
   }
 
@@ -197,9 +204,6 @@ class AddAlertModal extends Component {
     this.setState({visible: true});
     this.setState({saveCancel: false});
     this.setState({canvasMode: !this.state.canvasMode});
-    console.log(this.state.visible);
-    console.log(this.state.saveCancel);
-    console.log(this.state.canvasMode);
     this.fetchAlerts(true);
   };
 
@@ -263,6 +267,7 @@ class AddAlertModal extends Component {
     if (event === 'save') {
       if (this.alertDetails.polygonPoints.length !== 0) {
         this.alertDetails.currentAlertType = '';
+        this.alertDetails['id'] = this.props.data.id;
 
         switch (this.state.alertType) {
           case 'RA':
@@ -303,6 +308,7 @@ class AddAlertModal extends Component {
 
   deleteAlert = () => {
     if (this.alertDetails.currentAlertId !== 0 && this.alertDetails.currentAlertType !== '') {
+      this.alertDetails['id'] = this.props.data.id;
       this.props.deletePolygonAlert(this.props.data.id, this.alertDetails.currentAlertId);
       this.alertDetails.currentAlertId = 0;
       this.alertDetails.currentAlertType = '';
@@ -319,7 +325,7 @@ class AddAlertModal extends Component {
   render() {
     return (
       <div style={styles.form}>
-        <Icon type='eye' onClick={this.showModal} style={styles.editCamera}/>
+        <Icon type='eye' onClick={this.showModal}/>
         <AddAlertForm
           ref={(form) => this.form = form}
           visible={this.state.visible}
@@ -364,7 +370,7 @@ const styles = {
     textAlign: 'center'
   },
   editCamera: {
-    float: 'right',
+    float: 'left',
     fontSize: 18
   },
   image: {

@@ -268,8 +268,9 @@ export function resetPassword(password, confirmPassword, token) {
 
     const url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/reset_password`;
     const data = {
-      invitation_token: token,
+      password_reset_token: token,
       user: {
+        // id: id, we need to get the user id here
         password_confirm: confirmPassword,
         password
       }

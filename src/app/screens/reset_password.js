@@ -28,7 +28,7 @@ class ResetPassword extends Component {
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.resetPasswordSuccess && this.props.resetPasswordSuccess !== nextProps.resetPasswordSuccess) {
-      message.success('Registration complete! Please log in.');
+      message.success('Password reset complete! Please log in.');
       this.props.history.push('/login');
     }
 

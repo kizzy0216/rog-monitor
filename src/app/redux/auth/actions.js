@@ -270,7 +270,6 @@ export function resetPassword(password, confirmPassword, token) {
     const data = {
       password_reset_token: token,
       user: {
-        // id: id, we need to get the user id here
         password_confirm: confirmPassword,
         password
       }

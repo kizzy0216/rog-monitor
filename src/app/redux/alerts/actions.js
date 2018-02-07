@@ -187,15 +187,15 @@ export function fetchAlerts(user) {
   }
 }
 
-export function deleteAlert(user, alertId) {
+export function deleteAlert(user, alertId, cameraId) {
   return (dispatch) => {
     dispatch(deleteInProcess(true));
     dispatch(deleteError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/alerts`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/cameras/${cameraId}/alerts/${alertId}`;
     let data = {alert: {id: alertId, is_valid: false}};
     let config = {headers: {Authorization: user.jwt}};
-    axios.delete(url, data, config)
+    axios.delete(url, config)
       .then(response => {
         dispatch(deleteSuccess(alertId));
       })

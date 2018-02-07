@@ -28,8 +28,9 @@ class Alerts extends Component {
 
   clearAlerts = () => {
     this.props.actions.clearAlerts();
+    console.log(alert);
     this.props.alerts.forEach(alert => {
-      this.props.actions.deleteAlert(this.props.user, alert.id);
+      this.props.actions.deleteAlert(this.props.user, alert.id, alert.camera.id);
     });
   }
 

@@ -22,6 +22,7 @@ class _AlertCard extends Component {
   }
 
   deleteAlert = () => {
+    console.log(this.props);
     if (!this.props.deleteInProcess) {
       this.props.deleteAlert(this.props.user, this.props.id);
     }

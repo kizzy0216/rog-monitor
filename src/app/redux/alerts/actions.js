@@ -187,7 +187,8 @@ export function fetchAlerts(user) {
   }
 }
 
-export function deleteAlert(user, alertId, cameraId) {
+export function deleteAlert(user, alertId) {
+  console.log("User Information: " + user);
   return (dispatch) => {
     dispatch(deleteInProcess(true));
     dispatch(deleteError(''));

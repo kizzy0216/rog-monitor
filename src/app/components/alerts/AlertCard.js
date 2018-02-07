@@ -23,14 +23,11 @@ class _AlertCard extends Component {
 
   deleteAlert = () => {
     if (!this.props.deleteInProcess) {
-      console.log("hello");
-      console.log(this.props);
       this.props.deleteAlert(this.props.user, this.props.id);
     }
   }
 
   render() {
-    console.log("hello this is the render");
     return (
       <Card>
         <div style={styles.alertCardImgContainer} onClick={() => this.playAlertVideo()}>

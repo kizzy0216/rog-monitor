@@ -192,7 +192,7 @@ export function deleteAlert(user, alertId) {
     dispatch(deleteInProcess(true));
     dispatch(deleteError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/alerts/${alertId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/me/alerts/${alertId}`;
     let config = {headers: {Authorization: user.jwt}};
     axios.delete(url, config)
       .then(response => {

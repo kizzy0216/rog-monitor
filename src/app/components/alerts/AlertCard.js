@@ -30,6 +30,7 @@ class _AlertCard extends Component {
   }
 
   render() {
+    console.log("hello this is the render");
     return (
       <Card>
         <div style={styles.alertCardImgContainer} onClick={() => this.playAlertVideo()}>

@@ -119,7 +119,7 @@ class EditCamera extends Component {
   render() {
     return (
       <div>
-        <Icon type='tool' onClick={this.showModal} style={styles.editCamera}/>
+        <Icon type='setting' onClick={this.showModal} style={styles.editCamera}/>
         <CameraLicensesForm
           ref={(form) => this.form = form}
           visible={this.state.visible}

@@ -49,6 +49,62 @@ function deleteSuccess(alertId) {
   }
 }
 
+function createAlertInProcess(bool) {
+  return {
+    type: types.CREATE_ALERT_IN_PROCESS,
+   bool
+  }
+}
+
+function createAlertError(bool) {
+  return {
+    type: types.CREATE_ALERT_ERROR,
+    createAlertError: bool
+  }
+}
+
+function createAlertSuccess(bool) {
+  return {
+    type: types.CREATE_ALERT_SUCCESS,
+    createAlertSuccess: bool
+  }
+}
+
+function fetchPolygonAlertSuccess(polygonData) {
+  return{
+    type: types.FETCH_POLYGON_ALERT_SUCCESS,
+    polygonData
+  }
+}
+
+function fetchPolygonAlertInSuccess(bool) {
+  return{
+    type: types.FETCH_POLYGON_ALERT_IN_SUCCESS,
+    bool
+  }
+}
+
+function fetchPolygonAlertInProcess(bool) {
+  return{
+    type: types.FETCH_POLYGON_ALERT_IN_PROCESS,
+    bool
+  }
+}
+
+function deletePolygonAlertSuccess(bool) {
+  return {
+    type: types.DELETE_POLYGON_ALERT_SUCCESS,
+    bool
+  }
+}
+
+function deletePolygonAlertInProcess(bool) {
+  return {
+    type: types.DELETE_POLYGON_ALERT_IN_PROCESS,
+    bool
+  }
+}
+
 export function mergeNewAlerts() {
   return {
     type: types.MERGE_NEW_ALERTS
@@ -114,7 +170,7 @@ export function fetchAlerts(user) {
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
-    
+
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/alerts`;
     let config = {headers: {Authorization: user.jwt}}
     axios.get(url, config)
@@ -136,10 +192,9 @@ export function deleteAlert(user, alertId) {
     dispatch(deleteInProcess(true));
     dispatch(deleteError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/alerts`;
-    let data = {alert: {id: alertId, is_valid: false}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/alerts/${alertId}`;
     let config = {headers: {Authorization: user.jwt}};
-    axios.patch(url, data, config)
+    axios.delete(url, config)
       .then(response => {
         dispatch(deleteSuccess(alertId));
       })
@@ -156,4 +211,119 @@ export function clearAlerts() {
   return (dispatch) => {
     dispatch(clearAllAlerts());
   }
+}
+
+
+export function createAlert(alertCoordinates, alertType, cameraId, duration, direction) {
+  return (dispatch) => {
+    dispatch(createAlertInProcess(true));
+    dispatch(createAlertError(false));
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
+
+    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/` + cameraId + `/alerts`;
+    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+
+    let alertData = {type: alertType, points: alertCoordinates};
+    if(duration !== undefined){
+      alertData['duration'] = duration;
+    }
+    if(direction !== undefined){
+      alertData['direction'] = direction;
+    }
+
+
+    axios.post(urlAlert, alertData, config)
+      .then((resp) => {
+        dispatch(createAlertSuccess(true));
+      })
+      .catch((error) => {
+        dispatch(createAlertError(true));
+      })
+      .finally(() => {
+        dispatch(createAlertSuccess(false));
+        dispatch(createAlertInProcess(false));
+      })
+  }
+}
+
+export function fetchPolygonAlert(cameraId) {
+  return (dispatch) => {
+    dispatch(fetchPolygonAlertInProcess(true));
+    dispatch(fetchPolygonAlertInSuccess(false));
+
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
+
+    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/` + cameraId + `/alerts`;
+    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+
+    axios.get(urlAlert, config)
+      .then((resp) => {
+        dispatch(fetchPolygonAlertSuccess(resp.data));
+        dispatch(fetchPolygonAlertInSuccess(true));
+      })
+      .catch((error) => {
+      })
+      .finally(() => {
+        dispatch(fetchPolygonAlertInProcess(false));
+      })
+  }
+}
+
+export function deletePolygonAlert(cameraId, alertId) {
+  return (dispatch) => {
+    dispatch(deletePolygonAlertInProcess(true));
+
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
+
+    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/` + cameraId + `/alerts/` + alertId;
+    let config = {headers: {Authorization: 'JWT' + ' ' + bvc_jwt}};
+
+    axios.delete(urlAlert, config)
+      .then((resp) => {
+        dispatch(deletePolygonAlertSuccess(true));
+      })
+      .catch((error) => {
+      })
+      .finally(() => {
+        dispatch(deletePolygonAlertInProcess(false));
+        dispatch(deletePolygonAlertSuccess(false));
+      })
+  }
+}
+
+  export function registerCamera(userId, cameraDetails) {
+    return (dispatch) => {
+      // dispatch(registerCameraInProcess(true));
+
+      const bvc_jwt = localStorage.getItem('bvc_jwt');
+
+      let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/user/` + userId + `/cameras`;
+      let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+      let cameraData = [];
+      for(let i = 0; i < cameraDetails.length; i++) {
+        cameraData.push({id: cameraDetails[i].id, name: cameraDetails[i].name, url: cameraDetails[i].rtspUrl, enabled: true});
+      }
+      axios.get(urlAlert, config)
+
+        .then((resp) => {
+
+          // Issue with BVC API. It needs all the camera ids to be sent again, else it would delete the not sent ones.
+          for(let i = 0; i < resp.data.cameras.length; i++ ) {
+            if (resp.data.cameras[i].id !== cameraData[i].id) {
+              axios.post(urlAlert, cameraData, config)
+                .then((resp) => {
+                  // dispatch(registerCameraSuccess(true));
+                })
+                .catch((error) => {
+                  // dispatch(registerCameraSuccess(true));
+                })
+
+
+            }
+          }
+
+        })
+        .catch((error) => {
+        })
+    }
 }

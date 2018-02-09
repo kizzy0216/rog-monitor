@@ -5,6 +5,7 @@ import { Button, Modal, Form, Input, Icon, message } from 'antd';
 import RtspStream from '../video/RtspStream';
 
 import { addLocationCamera } from '../../redux/locations/actions';
+import { registerCamera } from '../../redux/alerts/actions';
 
 const FormItem = Form.Item;
 
@@ -91,6 +92,10 @@ class AddCameraModal extends Component {
       this.resetFields();
       this.props.toggleAddCameraModalVisibility();
     }
+    if(nextProps.addedCameraData !== '' && nextProps.addedCameraData !== this.props.addedCameraData) {
+      this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data.data);
+    }
+
   };
 
   resetFields = () => {
@@ -176,13 +181,15 @@ const mapStateToProps = (state) => {
   return {
     addLocationCameraError: state.locations.addLocationCameraError,
     addLocationCameraSuccess: state.locations.addLocationCameraSuccess,
-    addLocationCameraInProcess: state.locations.addLocationCameraInProcess
+    addLocationCameraInProcess: state.locations.addLocationCameraInProcess,
+    addedCameraData: state.locations.addedCameraData
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addLocationCamera: (user, location, name, rtspUrl, username, password) => dispatch(addLocationCamera(user, location, name, rtspUrl, username, password))
+    addLocationCamera: (user, location, name, rtspUrl, username, password) => dispatch(addLocationCamera(user, location, name, rtspUrl, username, password)),
+    registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
   }
 }
 

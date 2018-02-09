@@ -99,6 +99,13 @@ function addLocationCameraSuccess(bool) {
   }
 }
 
+function addedCameraData(cameraData) {
+  return {
+    type: types.ADD_CAMERA_DATA,
+    cameraData
+  }
+}
+
 function shareLocationInProcess(bool) {
   return {
     type: types.SHARE_LOCATION_IN_PROCESS,
@@ -233,6 +240,7 @@ export function addLocationCamera(user, location, name, rtspUrl, username, passw
         dispatch(fetchLocations(user));
         dispatch(addLocationCameraSuccess(true));
         dispatch(addLocationCameraSuccess(false));
+        dispatch(addedCameraData(response));
 
         cameraAddEvent.status = 'Add Camera Success';
         dispatch(trackEventAnalytics('add camera', cameraAddEvent));

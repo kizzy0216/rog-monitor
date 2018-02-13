@@ -539,11 +539,11 @@ export function getPasswordResetRequest(token) {
         dispatch(getPasswordResetRequestSuccess(resp.data.data));
       })
       .catch(error => {
-        let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
         if (error.response.status === 404) {
-          errMessage = 'Invalid request';
+          let errMessage = 'Invalid request: 404';
+        } else {
+          let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
         }
-
         dispatch(getPasswordResetRequestError(errMessage));
       })
       .finally(() => {

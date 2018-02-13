@@ -19,5 +19,6 @@ export default {
   removeGuardError: '',
   removeLocationInProcess: false,
   removeLocationError: '',
-  removeLocationSuccess: false
+  removeLocationSuccess: false,
+  addedCameraData: ''
 }

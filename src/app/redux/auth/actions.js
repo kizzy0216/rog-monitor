@@ -549,7 +549,7 @@ export function getPasswordResetRequest(token) {
       .finally(() => {
         dispatch(getPasswordResetRequestError(''));
         dispatch(getPasswordResetRequestInProcess(false));
-      }
+      })
   }
 }
 

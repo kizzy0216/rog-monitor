@@ -25,7 +25,7 @@ export default class LoginRouter extends Component {
             <Switch>
               <Route exact path='/login' component={Login} />
               <Route exact path='/register/:token' component={Register} />
-              <Route exact path='/reset_password/:token' component={ResetPassword} />
+              <Route exact path='/password_reset_form/:token' component={ResetPassword} />
 
               <Redirect to='/login' />
             </Switch>

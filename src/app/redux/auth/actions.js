@@ -514,10 +514,7 @@ export function sendPasswordResetRequestEmail(email) {
         dispatch(sendPasswordResetRequestSuccess(false));
       })
       .catch(error => {
-        let errMessage = 'Error sending request. Please try again later.';
-        if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.email) {
-          errMessage = 'A request has already been sent to this email.';
-        }
+        let errMessage = 'Sorry, we can\'t find that email.';
 
         dispatch(sendPasswordResetRequestError(errMessage));
       })
@@ -533,16 +530,16 @@ export function getPasswordResetRequest(token) {
     dispatch(getPasswordResetRequestError(''));
     dispatch(getPasswordResetRequestInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset/${token}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset_form/${token}`;
     axios.get(url)
       .then(resp => {
         dispatch(getPasswordResetRequestSuccess(resp.data.data));
       })
       .catch(error => {
+        console.log(error);
+        let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
         if (error.response.status === 404) {
           let errMessage = 'Invalid request: 404';
-        } else {
-          let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
         }
         dispatch(getPasswordResetRequestError(errMessage));
       })

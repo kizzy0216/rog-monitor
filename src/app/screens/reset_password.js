@@ -8,7 +8,7 @@ import axios from 'axios';
 
 import logoFull from '../../assets/img/logo-full.png';
 
-import { getPasswordRequest, resetPassword } from '../redux/auth/actions';
+import { getPasswordResetRequest, resetPassword } from '../redux/auth/actions';
 import SignInLink from '../components/navigation/SignInLink';
 
 const FormItem = Form.Item;
@@ -23,7 +23,7 @@ class ResetPassword extends Component {
   }
 
   componentWillMount = () => {
-    this.props.getPasswordRequest(this.props.match.params.token);
+    this.props.getPasswordResetRequest(this.props.match.params.token);
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -39,8 +39,8 @@ class ResetPassword extends Component {
       }
     }
 
-    if (nextProps.getPasswordRequestError && this.props.getPasswordRequestError !== nextProps.getPasswordRequestError) {
-      message.error(nextProps.getPasswordRequestError);
+    if (nextProps.getPasswordResetRequestError && this.props.getPasswordResetRequestError !== nextProps.getPasswordResetRequestError) {
+      message.error(nextProps.getPasswordResetRequestError);
       this.props.history.push('/login');
     }
   }
@@ -99,7 +99,7 @@ class ResetPassword extends Component {
                 <Row type='flex' justify='center' align='middle'>
                   <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}}>
                     <Form onSubmit={this.handleSubmit} className='resetPassword-form'>
-                      <FormItem label='Password' hasFeedback>
+                      <FormItem label='New Password' hasFeedback>
                         {getFieldDecorator('password', {
                           rules: [
                             {required: true, message: 'Please choose a password'},
@@ -109,7 +109,7 @@ class ResetPassword extends Component {
                           <Input type='password' onBlur={this.validateStatus} />
                         )}
                       </FormItem>
-                      <FormItem label="Confirm Password" hasFeedback>
+                      <FormItem label="Confirm New Password" hasFeedback>
                         {getFieldDecorator('confirmPassword', {
                           rules: [
                             {required: true, message: 'Please confirm your password'},
@@ -122,7 +122,7 @@ class ResetPassword extends Component {
                       <FormItem>
                         <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.resetPasswordInProcess}>
                           <Icon type={this.props.resetPasswordInProcess ? 'loading' : 'lock'} style={styles.font13} />
-                          &nbsp;Sign Up
+                          &nbsp;Reset Password
                         </Button>
                       </FormItem>
                     </Form>
@@ -214,8 +214,8 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     resetPassword: state.auth.resetPassword,
-    getPasswordRequestInProcess: state.auth.getPasswordRequestInProcess,
-    getPasswordRequestError: state.auth.getPasswordRequestError,
+    getPasswordResetRequestInProcess: state.auth.getPasswordResetRequestInProcess,
+    getPasswordResetRequestError: state.auth.getPasswordResetRequestError,
     resetPasswordInProcess: state.auth.resetPasswordInProcess,
     resetPasswordError: state.auth.resetPasswordError,
     resetPasswordSuccess: state.auth.resetPasswordSuccess
@@ -224,7 +224,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getPasswordRequest: (token) => dispatch(getPasswordRequest(token)),
+    getPasswordResetRequest: (token) => dispatch(getPasswordResetRequest(token)),
     resetPassword: (password, passwordConfirm, token) => dispatch(resetPassword(password, passwordConfirm, token))
   }
 }

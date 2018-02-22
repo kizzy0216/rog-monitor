@@ -42,14 +42,14 @@ const PasswordResetForm = Form.create()(
 
 class RequestPasswordResetModal extends Component {
   componentWillReceiveProps(nextProps) {
-    if (nextProps.sendPasswordResetSuccess && this.props.sendPasswordResetSuccess !== nextProps.sendPasswordResetSuccess) {
+    if (nextProps.sendPasswordResetRequestSuccess && this.props.sendPasswordResetRequestSuccess !== nextProps.sendPasswordResetRequestSuccess) {
       message.success('Password reset request sent. Please check your email.');
       this.form.resetFields();
       this.props.toggleRequestPasswordResetModalVisibility();
     }
 
-    if (nextProps.sendPasswordResetError && this.props.sendPasswordResetError !== nextProps.sendPasswordResetError) {
-      message.error(nextProps.sendPasswordResetError);
+    if (nextProps.sendPasswordResetRequestError && this.props.sendPasswordResetRequestError !== nextProps.sendPasswordResetRequestError) {
+      message.error(nextProps.sendPasswordResetRequestError);
     }
   }
 
@@ -99,8 +99,8 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     sendPasswordResetInProcess: state.auth.sendPasswordResetInProcess,
-    sendPasswordResetError: state.auth.sendPasswordResetError,
-    sendPasswordResetSuccess: state.auth.sendPasswordResetSuccess
+    sendPasswordResetRequestError: state.auth.sendPasswordResetRequestError,
+    sendPasswordResetRequestSuccess: state.auth.sendPasswordResetRequestSuccess
   }
 }
 

@@ -9,6 +9,7 @@ import { login } from '../redux/auth/actions';
 import RegisterBtn from '../components/navigation/RegisterBtn';
 import RequestInviteModal from '../components/modals/RequestInviteModal';
 import { authenticateBVCServer } from '../redux/auth/actions';
+import RequestPasswordResetModal from '../components/modals/RequestPasswordResetModal';
 
 const FormItem = Form.Item;
 
@@ -17,7 +18,8 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      inviteModalVisible: false
+      inviteModalVisible: false,
+      requestPasswordResetModal: false
     }
   }
 
@@ -34,6 +36,10 @@ class Login extends Component {
 
   toggleInviteModalVisibility = () => {
     this.setState({inviteModalVisible: !this.state.inviteModalVisible});
+  }
+
+  toggleRequestPasswordResetModalVisibility = () => {
+    this.setState({requestPasswordResetModalVisible: !this.state.requestPasswordResetModalVisible});
   }
 
   render() {
@@ -140,8 +146,9 @@ class Login extends Component {
                       </p>
                     </div>
                     <div style={styles.forgotPassword}>
-                      <a href=''>I forgot my user ID or Password</a>
+                      <a href='javascript:;' onClick={this.toggleRequestPasswordResetModalVisibility}>I forgot my Password</a>
                     </div>
+                    <RequestPasswordResetModal visible={this.state.requestPasswordResetModalVisible} toggleRequestPasswordResetModalVisibility={this.toggleRequestPasswordResetModalVisibility.bind(this)} />
                   </Col>
                 </Row>
               </Col>

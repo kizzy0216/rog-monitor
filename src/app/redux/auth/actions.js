@@ -30,6 +30,26 @@ function registerSuccess() {
   }
 }
 
+function resetPasswordInProcess(bool) {
+  return {
+    type: types.RESET_PASSWORD_IN_PROCESS,
+    resetPasswordInProcess: bool
+  }
+}
+
+function resetPasswordError(error) {
+  return {
+    type: types.RESET_PASSWORD_ERROR,
+    resetPasswordError: error
+  }
+}
+
+function resetPasswordSuccess() {
+  return {
+    type: types.RESET_PASSWORD_SUCCESS
+  }
+}
+
 function loginInProcess(bool) {
   return {
     type: types.LOGIN_IN_PROCESS,
@@ -93,6 +113,48 @@ function getInvitationError(error) {
   }
 }
 
+function sendPasswordResetRequestInProcess(bool) {
+  return {
+    type: types.SEND_PASSWORD_RESET_REQUEST_IN_PROCESS,
+    sendPasswordResetRequestInProcess: bool
+  }
+}
+
+function sendPasswordResetRequestSuccess(bool) {
+  return {
+    type: types.SEND_PASSWORD_RESET_REQUEST_SUCCESS,
+    sendPasswordResetRequestSuccess: bool
+  }
+}
+
+function sendPasswordResetRequestError(error) {
+  return {
+    type: types.SEND_PASSWORD_RESET_REQUEST_ERROR,
+    sendPasswordResetRequestError: error
+  }
+}
+
+function getPasswordResetRequestInProcess(bool) {
+  return {
+    type: types.GET_PASSWORD_RESET_REQUEST_IN_PROCESS,
+    getPasswordResetRequestInProcess: bool
+  }
+}
+
+function getPasswordResetRequestSuccess(request) {
+  return {
+    type: types.GET_PASSWORD_RESET_REQUEST_SUCCESS,
+    request
+  }
+}
+
+function getPasswordResetRequestError(error) {
+  return {
+    type: types.GET_PASSWORD_RESET_REQUEST_ERROR,
+    getPasswordResetRequestError: error
+  }
+}
+
 function bvcAuthSuccess(token) {
   return {
     type: types.BVC_AUTH_SUCCESS,
@@ -131,6 +193,12 @@ export function logoutSuccess() {
 export function resetRegisterSuccess() {
   return {
     type: types.RESET_REGISTER_SUCCESS
+  }
+}
+
+export function resetResetPasswordSuccess() {
+  return {
+    type: types.RESET_RESET_PASSWORD_SUCCESS
   }
 }
 
@@ -210,6 +278,54 @@ export function register(email, firstName, lastName, phone, password, confirmPas
       .finally(() => {
         dispatch(registerError(''));
         dispatch(registerInProcess(false));
+      });
+  }
+}
+
+export function resetPassword(password, confirmPassword, token) {
+  return (dispatch) => {
+    dispatch(resetPasswordError(''));
+    dispatch(resetPasswordInProcess(true));
+
+    const url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/reset_password`;
+    const data = {
+      password_reset_token: token,
+      user: {
+        password_confirm: confirmPassword,
+        password
+      }
+    };
+
+    axios.post(url, data)
+      .then((resp) => {
+        dispatch(resetPasswordSuccess());
+
+        const registrationEvent = {
+          reset_password_status: 'Password Reset Successful',
+          reset_password_date: new Date().toString().split(' ').splice(1, 4).join(' ')
+        };
+
+        dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent));
+
+        /*-- Needed for Woopra Trigger event --*/
+        resetPasswordEvent.reset_password_status = 'Password Reset Completed';
+        setInterval(dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent)), 1000);
+      })
+      .catch((error) => {
+        let errMessage = 'Error resetting your password. Please try again later';
+        if (error.response && error.response.data && error.response.data.errors) {
+          if (error.response.data.errors.password) {
+            errMessage = error.response.data.errors.password;
+          }
+          else if (error.response.data.errors.token) {
+            errMessage = 'Invalid request';
+          }
+        }
+        dispatch(resetPasswordError(errMessage));
+      })
+      .finally(() => {
+        dispatch(resetPasswordError(''));
+        dispatch(resetPasswordInProcess(false));
       });
   }
 }
@@ -370,6 +486,70 @@ export function getInvitation(token) {
   }
 }
 
+export function sendPasswordResetRequestEmail(email) {
+  return (dispatch) => {
+    dispatch(sendPasswordResetRequestError(''));
+    dispatch(sendPasswordResetRequestInProcess(true));
+
+    const passwordResetRequestEmail = email.trim();
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset_request`;
+    let data = {request: {email: passwordResetRequestEmail}};
+
+    const passwordResetRequestEvent = {
+      email: passwordResetRequestEmail,
+      password_reset_request_status: 'PasswordResetRequest Sent',
+      password_reset_request_date: new Date().toString().split(' ').splice(1, 4).join(' ')
+    };
+
+    dispatch(trackEventAnalytics('passwordResetRequest', passwordResetRequestEvent));
+
+
+    /*-- Needed for Woopra Trigger event --*/
+    passwordResetRequestEvent.invite_status = 'PasswordResetRequest Received';
+    setInterval(dispatch(trackEventAnalytics('passwordResetRequest', passwordResetRequestEvent)), 1000);
+
+    axios.post(url, data)
+      .then(resp => {
+        dispatch(sendPasswordResetRequestSuccess(true));
+        dispatch(sendPasswordResetRequestSuccess(false));
+      })
+      .catch(error => {
+        let errMessage = 'Sorry, we can\'t find that email.';
+
+        dispatch(sendPasswordResetRequestError(errMessage));
+      })
+      .finally(() => {
+        dispatch(sendPasswordResetRequestError(''));
+        dispatch(sendPasswordResetRequestInProcess(false));
+      })
+  }
+}
+
+export function getPasswordResetRequest(token) {
+  return (dispatch) => {
+    dispatch(getPasswordResetRequestError(''));
+    dispatch(getPasswordResetRequestInProcess(true));
+
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset_form/${token}`;
+    axios.get(url)
+      .then(resp => {
+        dispatch(getPasswordResetRequestSuccess(resp.data.data));
+      })
+      .catch(error => {
+        console.log(error);
+        let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
+        if (error.response.status === 404) {
+          let errMessage = 'Invalid request: 404';
+        }
+        dispatch(getPasswordResetRequestError(errMessage));
+      })
+      .finally(() => {
+        dispatch(getPasswordResetRequestError(''));
+        dispatch(getPasswordResetRequestInProcess(false));
+      })
+  }
+}
+
 export function checkBVCAuthToken() {
   return (dispatch) => {
     const jwt = localStorage.getItem('bvc_jwt');
@@ -418,7 +598,6 @@ export function authenticateBVCServer() {
   }
 }
 
-
 export function initialiseAnalyticsEngine() {
   return (dispatch) => {
     // initialiseGoogleAnalytics();
@@ -465,4 +644,3 @@ function initialiseWoopraAnalytics() {
   });
   woopra.track();
 }
-

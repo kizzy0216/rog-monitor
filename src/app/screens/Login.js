@@ -47,6 +47,7 @@ class Login extends Component {
     return (
       <Layout>
         <Header style={styles.header}>
+          <Col xs={{span: 0}} sm={{span: 12}}><h3 style={styles.chromeText}>This web site requires the Google Chrome web browser.</h3></Col>
           <img style={styles.headerLogo} src={logoFull} height='50px'/>
         </Header>
         <Layout>
@@ -66,9 +67,6 @@ class Login extends Component {
                 </Row>
                 <Row type='flex' justify='center' align='bottom'>
                   <Col sm={{span: 24}} style={styles.downloadBtnContainer}>
-                    <Button type='primary' size={'large'} style={styles.downloadBtn}>
-                      <a href='https://www.gorog.co/download.html' target='_blank' style={{textDecoration: 'none'}}>Download it free</a>
-                    </Button>
                     <div style={styles.howItWorksLink}>
                       <a href='https://www.gorog.co/faststart.html' target="_blank">Learn how it works.</a>
                     </div>
@@ -172,6 +170,9 @@ const styles = {
   headerLogo: {
     float: 'right',
     marginTop: 8
+  },
+  chromeText: {
+    color: 'white'
   },
   content: {
     marginTop: 65,

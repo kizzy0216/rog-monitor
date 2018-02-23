@@ -5,7 +5,7 @@ import {
   Redirect,
   Switch
 } from 'react-router-dom';
-import { Layout } from 'antd';
+import { Layout, Row, Col } from 'antd';
 const { Header, Sider, Content } = Layout;
 
 import Hamburger from './Hamburger';
@@ -43,6 +43,7 @@ export default class AppRouter extends Component {
               collapsed={this.state.collapsed}
               toggleCollapsed={this.toggleCollapsed.bind(this)} />
             <NavigationMenu style={styles.menu}/>
+            <Col xs={{span: 0}} sm={{span: 12}} style={{float: 'right'}}><h3 style={styles.chromeText}>This web site requires the Google Chrome web browser.</h3></Col>
           </Header>
 
           <Sider collapsed={this.state.collapsed} collapsedWidth={0} style={styles.sider}>
@@ -74,6 +75,12 @@ const styles = {
     position: 'fixed',
     width: '100%',
     zIndex: 1 // Required for Content to scroll under Header
+  },
+  chromeText: {
+    color: 'white',
+    float: 'right',
+    marginTop: -55,
+    marginRight: 20
   },
   hamburger: {
     float: 'left',

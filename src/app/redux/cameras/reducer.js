@@ -26,24 +26,30 @@ const cameras = (state = initialState, action) => {
           ...state,
           authRtspUrl: action.authRtspUrl,
         }
-    
+
     case types.DELETE_CAMERA_ERROR:
         return {
           ...state,
           deleteCameraError: action.deleteCameraError
         }
-    
+
     case types.DELETE_CAMERA_IN_PROCESS:
         return {
           ...state,
           deleteCameraInProcess: action.deleteCameraInProcess
         }
-    
+
     case types.DELETE_CAMERA_SUCCESS:
         return {
           ...state,
           deleteCameraSuccess: action.deleteCameraSuccess
         }
+
+    case types.BVC_CAMERA_CONNECTION:
+      return {
+        ...state,
+        bvcCameraConnection: action.bvcCameraConnection
+      }
 
     default:
       return state;

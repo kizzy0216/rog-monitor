@@ -6,6 +6,7 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { trackEventAnalytics } from "../auth/actions";
+import {checkBvcCameraConnection} from "../cameras/actions";
 import { locale } from 'moment';
 
 function fetchInProcess(bool) {
@@ -244,6 +245,7 @@ export function addLocationCamera(user, location, name, rtspUrl, username, passw
 
         cameraAddEvent.status = 'Add Camera Success';
         dispatch(trackEventAnalytics('add camera', cameraAddEvent));
+        dispatch(checkBvcCameraConnection(user, response));
       })
       .catch((error) => {
         let errMessage = 'Error creating camera. Please try again later.';

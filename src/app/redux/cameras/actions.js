@@ -56,6 +56,13 @@ export function clearCameraData() {
   }
 }
 
+export function bvcCameraConnection(bool) {
+  return {
+    type: types.BVC_CAMERA_CONNECTION,
+    bvcCameraConnection: bool
+  }
+}
+
 export function fetchCameraAuthRtspUrl(user, cameraId) {
   return (dispatch) => {
     dispatch(fetchInProcess(true));
@@ -96,6 +103,34 @@ export function deleteCamera(user, cameraId) {
       .finally(() => {
         dispatch(deleteCameraError(''));
         dispatch(deleteCameraInProcess(false));
+      });
+  }
+}
+
+export function checkBvcCameraConnection(user, cameraData) {
+  return (dispatch) => {
+    cameraId = '';//get camera id here from cameraData
+    let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/connectedOnce`;
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
+    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+    axios.get(url, config)
+      .then((response) => {
+        // success action goes here
+        if (response.connectedOnce == true){
+          dispatch(bvcCameraConnection(true));
+        } else if (response.connectedOnce == false){
+          dispatch(bvcCameraConnection(false));
+          // check if timeout is up, if yes, delete camera, if no, recursivally call this function again to check bool again.
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        // call delete camera function here and display out error
+        dispatch(deleteCamera(user, cameraId));
+        dispatch(bvcCameraConnection(false));
+      })
+      .finally(() => {
+        // callback to end the check and display message that BVC failed to retrieve the connect after one minute.
       });
   }
 }

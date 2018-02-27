@@ -107,30 +107,38 @@ export function deleteCamera(user, cameraId) {
   }
 }
 
-export function checkBvcCameraConnection(user, cameraData) {
+export function checkBvcCameraConnection(user, cameraId) {
   return (dispatch) => {
-    cameraId = '';//get camera id here from cameraData
     let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/connectedOnce`;
     const bvc_jwt = localStorage.getItem('bvc_jwt');
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
-    axios.get(url, config)
+    let timeout = 30;
+    let checkBvc = setInterval(function(){
+      if (timeout <= 0){
+        clearInterval(checkBvc);
+      } else {
+        timeout -= 5;
+      }
+      axios.get(bvc_url, config)
       .then((response) => {
-        // success action goes here
-        if (response.connectedOnce == true){
-          dispatch(bvcCameraConnection(true));
-        } else if (response.connectedOnce == false){
-          dispatch(bvcCameraConnection(false));
-          // check if timeout is up, if yes, delete camera, if no, recursivally call this function again to check bool again.
-        }
+        console.log(response.data.value);
+        // if (response.data.value == true){
+        //   dispatch(bvcCameraConnection(true));
+        //   return;
+        // } else if (response.data.value == false){
+        //   dispatch(bvcCameraConnection(false));
+        //   if (timeout <= 0){
+        //     dispatch(deleteCamera(user, cameraId));
+        //   }
+        // }
       })
       .catch((error) => {
         console.log(error);
-        // call delete camera function here and display out error
-        dispatch(deleteCamera(user, cameraId));
-        dispatch(bvcCameraConnection(false));
+        // dispatch(bvcCameraConnection(false));
+        // if (timeout <= 0){
+        //   dispatch(deleteCamera(user, cameraId));
+        // }
       })
-      .finally(() => {
-        // callback to end the check and display message that BVC failed to retrieve the connect after one minute.
-      });
+    }, 5000, bvc_url, config);
   }
 }

@@ -245,7 +245,7 @@ export function addLocationCamera(user, location, name, rtspUrl, username, passw
 
         cameraAddEvent.status = 'Add Camera Success';
         dispatch(trackEventAnalytics('add camera', cameraAddEvent));
-        dispatch(checkBvcCameraConnection(user, response));
+        dispatch(checkBvcCameraConnection(user, response.data.data.id));
       })
       .catch((error) => {
         let errMessage = 'Error creating camera. Please try again later.';

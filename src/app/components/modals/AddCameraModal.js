@@ -92,10 +92,18 @@ class AddCameraModal extends Component {
       this.resetFields();
       this.props.toggleAddCameraModalVisibility();
     }
+    if (nextProps.addLocationCameraError !== '' && this.props.addLocationCameraError !== nextProps.addLocationCameraError) {
+      message.error(nextProps.addLocationCameraError);
+    }
     if(nextProps.addedCameraData !== '' && nextProps.addedCameraData !== this.props.addedCameraData) {
       this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data.data);
     }
-
+    if(nextProps.bvcCameraConnection && nextProps.bvcCameraConnection !== this.props.bvcCameraConnection){
+      message.success('Camera connected successfully!');
+    }
+    if(nextProps.bvcCameraConnectionFail && nextProps.bvcCameraConnectionFail !== this.props.bvcCameraConnectionFail){
+      message.error('Camera could not connect, deleting camera. Please try again.')
+    }
   };
 
   resetFields = () => {
@@ -182,7 +190,9 @@ const mapStateToProps = (state) => {
     addLocationCameraError: state.locations.addLocationCameraError,
     addLocationCameraSuccess: state.locations.addLocationCameraSuccess,
     addLocationCameraInProcess: state.locations.addLocationCameraInProcess,
-    addedCameraData: state.locations.addedCameraData
+    addedCameraData: state.locations.addedCameraData,
+    bvcCameraConnection: state.locations.bvcCameraConnection,
+    bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail
   }
 }
 

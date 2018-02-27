@@ -6,7 +6,7 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { trackEventAnalytics } from "../auth/actions";
-import {checkBvcCameraConnection} from "../cameras/actions";
+import {deleteCamera} from "../cameras/actions";
 import { locale } from 'moment';
 
 function fetchInProcess(bool) {
@@ -177,6 +177,20 @@ export function selectLocation(location) {
   }
 }
 
+export function bvcCameraConnection(bool) {
+  return {
+    type: types.BVC_CAMERA_CONNECTION,
+    bvcCameraConnection: bool
+  }
+}
+
+export function bvcCameraConnectionFail(bool) {
+  return {
+    type: types.BVC_CAMERA_CONNECTION_FAIL,
+    bvcCameraConnectionFail: bool
+  }
+}
+
 function parseLocations(locations, user) {
   locations = locations.map(location => {
     let myRole = location.guards.find(guard => guard.user.id == user.id).role;
@@ -266,6 +280,47 @@ export function addLocationCamera(user, location, name, rtspUrl, username, passw
         dispatch(addLocationCameraError(''));
         dispatch(addLocationCameraInProcess(false));
       });
+  }
+}
+
+export function checkBvcCameraConnection(user, cameraId) {
+  return (dispatch) => {
+    let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/connectedOnce`;
+    console.log(bvc_url);
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
+    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+    let timeout = 30;
+    let cameraDeleted = false
+    let checkBvc = setInterval(function(){
+      if (timeout <= 0){
+        clearInterval(checkBvc);
+      } else {
+        timeout -= 5;
+      }
+      axios.get(bvc_url, config)
+      .then((response) => {
+        console.log(response.data.value);
+        if (response.data.value == true){
+          dispatch(bvcCameraConnection(true));
+        } else if (timeout <= 0){
+          dispatch(bvcCameraConnectionFail(true));
+          if(cameraDeleted == false){
+            dispatch(deleteCamera(user, cameraId));
+            cameraDeleted = true;
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        if (timeout <= 0){
+          dispatch(bvcCameraConnectionFail(true));
+          if(cameraDeleted == false){
+            dispatch(deleteCamera(user, cameraId));
+            cameraDeleted = true;
+          }
+        }
+      })
+    }, 5000, bvc_url, config);
   }
 }
 

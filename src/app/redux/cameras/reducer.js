@@ -45,12 +45,6 @@ const cameras = (state = initialState, action) => {
           deleteCameraSuccess: action.deleteCameraSuccess
         }
 
-    case types.BVC_CAMERA_CONNECTION:
-      return {
-        ...state,
-        bvcCameraConnection: action.bvcCameraConnection
-      }
-
     default:
       return state;
   }

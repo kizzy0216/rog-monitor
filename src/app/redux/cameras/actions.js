@@ -56,13 +56,6 @@ export function clearCameraData() {
   }
 }
 
-export function bvcCameraConnection(bool) {
-  return {
-    type: types.BVC_CAMERA_CONNECTION,
-    bvcCameraConnection: bool
-  }
-}
-
 export function fetchCameraAuthRtspUrl(user, cameraId) {
   return (dispatch) => {
     dispatch(fetchInProcess(true));
@@ -104,41 +97,5 @@ export function deleteCamera(user, cameraId) {
         dispatch(deleteCameraError(''));
         dispatch(deleteCameraInProcess(false));
       });
-  }
-}
-
-export function checkBvcCameraConnection(user, cameraId) {
-  return (dispatch) => {
-    let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/connectedOnce`;
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
-    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
-    let timeout = 30;
-    let checkBvc = setInterval(function(){
-      if (timeout <= 0){
-        clearInterval(checkBvc);
-      } else {
-        timeout -= 5;
-      }
-      axios.get(bvc_url, config)
-      .then((response) => {
-        console.log(response.data.value);
-        // if (response.data.value == true){
-        //   dispatch(bvcCameraConnection(true));
-        //   return;
-        // } else if (response.data.value == false){
-        //   dispatch(bvcCameraConnection(false));
-        //   if (timeout <= 0){
-        //     dispatch(deleteCamera(user, cameraId));
-        //   }
-        // }
-      })
-      .catch((error) => {
-        console.log(error);
-        // dispatch(bvcCameraConnection(false));
-        // if (timeout <= 0){
-        //   dispatch(deleteCamera(user, cameraId));
-        // }
-      })
-    }, 5000, bvc_url, config);
   }
 }

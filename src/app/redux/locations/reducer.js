@@ -144,6 +144,18 @@ const locations = (state = initialState, action) => {
         addedCameraData: action.cameraData
       }
 
+    case types.BVC_CAMERA_CONNECTION:
+      return {
+        ...state,
+        bvcCameraConnection: action.bvcCameraConnection
+      }
+
+      case types.BVC_CAMERA_CONNECTION_FAIL:
+        return {
+          ...state,
+          bvcCameraConnectionFail: action.bvcCameraConnectionFail
+        }
+
     default:
       return state;
   }

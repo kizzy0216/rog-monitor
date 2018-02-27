@@ -289,8 +289,7 @@ export function checkBvcCameraConnection(user, cameraId) {
     console.log(bvc_url);
     const bvc_jwt = localStorage.getItem('bvc_jwt');
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
-    let timeout = 30;
-    let cameraDeleted = false
+    let timeout = 90;
     let checkBvc = setInterval(function(){
       if (timeout <= 0){
         clearInterval(checkBvc);
@@ -302,21 +301,18 @@ export function checkBvcCameraConnection(user, cameraId) {
       .then((response) => {
         if (response.data.value == true){
           dispatch(bvcCameraConnection(true));
+          return false;
         } else if (timeout <= 0){
           dispatch(bvcCameraConnectionFail(true));
-          if(cameraDeleted == false){
-            // dispatch(deleteCamera(user, cameraId));
-            // cameraDeleted = true;
-          }
+          // dispatch(deleteCamera(user, cameraId));
+          // return false;
         }
       })
       .catch((error) => {
         if (timeout <= 0){
           dispatch(bvcCameraConnectionFail(true));
-          if(cameraDeleted == false){
-            // dispatch(deleteCamera(user, cameraId));
-            // cameraDeleted = true;
-          }
+          // dispatch(deleteCamera(user, cameraId));
+          // return false;
         }
       })
     }, 5000, bvc_url, config);

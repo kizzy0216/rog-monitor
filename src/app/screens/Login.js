@@ -47,7 +47,7 @@ class Login extends Component {
     return (
       <Layout>
         <Header style={styles.header}>
-          <Col xs={{span: 0}} sm={{span: 12}}><h3 style={styles.chromeText}>This web site requires the Google Chrome web browser.</h3></Col>
+          <Col xs={{span: 0}} sm={{span: 12}}><h3 style={styles.chromeText}>This application requires the Google Chrome web browser.</h3></Col>
           <img style={styles.headerLogo} src={logoFull} height='50px'/>
         </Header>
         <Layout>

@@ -299,7 +299,6 @@ export function checkBvcCameraConnection(user, cameraId) {
       }
       axios.get(bvc_url, config)
       .then((response) => {
-        console.log(response.data.value);
         if (response.data.value == true){
           dispatch(bvcCameraConnection(true));
         } else if (timeout <= 0){
@@ -311,7 +310,6 @@ export function checkBvcCameraConnection(user, cameraId) {
         }
       })
       .catch((error) => {
-        console.log(error);
         if (timeout <= 0){
           dispatch(bvcCameraConnectionFail(true));
           if(cameraDeleted == false){

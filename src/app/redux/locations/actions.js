@@ -297,6 +297,7 @@ export function checkBvcCameraConnection(user, cameraId) {
       } else {
         timeout -= 5;
       }
+      console.log(timeout);
       axios.get(bvc_url, config)
       .then((response) => {
         if (response.data.value == true){
@@ -304,8 +305,8 @@ export function checkBvcCameraConnection(user, cameraId) {
         } else if (timeout <= 0){
           dispatch(bvcCameraConnectionFail(true));
           if(cameraDeleted == false){
-            dispatch(deleteCamera(user, cameraId));
-            cameraDeleted = true;
+            // dispatch(deleteCamera(user, cameraId));
+            // cameraDeleted = true;
           }
         }
       })
@@ -313,8 +314,8 @@ export function checkBvcCameraConnection(user, cameraId) {
         if (timeout <= 0){
           dispatch(bvcCameraConnectionFail(true));
           if(cameraDeleted == false){
-            dispatch(deleteCamera(user, cameraId));
-            cameraDeleted = true;
+            // dispatch(deleteCamera(user, cameraId));
+            // cameraDeleted = true;
           }
         }
       })

@@ -20,5 +20,7 @@ export default {
   removeLocationInProcess: false,
   removeLocationError: '',
   removeLocationSuccess: false,
-  addedCameraData: ''
+  addedCameraData: '',
+  bvcCameraConnection: false,
+  bvcCameraConnectionFail: false
 }

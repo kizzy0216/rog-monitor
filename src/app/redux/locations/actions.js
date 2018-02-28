@@ -286,7 +286,6 @@ export function addLocationCamera(user, location, name, rtspUrl, username, passw
 export function checkBvcCameraConnection(user, cameraId) {
   return (dispatch) => {
     let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/connectedOnce`;
-    console.log(bvc_url);
     const bvc_jwt = localStorage.getItem('bvc_jwt');
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
     let timeout = 90;
@@ -296,7 +295,6 @@ export function checkBvcCameraConnection(user, cameraId) {
       } else {
         timeout -= 5;
       }
-      console.log(timeout);
       axios.get(bvc_url, config)
       .then((response) => {
         if (response.data.value == true){
@@ -304,15 +302,15 @@ export function checkBvcCameraConnection(user, cameraId) {
           return false;
         } else if (timeout <= 0){
           dispatch(bvcCameraConnectionFail(true));
-          // dispatch(deleteCamera(user, cameraId));
-          // return false;
+          dispatch(deleteCamera(user, cameraId));
+          return false;
         }
       })
       .catch((error) => {
         if (timeout <= 0){
           dispatch(bvcCameraConnectionFail(true));
-          // dispatch(deleteCamera(user, cameraId));
-          // return false;
+          dispatch(deleteCamera(user, cameraId));
+          return false;
         }
       })
     }, 5000, bvc_url, config);

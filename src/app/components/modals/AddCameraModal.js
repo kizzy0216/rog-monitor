@@ -99,10 +99,10 @@ class AddCameraModal extends Component {
       this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data.data);
     }
     if(nextProps.bvcCameraConnection && nextProps.bvcCameraConnection !== this.props.bvcCameraConnection){
-      message.success('Camera connected successfully!');
+      message.success('Camera stream linked successfully!');
     }
     if(nextProps.bvcCameraConnectionFail && nextProps.bvcCameraConnectionFail !== this.props.bvcCameraConnectionFail){
-      message.error('Camera could not connect, deleting camera. Please try again.')
+      message.error('Camera stream could not connect. Deleting camera. Please try adding your camera again.')
     }
   };
 

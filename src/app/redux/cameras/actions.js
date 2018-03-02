@@ -77,6 +77,25 @@ export function fetchCameraAuthRtspUrl(user, cameraId) {
   }
 }
 
+export function updatePreviewImage(cameraId) {
+  return (dispatch) => {
+    // TODO figure out how to start the fetch process and re-activate when response comes back
+    let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/updateImage`;
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
+    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+    axios.get(bvc_url, config)
+    .then((response) => {
+      // insert code here
+    })
+    .catch((error) => {
+      // insert code here
+    })
+    .finally(() => {
+      // insert code here
+    })
+  }
+}
+
 export function deleteCamera(user, cameraId) {
   return (dispatch) => {
     dispatch(deleteCameraError(''));

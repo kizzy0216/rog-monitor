@@ -148,21 +148,21 @@ class CustomCanvas extends Component {
             switch (fabricCanvas.getActiveObject().id) {
               case 'rightLeft':
                 virtualWallDetails.id = 'right';
-                fabricCanvas.getActiveObject().remove();
+                fabricCanvas.remove(fabricCanvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
               case 'right':
                 virtualWallDetails.id = 'left';
-                fabricCanvas.getActiveObject().remove();
+                fabricCanvas.remove(fabricCanvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, Math.PI, 0, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
               case 'left':
                 virtualWallDetails.id = 'rightLeft';
-                fabricCanvas.getActiveObject().remove();
+                fabricCanvas.remove(fabricCanvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2 * Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
@@ -239,21 +239,21 @@ class CustomCanvas extends Component {
             switch (fabricCanvas.getActiveObject().id) {
               case 'rightLeft':
                 virtualWallDetails.id = 'right';
-                fabricCanvas.getActiveObject().remove();
+                fabricCanvas.remove(fabricCanvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
               case 'right':
                 virtualWallDetails.id = 'left';
-                fabricCanvas.getActiveObject().remove();
+                fabricCanvas.remove(fabricCanvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, Math.PI, 0, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
               case 'left':
                 virtualWallDetails.id = 'rightLeft';
-                fabricCanvas.getActiveObject().remove();
+                fabricCanvas.remove(fabricCanvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2 * Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);

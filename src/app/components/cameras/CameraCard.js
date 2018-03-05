@@ -33,6 +33,12 @@ class CameraCard extends Component {
     this.props.registerCamera(this.props.user.id, this.props.cameraLocation.cameras);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if ((nextProps.id === this.props.id) && (this.props.image.original !== nextProps.image)) {
+      this.props.image.original = nextProps.image
+    }
+  }
+
   render() {
     if (this.props.liveView) {
       return (
@@ -41,6 +47,7 @@ class CameraCard extends Component {
             <Col>{this.props.name}</Col>
           </Row>
           <div style={styles.refreshImage}>
+            {/* \add functionality to loading icon to trigger fetch new image */}
              <Icon type="loading-3-quarters" />
             <span style={styles.alertModal}>
             <AddAlertModal data={this.props}/>

@@ -8,6 +8,7 @@ import CameraTiles from '../components/cameras/CameraTiles';
 import AddLocationModal from '../components/modals/AddLocationModal';
 import CameraOptionButtons from '../components/cameras/CameraOptionButtons';
 
+import { listenForNewImageThumbnails } from '../redux/cameras/actions';
 import * as locationActions from '../redux/locations/actions';
 import { trackEventAnalytics } from '../redux/auth/actions';
 
@@ -25,6 +26,7 @@ class CameraList extends Component {
 
   componentWillMount = () => {
     this.props.actions.fetchLocations(this.props.user, this.props.rummage, true);
+    this.props.listenForNewImageThumbnails(this.props.user);
   }
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.locations.length && !nextProps.selectedLocation.name) {
@@ -160,7 +162,7 @@ const mapDispatchToProps = (dispatch) => {
     actions: bindActionCreators(locationActions, dispatch),
     addLocationCamera: (user, location, name, rtspUrl, username, password) => dispatch(addLocationCamera(user, location, name, rtspUrl, username, password)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
-
+    listenForNewImageThumbnails: (user) => dispatch(listenForNewImageThumbnails(user)),
   }
 };
 

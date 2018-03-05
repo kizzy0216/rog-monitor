@@ -45,6 +45,14 @@ const cameras = (state = initialState, action) => {
           deleteCameraSuccess: action.deleteCameraSuccess
         }
 
+    case types.REFRESH_CAMERA_IMAGE:
+      return {
+        ...state,
+        refresh: action.refresh,
+        cameraId: action.cameraId,
+        newImagePath: action.newImagePath
+      }
+
     default:
       return state;
   }

@@ -65,12 +65,11 @@ function channelConnected(channel) {
   }
 }
 
-export function refreshCameraImage(cameraId, newImagePath) {
+export function refreshCameraImage(id, image) {
   return {
     type: types.REFRESH_CAMERA_IMAGE,
-    refresh: true,
-    cameraId,
-    newImagePath
+    id,
+    image
   }
 }
 
@@ -135,12 +134,14 @@ export function listenForNewImageThumbnails(user) {
 
 export function handleNewImage(channel) {
   return (dispatch) => {
-    channel.on('new_image', image => dispatch(newImage(id, image)));
+    channel.on('new_image', camera => dispatch(newImage(camera)));
   }
 }
 
-export function newImage(id, image) {
-  refreshCameraImage(id, image);
+export function newImage(camera) {
+  return (dispatch) => {
+    dispatch(refreshCameraImage(camera.id, camera.image.original));
+  }
 }
 
 export function deleteCamera(user, cameraId) {

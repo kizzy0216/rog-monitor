@@ -34,8 +34,9 @@ class CameraCard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if ((nextProps.id === this.props.id) && (this.props.image.original !== nextProps.image)) {
-      this.props.image.original = nextProps.image
+    console.log(nextProps);
+    if ((nextProps.refreshCameraId === this.props.id) && (this.props.image.original !== nextProps.refreshCameraImage)) {
+      this.props.image.original = nextProps.refreshCameraImage
     }
   }
 
@@ -123,7 +124,9 @@ const styles = {
 }
 const mapStateToProps = (state) => {
   return {
-    polygonData: state.alerts.polygonData
+    polygonData: state.alerts.polygonData,
+    refreshCameraImage: state.cameras.refreshCameraImage,
+    refreshCameraId: state.cameras.refreshCameraId
   }
 };
 const mapDispatchToProps = (dispatch) => {

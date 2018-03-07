@@ -48,9 +48,8 @@ const cameras = (state = initialState, action) => {
     case types.REFRESH_CAMERA_IMAGE:
       return {
         ...state,
-        refresh: action.refresh,
-        cameraId: action.cameraId,
-        newImagePath: action.newImagePath
+        refreshCameraId: action.id,
+        refreshCameraImage: action.image
       }
 
     default:

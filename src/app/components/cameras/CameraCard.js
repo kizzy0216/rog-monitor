@@ -44,7 +44,7 @@ class CameraCard extends Component {
       message.error(nextProps.refreshCameraError);
     }
     if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
-      message.warning('Retrieving preview image. This could take up to 90 seconds.');
+      message.warning('Retrieving preview image. This may take up to 90 seconds.');
     }
     if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
       message.success('Image successfully retrieved!');

@@ -6,7 +6,7 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { trackEventAnalytics } from "../auth/actions";
-import {deleteCamera} from "../cameras/actions";
+import {deleteCamera, updatePreviewImage} from "../cameras/actions";
 import { locale } from 'moment';
 
 function fetchInProcess(bool) {
@@ -299,6 +299,7 @@ export function checkBvcCameraConnection(user, cameraId) {
       .then((response) => {
         if (response.data.value == true){
           dispatch(bvcCameraConnection(true));
+          dispatch(updatePreviewImage(user, cameraId));
           return false;
         } else if (timeout <= 0){
           dispatch(bvcCameraConnectionFail(true));

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Icon, Row, Col, Popconfirm, message } from 'antd';
+import { Card, Icon, Row, Col, Popconfirm, message, Button } from 'antd';
 
 import Recorder from '../video/Recorder';
 import EditCamera from '../cameras/EditCamera';
 
-import { deleteCamera } from '../../redux/cameras/actions';
+import { deleteCamera, updatePreviewImage } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
@@ -14,6 +14,9 @@ import { registerCamera } from '../../redux/alerts/actions';
 class CameraCard extends Component {
   deleteCamera = () => {
     this.props.deleteCamera(this.props.user, this.props.id)
+  };
+  updatePreviewImage = () => {
+    this.props.updatePreviewImage(this.props.user, this.props.id)
   };
 
   viewCameraStream = () => {
@@ -34,9 +37,17 @@ class CameraCard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if ((nextProps.refreshCameraId === this.props.id) && (this.props.image.original !== nextProps.refreshCameraImage)) {
       this.props.image.original = nextProps.refreshCameraImage
+    }
+    if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {
+      message.error(nextProps.refreshCameraError);
+    }
+    if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
+      message.warning('Retrieving preview image. This could take up to 90 seconds.');
+    }
+    if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
+      message.success('Image successfully retrieved!');
     }
   }
 
@@ -48,8 +59,9 @@ class CameraCard extends Component {
             <Col>{this.props.name}</Col>
           </Row>
           <div style={styles.refreshImage}>
-            {/* \add functionality to loading icon to trigger fetch new image */}
-             <Icon type="loading-3-quarters" />
+              <Button style={styles.getThumbnailBtn} disabled={this.props.imageUpdateInProgress} onClick={() => this.updatePreviewImage(this.props.user, this.props.id)}>
+               <Icon type={this.props.imageUpdateInProgress ? 'loading' : 'reload'} />
+            </Button>
             <span style={styles.alertModal}>
             <AddAlertModal data={this.props}/>
             </span>
@@ -58,7 +70,11 @@ class CameraCard extends Component {
 
           </div>
           <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
-            <img src={this.props.image.original} style={styles.cameraCardImg} />
+            {this.props.image.original ?
+              <img src={this.props.image.original} style={styles.cameraCardImg} /> :
+              <Icon type="loading" style={styles.mainImageLoading}/>
+            }
+
           </div>
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<span></span>) :
@@ -120,13 +136,25 @@ const styles = {
   },
   alertModal: {
     float: 'left'
+  },
+  getThumbnailBtn: {
+    backgroundColor: 'white'
+  },
+  mainImageLoading: {
+    width: '100%',
+    height: '100%',
+    fontSize: 100,
+    marginTop: 25
   }
 }
 const mapStateToProps = (state) => {
   return {
     polygonData: state.alerts.polygonData,
     refreshCameraImage: state.cameras.refreshCameraImage,
-    refreshCameraId: state.cameras.refreshCameraId
+    refreshCameraId: state.cameras.refreshCameraId,
+    imageUpdateInProgress: state.cameras.imageUpdateInProgress,
+    refreshCameraError: state.cameras.refreshCameraError,
+    imageUpdateSuccess: state.cameras.imageUpdateSuccess
   }
 };
 const mapDispatchToProps = (dispatch) => {
@@ -134,6 +162,7 @@ const mapDispatchToProps = (dispatch) => {
     deleteCamera: (user, cameraId) => dispatch(deleteCamera(user, cameraId)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
     registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
+    updatePreviewImage: (user, cameraId) => dispatch(updatePreviewImage(user, cameraId))
   }
 }
 

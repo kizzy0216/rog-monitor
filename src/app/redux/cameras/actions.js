@@ -61,15 +61,36 @@ export function clearCameraData() {
 function channelConnected(channel) {
   return {
     type: types.CHANNEL_CONNECTED,
-    channel
+    channel: channel
   }
 }
 
 export function refreshCameraImage(id, image) {
   return {
     type: types.REFRESH_CAMERA_IMAGE,
-    id,
-    image
+    refreshCameraId: id,
+    refreshCameraImage: image
+  }
+}
+
+export function imageUpdateInProgress(bool) {
+  return {
+    type: types.IMAGE_UPDATE_IN_PROGRESS,
+    imageUpdateInProgress: bool
+  }
+}
+
+function refreshCameraError(error) {
+  return {
+    type: types.REFRESH_CAMERA_ERROR,
+    refreshCameraError: error
+  }
+}
+
+function imageUpdateSuccess(bool) {
+  return {
+    type: types.IMAGE_UPDATE_SUCCESS,
+    imageUpdateSuccess: bool
   }
 }
 
@@ -103,13 +124,13 @@ export function updatePreviewImage(user, cameraId) {
 
     axios.post(bvc_url, data, bvc_config)
       .then((response) => {
-        console.log(response);
+        dispatch(imageUpdateSuccess(false));
+        dispatch(imageUpdateInProgress(true));
       })
       .catch((error) => {
-        console.log(error)
-      })
-      .finally(() => {
-        // insert cleanup code here such as resetting states
+        console.log(error);
+        refreshCameraError('Error refreshing camera image.');
+        dispatch(imageUpdateInProgress(false));
       })
   }
 }
@@ -141,6 +162,8 @@ export function handleNewImage(channel) {
 export function newImage(camera) {
   return (dispatch) => {
     dispatch(refreshCameraImage(camera.id, camera.image.original));
+    dispatch(imageUpdateInProgress(false));
+    dispatch(imageUpdateSuccess(true));
   }
 }
 

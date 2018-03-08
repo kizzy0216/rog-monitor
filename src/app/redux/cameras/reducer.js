@@ -48,8 +48,26 @@ const cameras = (state = initialState, action) => {
     case types.REFRESH_CAMERA_IMAGE:
       return {
         ...state,
-        refreshCameraId: action.id,
-        refreshCameraImage: action.image
+        refreshCameraId: action.refreshCameraId,
+        refreshCameraImage: action.refreshCameraImage
+      }
+
+    case types.IMAGE_UPDATE_IN_PROGRESS:
+      return{
+        ...state,
+        imageUpdateInProgress: action.imageUpdateInProgress
+      }
+
+    case types.REFRESH_CAMERA_ERROR:
+      return{
+        ...state,
+        refreshCameraError: action.refreshCameraError
+      }
+
+    case types.IMAGE_UPDATE_SUCCESS:
+      return{
+        ...state,
+        imageUpdateSuccess: action.imageUpdateSuccess
       }
 
     default:

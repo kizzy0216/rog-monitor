@@ -160,6 +160,7 @@ export function handleNewImage(channel) {
 }
 
 export function newImage(camera) {
+  console.log("Hit Image Update!");
   return (dispatch) => {
     dispatch(refreshCameraImage(camera.id, camera.image.original));
     dispatch(imageUpdateInProgress(false));

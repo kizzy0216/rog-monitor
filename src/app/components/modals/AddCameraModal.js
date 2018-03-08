@@ -91,7 +91,7 @@ class AddCameraModal extends Component {
       message.success('Camera added!');
       this.resetFields();
       this.props.toggleAddCameraModalVisibility();
-      setTimeout(() => {message.warning('Connecting to live stream. This could take up to 60 seconds.');}, 3000);
+      setTimeout(() => {message.warning('Connecting to live stream. This could take up to 60 seconds.');}, 3500);
     }
     if (nextProps.addLocationCameraError !== '' && this.props.addLocationCameraError !== nextProps.addLocationCameraError) {
       message.error(nextProps.addLocationCameraError);

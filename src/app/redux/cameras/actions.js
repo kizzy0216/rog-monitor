@@ -124,7 +124,6 @@ export function updatePreviewImage(cameraId) {
 
     axios.post(bvc_url, data, bvc_config)
       .then((response) => {
-        dispatch(imageUpdateSuccess(false));
         dispatch(imageUpdateInProgress(true));
       })
       .catch((error) => {
@@ -160,11 +159,11 @@ export function handleNewImage(channel) {
 }
 
 export function newImage(camera) {
-  console.log("Hit Image Update!");
   return (dispatch) => {
     dispatch(refreshCameraImage(camera.id, camera.image.original));
     dispatch(imageUpdateInProgress(false));
     dispatch(imageUpdateSuccess(true));
+    dispatch(imageUpdateSuccess(false));
   }
 }
 

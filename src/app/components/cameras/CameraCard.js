@@ -38,8 +38,10 @@ class CameraCard extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.id === nextProps.id){
-      if (nextProps.id === nextProps.refreshCameraId && this.props.image.original !== nextProps.refreshCameraImage) {
-        this.props.image.original = nextProps.refreshCameraImage
+      if (nextProps.id === nextProps.refreshCameraId){
+        if (this.props.image.original !== nextProps.refreshCameraImage) {
+          this.props.image.original = nextProps.refreshCameraImage
+        }
       }
       if (this.props.id === nextProps.imageUpdateInProgressId) {
         if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {

@@ -15,8 +15,8 @@ class CameraCard extends Component {
   deleteCamera = () => {
     this.props.deleteCamera(this.props.user, this.props.id)
   };
-  updatePreviewImage = (id) => {
-    this.props.updatePreviewImage(id)
+  updatePreviewImage = () => {
+    this.props.updatePreviewImage(this.props.id)
   };
 
   viewCameraStream = () => {
@@ -59,7 +59,7 @@ class CameraCard extends Component {
             <Col>{this.props.name}</Col>
           </Row>
           <div style={styles.refreshImage}>
-              <Button style={styles.getThumbnailBtn} disabled={this.props.imageUpdateInProgress} onClick={() => this.updatePreviewImage(this.props.id)}>
+              <Button style={styles.getThumbnailBtn} disabled={this.props.imageUpdateInProgress} onClick={() => this.updatePreviewImage}>
                <Icon type={this.props.imageUpdateInProgress ? 'loading' : 'reload'} />
             </Button>
             <span style={styles.alertModal}>

@@ -68,7 +68,8 @@ const cameras = (state = initialState, action) => {
     case types.IMAGE_UPDATE_SUCCESS:
       return{
         ...state,
-        imageUpdateSuccess: action.imageUpdateSuccess
+        imageUpdateSuccess: action.imageUpdateSuccess,
+        imageUpdateSuccessId: action.imageUpdateSuccessId
       }
 
     default:

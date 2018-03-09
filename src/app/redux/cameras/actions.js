@@ -88,10 +88,11 @@ function refreshCameraError(error) {
   }
 }
 
-function imageUpdateSuccess(bool) {
+function imageUpdateSuccess(bool, id) {
   return {
     type: types.IMAGE_UPDATE_SUCCESS,
-    imageUpdateSuccess: bool
+    imageUpdateSuccess: bool,
+    imageUpdateSuccessId: id
   }
 }
 
@@ -162,8 +163,8 @@ export function newImage(camera) {
   return (dispatch) => {
     dispatch(refreshCameraImage(camera.id, camera.image.original));
     dispatch(imageUpdateInProgress(false, camera.id));
-    dispatch(imageUpdateSuccess(true));
-    dispatch(imageUpdateSuccess(false));
+    dispatch(imageUpdateSuccess(true, camera.id));
+    dispatch(imageUpdateSuccess(false, camera.id));
   }
 }
 

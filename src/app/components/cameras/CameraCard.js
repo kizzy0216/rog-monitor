@@ -50,6 +50,8 @@ class CameraCard extends Component {
         if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
           message.warning('Retrieving preview image. This may take up to 90 seconds.');
         }
+      }
+      if (this.props.id === nextProps.imageUpdateSuccessId) {
         if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
           message.success('Preview image retrieved!');
         }
@@ -167,7 +169,8 @@ const mapStateToProps = (state) => {
     imageUpdateInProgress: state.cameras.imageUpdateInProgress,
     imageUpdateInProgressId: state.cameras.imageUpdateInProgressId,
     refreshCameraError: state.cameras.refreshCameraError,
-    imageUpdateSuccess: state.cameras.imageUpdateSuccess
+    imageUpdateSuccess: state.cameras.imageUpdateSuccess,
+    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId
   }
 };
 const mapDispatchToProps = (dispatch) => {

@@ -73,10 +73,11 @@ export function refreshCameraImage(id, image) {
   }
 }
 
-export function imageUpdateInProgress(bool) {
+export function imageUpdateInProgress(bool, id) {
   return {
     type: types.IMAGE_UPDATE_IN_PROGRESS,
-    imageUpdateInProgress: bool
+    imageUpdateInProgress: bool,
+    imageUpdateInProgressId : id
   }
 }
 
@@ -124,12 +125,12 @@ export function updatePreviewImage(cameraId) {
 
     axios.post(bvc_url, data, bvc_config)
       .then((response) => {
-        dispatch(imageUpdateInProgress(true));
+        dispatch(imageUpdateInProgress(true, cameraId));
       })
       .catch((error) => {
         console.log(error);
         refreshCameraError('Error refreshing camera image.');
-        dispatch(imageUpdateInProgress(false));
+        dispatch(imageUpdateInProgress(false, cameraId));
       })
   }
 }
@@ -161,7 +162,7 @@ export function handleNewImage(channel) {
 export function newImage(camera) {
   return (dispatch) => {
     dispatch(refreshCameraImage(camera.id, camera.image.original));
-    dispatch(imageUpdateInProgress(false));
+    dispatch(imageUpdateInProgress(false, camera.id));
     dispatch(imageUpdateSuccess(true));
     dispatch(imageUpdateSuccess(false));
   }

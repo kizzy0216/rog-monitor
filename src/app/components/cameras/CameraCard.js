@@ -16,7 +16,7 @@ class CameraCard extends Component {
     this.props.deleteCamera(this.props.user, this.props.id)
   };
   updatePreviewImage = () => {
-    this.props.updatePreviewImage(this.props.id)
+    this.props.updatePreviewImage(this.props.id);
   };
 
   viewCameraStream = () => {
@@ -37,17 +37,21 @@ class CameraCard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if ((nextProps.refreshCameraId === this.props.id) && (this.props.image.original !== nextProps.refreshCameraImage)) {
-      this.props.image.original = nextProps.refreshCameraImage
-    }
-    if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {
-      message.error(nextProps.refreshCameraError);
-    }
-    if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
-      message.warning('Retrieving preview image. This may take up to 90 seconds.');
-    }
-    if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
-      message.success('Preview image retrieved!');
+    if (this.props.id === nextProps.id){
+      if (nextProps.id === nextProps.refreshCameraId && this.props.image.original !== nextProps.refreshCameraImage) {
+        this.props.image.original = nextProps.refreshCameraImage
+      }
+      if (this.props.id === nextProps.imageUpdateInProgressId) {
+        if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {
+          message.error(nextProps.refreshCameraError);
+        }
+        if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
+          message.warning('Retrieving preview image. This may take up to 90 seconds.');
+        }
+        if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
+          message.success('Preview image retrieved!');
+        }
+      }
     }
   }
 
@@ -59,9 +63,15 @@ class CameraCard extends Component {
             <Col>{this.props.name}</Col>
           </Row>
           <div style={styles.refreshImage}>
-              <Button style={styles.getThumbnailBtn} disabled={this.props.imageUpdateInProgress} onClick={() => this.updatePreviewImage}>
-               <Icon type={this.props.imageUpdateInProgress ? 'loading' : 'reload'} />
-            </Button>
+            {this.props.imageUpdateInProgress && this.props.imageUpdateInProgressId === this.props.id ?
+              <Button style={styles.getThumbnailBtn} onClick={this.updatePreviewImage} disabled>
+                <Icon type='loading' />
+              </Button> :
+              <Button style={styles.getThumbnailBtn} onClick={this.updatePreviewImage}>
+                <Icon type='reload' />
+              </Button>
+            }
+
             <span style={styles.alertModal}>
             <AddAlertModal data={this.props}/>
             </span>
@@ -153,6 +163,7 @@ const mapStateToProps = (state) => {
     refreshCameraImage: state.cameras.refreshCameraImage,
     refreshCameraId: state.cameras.refreshCameraId,
     imageUpdateInProgress: state.cameras.imageUpdateInProgress,
+    imageUpdateInProgressId: state.cameras.imageUpdateInProgressId,
     refreshCameraError: state.cameras.refreshCameraError,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess
   }

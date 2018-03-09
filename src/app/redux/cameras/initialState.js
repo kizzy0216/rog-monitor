@@ -6,7 +6,9 @@ export default {
   deleteCameraSucess: false,
   deleteCameraError: '',
   imageUpdateInProgress: false,
+  imageUpdateInProgressId: '',
   refreshCameraError: '',
   imageUpdateSuccess: false,
-  image: false
+  image: false,
+  disabledFlag: false
 }

@@ -55,7 +55,8 @@ const cameras = (state = initialState, action) => {
     case types.IMAGE_UPDATE_IN_PROGRESS:
       return{
         ...state,
-        imageUpdateInProgress: action.imageUpdateInProgress
+        imageUpdateInProgress: action.imageUpdateInProgress,
+        imageUpdateInProgressId: action.imageUpdateInProgressId
       }
 
     case types.REFRESH_CAMERA_ERROR:

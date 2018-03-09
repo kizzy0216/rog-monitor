@@ -15,8 +15,8 @@ class CameraCard extends Component {
   deleteCamera = () => {
     this.props.deleteCamera(this.props.user, this.props.id)
   };
-  updatePreviewImage = () => {
-    this.props.updatePreviewImage(this.props.id)
+  updatePreviewImage = (id) => {
+    this.props.updatePreviewImage(id)
   };
 
   viewCameraStream = () => {

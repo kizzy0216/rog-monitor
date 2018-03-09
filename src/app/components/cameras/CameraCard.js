@@ -162,7 +162,7 @@ const mapDispatchToProps = (dispatch) => {
     deleteCamera: (user, cameraId) => dispatch(deleteCamera(user, cameraId)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
     registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
-    updatePreviewImage: (user, cameraId) => dispatch(updatePreviewImage(user, cameraId))
+    updatePreviewImage: (cameraId) => dispatch(updatePreviewImage(cameraId))
   }
 }
 

@@ -115,7 +115,7 @@ export function fetchCameraAuthRtspUrl(user, cameraId) {
   }
 }
 
-export function updatePreviewImage(user, cameraId) {
+export function updatePreviewImage(cameraId) {
   return (dispatch) => {
     let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/update_thumbnail`;
     const bvc_jwt = localStorage.getItem('bvc_jwt');
@@ -137,7 +137,7 @@ export function updatePreviewImage(user, cameraId) {
 
 export function listenForNewImageThumbnails(user) {
   return (dispatch) => {
-    let channelName = `images:user-${user.id}`;
+    let channelName = `images:user`;
     let params = {token: user.jwt};
     let ws = new Socket(`${process.env.REACT_APP_ROG_WS_URL}/socket`, {params});
 

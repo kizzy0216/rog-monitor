@@ -128,7 +128,6 @@ export function updatePreviewImage(cameraId) {
         dispatch(imageUpdateInProgress(true, cameraId));
       })
       .catch((error) => {
-        console.log(error);
         refreshCameraError('Error refreshing camera image.');
         dispatch(imageUpdateInProgress(false, cameraId));
       })

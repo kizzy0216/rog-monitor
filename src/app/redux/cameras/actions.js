@@ -81,10 +81,11 @@ export function imageUpdateInProgress(bool, id) {
   }
 }
 
-function refreshCameraError(error) {
+function refreshCameraError(error, id) {
   return {
     type: types.REFRESH_CAMERA_ERROR,
-    refreshCameraError: error
+    refreshCameraError: error,
+    refreshCameraErrorId: id
   }
 }
 
@@ -129,7 +130,7 @@ export function updatePreviewImage(cameraId) {
         dispatch(imageUpdateInProgress(true, cameraId));
       })
       .catch((error) => {
-        refreshCameraError('Error refreshing camera image.');
+        refreshCameraError('Error refreshing camera image.', cameraId);
         dispatch(imageUpdateInProgress(false, cameraId));
       })
   }

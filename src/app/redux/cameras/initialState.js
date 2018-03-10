@@ -8,6 +8,7 @@ export default {
   imageUpdateInProgress: false,
   imageUpdateInProgressId: '',
   refreshCameraError: '',
+  refreshCameraErrorId: '',
   imageUpdateSuccess: false,
   imageUpdateSuccessId: '',
   image: false,

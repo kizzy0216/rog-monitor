@@ -62,7 +62,8 @@ const cameras = (state = initialState, action) => {
     case types.REFRESH_CAMERA_ERROR:
       return{
         ...state,
-        refreshCameraError: action.refreshCameraError
+        refreshCameraError: action.refreshCameraError,
+        refreshCameraErrorId: action.refreshCameraErrorId
       }
 
     case types.IMAGE_UPDATE_SUCCESS:

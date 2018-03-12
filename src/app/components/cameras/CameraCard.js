@@ -10,6 +10,7 @@ import { deleteCamera, updatePreviewImage } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
+import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 
 class CameraCard extends Component {
   deleteCamera = () => {
@@ -69,14 +70,7 @@ class CameraCard extends Component {
             <Col>{this.props.name}</Col>
           </Row>
           <div style={styles.refreshImage}>
-            {this.props.imageUpdateInProgress && this.props.imageUpdateInProgressId === this.props.id ?
-              <Button style={styles.getThumbnailBtn} onClick={this.updatePreviewImage} disabled>
-                <Icon type='loading' />
-              </Button> :
-              <Button style={styles.getThumbnailBtn} onClick={this.updatePreviewImage}>
-                <Icon type='reload' />
-              </Button>
-            }
+            <RefreshPreviewImage data={this.props}/>
 
             <span style={styles.alertModal}>
             <AddAlertModal data={this.props}/>
@@ -88,7 +82,7 @@ class CameraCard extends Component {
           <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
             {this.props.image.original ?
               <img src={this.props.image.original} style={styles.cameraCardImg} /> :
-              <Icon type="loading" style={styles.mainImageLoading}/>
+              <img src={loading} style={styles.cameraCardImg} />
             }
 
           </div>
@@ -155,12 +149,6 @@ const styles = {
   },
   getThumbnailBtn: {
     backgroundColor: 'white'
-  },
-  mainImageLoading: {
-    width: '100%',
-    height: '100%',
-    fontSize: 100,
-    marginTop: 25
   }
 }
 const mapStateToProps = (state) => {

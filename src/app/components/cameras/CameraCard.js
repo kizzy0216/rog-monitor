@@ -60,6 +60,7 @@ class CameraCard extends Component {
   }
 
   render() {
+    console.log(this.props.liveView);
     if (this.props.liveView) {
       return (
         <Card>
@@ -67,7 +68,7 @@ class CameraCard extends Component {
             <Col>{this.props.name}</Col>
           </Row>
           <div style={styles.refreshImage}>
-            {/* <RefreshPreviewImage data={this.props}/> */}
+            <RefreshPreviewImage data={this.props}/>
 
             <span style={styles.alertModal}>
             <AddAlertModal data={this.props}/>

@@ -6,7 +6,7 @@ import { Card, Icon, Row, Col, Popconfirm, message, Button } from 'antd';
 import Recorder from '../video/Recorder';
 import EditCamera from '../cameras/EditCamera';
 
-import { deleteCamera, updatePreviewImage } from '../../redux/cameras/actions';
+import { deleteCamera } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
@@ -14,10 +14,7 @@ import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 
 class CameraCard extends Component {
   deleteCamera = () => {
-    this.props.deleteCamera(this.props.user, this.props.id)
-  };
-  updatePreviewImage = () => {
-    this.props.updatePreviewImage(this.props.id);
+    this.props.deleteCamera(this.props.user, this.props.id);
   };
 
   viewCameraStream = () => {
@@ -169,7 +166,6 @@ const mapDispatchToProps = (dispatch) => {
     deleteCamera: (user, cameraId) => dispatch(deleteCamera(user, cameraId)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
     registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
-    updatePreviewImage: (cameraId) => dispatch(updatePreviewImage(cameraId))
   }
 }
 

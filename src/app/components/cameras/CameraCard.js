@@ -11,6 +11,7 @@ import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
+import loading from '../../../assets/img/TempCameraImage.jpeg'
 
 class CameraCard extends Component {
   deleteCamera = () => {
@@ -60,7 +61,6 @@ class CameraCard extends Component {
   }
 
   render() {
-    console.log(this.props.liveView);
     if (this.props.liveView) {
       return (
         <Card>
@@ -71,7 +71,7 @@ class CameraCard extends Component {
             <RefreshPreviewImage data={this.props}/>
 
             <span style={styles.alertModal}>
-            <AddAlertModal data={this.props}/>
+              <AddAlertModal data={this.props}/>
             </span>
           </div>
           <div>

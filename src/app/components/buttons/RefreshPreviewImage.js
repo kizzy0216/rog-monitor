@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Icon, Button } from 'antd';
+import { Icon, Button, message } from 'antd';
 import { updatePreviewImage } from '../../redux/cameras/actions';
 
 
@@ -23,6 +23,14 @@ class RefreshPreviewImage extends Component {
     if (nextProps.data.id === nextProps.imageUpdateInProgressId) {
       if (nextProps.imageUpdateInProgress) {
         this.setState({disabledFlag: true});
+        setTimeout(function(){
+          if (nextProps.imageUpdateInProgress){
+            if(this.state.disabledFlag){
+              message.error('Could not fetch preview image. Please try again later.');
+              this.setState({disabledFlag: false});
+            }
+          }
+        }, 90000, nextProps, this.state.disabledFlag);
       } else {
         this.setState({disabledFlag: false});
       }

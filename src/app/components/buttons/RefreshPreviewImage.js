@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { Icon, Button, message } from 'antd';
 import { updatePreviewImage } from '../../redux/cameras/actions';
 
-let timeout = false;
+let timeout = {};
 
 class RefreshPreviewImage extends Component {
 

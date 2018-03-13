@@ -38,10 +38,6 @@ class RefreshPreviewImage extends Component {
     }
   }
 
-componentWillUnmount() {
-  clearTimeout(flagTimeout);
-}
-
   render() {
     return (
         <Button style={styles.getThumbnailBtn} onClick={this.updatePreviewImage} disabled={this.state.disabledFlag}>

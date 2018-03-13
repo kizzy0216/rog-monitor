@@ -17,13 +17,17 @@ class RefreshPreviewImage extends Component {
 
   flagTimeout = () => {
     timeout = setTimeout(() => {
-      this.setState({disabledFlag: false});
-      message.error('Timeout for fetching image.');
+      if (this.props.data.id === this.props.imageUpdateInProgressId) {
+        this.setState({disabledFlag: false});
+        message.error('Timeout for fetching image.');
+      }
     }, 90000);
   }
 
   removeTimeout = () => {
-    clearTimeout(timeout);
+    if (this.props.data.id === this.props.imageUpdateInProgressId) {
+      clearTimeout(timeout);
+    }
   }
 
   updatePreviewImage = () => {

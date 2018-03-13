@@ -300,7 +300,7 @@ export function checkBvcCameraConnection(user, cameraId) {
       .then((response) => {
         if (response.data.value == true){
           dispatch(bvcCameraConnection(true));
-          dispatch(updatePreviewImage(cameraId));
+          // dispatch(updatePreviewImage(cameraId));
           clearInterval(checkBvc);
           return false;
         } else if (timeout <= 0){

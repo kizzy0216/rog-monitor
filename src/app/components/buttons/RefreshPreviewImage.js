@@ -16,19 +16,14 @@ class RefreshPreviewImage extends Component {
   }
 
   flagTimeout = () => {
-    if (!timeout) {
-      timeout = setTimeout(() => {
-        this.setState({disabledFlag: false});
-        message.error('Timeout for fetching image.');
-        clearTimeout(timeout);
-      }, 90000);
-    }
+    timeout = setTimeout(() => {
+      this.setState({disabledFlag: false});
+      message.error('Timeout for fetching image.');
+    }, 90000);
   }
 
   removeTimeout = () => {
-    if (timeout) {
-      clearTimeout(timeout);
-    }
+    clearTimeout(timeout);
   }
 
   updatePreviewImage = () => {

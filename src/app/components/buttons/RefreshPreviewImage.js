@@ -29,6 +29,7 @@ class RefreshPreviewImage extends Component {
             if(this.state.disabledFlag){
               message.error('Error fetching image. Please try again later.');
               this.setState({disabledFlag: false});
+              clearTimeout(flagTimeout);
             }
           }
         }, 90000, nextProps);

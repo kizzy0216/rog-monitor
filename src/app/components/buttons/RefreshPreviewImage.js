@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { Icon, Button, message } from 'antd';
 import { updatePreviewImage } from '../../redux/cameras/actions';
 
-
+let timeout = false;
 
 class RefreshPreviewImage extends Component {
 
@@ -15,31 +15,33 @@ class RefreshPreviewImage extends Component {
     };
   }
 
+  flagTimeout = () => {
+    if (!timeout) {
+      timeout = setTimeout(() => {
+        this.setState({disabledFlag: false});
+        message.error('Timeout for fetching image.');
+        clearTimeout(timeout);
+      }, 90000);
+    }
+  }
+
+  removeTimeout = () => {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+  }
+
   updatePreviewImage = () => {
     this.props.updatePreviewImage(this.props.data.id);
+    this.setState({disabledFlag: true});
+    this.flagTimeout();
   };
 
   componentWillReceiveProps(nextProps) {
-    let flagTimeout;
     if (nextProps.data.id === nextProps.imageUpdateInProgressId) {
-      if (nextProps.imageUpdateInProgress) {
-        this.setState({disabledFlag: true});
-        flagTimeout = setTimeout(() => {
-          if (nextProps.imageUpdateInProgress && this.props.data.imageUpdateInProgress === nextProps.imageUpdateInProgress){
-            if(this.state.disabledFlag){
-              message.error('Timeout for fetching image.');
-              this.setState({disabledFlag: false});
-              clearTimeout(flagTimeout);
-            } else {
-              clearTimeout(flagTimeout);
-            }
-          } else {
-            clearTimeout(flagTimeout);
-          }
-        }, 90000, nextProps);
-      } else {
+      if (!nextProps.imageUpdateInProgress) {
         this.setState({disabledFlag: false});
-        clearTimeout(flagTimeout);
+        this.removeTimeout();
       }
     }
   }

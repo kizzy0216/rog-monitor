@@ -23,19 +23,24 @@ class RefreshPreviewImage extends Component {
     if (nextProps.data.id === nextProps.imageUpdateInProgressId) {
       if (nextProps.imageUpdateInProgress) {
         this.setState({disabledFlag: true});
-        setTimeout(function(){
+        let flagTimeout = setTimeout(() => {
           if (nextProps.imageUpdateInProgress){
             if(this.state.disabledFlag){
-              message.error('Could not fetch preview image. Please try again later.');
+              message.error('Error fetching image. Please try again later.');
               this.setState({disabledFlag: false});
-            } else{ clearTimeout(); }
-          }else{ clearTimeout(); }
-        }, 90000, nextProps, this.state.disabledFlag);
+            }
+          }
+        }, 90000, nextProps);
       } else {
         this.setState({disabledFlag: false});
+        clearTimeout(flagTimeout);
       }
     }
   }
+
+componentWillUnmount() {
+  clearTimeout(flagTimeout);
+}
 
   render() {
     return (

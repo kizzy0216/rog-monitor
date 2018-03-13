@@ -28,8 +28,8 @@ class RefreshPreviewImage extends Component {
             if(this.state.disabledFlag){
               message.error('Could not fetch preview image. Please try again later.');
               this.setState({disabledFlag: false});
-            }
-          }
+            } else{ clearTimeout(); }
+          }else{ clearTimeout(); }
         }, 90000, nextProps, this.state.disabledFlag);
       } else {
         this.setState({disabledFlag: false});

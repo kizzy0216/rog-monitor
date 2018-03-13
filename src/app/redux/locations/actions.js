@@ -236,9 +236,9 @@ export function addLocationCamera(user, location, name, rtspUrl, username, passw
       camera: {
         'location_id': location.id,
         'rtsp_url': rtspUrl,
-        'camera_name': name,
-        'username': username,
-        'password': password
+        name,
+        username,
+        password
       }
     };
 

@@ -27,7 +27,7 @@ class RefreshPreviewImage extends Component {
         flagTimeout = setTimeout(() => {
           if (nextProps.imageUpdateInProgress && this.props.data.imageUpdateInProgress === nextProps.imageUpdateInProgress){
             if(this.state.disabledFlag){
-              message.error('Error fetching image. Please try again later.');
+              message.error('Timeout for fetching image. Please try again later.');
               this.setState({disabledFlag: false});
               clearTimeout(flagTimeout);
             } else {

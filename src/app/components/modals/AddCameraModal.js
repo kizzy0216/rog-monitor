@@ -91,6 +91,7 @@ class AddCameraModal extends Component {
       message.success('Camera added!');
       this.resetFields();
       this.props.toggleAddCameraModalVisibility();
+      setTimeout(() => {message.warning('Connecting to live stream. This could take up to 90 seconds.');}, 3500);
     }
     if (nextProps.addLocationCameraError !== '' && this.props.addLocationCameraError !== nextProps.addLocationCameraError) {
       message.error(nextProps.addLocationCameraError);
@@ -99,10 +100,10 @@ class AddCameraModal extends Component {
       this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data.data);
     }
     if(nextProps.bvcCameraConnection && nextProps.bvcCameraConnection !== this.props.bvcCameraConnection){
-      message.success('Camera stream linked successfully!');
+      message.success('Live stream connected!');
     }
     if(nextProps.bvcCameraConnectionFail && nextProps.bvcCameraConnectionFail !== this.props.bvcCameraConnectionFail){
-      message.error('Camera stream could not connect. Deleting camera. Please try adding your camera again.')
+      message.error('Camera stream could not connect. Deleting camera.');
     }
   };
 

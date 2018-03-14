@@ -4,5 +4,13 @@ export default {
   fetchError: '',
   deleteCameraInProcess: false,
   deleteCameraSucess: false,
-  deleteCameraError: ''
+  deleteCameraError: '',
+  imageUpdateInProgress: false,
+  imageUpdateInProgressId: '',
+  refreshCameraError: '',
+  refreshCameraErrorId: '',
+  imageUpdateSuccess: false,
+  imageUpdateSuccessId: '',
+  image: false,
+  disabledFlag: false
 }

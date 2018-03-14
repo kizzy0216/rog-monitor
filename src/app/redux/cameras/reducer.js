@@ -45,6 +45,34 @@ const cameras = (state = initialState, action) => {
           deleteCameraSuccess: action.deleteCameraSuccess
         }
 
+    case types.REFRESH_CAMERA_IMAGE:
+      return {
+        ...state,
+        refreshCameraId: action.refreshCameraId,
+        refreshCameraImage: action.refreshCameraImage
+      }
+
+    case types.IMAGE_UPDATE_IN_PROGRESS:
+      return{
+        ...state,
+        imageUpdateInProgress: action.imageUpdateInProgress,
+        imageUpdateInProgressId: action.imageUpdateInProgressId
+      }
+
+    case types.REFRESH_CAMERA_ERROR:
+      return{
+        ...state,
+        refreshCameraError: action.refreshCameraError,
+        refreshCameraErrorId: action.refreshCameraErrorId
+      }
+
+    case types.IMAGE_UPDATE_SUCCESS:
+      return{
+        ...state,
+        imageUpdateSuccess: action.imageUpdateSuccess,
+        imageUpdateSuccessId: action.imageUpdateSuccessId
+      }
+
     default:
       return state;
   }

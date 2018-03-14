@@ -5,6 +5,8 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
+import { Socket } from '../../../lib/phoenix/phoenix';
+
 import { fetchLocations } from '../locations/actions';
 
 function fetchInProcess(bool) {
@@ -56,6 +58,45 @@ export function clearCameraData() {
   }
 }
 
+function channelConnected(channel) {
+  return {
+    type: types.CHANNEL_CONNECTED,
+    channel: channel
+  }
+}
+
+export function refreshCameraImage(id, image) {
+  return {
+    type: types.REFRESH_CAMERA_IMAGE,
+    refreshCameraId: id,
+    refreshCameraImage: image
+  }
+}
+
+export function imageUpdateInProgress(bool, id) {
+  return {
+    type: types.IMAGE_UPDATE_IN_PROGRESS,
+    imageUpdateInProgress: bool,
+    imageUpdateInProgressId : id
+  }
+}
+
+function refreshCameraError(error, id) {
+  return {
+    type: types.REFRESH_CAMERA_ERROR,
+    refreshCameraError: error,
+    refreshCameraErrorId: id
+  }
+}
+
+function imageUpdateSuccess(bool, id) {
+  return {
+    type: types.IMAGE_UPDATE_SUCCESS,
+    imageUpdateSuccess: bool,
+    imageUpdateSuccessId: id
+  }
+}
+
 export function fetchCameraAuthRtspUrl(user, cameraId) {
   return (dispatch) => {
     dispatch(fetchInProcess(true));
@@ -74,6 +115,57 @@ export function fetchCameraAuthRtspUrl(user, cameraId) {
       .finally(() => {
         dispatch(fetchInProcess(false));
       });
+  }
+}
+
+export function updatePreviewImage(cameraId) {
+  return (dispatch) => {
+    let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/update_thumbnail`;
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
+    let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+    let data = {'image': null}
+
+    axios.post(bvc_url, data, bvc_config)
+      .then((response) => {
+        dispatch(imageUpdateInProgress(true, cameraId));
+      })
+      .catch((error) => {
+        refreshCameraError('Error refreshing camera image.', cameraId);
+        dispatch(imageUpdateInProgress(false, cameraId));
+      })
+  }
+}
+
+export function listenForNewImageThumbnails(user) {
+  return (dispatch) => {
+    let channelName = `images:user`;
+    let params = {token: user.jwt};
+    let ws = new Socket(`${process.env.REACT_APP_ROG_WS_URL}/socket`, {params});
+
+    ws.connect();
+
+    let channel = ws.channel(channelName, {});
+    channel.join()
+      .receive('ok', resp => {
+        dispatch(channelConnected(channel));
+        dispatch(handleNewImage(channel));
+      })
+      .receive('error', resp => console.log(`Unable to join channel ${channelName}`));
+  }
+}
+
+export function handleNewImage(channel) {
+  return (dispatch) => {
+    channel.on('new_image', camera => dispatch(newImage(camera)));
+  }
+}
+
+export function newImage(camera) {
+  return (dispatch) => {
+    dispatch(refreshCameraImage(camera.id, camera.image.original));
+    dispatch(imageUpdateInProgress(false, camera.id));
+    dispatch(imageUpdateSuccess(true, camera.id));
+    dispatch(imageUpdateSuccess(false, camera.id));
   }
 }
 

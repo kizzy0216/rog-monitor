@@ -92,7 +92,7 @@ const styles = {
     marginTop: 50
   },
   content: {
-    marginTop: 65,
+    marginTop: 60,
     zIndex: 0 // Required for Content to scroll under Header
   }
 }

@@ -42,17 +42,17 @@ class CameraCard extends Component {
           this.props.image.original = nextProps.refreshCameraImage
         }
       }
-      if (this.props.id === nextProps.refreshCameraErrorId) {
+      if (nextProps.id === nextProps.refreshCameraErrorId) {
         if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {
           message.error(nextProps.refreshCameraError);
         }
       }
-      if (this.props.id === nextProps.imageUpdateInProgressId) {
+      if (nextProps.id === nextProps.imageUpdateInProgressId) {
         if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
           message.warning('Retrieving preview image. This may take up to 90 seconds.');
         }
       }
-      if (this.props.id === nextProps.imageUpdateSuccessId) {
+      if (nextProps.id === nextProps.imageUpdateSuccessId) {
         if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
           message.success('Preview image retrieved!');
         }

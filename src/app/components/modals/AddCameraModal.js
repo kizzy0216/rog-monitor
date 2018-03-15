@@ -50,10 +50,10 @@ const AddCameraForm = Form.create()(
           </FormItem>
           <FormItem hasFeedback>
             {getFieldDecorator('rtspUrl', {rules: [
-                {required: true, message: 'Please enter the RTSP URL'}
+                {required: true, message: 'Please enter the camera URL'}
               ]
             })(
-              <Input placeholder='Enter RTSP URL'/>
+              <Input placeholder='Enter Camera URL'/>
             )}
 
           </FormItem>

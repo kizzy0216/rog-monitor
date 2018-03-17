@@ -89,6 +89,27 @@ function refreshCameraError(error, id) {
   }
 }
 
+function editCameraInProcess(bool) {
+  return {
+    type: types.EDIT_CAMERA_IN_PROCESS,
+    editCameraInProcess: bool
+  }
+}
+
+function editCameraSuccess(bool) {
+  return {
+    type: types.EDIT_CAMERA_SUCCESS,
+    editCameraSuccess: bool
+  }
+}
+
+function editCameraError(message) {
+  return {
+    type: types.EDIT_CAMERA_ERROR,
+    editCameraError: message
+  }
+}
+
 function imageUpdateSuccess(bool, id) {
   return {
     type: types.IMAGE_UPDATE_SUCCESS,
@@ -166,6 +187,40 @@ export function newImage(camera) {
     dispatch(imageUpdateInProgress(false, camera.id));
     dispatch(imageUpdateSuccess(true, camera.id));
     dispatch(imageUpdateSuccess(false, camera.id));
+  }
+}
+
+export function editCamera(user, cameraId, cameraData) {
+  return (dispatch) => {
+    dispatch(editCameraError(''));
+    dispatch(editCameraInProcess(true));
+
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/cameras/${cameraId}`;
+    let config = {headers: {Authorization: user.jwt}};
+
+    let data = {
+      camera: cameraData
+    };
+
+    axios.patch(url, data, config)
+      .then((response) => {
+        dispatch(editCameraSuccess(true));
+        dispatch(editCameraSuccess(false));
+      })
+      .catch((error) => {
+        let errMessage = 'Error editing camera. Please try again later.';
+        if (error.response.data.error) {
+          if (error.response.data.error === 'has already been used') {
+            errMessage = `This location already has a camera with that name.`
+          }
+        }
+        dispatch(editCameraError(errMessage));
+        dispatch(editCameraInProcess(false));
+      })
+      .finally(() => {
+        dispatch(editCameraError(''));
+        dispatch(editCameraInProcess(false));
+      });
   }
 }
 

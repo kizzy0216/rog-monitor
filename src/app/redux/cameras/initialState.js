@@ -12,5 +12,8 @@ export default {
   imageUpdateSuccess: false,
   imageUpdateSuccessId: '',
   image: false,
-  disabledFlag: false
+  disabledFlag: false,
+  editCameraInProcess: false,
+  editCameraSuccess: false,
+  editCameraError: ''
 }

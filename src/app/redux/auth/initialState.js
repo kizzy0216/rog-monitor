@@ -4,6 +4,8 @@ export default {
   loginError: false,
   registerInProcess: false,
   registerError: false,
+  resetPasswordInProcess: false,
+  resetPasswordError: false,
   sendInvitationInProcess: false,
   sendInvitationSuccess: false,
   sendInvitationError: '',
@@ -13,5 +15,11 @@ export default {
   bvcInteractionInProcess: false,
   bvcAuthError: false,
   deleteAlertSuccess: false,
-  createAlertSuccess: false
+  createAlertSuccess: false,
+  sendpasswordResetRequestInProcess: false,
+  sendpasswordResetRequestSuccess: false,
+  sendpasswordResetRequestError: '',
+  getpasswordResetRequestInProcess: false,
+  getpasswordResetRequestSuccess: false,
+  getpasswordResetRequestError: ''
 }

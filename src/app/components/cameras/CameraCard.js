@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Icon, Row, Col, Popconfirm, message } from 'antd';
+import { Card, Icon, Row, Col, Popconfirm, message, Button } from 'antd';
 
 import Recorder from '../video/Recorder';
 import EditCamera from '../cameras/EditCamera';
@@ -10,10 +10,12 @@ import { deleteCamera } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
+import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
+import loading from '../../../assets/img/TempCameraImage.jpeg'
 
 class CameraCard extends Component {
   deleteCamera = () => {
-    this.props.deleteCamera(this.props.user, this.props.id)
+    this.props.deleteCamera(this.props.user, this.props.id);
   };
 
   viewCameraStream = () => {
@@ -33,6 +35,31 @@ class CameraCard extends Component {
     this.props.registerCamera(this.props.user.id, this.props.cameraLocation.cameras);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.id === nextProps.id){
+      if (nextProps.id === nextProps.refreshCameraId){
+        if (this.props.image.original !== nextProps.refreshCameraImage) {
+          this.props.image.original = nextProps.refreshCameraImage
+        }
+      }
+      if (nextProps.id === nextProps.refreshCameraErrorId) {
+        if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {
+          message.error(nextProps.refreshCameraError);
+        }
+      }
+      if (nextProps.id === nextProps.imageUpdateInProgressId) {
+        if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
+          message.warning('Retrieving preview image. This may take up to 90 seconds.');
+        }
+      }
+      if (nextProps.id === nextProps.imageUpdateSuccessId) {
+        if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
+          message.success('Preview image retrieved!');
+        }
+      }
+    }
+  }
+
   render() {
     if (this.props.liveView) {
       return (
@@ -41,16 +68,24 @@ class CameraCard extends Component {
             <Col>{this.props.name}</Col>
           </Row>
           <div style={styles.refreshImage}>
-             <Icon type="loading-3-quarters" />
+            <RefreshPreviewImage data={this.props}/>
+
             <span style={styles.alertModal}>
-            <AddAlertModal data={this.props}/>
+              {this.props.cameraLocation.myRole === 'viewer' ?
+                ('') :
+                <AddAlertModal data={this.props}/>
+              }
             </span>
           </div>
           <div>
 
           </div>
           <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
-            <img src={this.props.image.original} style={styles.cameraCardImg} />
+            {this.props.image.original ?
+              <img src={this.props.image.original} style={styles.cameraCardImg} /> :
+              <img src={loading} style={styles.cameraCardImg} />
+            }
+
           </div>
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<span></span>) :
@@ -112,11 +147,22 @@ const styles = {
   },
   alertModal: {
     float: 'left'
+  },
+  getThumbnailBtn: {
+    backgroundColor: 'white'
   }
 }
 const mapStateToProps = (state) => {
   return {
-    polygonData: state.alerts.polygonData
+    polygonData: state.alerts.polygonData,
+    refreshCameraImage: state.cameras.refreshCameraImage,
+    refreshCameraId: state.cameras.refreshCameraId,
+    imageUpdateInProgress: state.cameras.imageUpdateInProgress,
+    imageUpdateInProgressId: state.cameras.imageUpdateInProgressId,
+    refreshCameraError: state.cameras.refreshCameraError,
+    refreshCameraErrorId: state.cameras.refreshCameraErrorId,
+    imageUpdateSuccess: state.cameras.imageUpdateSuccess,
+    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId
   }
 };
 const mapDispatchToProps = (dispatch) => {

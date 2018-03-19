@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Icon, Modal, Form, Input, Button } from 'antd';
+import { connect } from 'react-redux';
+import { Icon, Modal, Form, Input, Button, message } from 'antd';
 import CustomInput from '../../components/formitems/CustomInput';
+
+import { editCamera } from '../../redux/cameras/actions'
 
 const FormItem = Form.Item;
 const CameraLicensesForm = Form.create()(
@@ -37,7 +39,7 @@ const CameraLicensesForm = Form.create()(
               <CustomInput style={styles.input} type='text' handleSave={onCreate} value1={cameraData.name}/>
             )}
           </FormItem>
-          <FormItem label='RSTP URL' {...formItemLayout}>
+          <FormItem label='URL' {...formItemLayout}>
             {getFieldDecorator('rtspUrl')(
               <CustomInput style={styles.input} type='text' handleSave={onCreate} value1={cameraData.rtspUrl}/>
             )}
@@ -63,7 +65,8 @@ class EditCamera extends Component {
     super(props);
     this.state = {
       visible: false,
-      error: false
+      error: false,
+      flag: false
     }
   }
 
@@ -87,34 +90,28 @@ class EditCamera extends Component {
         return;
       }
 
-      switch (e.target.id) {
-        case 'name':
-          this.setState({name: e.target.value});
-          this.cameraData.name = e.target.value;
-          break;
+      let cameraData = {};
+      cameraData[e.target.id] = e.target.value.trim();
 
-        case 'rtspUrl':
-          this.setState({rtspUrl: e.target.value});
-          this.cameraData.rtspUrl = e.target.value;
-          break;
-
-        case 'username':
-          this.setState({username: e.target.value});
-          this.cameraData.username = e.target.value;
-          break;
-
-        case 'password':
-          this.setState({password: e.target.value});
-          this.cameraData.password = e.target.value;
-          break;
-      }
-
-
-      // console.log('Received values of form: ', this.cameraData);
-      // form.resetFields();
+      this.props.editCamera(this.props.user, this.props.data.id, cameraData);
       this.setState({visible: true});
+      message.warning('Saving your update.');
+      this.setState({flag: true});
     });
   };
+
+  componentWillReceiveProps(nextProps){
+    if (this.props.data.id === nextProps.data.id && this.state.flag == true) {
+      if (nextProps.editCameraError !== '' && this.props.editCameraError !== nextProps.editCameraError) {
+        message.error(nextProps.editCameraError);
+        this.setState({flag: false});
+      }
+      if (nextProps.editCameraSuccess === true) {
+        message.success('Camera updated.');
+        this.setState({flag: false});
+      }
+    }
+  }
 
   render() {
     return (
@@ -149,4 +146,20 @@ const styles = {
     width: '50%'
   }
 };
-export default withRouter(EditCamera);
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user,
+    editCameraInProcess: state.cameras.editCameraInProcess,
+    editCameraError: state.cameras.editCameraError,
+    editCameraSuccess: state.cameras.editCameraSuccess,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    editCamera: (user, camera, cameraData) => dispatch(editCamera(user, camera, cameraData)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditCamera);

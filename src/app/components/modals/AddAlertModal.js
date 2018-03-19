@@ -57,11 +57,11 @@ const AddAlertForm = Form.create()(
             {deleteButton && canvasMode &&
             <div>
                 <span style={styles.currentalertDetails}>
-                Alert Id: {currentAlertDetails.currentAlertId}
+                Trigger Id: {currentAlertDetails.currentAlertId}
                 </span>
               <br/>
               <span style={styles.currentalertDetails}>
-                Alert Type: {(currentAlertDetails.currentAlertType === 'RA') ? 'Restricted Area' : ((currentAlertDetails.currentAlertType === 'LD') ? 'Loitering Detection' : 'Virtual Wall')}
+                Trigger Type: {(currentAlertDetails.currentAlertType === 'RA') ? 'Restricted Area' : ((currentAlertDetails.currentAlertType === 'LD') ? 'Loitering Detection' : 'Virtual Wall')}
                 </span>
               <Button style={styles.deleteButton} onClick={deleteAlert} loading={deleteStatus}>
                 Delete
@@ -70,7 +70,7 @@ const AddAlertForm = Form.create()(
             }
           </FormItem>
           <FormItem>
-            <Popover title='Select Alert Type to Add'
+            <Popover title='Select Trigger Type to Add'
                      content=
                        {
                          <div style={styles.alertType}>
@@ -200,8 +200,9 @@ class AddAlertModal extends Component {
         this.props.fetchPolygonAlert(this.alertDetails['id']);
         this.alertDetails['id'] = undefined;
         this.setState({deleteButton: false});
+        this.setState({saveCancel: false});
       }
-      this.setState({saveCancel: false});
+
     }
     else if (this.props.polygonData !== nextProps.polygonData) {
       this.setState({canvasMode: true});
@@ -295,7 +296,7 @@ class AddAlertModal extends Component {
         this.fetchAlerts(true);
       }
       else {
-        message.error('please draw a alert to save');
+        message.error('please draw a trigger to save');
       }
     }
     this.alertDetails.polygonPoints.length = 0;

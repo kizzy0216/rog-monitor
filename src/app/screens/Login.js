@@ -9,6 +9,7 @@ import { login } from '../redux/auth/actions';
 import RegisterBtn from '../components/navigation/RegisterBtn';
 import RequestInviteModal from '../components/modals/RequestInviteModal';
 import { authenticateBVCServer } from '../redux/auth/actions';
+import RequestPasswordResetModal from '../components/modals/RequestPasswordResetModal';
 
 const FormItem = Form.Item;
 
@@ -17,7 +18,8 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      inviteModalVisible: false
+      inviteModalVisible: false,
+      requestPasswordResetModal: false
     }
   }
 
@@ -36,11 +38,16 @@ class Login extends Component {
     this.setState({inviteModalVisible: !this.state.inviteModalVisible});
   }
 
+  toggleRequestPasswordResetModalVisibility = () => {
+    this.setState({requestPasswordResetModalVisible: !this.state.requestPasswordResetModalVisible});
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Layout>
         <Header style={styles.header}>
+          <Col xs={{span: 0}} sm={{span: 12}}><h3 style={styles.chromeText}>ROG Monitor requires the Google Chrome web browser.</h3></Col>
           <img style={styles.headerLogo} src={logoFull} height='50px'/>
         </Header>
         <Layout>
@@ -60,9 +67,6 @@ class Login extends Component {
                 </Row>
                 <Row type='flex' justify='center' align='bottom'>
                   <Col sm={{span: 24}} style={styles.downloadBtnContainer}>
-                    <Button type='primary' size={'large'} style={styles.downloadBtn}>
-                      <a href='https://www.gorog.co/download.html' target='_blank' style={{textDecoration: 'none'}}>Download it free</a>
-                    </Button>
                     <div style={styles.howItWorksLink}>
                       <a href='https://www.gorog.co/faststart.html' target="_blank">Learn how it works.</a>
                     </div>
@@ -140,8 +144,9 @@ class Login extends Component {
                       </p>
                     </div>
                     <div style={styles.forgotPassword}>
-                      <a href=''>I forgot my user ID or Password</a>
+                      <a href='javascript:;' onClick={this.toggleRequestPasswordResetModalVisibility}>I forgot my Password</a>
                     </div>
+                    <RequestPasswordResetModal visible={this.state.requestPasswordResetModalVisible} toggleRequestPasswordResetModalVisibility={this.toggleRequestPasswordResetModalVisibility.bind(this)} />
                   </Col>
                 </Row>
               </Col>
@@ -165,6 +170,9 @@ const styles = {
   headerLogo: {
     float: 'right',
     marginTop: 8
+  },
+  chromeText: {
+    color: 'white'
   },
   content: {
     marginTop: 65,

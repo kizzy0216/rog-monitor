@@ -11,7 +11,7 @@ class NavigationMenu extends Component {
       const alert = nextProps.newAlerts[0];
 
       notification.open({
-        message: 'Alert!',
+        message: 'Alert:',
         description: `${alert.type} by ${alert.camera.name} at ${alert.camera.location.name}`,
         duration: 5
       });
@@ -30,7 +30,7 @@ class NavigationMenu extends Component {
       this.props.history.push(path);
     }
   }
-  
+
   render() {
     return (
       <Menu

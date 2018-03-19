@@ -28,7 +28,7 @@ class CustomInput extends Component {
       }
     });
   };
-  
+
   handleChange = (event) => {
     this.setState({value: event.target.value});
   };
@@ -48,7 +48,7 @@ class CustomInput extends Component {
             }
             {
              !this.props.visibility && <Button key='add_alert' type='primary' size='large'>
-                Add Alert
+                Add Alert Trigger
               </Button>
             }
             {

@@ -50,10 +50,10 @@ const AddCameraForm = Form.create()(
           </FormItem>
           <FormItem hasFeedback>
             {getFieldDecorator('rtspUrl', {rules: [
-                {required: true, message: 'Please enter the RTSP URL'}
+                {required: true, message: 'Please enter the camera URL'}
               ]
             })(
-              <Input placeholder='Enter RTSP URL'/>
+              <Input placeholder='Enter Camera URL'/>
             )}
 
           </FormItem>
@@ -91,11 +91,20 @@ class AddCameraModal extends Component {
       message.success('Camera added!');
       this.resetFields();
       this.props.toggleAddCameraModalVisibility();
+      setTimeout(() => {message.warning('Connecting to live stream. This could take up to 90 seconds.');}, 3500);
+    }
+    if (nextProps.addLocationCameraError !== '' && this.props.addLocationCameraError !== nextProps.addLocationCameraError) {
+      message.error(nextProps.addLocationCameraError);
     }
     if(nextProps.addedCameraData !== '' && nextProps.addedCameraData !== this.props.addedCameraData) {
       this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data.data);
     }
-
+    if(nextProps.bvcCameraConnection && nextProps.bvcCameraConnection !== this.props.bvcCameraConnection){
+      message.success('Live stream connected!');
+    }
+    if(nextProps.bvcCameraConnectionFail && nextProps.bvcCameraConnectionFail !== this.props.bvcCameraConnectionFail){
+      message.error('Camera stream could not connect. Deleting camera.');
+    }
   };
 
   resetFields = () => {
@@ -182,7 +191,9 @@ const mapStateToProps = (state) => {
     addLocationCameraError: state.locations.addLocationCameraError,
     addLocationCameraSuccess: state.locations.addLocationCameraSuccess,
     addLocationCameraInProcess: state.locations.addLocationCameraInProcess,
-    addedCameraData: state.locations.addedCameraData
+    addedCameraData: state.locations.addedCameraData,
+    bvcCameraConnection: state.locations.bvcCameraConnection,
+    bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail
   }
 }
 

@@ -6,7 +6,7 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { trackEventAnalytics } from "../auth/actions";
-import {updatePreviewImage} from "../cameras/actions";
+import {deleteCamera, updatePreviewImage} from "../cameras/actions";
 import { locale } from 'moment';
 
 function fetchInProcess(bool) {
@@ -289,7 +289,7 @@ export function checkBvcCameraConnection(user, cameraId) {
     const bvc_jwt = localStorage.getItem('bvc_jwt');
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
     let timeout = 90;
-    let failed = false;
+    let deleted = false;
     let checkBvc = setInterval(function(){
       if (timeout <= 0){
         clearInterval(checkBvc);
@@ -304,13 +304,14 @@ export function checkBvcCameraConnection(user, cameraId) {
           return false;
         } else if (timeout <= 0){
           dispatch(bvcCameraConnectionFail(true));
-          failed = true;
+          dispatch(deleteCamera(user, cameraId));
+          deleted = true;
         }
       })
       .catch((error) => {
-        if (timeout <= 0 && failed == false){
+        if (timeout <= 0 && deleted == false){
           dispatch(bvcCameraConnectionFail(true));
-          failed = true;
+          dispatch(deleteCamera(user, cameraId));
         }
       })
     }, 5000, bvc_url, config);

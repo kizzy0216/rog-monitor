@@ -12,7 +12,6 @@ import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
-import cameraConnectError from '../../../assets/img/connectError.jpeg'
 
 class CameraCard extends Component {
   deleteCamera = () => {
@@ -84,9 +83,7 @@ class CameraCard extends Component {
           <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
             {this.props.image.original ?
               <img src={this.props.image.original} style={styles.cameraCardImg} /> :
-              this.props.bvcCameraConnectionFail ?
-                <img src={cameraConnectError} style={styles.cameraCardImg} /> :
-                <img src={loading} style={styles.cameraCardImg} />
+              <img src={loading} style={styles.cameraCardImg} />
             }
 
           </div>
@@ -165,8 +162,7 @@ const mapStateToProps = (state) => {
     refreshCameraError: state.cameras.refreshCameraError,
     refreshCameraErrorId: state.cameras.refreshCameraErrorId,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
-    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId,
-    bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail
+    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId
   }
 };
 const mapDispatchToProps = (dispatch) => {

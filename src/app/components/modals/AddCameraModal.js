@@ -103,7 +103,7 @@ class AddCameraModal extends Component {
       message.success('Live stream connected!');
     }
     if(nextProps.bvcCameraConnectionFail && nextProps.bvcCameraConnectionFail !== this.props.bvcCameraConnectionFail){
-      message.error('Camera stream could not connect. Deleting camera.');
+      message.error('Camera stream could not connect.');
     }
   };
 

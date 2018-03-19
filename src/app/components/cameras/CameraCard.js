@@ -12,8 +12,16 @@ import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
+import cameraConnectError from '../../../assets/img/connectError.jpeg'
 
 class CameraCard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      flag: false
+    }
+  }
+
   deleteCamera = () => {
     this.props.deleteCamera(this.props.user, this.props.id);
   };
@@ -71,10 +79,7 @@ class CameraCard extends Component {
             <RefreshPreviewImage data={this.props}/>
 
             <span style={styles.alertModal}>
-              {this.props.cameraLocation.myRole === 'viewer' ?
-                ('') :
-                <AddAlertModal data={this.props}/>
-              }
+              <AddAlertModal data={this.props}/>
             </span>
           </div>
           <div>
@@ -83,7 +88,9 @@ class CameraCard extends Component {
           <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
             {this.props.image.original ?
               <img src={this.props.image.original} style={styles.cameraCardImg} /> :
-              <img src={loading} style={styles.cameraCardImg} />
+              this.props.bvcCameraConnectionFail ?
+                <img src={cameraConnectError} style={styles.cameraCardImg} /> :
+                <img src={loading} style={styles.cameraCardImg} />
             }
 
           </div>
@@ -162,7 +169,8 @@ const mapStateToProps = (state) => {
     refreshCameraError: state.cameras.refreshCameraError,
     refreshCameraErrorId: state.cameras.refreshCameraErrorId,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
-    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId
+    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId ,
+    bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail
   }
 };
 const mapDispatchToProps = (dispatch) => {

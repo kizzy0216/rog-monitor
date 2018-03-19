@@ -38,22 +38,22 @@ class CameraCard extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.id === nextProps.id){
       if (nextProps.id === nextProps.refreshCameraId){
-        if (this.props.image.original !== nextProps.refreshCameraImage) {
+        if (this.props.image.original !== nextProps.refreshCameraImage && this.props.refreshCameraId === nextProps.refreshCameraId) {
           this.props.image.original = nextProps.refreshCameraImage
         }
       }
       if (nextProps.id === nextProps.refreshCameraErrorId) {
-        if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {
+        if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError && this.props.refreshCameraErrorId === nextProps.refreshCameraErrorId) {
           message.error(nextProps.refreshCameraError);
         }
       }
       if (nextProps.id === nextProps.imageUpdateInProgressId) {
-        if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
+        if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress && this.props.imageUpdateInProgressId === nextProps.imageUpdateInProgressId) {
           message.warning('Retrieving preview image. This may take up to 90 seconds.');
         }
       }
       if (nextProps.id === nextProps.imageUpdateSuccessId) {
-        if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
+        if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess && this.props.imageUpdateSuccessId === nextProps.imageUpdateSuccessId) {
           message.success('Preview image retrieved!');
         }
       }

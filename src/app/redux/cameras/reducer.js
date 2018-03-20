@@ -91,6 +91,14 @@ const cameras = (state = initialState, action) => {
         editCameraError: action.editCameraError
       }
 
+    case types.UPDATE_CAMERA:
+      return {
+        ...state,
+        name: action.name,
+        rtspUrl: action.rtspUrl,
+        username: action.username
+      }
+
     default:
       return state;
   }

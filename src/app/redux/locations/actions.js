@@ -184,10 +184,11 @@ export function bvcCameraConnection(bool) {
   }
 }
 
-export function bvcCameraConnectionFail(bool) {
+export function bvcCameraConnectionFail(bool, id) {
   return {
     type: types.BVC_CAMERA_CONNECTION_FAIL,
-    bvcCameraConnectionFail: bool
+    bvcCameraConnectionFail: bool,
+    bvcCameraConnectionFailId: id
   }
 }
 
@@ -300,16 +301,17 @@ export function checkBvcCameraConnection(user, cameraId) {
       .then((response) => {
         if (response.data.value == true){
           dispatch(bvcCameraConnection(true));
+          dispatch(bvcCameraConnectionFail(false, cameraId));
           clearInterval(checkBvc);
           return false;
         } else if (timeout <= 0){
-          dispatch(bvcCameraConnectionFail(true));
+          dispatch(bvcCameraConnectionFail(true, cameraId));
           failed = true;
         }
       })
       .catch((error) => {
         if (timeout <= 0 && failed == false){
-          dispatch(bvcCameraConnectionFail(true));
+          dispatch(bvcCameraConnectionFail(true, cameraId));
           failed = true;
         }
       })

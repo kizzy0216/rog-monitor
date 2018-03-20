@@ -22,5 +22,6 @@ export default {
   removeLocationSuccess: false,
   addedCameraData: '',
   bvcCameraConnection: false,
-  bvcCameraConnectionFail: false
+  bvcCameraConnectionFail: false,
+  bvcCameraConnectionFailId: ''
 }

@@ -79,7 +79,10 @@ class CameraCard extends Component {
             <RefreshPreviewImage data={this.props}/>
 
             <span style={styles.alertModal}>
-              <AddAlertModal data={this.props}/>
+              {this.props.cameraLocation.myRole === 'viewer' ?
+                ('') :
+                <AddAlertModal data={this.props}/>
+              }
             </span>
           </div>
           <div>

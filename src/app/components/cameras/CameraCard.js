@@ -81,7 +81,7 @@ class CameraCard extends Component {
           <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
             {this.props.image.original ?
               <img src={this.props.image.original} style={styles.cameraCardImg} /> :
-              this.props.bvcCameraConnectionFail ?
+              ((this.props.bvcCameraConnectionFail) && (this.props.id === this.props.bvcCameraConnectionFailId)) ?
                 <img src={cameraConnectError} style={styles.cameraCardImg} /> :
                 <img src={loading} style={styles.cameraCardImg} />
             }
@@ -163,7 +163,8 @@ const mapStateToProps = (state) => {
     refreshCameraErrorId: state.cameras.refreshCameraErrorId,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
     imageUpdateSuccessId: state.cameras.imageUpdateSuccessId,
-    bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail
+    bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail,
+    bvcCameraConnectionFailId: state.locations.bvcCameraConnectionFailId
   }
 };
 const mapDispatchToProps = (dispatch) => {

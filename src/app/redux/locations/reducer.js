@@ -153,7 +153,8 @@ const locations = (state = initialState, action) => {
       case types.BVC_CAMERA_CONNECTION_FAIL:
         return {
           ...state,
-          bvcCameraConnectionFail: action.bvcCameraConnectionFail
+          bvcCameraConnectionFail: action.bvcCameraConnectionFail,
+          bvcCameraConnectionFailId: action.bvcCameraConnectionFailId
         }
 
     default:

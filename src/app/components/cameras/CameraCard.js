@@ -15,6 +15,13 @@ import loading from '../../../assets/img/TempCameraImage.jpeg'
 import cameraConnectError from '../../../assets/img/connectError.jpeg'
 
 class CameraCard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      flag: false
+    }
+  }
+
   deleteCamera = () => {
     this.props.deleteCamera(this.props.user, this.props.id);
   };
@@ -39,22 +46,22 @@ class CameraCard extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.id === nextProps.id){
       if (nextProps.id === nextProps.refreshCameraId){
-        if (this.props.image.original !== nextProps.refreshCameraImage) {
+        if (this.props.image.original !== nextProps.refreshCameraImage && this.props.refreshCameraId === nextProps.refreshCameraId) {
           this.props.image.original = nextProps.refreshCameraImage
         }
       }
       if (nextProps.id === nextProps.refreshCameraErrorId) {
-        if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {
+        if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError && this.props.refreshCameraErrorId === nextProps.refreshCameraErrorId) {
           message.error(nextProps.refreshCameraError);
         }
       }
       if (nextProps.id === nextProps.imageUpdateInProgressId) {
-        if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
+        if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress && this.props.imageUpdateInProgressId === nextProps.imageUpdateInProgressId) {
           message.warning('Retrieving preview image. This may take up to 90 seconds.');
         }
       }
       if (nextProps.id === nextProps.imageUpdateSuccessId) {
-        if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
+        if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess && this.props.imageUpdateSuccessId === nextProps.imageUpdateSuccessId) {
           message.success('Preview image retrieved!');
         }
       }
@@ -72,7 +79,10 @@ class CameraCard extends Component {
             <RefreshPreviewImage data={this.props}/>
 
             <span style={styles.alertModal}>
-              <AddAlertModal data={this.props}/>
+              {this.props.cameraLocation.myRole === 'viewer' ?
+                ('') :
+                <AddAlertModal data={this.props}/>
+              }
             </span>
           </div>
           <div>

@@ -73,6 +73,32 @@ const cameras = (state = initialState, action) => {
         imageUpdateSuccessId: action.imageUpdateSuccessId
       }
 
+    case types.EDIT_CAMERA_IN_PROCESS:
+      return{
+        ...state,
+        editCameraInProcess: action.editCameraInProcess
+      }
+
+    case types.EDIT_CAMERA_SUCCESS:
+      return {
+        ...state,
+        editCameraSuccess: action.editCameraSuccess
+      }
+
+    case types.EDIT_CAMERA_ERROR:
+      return {
+        ...state,
+        editCameraError: action.editCameraError
+      }
+
+    case types.UPDATE_CAMERA:
+      return {
+        ...state,
+        name: action.name,
+        rtspUrl: action.rtspUrl,
+        username: action.username
+      }
+
     default:
       return state;
   }

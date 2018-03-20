@@ -200,8 +200,9 @@ class AddAlertModal extends Component {
         this.props.fetchPolygonAlert(this.alertDetails['id']);
         this.alertDetails['id'] = undefined;
         this.setState({deleteButton: false});
+        this.setState({saveCancel: false});
       }
-      this.setState({saveCancel: false});
+
     }
     else if (this.props.polygonData !== nextProps.polygonData) {
       this.setState({canvasMode: true});

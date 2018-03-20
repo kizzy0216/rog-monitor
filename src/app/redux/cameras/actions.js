@@ -89,11 +89,41 @@ function refreshCameraError(error, id) {
   }
 }
 
+function editCameraInProcess(bool) {
+  return {
+    type: types.EDIT_CAMERA_IN_PROCESS,
+    editCameraInProcess: bool
+  }
+}
+
+function editCameraSuccess(bool) {
+  return {
+    type: types.EDIT_CAMERA_SUCCESS,
+    editCameraSuccess: bool
+  }
+}
+
+function editCameraError(message) {
+  return {
+    type: types.EDIT_CAMERA_ERROR,
+    editCameraError: message
+  }
+}
+
 function imageUpdateSuccess(bool, id) {
   return {
     type: types.IMAGE_UPDATE_SUCCESS,
     imageUpdateSuccess: bool,
     imageUpdateSuccessId: id
+  }
+}
+
+function updateCamera(cameraData) {
+  return {
+    type: types.UPDATE_CAMERA,
+    name: cameraData.name,
+    rtspUrl: cameraData.rtspUrl,
+    username: cameraData.username
   }
 }
 
@@ -169,6 +199,42 @@ export function newImage(camera) {
   }
 }
 
+export function editCamera(user, cameraId, cameraData) {
+  return (dispatch) => {
+    dispatch(editCameraError(''));
+    dispatch(editCameraInProcess(true));
+
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/cameras/${cameraId}`;
+    let config = {headers: {Authorization: user.jwt}};
+
+    let data = {
+      camera: cameraData
+    };
+
+    axios.patch(url, data, config)
+      .then((response) => {
+        dispatch(updateCamera(response.data.data));
+        dispatch(fetchLocations(user));
+        dispatch(editCameraSuccess(true));
+        dispatch(editCameraSuccess(false));
+      })
+      .catch((error) => {
+        let errMessage = 'Error editing camera. Please try again later.';
+        if (typeof error.response.data.error !== 'undefined') {
+          if (error.response.data.error === 'has already been used') {
+            errMessage = `This location already has a camera with that name.`
+          }
+        }
+        dispatch(editCameraError(errMessage));
+        dispatch(editCameraInProcess(false));
+      })
+      .finally(() => {
+        dispatch(editCameraError(''));
+        dispatch(editCameraInProcess(false));
+      });
+  }
+}
+
 export function deleteCamera(user, cameraId) {
   return (dispatch) => {
     dispatch(deleteCameraError(''));
@@ -178,7 +244,7 @@ export function deleteCamera(user, cameraId) {
     let config = {headers: {Authorization: user.jwt}};
     axios.delete(url, config)
       .then((response) => {
-        dispatch(fetchLocations(user))
+        dispatch(fetchLocations(user));
         dispatch(deleteCameraSuccess(true));
         dispatch(deleteCameraSuccess(false));
       })

@@ -1,6 +1,6 @@
 export default {
   locations: [],
-  selectedLocation: {id: null, name: null, cameras: []},
+  selectedLocation: {id: null, name: null, cameras: [], guards: []},
   fetchInProcess: false,
   fetchError: false,
   addLocationCameraInProcess: false,

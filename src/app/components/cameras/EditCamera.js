@@ -43,11 +43,6 @@ const CameraLicensesForm = Form.create()(
               <CustomInput style={styles.input} type='text' handleSave={onCreate} value1={cameraData.name}/>
             )}
           </FormItem>
-          <FormItem label='URL' {...formItemLayout}>
-            {getFieldDecorator('rtspUrl')(
-              <CustomInput style={styles.input} type='text' handleSave={onCreate} value1={cameraData.rtspUrl}/>
-            )}
-          </FormItem>
           <FormItem label='Username' {...formItemLayout}>
             {getFieldDecorator('username')(
               <CustomInput style={styles.input} type='text' handleSave={onCreate} value1={cameraData.username}/>
@@ -77,7 +72,6 @@ class EditCamera extends Component {
   cameraData = {
     image: this.props.data.image.original,
     name: this.props.data.name,
-    rtspUrl: this.props.data.rtspUrl,
     username: this.props.data.username,
     password: '****'
   };

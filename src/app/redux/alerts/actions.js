@@ -220,7 +220,7 @@ export function createAlert(alertCoordinates, alertType, cameraId, duration, dir
     dispatch(createAlertError(false));
     const bvc_jwt = localStorage.getItem('bvc_jwt');
 
-    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/` + cameraId + `/alerts`;
+    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/${cameraId}/alerts`;
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
 
     let alertData = {type: alertType, points: alertCoordinates};
@@ -253,7 +253,7 @@ export function fetchPolygonAlert(cameraId) {
 
     const bvc_jwt = localStorage.getItem('bvc_jwt');
 
-    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/` + cameraId + `/alerts`;
+    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/${cameraId}/alerts`;
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
 
     axios.get(urlAlert, config)
@@ -275,7 +275,7 @@ export function deletePolygonAlert(cameraId, alertId) {
 
     const bvc_jwt = localStorage.getItem('bvc_jwt');
 
-    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/` + cameraId + `/alerts/` + alertId;
+    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/${cameraId}/alerts/${alertId}`;
     let config = {headers: {Authorization: 'JWT' + ' ' + bvc_jwt}};
 
     axios.delete(urlAlert, config)
@@ -297,7 +297,7 @@ export function deletePolygonAlert(cameraId, alertId) {
 
       const bvc_jwt = localStorage.getItem('bvc_jwt');
 
-      let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/user/` + userId + `/cameras`;
+      let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/user/${userId}/cameras`;
       let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
       let cameraData = [];
       for(let i = 0; i < cameraDetails.length; i++) {

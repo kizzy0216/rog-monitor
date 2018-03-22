@@ -44,7 +44,6 @@ class CameraCard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (this.props.id === nextProps.id){
       if (nextProps.id === nextProps.refreshCameraId){
         if (this.props.image.original !== nextProps.refreshCameraImage && this.props.refreshCameraId === nextProps.refreshCameraId) {

@@ -73,9 +73,7 @@ class CameraCard extends Component {
       return (
         <Card>
           <Row type='flex' justify='center'>
-            <Col>
-              <p style={styles.cameraCardTitle}>{this.props.name}</p>
-            </Col>
+            <Col style={styles.cameraCardTitle}>{this.props.name}</Col>
           </Row>
           <Row>
             <div style={styles.refreshImage}>

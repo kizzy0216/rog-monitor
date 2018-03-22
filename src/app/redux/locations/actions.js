@@ -290,7 +290,6 @@ export function checkBvcCameraConnection(user, cameraId) {
     const bvc_jwt = localStorage.getItem('bvc_jwt');
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
     let timeout = 90;
-    let failed = false;
     let checkBvc = setInterval(function(){
       if (timeout <= 0){
         dispatch(bvcCameraConnectionFail(true, cameraId));

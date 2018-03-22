@@ -60,7 +60,7 @@ const AddCameraForm = Form.create()(
           <FormItem hasFeedback>
             {getFieldDecorator('username', {
               rules: [
-                {required: true, message: 'Please enter the camera username'}
+                {required: false, message: 'Please enter the camera username'}
               ]
             })(
               <Input placeholder='Enter camera username'/>
@@ -69,7 +69,7 @@ const AddCameraForm = Form.create()(
           <FormItem hasFeedback>
             {getFieldDecorator('password', {
               rules: [
-                {required: true, message: 'Please enter the camera password'}
+                {required: false, message: 'Please enter the camera password'}
               ]
             })(
               <Input type='password' placeholder='Enter camera password'/>

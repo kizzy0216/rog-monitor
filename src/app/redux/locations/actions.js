@@ -227,7 +227,7 @@ export function fetchLocations(user) {
   }
 }
 
-export function addLocationCamera(user, location, name, rtspUrl, username, password) {
+export function addLocationCamera(user, location, name, rtspUrl, username = "admin", password = "admin") {
   return (dispatch) => {
     dispatch(addLocationCameraError(''));
     dispatch(addLocationCameraInProcess(true));

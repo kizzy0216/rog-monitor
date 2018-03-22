@@ -299,21 +299,11 @@ export function checkBvcCameraConnection(user, cameraId) {
       }
       axios.get(bvc_url, config)
       .then((response) => {
-        if (response.data.value == true){
-          dispatch(bvcCameraConnection(true));
-          dispatch(bvcCameraConnectionFail(false, cameraId));
-          clearInterval(checkBvc);
-          return false;
-        } else if (timeout <= 0){
-          dispatch(bvcCameraConnectionFail(true, cameraId));
-          failed = true;
-        }
-      })
-      .catch((error) => {
-        if (timeout <= 0 && failed == false){
-          dispatch(bvcCameraConnectionFail(true, cameraId));
-          failed = true;
-        }
+          dispatch(bvcCameraConnection(response.data.value));
+          dispatch(bvcCameraConnectionFail(!response.data.value, cameraId));
+          if (response.data.value == true) {
+            clearInterval(checkBvc);
+          }
       })
     }, 5000, bvc_url, config);
   }

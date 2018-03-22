@@ -44,6 +44,7 @@ class CameraCard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
     if (this.props.id === nextProps.id){
       if (nextProps.id === nextProps.refreshCameraId){
         if (this.props.image.original !== nextProps.refreshCameraImage && this.props.refreshCameraId === nextProps.refreshCameraId) {
@@ -56,7 +57,7 @@ class CameraCard extends Component {
         }
       }
       if (nextProps.id === nextProps.imageUpdateInProgressId) {
-        if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress && this.props.imageUpdateInProgressId === nextProps.imageUpdateInProgressId) {
+        if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
           message.warning('Retrieving preview image. This may take up to 90 seconds.');
         }
       }

@@ -293,6 +293,7 @@ export function checkBvcCameraConnection(user, cameraId) {
     let failed = false;
     let checkBvc = setInterval(function(){
       if (timeout <= 0){
+        dispatch(bvcCameraConnectionFail(true, cameraId));
         clearInterval(checkBvc);
       } else {
         timeout -= 5;
@@ -300,7 +301,6 @@ export function checkBvcCameraConnection(user, cameraId) {
       axios.get(bvc_url, config)
       .then((response) => {
           dispatch(bvcCameraConnection(response.data.value));
-          dispatch(bvcCameraConnectionFail(!response.data.value, cameraId));
           if (response.data.value == true) {
             clearInterval(checkBvc);
           }

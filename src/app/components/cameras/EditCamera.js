@@ -134,6 +134,7 @@ class EditCamera extends Component {
 const styles = {
   modal: {
     textAlign: 'center',
+    wordBreak: 'break-word'
   },
   error: {
     color: 'red',

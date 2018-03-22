@@ -373,7 +373,8 @@ class AddAlertModal extends Component {
 
 const styles = {
   modal: {
-    textAlign: 'center'
+    textAlign: 'center',
+    wordBreak: 'break-word'
   },
   error: {
     color: 'red',

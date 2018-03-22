@@ -73,30 +73,33 @@ class CameraCard extends Component {
       return (
         <Card>
           <Row type='flex' justify='center'>
-            <Col>{this.props.name}</Col>
+            <Col>
+              <p style={styles.cameraCardTitle}>{this.props.name}</p>
+            </Col>
           </Row>
-          <div style={styles.refreshImage}>
-            <RefreshPreviewImage data={this.props}/>
+          <Row>
+            <div style={styles.refreshImage}>
+              <RefreshPreviewImage data={this.props}/>
 
-            <span style={styles.alertModal}>
-              {this.props.cameraLocation.myRole === 'viewer' ?
-                ('') :
-                <AddAlertModal data={this.props}/>
+              <span style={styles.alertModal}>
+                {this.props.cameraLocation.myRole === 'viewer' ?
+                  ('') :
+                  <AddAlertModal data={this.props}/>
+                }
+              </span>
+            </div>
+          </Row>
+          <Row>
+            <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
+              {this.props.image.original ?
+                <img src={this.props.image.original} style={styles.cameraCardImg} /> :
+                ((this.props.bvcCameraConnectionFail) && (this.props.id === this.props.bvcCameraConnectionFailId)) ?
+                  <img src={cameraConnectError} style={styles.cameraCardImg} /> :
+                  <img src={loading} style={styles.cameraCardImg} />
               }
-            </span>
-          </div>
-          <div>
 
-          </div>
-          <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
-            {this.props.image.original ?
-              <img src={this.props.image.original} style={styles.cameraCardImg} /> :
-              ((this.props.bvcCameraConnectionFail) && (this.props.id === this.props.bvcCameraConnectionFailId)) ?
-                <img src={cameraConnectError} style={styles.cameraCardImg} /> :
-                <img src={loading} style={styles.cameraCardImg} />
-            }
-
-          </div>
+            </div>
+          </Row>
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<span></span>) :
 
@@ -128,6 +131,9 @@ class CameraCard extends Component {
 }
 
 const styles = {
+  cameraCardTitle: {
+    wordBreak: 'break-word'
+  },
   cameraCardImgContainer: {
     backgroundColor: 'white',
     height: 170,

@@ -257,7 +257,6 @@ const styles = {
   },
   phoneCaption: {
     marginTop: -20,
-    paddingBottom: 2
   },
   signInLinkCaption: {
     fontSize: 16

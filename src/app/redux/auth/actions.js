@@ -230,12 +230,6 @@ export function checkLogin() {
 
 export function register(email, firstName, lastName, phone, password, confirmPassword, token) {
   return (dispatch) => {
-    if (isNaN(phone)) {
-      dispatch(registerError('Please enter only numbers in the phone number field.'));
-      dispatch(registerInProcess(false));
-      return false;
-    }
-
     dispatch(registerError(''));
     dispatch(registerInProcess(true));
 

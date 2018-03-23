@@ -18,7 +18,8 @@ class Register extends Component {
     super(props);
 
     this.state = {
-      confirmDirty: false
+      confirmDirty: false,
+      phoneError: false
     }
   }
 
@@ -55,6 +56,15 @@ class Register extends Component {
     });
   }
 
+  checkAgreement = (rule, value, callback) => {
+    const form = this.props.form;
+    if (!value) {
+      callback('Please agree to our terms of use.');
+    } else {
+      callback();
+    }
+  }
+
   checkPasswordLength = (rule, value, callback) => {
     const form = this.props.form;
     if (value && value.length < 8) {
@@ -76,6 +86,17 @@ class Register extends Component {
   handleConfirmBlur = (e) => {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+  }
+
+  checkPhoneNumber = (rule, value, callback) => {
+    const form = this.props.form;
+    if (!value) {
+      this.setState({phoneError: true});
+      callback('Please enter your phone number');
+    } else {
+      this.setState({phoneError: false});
+      callback();
+    }
   }
 
   render() {
@@ -127,13 +148,17 @@ class Register extends Component {
                       <FormItem label='Phone' hasFeedback>
                         {getFieldDecorator('phone', {
                           rules: [
-                            {required: true, message: 'Please enter your phone number'}
+                            {validator: this.checkPhoneNumber}
                           ],
                         })(
                           <Input onBlur={this.validateStatus} />
                         )}
-                        <div style={styles.phoneCaption}>Standard call, messaging or data rates may apply</div>
                       </FormItem>
+                      {this.state.phoneError ?
+                        ''
+                      :
+                        <div style={styles.phoneCaption} class="ant-form-explain">Standard call, messaging or data rates may apply</div>
+                      }
                       <FormItem label='Password' hasFeedback>
                         {getFieldDecorator('password', {
                           rules: [
@@ -163,7 +188,7 @@ class Register extends Component {
                       <FormItem>
                         {getFieldDecorator('termsOfUse', {
                           rules: [
-                            {required: true, message: 'Please agree to our terms of use'}
+                            {validator: this.checkAgreement}
                           ]
                         })(
                         <Checkbox>By clicking Sign Up, you acknowledge you have read and agree to the <a href='https://www.gorog.co/tc.html' target='_blank'>Terms of Use</a>.</Checkbox>
@@ -231,8 +256,8 @@ const styles = {
     marginBottom: 10
   },
   phoneCaption: {
-    fontSize: 10,
-    marginTop: -10
+    marginTop: -20,
+    paddingBottom: 2
   },
   signInLinkCaption: {
     fontSize: 16

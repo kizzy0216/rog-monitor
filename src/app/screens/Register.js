@@ -93,6 +93,9 @@ class Register extends Component {
     if (!value) {
       this.setState({phoneError: true});
       callback('Please enter your phone number');
+    } else if (isNaN(value)) {
+      this.setState({phoneError: true});
+      callback('Please enter phone number integers only.');
     } else {
       this.setState({phoneError: false});
       callback();
@@ -180,12 +183,6 @@ class Register extends Component {
                         )}
                       </FormItem>
                       <FormItem>
-                        <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.registerInProcess}>
-                          <Icon type={this.props.registerInProcess ? 'loading' : 'lock'} style={styles.font13} />
-                          &nbsp;Sign Up
-                        </Button>
-                      </FormItem>
-                      <FormItem>
                         {getFieldDecorator('termsOfUse', {
                           rules: [
                             {validator: this.checkAgreement}
@@ -193,6 +190,12 @@ class Register extends Component {
                         })(
                         <Checkbox>By clicking Sign Up, you acknowledge you have read and agree to the <a href='https://www.gorog.co/tc.html' target='_blank'>Terms of Use</a>.</Checkbox>
                         )}
+                      </FormItem>
+                      <FormItem>
+                        <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.registerInProcess}>
+                          <Icon type={this.props.registerInProcess ? 'loading' : 'lock'} style={styles.font13} />
+                          &nbsp;Sign Up
+                        </Button>
                       </FormItem>
                     </Form>
                   </Col>

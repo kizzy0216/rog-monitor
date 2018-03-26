@@ -51,7 +51,7 @@ class CameraCard extends Component {
         }
       }
       if (nextProps.id === nextProps.refreshCameraErrorId) {
-        if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError && this.props.refreshCameraErrorId === nextProps.refreshCameraErrorId) {
+        if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {
           message.error(nextProps.refreshCameraError);
         }
       }
@@ -61,7 +61,7 @@ class CameraCard extends Component {
         }
       }
       if (nextProps.id === nextProps.imageUpdateSuccessId) {
-        if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess && this.props.imageUpdateSuccessId === nextProps.imageUpdateSuccessId) {
+        if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
           message.success('Preview image retrieved!');
         }
       }

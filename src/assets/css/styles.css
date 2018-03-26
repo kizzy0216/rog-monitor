@@ -20,6 +20,15 @@ body{
   border-radius: 0px !important;
   border: none !important;
 }
+.removeLocationButton.ant-btn-danger{
+  background: #f0f2f5;
+  border-radius: 4px !important;
+}
+.removeLocationButton.ant-btn-danger:hover{
+  color: #fff;
+  background-color: #ff4d4f;
+  border-color: #ff4d4f;
+}
 .ant-form-item{
   margin-bottom: 17.4px !important;
 }

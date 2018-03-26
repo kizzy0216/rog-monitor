@@ -430,6 +430,9 @@ export function removeGuard(user, guard) {
     axios.delete(url, config)
     .then(response => {
       dispatch(fetchLocations(user));
+      dispatch(removeLocationSuccess(true));
+      dispatch(removeLocationSuccess(false));
+      dispatch(clearLocationData());
     })
     .catch((error) => {
       dispatch(removeGuardError('Error removing guard.'));

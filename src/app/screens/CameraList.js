@@ -97,7 +97,7 @@ class CameraList extends Component {
                     guard.user.id == this.props.user.id ?
                       <Tooltip key={guard.id} title='Remove Location' placement='bottom'>
                         <Popconfirm title="Are you sure you want to stop viewing this location? This action cannot be undone." onConfirm={() => this.props.removeGuardInProcess ? '' : this.props.removeGuard(this.props.user, guard)} okText="Yes, remove location" cancelText="Nevermind">
-                          <Button type="danger" icon="close" loading={this.props.removeGuardInProcess} disabled={this.props.removeGuardInProcess}></Button>
+                          <Button type="danger" icon="close" className="removeLocationButton" style={styles.removeLocationButton} loading={this.props.removeGuardInProcess} disabled={this.props.removeGuardInProcess}></Button>
                         </Popconfirm>
                       </Tooltip>
                     :

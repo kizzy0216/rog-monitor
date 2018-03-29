@@ -128,6 +128,7 @@ function channelConnected(channel) {
 }
 
 function newAlert(alert) {
+  console.log("alert: "+alert);
   return {
     type: types.NEW_ALERT,
     alert
@@ -135,6 +136,7 @@ function newAlert(alert) {
 }
 
 function handleNewAlert(channel) {
+  console.log("alert channel: "+channel);
   return (dispatch) => {
     channel.on('new_alert', alert => dispatch(newAlert(alert)));
   }

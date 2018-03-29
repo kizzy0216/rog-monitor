@@ -185,12 +185,14 @@ export function listenForNewImageThumbnails(user) {
 }
 
 export function handleNewImage(channel) {
+  console.log("image channel: "+channel);
   return (dispatch) => {
     channel.on('new_image', camera => dispatch(newImage(camera)));
   }
 }
 
 export function newImage(camera) {
+  console.log("image: "+camera);
   return (dispatch) => {
     dispatch(refreshCameraImage(camera.id, camera.image.original));
     dispatch(imageUpdateInProgress(false, camera.id));

@@ -136,7 +136,6 @@ function newAlert(alert) {
 }
 
 function handleNewAlert(channel) {
-  console.log("alert channel: "+channel);
   return (dispatch) => {
     channel.on('new_alert', alert => dispatch(newAlert(alert)));
   }

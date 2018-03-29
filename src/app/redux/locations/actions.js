@@ -253,7 +253,6 @@ export function addLocationCamera(user, location, name, rtspUrl, username = "adm
     let config = {headers: {Authorization: user.jwt}};
     axios.post(url, data, config)
       .then((response) => {
-        console.log(response);
         dispatch(fetchLocations(user));
         dispatch(addLocationCameraSuccess(true));
         dispatch(addLocationCameraSuccess(false));

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Card, Select, Row, Col, Icon, Modal, Button, Input, Form, Tooltip, message } from 'antd';
+import { Card, Select, Row, Col, Icon, Modal, Button, Input, Form, Tooltip, message, Popconfirm } from 'antd';
 const Option = Select.Option;
 
 import CameraTiles from '../components/cameras/CameraTiles';
@@ -11,11 +11,12 @@ import CameraOptionButtons from '../components/cameras/CameraOptionButtons';
 import { listenForNewImageThumbnails } from '../redux/cameras/actions';
 import * as locationActions from '../redux/locations/actions';
 import { trackEventAnalytics } from '../redux/auth/actions';
+import { removeGuard } from '../redux/locations/actions';
 
 class CameraList extends Component {
   constructor(props) {
     super(props);
-
+    let currentGuard = '';
     this.state = {
       rtspUrl: '',
       liveView: true,
@@ -51,6 +52,14 @@ class CameraList extends Component {
     if (nextProps.deleteCameraError && nextProps.deleteCameraError !== this.props.deleteCameraError) {
       message.error(nextProps.deleteCameraError);
     }
+
+    if (nextProps.rescindInviteError && nextProps.rescindInviteError !== this.props.rescindInviteError) {
+      message.error(nextProps.rescindInviteError);
+    }
+
+    if (nextProps.removeGuardError && nextProps.removeGuardError !== this.props.removeGuardError) {
+      message.error(nextProps.removeGuardError);
+    }
   }
 
   selectLocation = (location) => {
@@ -83,7 +92,18 @@ class CameraList extends Component {
             </Col>
             <Col xs={{span: 2}} sm={{span: 1}} style={styles.toggleLocationOptionsContainer}>
               {this.props.selectedLocation.myRole === 'viewer' ?
-                (<span></span>) :
+                (
+                  this.props.selectedLocation.guards.map(guard => (
+                    guard.user.id == this.props.user.id ?
+                      <Tooltip key={guard.id} title='Remove Location' placement='bottom'>
+                        <Popconfirm title="Are you sure you want to stop viewing this location? This action cannot be undone." onConfirm={() => this.props.removeGuardInProcess ? '' : this.props.removeGuard(this.props.user, guard)} okText="Yes, remove location" cancelText="Nevermind">
+                          <Button type="danger" icon="close" className="removeLocationButton" style={styles.removeLocationButton} loading={this.props.removeGuardInProcess} disabled={this.props.removeGuardInProcess}></Button>
+                        </Popconfirm>
+                      </Tooltip>
+                    :
+                    ''
+                  ))
+                ) :
                 (
                   <Tooltip title='Toggle Location Options' placement='bottom'>
                     <Icon style={styles.toggleLocationOptions} type='ellipsis' onClick={this.toggleLocationButtonsVisability} />
@@ -153,7 +173,9 @@ const mapStateToProps = (state) => {
     fetchError: state.locations.fetchError,
     fetchInProcess: state.locations.fetchInProcess,
     deleteCameraSuccess: state.cameras.deleteCameraSuccess,
-    deleteCameraError: state.cameras.deleteCameraError
+    deleteCameraError: state.cameras.deleteCameraError,
+    removeGuardInProcess: state.locations.removeGuardInProcess,
+    removeGuardError: state.locations.removeGuardError
   }
 };
 
@@ -163,6 +185,7 @@ const mapDispatchToProps = (dispatch) => {
     addLocationCamera: (user, location, name, rtspUrl, username, password) => dispatch(addLocationCamera(user, location, name, rtspUrl, username, password)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
     listenForNewImageThumbnails: (user) => dispatch(listenForNewImageThumbnails(user)),
+    removeGuard: (user, guard) => dispatch(removeGuard(user, guard)),
   }
 };
 

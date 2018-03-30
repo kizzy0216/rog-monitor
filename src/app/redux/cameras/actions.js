@@ -118,6 +118,15 @@ function imageUpdateSuccess(bool, id) {
   }
 }
 
+function updateCamera(cameraData) {
+  return {
+    type: types.UPDATE_CAMERA,
+    name: cameraData.name,
+    rtspUrl: cameraData.rtspUrl,
+    username: cameraData.username
+  }
+}
+
 export function fetchCameraAuthRtspUrl(user, cameraId) {
   return (dispatch) => {
     dispatch(fetchInProcess(true));
@@ -182,6 +191,7 @@ export function handleNewImage(channel) {
 }
 
 export function newImage(camera) {
+  console.log("image: "+camera);
   return (dispatch) => {
     dispatch(refreshCameraImage(camera.id, camera.image.original));
     dispatch(imageUpdateInProgress(false, camera.id));
@@ -204,12 +214,14 @@ export function editCamera(user, cameraId, cameraData) {
 
     axios.patch(url, data, config)
       .then((response) => {
+        dispatch(updateCamera(response.data.data));
+        dispatch(fetchLocations(user));
         dispatch(editCameraSuccess(true));
         dispatch(editCameraSuccess(false));
       })
       .catch((error) => {
         let errMessage = 'Error editing camera. Please try again later.';
-        if (error.response.data.error) {
+        if (typeof error.response.data.error !== 'undefined') {
           if (error.response.data.error === 'has already been used') {
             errMessage = `This location already has a camera with that name.`
           }
@@ -233,7 +245,7 @@ export function deleteCamera(user, cameraId) {
     let config = {headers: {Authorization: user.jwt}};
     axios.delete(url, config)
       .then((response) => {
-        dispatch(fetchLocations(user))
+        dispatch(fetchLocations(user));
         dispatch(deleteCameraSuccess(true));
         dispatch(deleteCameraSuccess(false));
       })

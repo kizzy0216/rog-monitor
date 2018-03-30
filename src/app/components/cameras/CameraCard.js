@@ -12,8 +12,16 @@ import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
+import cameraConnectError from '../../../assets/img/connectError.jpeg'
 
 class CameraCard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      flag: false
+    }
+  }
+
   deleteCamera = () => {
     this.props.deleteCamera(this.props.user, this.props.id);
   };
@@ -38,7 +46,7 @@ class CameraCard extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.id === nextProps.id){
       if (nextProps.id === nextProps.refreshCameraId){
-        if (this.props.image.original !== nextProps.refreshCameraImage) {
+        if (this.props.image.original !== nextProps.refreshCameraImage && this.props.refreshCameraId === nextProps.refreshCameraId) {
           this.props.image.original = nextProps.refreshCameraImage
         }
       }
@@ -65,28 +73,31 @@ class CameraCard extends Component {
       return (
         <Card>
           <Row type='flex' justify='center'>
-            <Col>{this.props.name}</Col>
+            <Col style={styles.cameraCardTitle}>{this.props.name}</Col>
           </Row>
-          <div style={styles.refreshImage}>
-            <RefreshPreviewImage data={this.props}/>
+          <Row>
+            <div style={styles.refreshImage}>
+              <RefreshPreviewImage data={this.props}/>
 
-            <span style={styles.alertModal}>
-              {this.props.cameraLocation.myRole === 'viewer' ?
-                ('') :
-                <AddAlertModal data={this.props}/>
+              <span style={styles.alertModal}>
+                {this.props.cameraLocation.myRole === 'viewer' ?
+                  ('') :
+                  <AddAlertModal data={this.props}/>
+                }
+              </span>
+            </div>
+          </Row>
+          <Row>
+            <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
+              {this.props.image.original ?
+                <img src={this.props.image.original} style={styles.cameraCardImg} /> :
+                ((this.props.bvcCameraConnectionFail) && (this.props.id === this.props.bvcCameraConnectionFailId)) ?
+                  <img src={cameraConnectError} style={styles.cameraCardImg} /> :
+                  <img src={loading} style={styles.cameraCardImg} />
               }
-            </span>
-          </div>
-          <div>
 
-          </div>
-          <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
-            {this.props.image.original ?
-              <img src={this.props.image.original} style={styles.cameraCardImg} /> :
-              <img src={loading} style={styles.cameraCardImg} />
-            }
-
-          </div>
+            </div>
+          </Row>
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<span></span>) :
 
@@ -118,6 +129,9 @@ class CameraCard extends Component {
 }
 
 const styles = {
+  cameraCardTitle: {
+    wordBreak: 'break-word'
+  },
   cameraCardImgContainer: {
     backgroundColor: 'white',
     height: 170,
@@ -162,7 +176,9 @@ const mapStateToProps = (state) => {
     refreshCameraError: state.cameras.refreshCameraError,
     refreshCameraErrorId: state.cameras.refreshCameraErrorId,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
-    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId
+    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId,
+    bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail,
+    bvcCameraConnectionFailId: state.locations.bvcCameraConnectionFailId
   }
 };
 const mapDispatchToProps = (dispatch) => {

@@ -6,7 +6,7 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { trackEventAnalytics } from "../auth/actions";
-import {deleteCamera, updatePreviewImage} from "../cameras/actions";
+import {updatePreviewImage} from "../cameras/actions";
 import { locale } from 'moment';
 
 function fetchInProcess(bool) {
@@ -184,10 +184,11 @@ export function bvcCameraConnection(bool) {
   }
 }
 
-export function bvcCameraConnectionFail(bool) {
+export function bvcCameraConnectionFail(bool, id) {
   return {
     type: types.BVC_CAMERA_CONNECTION_FAIL,
-    bvcCameraConnectionFail: bool
+    bvcCameraConnectionFail: bool,
+    bvcCameraConnectionFailId: id
   }
 }
 
@@ -226,7 +227,7 @@ export function fetchLocations(user) {
   }
 }
 
-export function addLocationCamera(user, location, name, rtspUrl, username, password) {
+export function addLocationCamera(user, location, name, rtspUrl, username = "admin", password = "admin") {
   return (dispatch) => {
     dispatch(addLocationCameraError(''));
     dispatch(addLocationCameraInProcess(true));
@@ -289,30 +290,19 @@ export function checkBvcCameraConnection(user, cameraId) {
     const bvc_jwt = localStorage.getItem('bvc_jwt');
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
     let timeout = 90;
-    let deleted = false;
     let checkBvc = setInterval(function(){
       if (timeout <= 0){
+        dispatch(bvcCameraConnectionFail(true, cameraId));
         clearInterval(checkBvc);
       } else {
         timeout -= 5;
       }
       axios.get(bvc_url, config)
       .then((response) => {
-        if (response.data.value == true){
-          dispatch(bvcCameraConnection(true));
-          clearInterval(checkBvc);
-          return false;
-        } else if (timeout <= 0){
-          dispatch(bvcCameraConnectionFail(true));
-          dispatch(deleteCamera(user, cameraId));
-          deleted = true;
-        }
-      })
-      .catch((error) => {
-        if (timeout <= 0 && deleted == false){
-          dispatch(bvcCameraConnectionFail(true));
-          dispatch(deleteCamera(user, cameraId));
-        }
+          dispatch(bvcCameraConnection(response.data.value));
+          if (response.data.value == true) {
+            clearInterval(checkBvc);
+          }
       })
     }, 5000, bvc_url, config);
   }
@@ -440,6 +430,9 @@ export function removeGuard(user, guard) {
     axios.delete(url, config)
     .then(response => {
       dispatch(fetchLocations(user));
+      dispatch(removeLocationSuccess(true));
+      dispatch(removeLocationSuccess(false));
+      dispatch(clearLocationData());
     })
     .catch((error) => {
       dispatch(removeGuardError('Error removing guard.'));

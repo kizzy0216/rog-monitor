@@ -4,6 +4,7 @@ import { Icon, Modal, Form, Input, Button, message } from 'antd';
 import CustomInput from '../../components/formitems/CustomInput';
 
 import { editCamera } from '../../redux/cameras/actions'
+import loading from '../../../assets/img/TempCameraImage.jpeg'
 
 const FormItem = Form.Item;
 const CameraLicensesForm = Form.create()(
@@ -19,7 +20,7 @@ const CameraLicensesForm = Form.create()(
       },
     };
     return (
-      <Modal title={`Edit ${props.cameraData.name}`}
+      <Modal title={`Edit ${cameraData.name}`}
              visible={visible}
              style={styles.modal}
              onCancel={onCancel}
@@ -27,7 +28,10 @@ const CameraLicensesForm = Form.create()(
       >
         <Form>
           <FormItem>
-            <img src={cameraData.image} style={styles.image}/>
+            {cameraData.image.original ?
+              <img src={cameraData.image.original} style={styles.image} /> :
+              <img src={loading} style={styles.image} />
+            }
           </FormItem>
           <FormItem>
             <Button key='submit' type='primary' size='large' onClick={props.testLiveView}>
@@ -39,11 +43,6 @@ const CameraLicensesForm = Form.create()(
               <CustomInput style={styles.input} type='text' handleSave={onCreate} value1={cameraData.name}/>
             )}
           </FormItem>
-          <FormItem label='URL' {...formItemLayout}>
-            {getFieldDecorator('rtspUrl')(
-              <CustomInput style={styles.input} type='text' handleSave={onCreate} value1={cameraData.rtspUrl}/>
-            )}
-          </FormItem>
           <FormItem label='Username' {...formItemLayout}>
             {getFieldDecorator('username')(
               <CustomInput style={styles.input} type='text' handleSave={onCreate} value1={cameraData.username}/>
@@ -51,7 +50,7 @@ const CameraLicensesForm = Form.create()(
           </FormItem>
           <FormItem label='Password' {...formItemLayout}>
             {getFieldDecorator('password')(
-              <CustomInput style={styles.input} type='password' handleSave={onCreate} value1={cameraData.password}/>
+              <CustomInput style={styles.input} type='password' handleSave={onCreate} value1="********" />
             )}
           </FormItem>
         </Form>
@@ -73,10 +72,9 @@ class EditCamera extends Component {
   cameraData = {
     image: this.props.data.image.original,
     name: this.props.data.name,
-    rtspUrl: this.props.data.rtspUrl,
     username: this.props.data.username,
     password: '****'
-  }
+  };
   showModal = () => {
     this.setState({visible: true});
   };
@@ -101,14 +99,17 @@ class EditCamera extends Component {
   };
 
   componentWillReceiveProps(nextProps){
-    if (this.props.data.id === nextProps.data.id && this.state.flag == true) {
-      if (nextProps.editCameraError !== '' && this.props.editCameraError !== nextProps.editCameraError) {
-        message.error(nextProps.editCameraError);
-        this.setState({flag: false});
-      }
-      if (nextProps.editCameraSuccess === true) {
-        message.success('Camera updated.');
-        this.setState({flag: false});
+    if (this.props.data.id === nextProps.data.id) {
+      if (this.state.flag == true) {
+        if (nextProps.editCameraError !== '' && this.props.editCameraError !== nextProps.editCameraError) {
+          message.error(nextProps.editCameraError);
+          this.setState({flag: false});
+        }
+        if (nextProps.editCameraSuccess === true) {
+          message.success('Camera updated.');
+          this.setState({flag: false});
+          this.cameraData = nextProps.data;
+        }
       }
     }
   }
@@ -123,7 +124,7 @@ class EditCamera extends Component {
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           error={this.state.error}
-          cameraData={this.cameraData}
+          cameraData={this.props.data}
         />
       </div>
     );
@@ -133,6 +134,7 @@ class EditCamera extends Component {
 const styles = {
   modal: {
     textAlign: 'center',
+    wordBreak: 'break-word'
   },
   error: {
     color: 'red',

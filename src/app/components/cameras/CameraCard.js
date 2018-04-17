@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Card, Icon, Row, Col, Popconfirm, message, Button } from 'antd';
+import moment, { lang } from 'moment';
 
 import Recorder from '../video/Recorder';
 import EditCamera from '../cameras/EditCamera';
@@ -20,6 +21,11 @@ class CameraCard extends Component {
     this.state = {
       flag: false
     }
+  }
+
+  formatDatetime = (timestamp) => {
+    const dt = moment(timestamp);
+    return `${dt.format('L')} ${dt.format('LT')}`;
   }
 
   deleteCamera = () => {
@@ -50,19 +56,9 @@ class CameraCard extends Component {
           this.props.image.original = nextProps.refreshCameraImage
         }
       }
-      if (nextProps.id === nextProps.refreshCameraErrorId) {
-        if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {
-          message.error(nextProps.refreshCameraError);
-        }
-      }
       if (nextProps.id === nextProps.imageUpdateInProgressId) {
         if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
           message.warning('Retrieving preview image. This may take up to 90 seconds.');
-        }
-      }
-      if (nextProps.id === nextProps.imageUpdateSuccessId) {
-        if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
-          message.success('Preview image retrieved!');
         }
       }
     }
@@ -99,13 +95,19 @@ class CameraCard extends Component {
             </div>
           </Row>
           {this.props.cameraLocation.myRole === 'viewer' ?
-            (<span></span>) :
-
+            (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
+              <Col span={2}>
+                <p style={{textAlign: 'center'}}>{this.formatDatetime(this.props.timestamp)}</p>
+              </Col>
+            </Row>) :
             (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
               <Col span={2}>
                 <EditCamera data={this.props} />
               </Col>
-              <Col span={2} offset={20}>
+              <Col span={20}>
+                <p style={{textAlign: 'center'}}>{this.formatDatetime(this.props.timestamp)}</p>
+              </Col>
+              <Col span={2}>
                 <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
                   <Icon type='delete' />
                 </Popconfirm>

@@ -6,10 +6,31 @@ import * as types from './actionTypes';
 
 import { loginMissing } from '../auth/actions'
 
+function updateUserError(error) {
+  return {
+    type: types.UPDATE_USER_ERROR,
+    updateUserError: error
+  }
+}
+
+function updateUserInProgress(bool) {
+  return {
+    type: types.UPDATE_USER_IN_PROGRESS,
+    updateUserInProgress: bool
+  }
+}
+
+function updateUserSuccess(bool) {
+  return {
+    type: types.UPDATE_USER_SUCCESS,
+    updateUserSuccess: bool
+  }
+}
+
 export function updateUser(user, userData) {
   return (dispatch) => {
-    dispatch(updateError(''));
-    dispatch(updateInProgress(true));
+    dispatch(updateUserError(''));
+    dispatch(updateUserInProgress(true));
     let config = {headers: {Authorization: user.jwt}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
     const data = {
@@ -20,12 +41,12 @@ export function updateUser(user, userData) {
         const user = {
           ...resp.data
         };
-        dispatch(updateSuccess(user));
-        dispatch(updateInProgress(false));
+        dispatch(updateUserSuccess(user));
+        dispatch(updateUserInProgress(false));
       })
       .catch(error => {
-        dispatch(userUpdateError(error));
-        dispatch(updateInProgress(false));
+        dispatch(updateUserError(error));
+        dispatch(updateUserInProgress(false));
       });
   }
 }

@@ -93,6 +93,10 @@ class UserSettings extends Component {
     this.form = form;
   };
 
+  componentWillReceiveProps = (nextProps) => {
+    console.log(nextProps);
+  }
+
   render() {
     return (
       <div>
@@ -135,7 +139,7 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    updateUserInProcess: state.locations.updateUserInProcess,
+    updateUserInProgress: state.locations.updateUserInProgress,
     updateUserError: state.locations.updateUserError,
     updateUserSuccess: state.locations.updateUserSuccess,
   }

@@ -1,7 +1,7 @@
 import initialState from './initialState';
 import * as types from './actionTypes';
 
-const auth = (state = initialState, action) => {
+const users = (state = initialState, action) => {
   switch (action.type) {
     case types.UPDATE_USER_IN_PROGRESS:
       return {
@@ -11,7 +11,7 @@ const auth = (state = initialState, action) => {
     case types.UPDATE_USER_SUCCESS:
       return {
         ...state,
-        user: action.updateUserSuccess
+        updateUserSuccess: action.updateUserSuccess
       }
     case types.UPDATE_USER_ERROR:
       return {
@@ -19,9 +19,15 @@ const auth = (state = initialState, action) => {
         updateUserError: action.updateUserError
       }
 
+    case types.UPDATE_USER_DATA:
+      return {
+        ...state,
+        userData: action.userData
+      }
+
     default:
       return state;
   }
 }
 
-export default auth;
+export default users;

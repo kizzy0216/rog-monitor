@@ -1,10 +1,18 @@
-import ReactGA from 'react-ga';
 import axios from 'axios';
 require('promise.prototype.finally').shim();
+
+import initialState from './initialState';
 
 import * as types from './actionTypes';
 
 import { loginMissing } from '../auth/actions'
+
+function updateUserData(userData) {
+  return{
+    type: types.UPDATE_USER_DATA,
+    userData: userData
+  }
+}
 
 function updateUserError(error) {
   return {
@@ -20,29 +28,28 @@ function updateUserInProgress(bool) {
   }
 }
 
-function updateUserSuccess(user) {
+function updateUserSuccess(bool, user) {
   return {
     type: types.UPDATE_USER_SUCCESS,
-    user
+    updateUserSuccess: bool
   }
 }
 
 export function updateUser(user, userData) {
   return (dispatch) => {
     dispatch(updateUserError(''));
+    dispatch(updateUserSuccess(false));
     dispatch(updateUserInProgress(true));
     let config = {headers: {Authorization: user.jwt}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
     const data = {
       user: userData
     };
-    console.log(data);
+
     axios.patch(url, data, config)
-      .then(resp => {
-        const user = {
-          ...resp.data
-        };
-        dispatch(updateUserSuccess(user));
+      .then((response) => {
+        dispatch(updateUserData(response));
+        dispatch(updateUserSuccess(true));
         dispatch(updateUserInProgress(false));
       })
       .catch(error => {

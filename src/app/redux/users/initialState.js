@@ -1,5 +1,6 @@
 export default {
-  user: {},
   updateUserInProgress: false,
-  updateUserError: ''
+  updateUserError: '',
+  updateUserSuccess: false,
+  userData: {},
 }

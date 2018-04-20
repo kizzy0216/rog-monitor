@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import store from '../../redux/store';
-import { Icon, Modal, Form, Input, Button } from 'antd';
+import { Icon, Modal, Form, Input, Button, message } from 'antd';
 const FormItem = Form.Item;
 
 import { updateUser } from '../../redux/users/actions';
@@ -10,7 +10,7 @@ import CustomInput from '../../components/formitems/CustomInput';
 
 const UserSettingsForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, firstName, lastName, email, phone} = props;
+    const {onCancel, visible, onCreate, updateUser, form, userData, updateUserSuccess} = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -30,22 +30,22 @@ const UserSettingsForm = Form.create()(
         <Form>
           <FormItem label='First Name' {...formItemLayout}>
             {getFieldDecorator('firstName')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={firstName} />
+              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.firstName} closeEditMode={updateUserSuccess} />
             )}
           </FormItem>
           <FormItem label='Last Name' {...formItemLayout}>
             {getFieldDecorator('lastName')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={lastName} />
+              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.lastName} closeEditMode={updateUserSuccess} />
             )}
           </FormItem>
           <FormItem label='Phone' {...formItemLayout}>
             {getFieldDecorator('phone')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={phone} />
+              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.phone} closeEditMode={updateUserSuccess} />
             )}
           </FormItem>
           <FormItem label='Email' {...formItemLayout}>
             {getFieldDecorator('email')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={email} />
+              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.email} closeEditMode={updateUserSuccess} />
             )}
           </FormItem>
         </Form>
@@ -56,16 +56,18 @@ const UserSettingsForm = Form.create()(
 
 class UserSettings extends Component {
   constructor(props) {
-    const {user} = store.getState().auth;
     super(props);
     this.state = {
       visible: false,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      phone: user.phone
     }
   }
+
+  userData = {
+    firstName: this.props.user.firstName,
+    lastName: this.props.user.lastName,
+    phone: this.props.user.phone,
+    email: this.props.user.phone
+  };
 
   cancelSaveButton = () => {
     this.setState({hidden: !this.state.hidden})
@@ -76,30 +78,52 @@ class UserSettings extends Component {
   handleCancel = () => {
     this.setState({visible: false});
   };
-  handleCreate = () => {
+  handleCreate = (e) => {
     const form = this.form;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
 
-      let userData = {
-        first_name: this.state.firstName,
-        last_name: this.state.lastName,
-        email: this.state.email,
-        phone: this.state.phone
-      };
+      let userData = {};
 
+      switch (e.target.id) {
+        case 'firstName':
+          this.setState({first_name: e.target.value.trim()});
+          userData.first_name = e.target.value.trim();
+          break;
+
+        case 'lastName':
+          this.setState({last_name: e.target.value.trim()});
+          userData.last_name = e.target.value.trim();
+          break;
+
+        case 'phone':
+          this.setState({phone: e.target.value.trim()});
+          userData.phone = e.target.value.trim();
+          break;
+
+        case 'email':
+          this.setState({email: e.target.value.trim()});
+          userData.email = e.target.value.trim();
+          break;
+
+      }
       this.props.updateUser(this.props.user, userData);
-      this.setState({hidden: !this.state.hidden})
     });
-  };
-  saveFormRef = (form) => {
-    this.form = form;
   };
 
   componentWillReceiveProps = (nextProps) => {
-    console.log(nextProps);
+    if (nextProps.updateUserError && this.props.updateUserError !== nextProps.updateUserError) {
+      message.error(nextProps.updateUserError);
+    }
+    if (nextProps.updateUserSuccess && this.props.updateUserSuccess !== nextProps.updateUserSuccess) {
+      message.success('Settings Saved.');
+      this.userData = nextProps.userData
+    }
+    if (nextProps.updateUserInProgress && this.props.updateUserInProgress !== nextProps.updateUserInProgress) {
+      message.warning('Updating Settings.');
+    }
   }
 
   render() {
@@ -111,25 +135,21 @@ class UserSettings extends Component {
           <span>User Settings</span>
         </div>
         <UserSettingsForm
-          ref={this.saveFormRef}
+          ref={(form) => this.form = form}
           visible={this.state.visible}
-          firstName={this.state.firstName}
-          lastName={this.state.lastName}
-          email={this.state.email}
-          phone={this.state.phone}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           cancelSaveButton={this.cancelSaveButton}
           cancelSave={this.state.hidden}
           error={this.state.error}
-          updatelicenses={this.updateInputValue}
+          userData={this.userData}
+          updateUserInProcess={this.props.updateUserInProcess}
+          updateUserSuccess={this.props.updateUserSuccess}
         />
       </div>
     );
   }
 }
-
-const {user} = store.getState().auth;
 
 const styles = {
   modal: {
@@ -144,9 +164,10 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    updateUserInProgress: state.locations.updateUserInProgress,
-    updateUserError: state.locations.updateUserError,
-    updateUserSuccess: state.locations.updateUserSuccess,
+    userData: state.users.userData.data,
+    updateUserInProgress: state.users.updateUserInProgress,
+    updateUserError: state.users.updateUserError,
+    updateUserSuccess: state.users.updateUserSuccess,
   }
 }
 

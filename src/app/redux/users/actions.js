@@ -34,7 +34,7 @@ export function updateUser(user, userData) {
     let config = {headers: {Authorization: user.jwt}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
     const data = {
-      userData
+      user: userData
     };
     console.log(data);
     axios.patch(url, data, config)

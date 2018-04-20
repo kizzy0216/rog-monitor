@@ -76,17 +76,22 @@ class UserSettings extends Component {
   handleCancel = () => {
     this.setState({visible: false});
   };
-  handleCreate = (e) => {
+  handleCreate = () => {
     const form = this.form;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
 
-      let userData = {};
-      userData[e.target.id] = e.target.value.trim();
+      let userData = {
+        first_name: this.state.firstName,
+        last_name: this.state.lastName,
+        email: this.state.email,
+        phone: this.state.phone
+      };
 
       this.props.updateUser(this.props.user, userData);
+      this.setState({hidden: !this.state.hidden})
     });
   };
   saveFormRef = (form) => {

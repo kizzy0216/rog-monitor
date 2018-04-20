@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import store from '../../redux/store';
 import { Icon, Modal, Form, Input, Button } from 'antd';
 const FormItem = Form.Item;
+
+import { updateUser } from '../../redux/users/actions';
 
 import CustomInput from '../../components/formitems/CustomInput';
 
 const UserSettingsForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, name, email, phone} = props;
+    const {onCancel, visible, onCreate, form, firstName, lastName, email, phone} = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -25,9 +28,14 @@ const UserSettingsForm = Form.create()(
              footer={[null, null]}
       >
         <Form>
-          <FormItem label='Name' {...formItemLayout}>
-            {getFieldDecorator('name')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={name} />
+          <FormItem label='First Name' {...formItemLayout}>
+            {getFieldDecorator('firstName')(
+              <CustomInput style={styles.input} handleSave={onCreate} value1={firstName} />
+            )}
+          </FormItem>
+          <FormItem label='Last Name' {...formItemLayout}>
+            {getFieldDecorator('lastName')(
+              <CustomInput style={styles.input} handleSave={onCreate} value1={lastName} />
             )}
           </FormItem>
           <FormItem label='Phone' {...formItemLayout}>
@@ -52,7 +60,8 @@ class UserSettings extends Component {
     super(props);
     this.state = {
       visible: false,
-      name: user.firstName + ' ' + user.lastName,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       phone: user.phone
     }
@@ -74,32 +83,10 @@ class UserSettings extends Component {
         return;
       }
 
-      const data = {
-        name: this.state.name,
-        email: this.state.email,
-        phone: this.state.phone
-      };
+      let userData = {};
+      userData[e.target.id] = e.target.value.trim();
 
-      switch (e.target.id) {
-        case 'name':
-          this.setState({name: e.target.value});
-          data.name = e.target.value;
-          break;
-
-        case 'phone':
-          this.setState({phone: e.target.value});
-          data.phone = e.target.value;
-          break;
-
-        case 'email':
-          this.setState({email: e.target.value});
-          data.email = e.target.value;
-          break;
-
-      }
-
-      // console.log('Received values of form: ', data);
-      this.setState({visible: true});
+      this.props.updateUser(this.props.user, userData);
     });
   };
   saveFormRef = (form) => {
@@ -117,7 +104,8 @@ class UserSettings extends Component {
         <UserSettingsForm
           ref={this.saveFormRef}
           visible={this.state.visible}
-          name={this.state.name}
+          firstName={this.state.firstName}
+          lastName={this.state.lastName}
           email={this.state.email}
           phone={this.state.phone}
           onCancel={this.handleCancel}
@@ -143,4 +131,20 @@ const styles = {
     textAlign: 'center'
   }
 };
-export default UserSettings;
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user,
+    updateUserInProcess: state.locations.updateUserInProcess,
+    updateUserError: state.locations.updateUserError,
+    updateUserSuccess: state.locations.updateUserSuccess,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateUser: (user, userData) => dispatch(updateUser(user, userData)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserSettings);

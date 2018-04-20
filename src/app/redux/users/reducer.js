@@ -11,7 +11,7 @@ const auth = (state = initialState, action) => {
     case types.UPDATE_USER_SUCCESS:
       return {
         ...state,
-        updateUserSuccess: action.updateUserSuccess
+        user: action.updateUserSuccess
       }
     case types.UPDATE_USER_ERROR:
       return {

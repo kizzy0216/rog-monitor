@@ -20,10 +20,10 @@ function updateUserInProgress(bool) {
   }
 }
 
-function updateUserSuccess(bool) {
+function updateUserSuccess(user) {
   return {
     type: types.UPDATE_USER_SUCCESS,
-    updateUserSuccess: bool
+    user
   }
 }
 
@@ -34,8 +34,9 @@ export function updateUser(user, userData) {
     let config = {headers: {Authorization: user.jwt}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
     const data = {
-      user: userData
+      userData
     };
+    console.log(data);
     axios.patch(url, data, config)
       .then(resp => {
         const user = {

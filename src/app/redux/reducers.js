@@ -5,6 +5,7 @@ import alerts from './alerts/reducer';
 import locations from './locations/reducer';
 import cameras from './cameras/reducer';
 import invites from './invites/reducer';
+import users from './users/reducer';
 
 export default combineReducers({
   auth,
@@ -12,4 +13,5 @@ export default combineReducers({
   locations,
   cameras,
   invites,
+  users,
 });

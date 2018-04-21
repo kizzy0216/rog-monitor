@@ -96,7 +96,7 @@ class CameraCard extends Component {
           </Row>
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
-              <Col span={2}>
+              <Col span={20} offset={2}>
                 <p style={{textAlign: 'center'}}>{this.formatDatetime(this.props.timestamp)}</p>
               </Col>
             </Row>) :

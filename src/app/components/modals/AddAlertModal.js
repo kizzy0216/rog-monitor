@@ -43,7 +43,7 @@ const AddAlertForm = Form.create()(
 
             {canvasMode && (currentAlertDetails.currentAlertType === 'LD') &&
             <Row>
-              <Col span={4} style={styles.LDtime}>
+              <Col span={4} style={styles.LDtimeLeft}>
                 {(convertToMilitaryFormat(loiteringSeconds) === undefined) ? '00:00' : convertToMilitaryFormat(loiteringSeconds)}
               </Col>
               <Col span={16}>
@@ -51,7 +51,7 @@ const AddAlertForm = Form.create()(
                         step={1} onChange={sliderValue} value={loiteringSeconds}/>
               </Col>
               <Col span={4}>
-                30:00
+                <p style={styles.LDtimeRight}>30:00</p>
               </Col>
             </Row>}
             {deleteButton && canvasMode &&
@@ -412,8 +412,12 @@ const styles = {
   currentalertDetails: {
     float: 'left'
   },
-  LDtime: {
-    paddingRight: 15
+  LDtimeLeft: {
+    paddingRight: 5
+  },
+  LDtimeRight: {
+    float: 'left',
+    paddingLeft: 5
   }
 };
 

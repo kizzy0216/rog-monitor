@@ -43,15 +43,15 @@ const AddAlertForm = Form.create()(
 
             {canvasMode && (currentAlertDetails.currentAlertType === 'LD') &&
             <Row>
-              <Col span={4}>
-                {(convertToMilitaryFormat(loiteringSeconds) === undefined) ? '00:00:00' : convertToMilitaryFormat(loiteringSeconds)}
+              <Col span={4} style={styles.LDtime}>
+                {(convertToMilitaryFormat(loiteringSeconds) === undefined) ? '00:00' : convertToMilitaryFormat(loiteringSeconds)}
               </Col>
               <Col span={16}>
-                <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={86400}
+                <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
                         step={1} onChange={sliderValue} value={loiteringSeconds}/>
               </Col>
               <Col span={4}>
-                24:00:00
+                30:00
               </Col>
             </Row>}
             {deleteButton && canvasMode &&
@@ -327,7 +327,7 @@ class AddAlertModal extends Component {
 
   convertToMilitaryFormat = (seconds) => {
     seconds = parseInt(seconds);
-    let format = Math.floor(moment.duration(seconds, 'seconds').asHours()) + ':' + moment.duration(seconds, 'seconds').minutes() + ':' + moment.duration(seconds, 'seconds').seconds();
+    let format = moment.duration(seconds, 'seconds').minutes() + ':' + moment.duration(seconds, 'seconds').seconds();
 
     return format;
   }
@@ -411,6 +411,9 @@ const styles = {
   },
   currentalertDetails: {
     float: 'left'
+  },
+  LDtime: {
+    paddingRight: 15
   }
 };
 

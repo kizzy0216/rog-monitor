@@ -7,13 +7,38 @@ import './assets/css/styles.css';
 
 import store from './app/redux/store';
 import App from './app/App.js';
+import App401 from './app/App401.js';
 import registerServiceWorker from './registerServiceWorker';
 
-const ReduxApp = () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-)
+if (process.env.AUTH_PASSWORD) {
+  var credentials = window.prompt("Enter Realm Password");
+  if (
+       !credentials
+       || credentials.pass !== process.env.AUTH_PASSWORD
+     ) {
+    render401();
+  } else {
+      renderApp();
+  }
+} else {
+  renderApp();
+}
 
-ReactDOM.render(<ReduxApp />, document.getElementById('root'));
-registerServiceWorker();
+function renderApp() {
+  const ReduxApp = () => (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
+  ReactDOM.render(<ReduxApp />, document.getElementById('root'));
+  registerServiceWorker();
+}
+
+function render401() {
+  const ErrorApp = () => (
+    <Provider store={store}>
+      <App401 />
+    </Provider>
+  )
+  ReactDOM.render(<ErrorApp />, document.getElementById('root'))
+}

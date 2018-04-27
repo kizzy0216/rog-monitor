@@ -12,10 +12,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 // if (process.env.AUTH_PASSWORD) {
   var credentials = window.prompt("Enter Realm Password");
-  if (
-       !credentials
-       || credentials.pass !== 'admin'
-     ) {
+  if (!credentials|| credentials !== process.env.AUTH_PASSWORD) {
     render401();
   } else {
       renderApp();

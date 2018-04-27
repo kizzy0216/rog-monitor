@@ -7,7 +7,7 @@ class App401 extends Component {
 
   render() {
     return(
-      <h1>Access Denied</h1>
+      <h1 style={{textAlign: 'center'}}>Access Denied</h1>
     )
   }
 }

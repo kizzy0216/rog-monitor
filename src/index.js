@@ -37,5 +37,6 @@ function render401() {
       <App401 />
     </Provider>
   )
-  ReactDOM.render(<ErrorApp />, document.getElementById('root'))
+  ReactDOM.render(<ErrorApp />, document.getElementById('root'));
+  registerServiceWorker();
 }

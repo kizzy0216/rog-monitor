@@ -10,16 +10,16 @@ import App from './app/App.js';
 import App401 from './app/App401.js';
 import registerServiceWorker from './registerServiceWorker';
 
-// if (process.env.AUTH_PASSWORD) {
+if (process.env.AUTH_PASSWORD) {
   var credentials = window.prompt("Enter Realm Password");
   if (!credentials|| credentials !== process.env.AUTH_PASSWORD) {
     render401();
   } else {
       renderApp();
   }
-// } else {
-//   renderApp();
-// }
+} else {
+  renderApp();
+}
 
 function renderApp() {
   const ReduxApp = () => (

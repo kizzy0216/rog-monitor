@@ -9,6 +9,7 @@ import store from './app/redux/store';
 import App from './app/App.js';
 import App401 from './app/App401.js';
 import registerServiceWorker from './registerServiceWorker';
+require('promise.prototype.finally').shim();
 
 if (process.env.AUTH_PASSWORD) {
   var credentials = window.prompt("Enter Realm Password");

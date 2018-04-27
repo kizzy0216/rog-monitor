@@ -11,9 +11,9 @@ import App401 from './app/App401.js';
 import registerServiceWorker from './registerServiceWorker';
 require('promise.prototype.finally').shim();
 
-if (process.env.AUTH_PASSWORD) {
+if (process.env.NODE_ENV == 'development') {
   var credentials = window.prompt("Enter Realm Password");
-  if (!credentials|| credentials !== process.env.AUTH_PASSWORD) {
+  if (!credentials|| credentials !== 'GoRogTeam!') {
     render401();
   } else {
       renderApp();

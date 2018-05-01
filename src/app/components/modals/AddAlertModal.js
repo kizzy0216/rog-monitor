@@ -389,7 +389,8 @@ const styles = {
     float: 'left'
   },
   form: {
-    position: 'relative'
+    position: 'relative',
+    float: 'left'
   },
   alertType: {
     textAlign: 'center'

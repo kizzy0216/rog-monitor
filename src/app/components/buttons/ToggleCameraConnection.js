@@ -12,8 +12,8 @@ class ToggleCameraConnection extends Component {
     this.state = {};
   }
 
-  toggleCameraConnection = (status) => {
-    this.props.toggleCameraConnection(this.props.id, status);
+  toggleCameraConnection = (enabled) => {
+    this.props.toggleCameraConnection(this.props.id, enabled);
   }
 
   componentWillMount = () => {

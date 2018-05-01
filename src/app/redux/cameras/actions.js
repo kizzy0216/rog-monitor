@@ -127,6 +127,20 @@ function updateCamera(cameraData) {
   }
 }
 
+function toggleCameraConnectionInProgress(bool) {
+  return {
+    type: types.TOGGLE_CAMERA_CONNECTION_IN_PROGRESS,
+    toggleCameraConnectionInProgress: bool
+  }
+}
+
+function cameraConnectionEnabled(bool) {
+  return {
+    type: types.CAMERA_CONNECTION_ENABLED,
+    cameraConnectionEnabled: bool
+  }
+}
+
 export function fetchCameraAuthRtspUrl(user, cameraId) {
   return (dispatch) => {
     dispatch(fetchInProcess(true));
@@ -256,5 +270,34 @@ export function deleteCamera(user, cameraId) {
         dispatch(deleteCameraError(''));
         dispatch(deleteCameraInProcess(false));
       });
+  }
+}
+
+export function toggleCameraConnection(cameraId, flag) {
+  return (dispatch) => {
+    dispatch(toggleCameraConnectionInProgress(true));
+    let url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/enabled`;
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
+    let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+    let data = {value: flag}
+    axios.put(url, data, bvc_config)
+      .then((response) => {
+        dispatch(cameraConnectionEnabled(flag));
+      })
+      .finally(() => {
+        dispatch(toggleCameraConnectionInProgress(false));
+      });
+  }
+}
+
+export function checkCameraConnection(cameraId) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/enabled`;
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
+    let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+    axios.get(url, bvc_config)
+      .then((response) => {
+        dispatch(cameraConnectionEnabled(response.data.enabled));
+      })
   }
 }

@@ -15,5 +15,6 @@ export default {
   disabledFlag: false,
   editCameraInProcess: false,
   editCameraSuccess: false,
-  editCameraError: ''
+  editCameraError: '',
+  toggleCameraConnectionInProgress: false
 }

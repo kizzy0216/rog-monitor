@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Icon, Row, Col, Popconfirm, message, Button } from 'antd';
+import { Card, Icon, Row, Col, Popconfirm, message, Button, Switch } from 'antd';
 import moment, { lang } from 'moment';
 
 import Recorder from '../video/Recorder';
 import EditCamera from '../cameras/EditCamera';
 
 import { deleteCamera } from '../../redux/cameras/actions';
+import { toggleCameraConnection } from '../../redux/cameras/actions';
+import { checkCameraConnection } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
@@ -32,6 +34,10 @@ class CameraCard extends Component {
     this.props.deleteCamera(this.props.user, this.props.id);
   };
 
+  toggleCameraConnection = () => {
+    this.props.toggleCameraConnection(this.props.id, !this.props.cameraConnectionEnabled);
+  }
+
   viewCameraStream = () => {
     const cameraViewEvent = {
       email: this.props.user.email,
@@ -47,6 +53,7 @@ class CameraCard extends Component {
 
   componentWillMount = () => {
     this.props.registerCamera(this.props.user.id, this.props.cameraLocation.cameras);
+    this.props.checkCameraConnection(this.props.id);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -72,15 +79,33 @@ class CameraCard extends Component {
             <Col style={styles.cameraCardTitle}>{this.props.name}</Col>
           </Row>
           <Row>
-            <div style={styles.refreshImage}>
-              <RefreshPreviewImage data={this.props}/>
-
-              <span style={styles.alertModal}>
-                {this.props.cameraLocation.myRole === 'viewer' ?
-                  ('') :
-                  <AddAlertModal data={this.props}/>
-                }
-              </span>
+            <div>
+              {this.props.cameraLocation.myRole === 'viewer' ?
+                (<div>''</div>) :
+                <div>
+                  <Col span={8} style={styles.alertModal}>
+                    <AddAlertModal
+                      data={this.props}
+                    />
+                  </Col>
+                  <Col span={8} style={styles.cameraConnectionSwitch}>
+                    <Switch
+                      checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />}
+                      onChange={this.toggleCameraConnection}
+                      loading={this.props.toggleCameraConnectionInProgress}
+                      checked={this.props.cameraConnectionEnabled}
+                    />
+                  </Col>
+                </div>
+              }
+              <div>
+                <Col span={8}>
+                  <RefreshPreviewImage
+                    style={styles.refreshImage}
+                    data={this.props}
+                  />
+                </Col>
+              </div>
             </div>
           </Row>
           <Row>
@@ -157,15 +182,15 @@ const styles = {
   cameraCardButtons: {
     marginTop: 10
   },
-  refreshImage: {
-    textAlign: 'right',
-    padding: '0 15px'
-  },
-  alertModal: {
-    float: 'left'
-  },
   getThumbnailBtn: {
     backgroundColor: 'white'
+  },
+  alertModal: {
+    marginTop: 6
+  },
+  cameraConnectionSwitch: {
+    textAlign: 'center',
+    marginTop: 5
   }
 }
 const mapStateToProps = (state) => {
@@ -180,12 +205,16 @@ const mapStateToProps = (state) => {
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
     imageUpdateSuccessId: state.cameras.imageUpdateSuccessId,
     bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail,
-    bvcCameraConnectionFailId: state.locations.bvcCameraConnectionFailId
+    bvcCameraConnectionFailId: state.locations.bvcCameraConnectionFailId,
+    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
+    toggleCameraConnectionInProgress: state.cameras.toggleCameraConnectionInProgress
   }
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     deleteCamera: (user, cameraId) => dispatch(deleteCamera(user, cameraId)),
+    toggleCameraConnection: (cameraId, cameraConnectionEnabled) => dispatch(toggleCameraConnection(cameraId, cameraConnectionEnabled)),
+    checkCameraConnection: (cameraId) => dispatch(checkCameraConnection(cameraId)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
     registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
   }

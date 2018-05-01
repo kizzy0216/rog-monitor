@@ -102,13 +102,8 @@ const cameras = (state = initialState, action) => {
     case types.CAMERA_CONNECTION_ENABLED:
       return {
         ...state,
-        cameraConnectionEnabled: action.cameraConnectionEnabled
-      }
-
-    case types.TOGGLE_CAMERA_CONNECTION_IN_PROGRESS:
-      return {
-        ...state,
-        toggleCameraConnectionInProgress: action.toggleCameraConnectionInProgress
+        cameraConnectionEnabled: action.cameraConnectionEnabled,
+        cameraConnectionId: action.cameraConnectionId
       }
 
     default:

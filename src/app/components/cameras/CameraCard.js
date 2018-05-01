@@ -175,7 +175,7 @@ const styles = {
     float: 'right'
   },
   alertModal: {
-    marginTop: 6
+    marginTop: 6.5
   },
   cameraConnectionSwitch: {
     textAlign: 'center',

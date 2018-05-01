@@ -6,14 +6,12 @@ import moment, { lang } from 'moment';
 
 import Recorder from '../video/Recorder';
 import EditCamera from '../cameras/EditCamera';
-
 import { deleteCamera } from '../../redux/cameras/actions';
-import { toggleCameraConnection } from '../../redux/cameras/actions';
-import { checkCameraConnection } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
+import ToggleCameraConnection from '../buttons/ToggleCameraConnection';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
 import cameraConnectError from '../../../assets/img/connectError.jpeg'
 
@@ -34,10 +32,6 @@ class CameraCard extends Component {
     this.props.deleteCamera(this.props.user, this.props.id);
   };
 
-  toggleCameraConnection = () => {
-    this.props.toggleCameraConnection(this.props.id, !this.props.cameraConnectionEnabled);
-  }
-
   viewCameraStream = () => {
     const cameraViewEvent = {
       email: this.props.user.email,
@@ -53,7 +47,6 @@ class CameraCard extends Component {
 
   componentWillMount = () => {
     this.props.registerCamera(this.props.user.id, this.props.cameraLocation.cameras);
-    this.props.checkCameraConnection(this.props.id);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -89,11 +82,8 @@ class CameraCard extends Component {
                     />
                   </Col>
                   <Col span={8} style={styles.cameraConnectionSwitch}>
-                    <Switch
-                      checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="cross" />}
-                      onChange={this.toggleCameraConnection}
-                      loading={this.props.toggleCameraConnectionInProgress}
-                      checked={this.props.cameraConnectionEnabled}
+                    <ToggleCameraConnection
+                      id={this.props.id}
                     />
                   </Col>
                 </div>
@@ -205,16 +195,12 @@ const mapStateToProps = (state) => {
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
     imageUpdateSuccessId: state.cameras.imageUpdateSuccessId,
     bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail,
-    bvcCameraConnectionFailId: state.locations.bvcCameraConnectionFailId,
-    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
-    toggleCameraConnectionInProgress: state.cameras.toggleCameraConnectionInProgress
+    bvcCameraConnectionFailId: state.locations.bvcCameraConnectionFailId
   }
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     deleteCamera: (user, cameraId) => dispatch(deleteCamera(user, cameraId)),
-    toggleCameraConnection: (cameraId, cameraConnectionEnabled) => dispatch(toggleCameraConnection(cameraId, cameraConnectionEnabled)),
-    checkCameraConnection: (cameraId) => dispatch(checkCameraConnection(cameraId)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
     registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
   }

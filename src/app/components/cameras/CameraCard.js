@@ -89,9 +89,8 @@ class CameraCard extends Component {
                 </div>
               }
               <div>
-                <Col span={8} style={{float: 'right'}}>
+                <Col span={8} style={styles.refreshImage}>
                   <RefreshPreviewImage
-                    style={styles.refreshImage}
                     data={this.props}
                   />
                 </Col>
@@ -172,8 +171,8 @@ const styles = {
   cameraCardButtons: {
     marginTop: 10
   },
-  getThumbnailBtn: {
-    backgroundColor: 'white'
+  refreshImage: {
+    float: 'right'
   },
   alertModal: {
     marginTop: 6

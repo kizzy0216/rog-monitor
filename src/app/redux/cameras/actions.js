@@ -275,7 +275,7 @@ export function toggleCameraConnection(cameraId, flag) {
     let data = {value: flag}
     axios.put(url, data, bvc_config)
       .then((response) => {
-        checkCameraConnection(cameraId);
+        dispatch(checkCameraConnection(cameraId));
       })
   }
 }

@@ -269,6 +269,7 @@ export function deleteCamera(user, cameraId) {
 
 export function toggleCameraConnection(cameraId, flag) {
   return (dispatch) => {
+    console.log("Camera Id: "+cameraId+": Send Value: "+flag);
     let url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/enabled`;
     const bvc_jwt = localStorage.getItem('bvc_jwt');
     let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
@@ -287,6 +288,7 @@ export function checkCameraConnection(cameraId) {
     let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
     axios.get(url, bvc_config)
       .then((response) => {
+        console.log("Camera Id: "+cameraId+": Response Value: "+response.data.enabled);
         dispatch(cameraConnectionEnabled(response.data.enabled, cameraId));
       })
   }

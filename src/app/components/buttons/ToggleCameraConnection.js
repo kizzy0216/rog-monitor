@@ -12,8 +12,8 @@ class ToggleCameraConnection extends Component {
     this.state = {};
   }
 
-  toggleCameraConnection = () => {
-    this.props.toggleCameraConnection(this.props.id, !this.props.cameraConnectionEnabled);
+  toggleCameraConnection = (status) => {
+    this.props.toggleCameraConnection(this.props.id, status);
   }
 
   componentWillMount = () => {
@@ -29,12 +29,13 @@ class ToggleCameraConnection extends Component {
   }
 
   render() {
+    let enabled = this.props.cameraConnectionEnabled;
     return (
       <Switch
         checkedChildren={<Icon type="check" />}
         unCheckedChildren={<Icon type="cross" />}
-        onChange={this.toggleCameraConnection}
-        checked={this.props.cameraConnectionEnabled}
+        onChange={() => this.toggleCameraConnection(!enabled)}
+        checked={enabled}
       />
     );
   }

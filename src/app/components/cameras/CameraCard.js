@@ -74,7 +74,7 @@ class CameraCard extends Component {
           <Row>
             <div>
               {this.props.cameraLocation.myRole === 'viewer' ?
-                (<div>''</div>) :
+                (<div></div>) :
                 <div>
                   <Col span={8} style={styles.alertModal}>
                     <AddAlertModal
@@ -89,7 +89,7 @@ class CameraCard extends Component {
                 </div>
               }
               <div>
-                <Col span={8}>
+                <Col span={8} style={{float: 'right'}}>
                   <RefreshPreviewImage
                     style={styles.refreshImage}
                     data={this.props}

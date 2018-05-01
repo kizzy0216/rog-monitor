@@ -7,11 +7,6 @@ import { checkCameraConnection } from '../../redux/cameras/actions';
 
 class ToggleCameraConnection extends Component {
 
-  constructor() {
-    super();
-    this.state = {};
-  }
-
   toggleCameraConnection = (enabled) => {
     this.props.toggleCameraConnection(this.props.id, enabled);
   }
@@ -39,10 +34,6 @@ class ToggleCameraConnection extends Component {
       />
     );
   }
-}
-
-const styles = {
-
 }
 
 const mapStateToProps = (state) => {

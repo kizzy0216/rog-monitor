@@ -338,13 +338,17 @@ export function resetPassword(password, confirmPassword, token) {
 var jwtTokenRefresh = window.setTimeout(login(localStorage.getItem('email'), localStorage.getItem('password')), (13000 * 1000));
 
 // logs user out on window/tab close
-window.onbeforeunload = function(){
-  localStorage.removeItem('jwt');
-  localStorage.removeItem('bvc_jwt');
-  localStorage.removeItem('email');
-  localStorage.removeItem('password');
-  window.clearTimeout(jwtTokenRefresh);
-  dispatch(clearAssociatedData());
+window.onunload = function(){
+  if (window.performance.navigation.type !== 0) {
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('bvc_jwt');
+    localStorage.removeItem('email');
+    localStorage.removeItem('password');
+    window.clearTimeout(jwtTokenRefresh);
+    return (dispatch) => {
+      clearAssociatedData();
+    }
+  }
 };
 
 export function login(email, password) {

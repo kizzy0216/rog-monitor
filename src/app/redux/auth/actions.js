@@ -219,7 +219,11 @@ export function checkLogin() {
         })
         .catch(error => {
           localStorage.removeItem('jwt');
-          dispatch(loginMissing());
+          if (localStorage.getItem('email') && localStorage.getItem('password')) {
+            login(localStorage.getItem('email'), localStorage.getItem('password'));
+          } else {
+            dispatch(loginMissing());
+          }
         });
     }
     else {
@@ -330,6 +334,19 @@ export function resetPassword(password, confirmPassword, token) {
   }
 }
 
+// set timout function to call login function to refresh token
+var jwtTokenRefresh = window.setTimeout(login(localStorage.getItem('email'), localStorage.getItem('password')), (13000 * 1000));
+
+// logs user out on window/tab close
+window.onbeforeunload = function(){
+  localStorage.removeItem('jwt');
+  localStorage.removeItem('bvc_jwt');
+  localStorage.removeItem('email');
+  localStorage.removeItem('password');
+  window.clearTimeout(jwtTokenRefresh);
+  dispatch(clearAssociatedData());
+};
+
 export function login(email, password) {
   return (dispatch) => {
     dispatch(loginInProcess(true));
@@ -355,15 +372,14 @@ export function login(email, password) {
             jwt: resp.data.jwt
           };
 
+          localStorage.setItem('email', email);
+          localStorage.setItem('password', password);
           localStorage.setItem('jwt', resp.data.jwt);
 
           dispatch(loginSuccess(user));
           dispatch(loginInProcess(false));
 
-
           dispatch(fetchReceivedInvites(user));
-
-          // dispatch(trackEventAnalytics('User', 'Sign In', 'Sign In Success'));
 
           const loginEvent = {
             email: resp.data.user.email,
@@ -384,6 +400,7 @@ export function login(email, password) {
             }
           }
           else {
+            console.log(error);
             errorMessage = 'Error logging in. Please try again later.';
           }
 
@@ -404,6 +421,9 @@ export function logout(channels) {
   return (dispatch) => {
     localStorage.removeItem('jwt');
     localStorage.removeItem('bvc_jwt');
+    localStorage.removeItem('email');
+    localStorage.removeItem('password');
+    window.clearTimeout(jwtTokenRefresh);
     disconnectFromChannels(channels);
     dispatch(clearAssociatedData());
     dispatch(logoutSuccess());
@@ -555,8 +575,9 @@ export function checkBVCAuthToken() {
     const jwt = localStorage.getItem('bvc_jwt');
     if (jwt) {
       dispatch(loginSuccess(jwt));
-    }
-    else {
+    } else if (localStorage.getItem('email') && localStorage.getItem('password')) {
+      authenticateBVCServer();
+    } else {
       dispatch(loginMissing());
     }
   }

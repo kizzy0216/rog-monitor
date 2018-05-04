@@ -6,6 +6,7 @@ import CustomInput from "../formitems/CustomInput";
 import {createAlert, fetchPolygonAlert, deletePolygonAlert} from '../../redux/alerts/actions';
 import {connect} from 'react-redux';
 import moment from 'moment';
+import loading from '../../../assets/img/TempCameraImage.jpeg';
 
 const FormItem = Form.Item;
 const AddAlertForm = Form.create()(
@@ -24,6 +25,7 @@ const AddAlertForm = Form.create()(
         xs: {span: 16},
       },
     };
+
     return (
       <Modal title={`Edit ${cameraName}`}
              visible={visible}
@@ -34,7 +36,10 @@ const AddAlertForm = Form.create()(
       >
         <Form>
           <FormItem style={styles.alertsHideSHow}>
-            <img src={alertImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad}/>
+            {alertImg === null ?
+              <img src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />:
+              <img src={alertImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
+            }
             {canvasMode &&
             <CustomCanvas width={imageDimensions.width} height={imageDimensions.height}
                           alertPointDirection={alertPointDirection}

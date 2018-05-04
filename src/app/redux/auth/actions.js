@@ -379,10 +379,7 @@ export function login(email, password) {
           dispatch(loginSuccess(user));
           dispatch(loginInProcess(false));
 
-
           dispatch(fetchReceivedInvites(user));
-
-          // dispatch(trackEventAnalytics('User', 'Sign In', 'Sign In Success'));
 
           const loginEvent = {
             email: resp.data.user.email,

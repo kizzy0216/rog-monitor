@@ -4,7 +4,7 @@ require('promise.prototype.finally').shim();
 import initialState from './initialState';
 
 import { Socket } from '../../../lib/phoenix/phoenix';
-
+import newAlertSound from '../../../assets/audio/newAlert.mp3';
 import * as types from './actionTypes';
 
 function fetchInProcess(bool) {
@@ -128,6 +128,8 @@ function channelConnected(channel) {
 }
 
 function newAlert(alert) {
+  var audio = new Audio(newAlertSound);
+  audio.play();
   return {
     type: types.NEW_ALERT,
     alert

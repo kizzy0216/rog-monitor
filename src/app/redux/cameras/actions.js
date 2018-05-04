@@ -277,6 +277,9 @@ export function toggleCameraConnection(cameraId, flag) {
       .then((response) => {
         dispatch(checkCameraConnection(cameraId));
       })
+      .catch((error)=>{
+        console.log(error);
+      })
   }
 }
 
@@ -288,6 +291,9 @@ export function checkCameraConnection(cameraId) {
     axios.get(url, bvc_config)
       .then((response) => {
         dispatch(cameraConnectionEnabled(response.data.enabled, cameraId));
+      })
+      .catch((error)=>{
+        console.log(error);
       })
   }
 }

@@ -330,9 +330,20 @@ class AddAlertModal extends Component {
     }
   };
 
-  convertToMilitaryFormat = (seconds) => {
-    seconds = parseInt(seconds);
-    let format = moment.duration(seconds, 'seconds').minutes() + ':' + moment.duration(seconds, 'seconds').seconds();
+  formatNumberLength = (num, length) => {
+    var r = "" + num;
+    while (r.length < length) {
+        r = "0" + r;
+    }
+    return r;
+  }
+
+  convertToMilitaryFormat = (time) => {
+    console.log(time);
+    time = parseInt(time);
+    let minutes = moment.duration(time, 'seconds').minutes();
+    let seconds = moment.duration(time, 'seconds').seconds();
+    let format = this.formatNumberLength(minutes, 2) + ':' + this.formatNumberLength(seconds, 2);
 
     return format;
   }

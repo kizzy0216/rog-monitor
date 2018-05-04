@@ -372,10 +372,9 @@ export function login(email, password) {
             jwt: resp.data.jwt
           };
 
-          localStorage.setItem('jwt', resp.data.jwt);
-
           localStorage.setItem('email', email);
           localStorage.setItem('password', password);
+          localStorage.setItem('jwt', resp.data.jwt);
 
           dispatch(loginSuccess(user));
           dispatch(loginInProcess(false));

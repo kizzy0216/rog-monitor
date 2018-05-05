@@ -333,7 +333,7 @@ export function resetPassword(password, confirmPassword, token) {
 }
 
 // set timout function to call login function to refresh token
-var jwtTokenRefresh = window.setTimeout(login(localStorage.getItem('email'), localStorage.getItem('password')), (580 * 1000));
+var jwtTokenRefresh = window.setInterval(login(localStorage.getItem('email'), localStorage.getItem('password')), (580 * 1000));
 
 export function login(email, password) {
   return (dispatch) => {

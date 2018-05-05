@@ -221,6 +221,7 @@ export function checkLogin() {
           localStorage.removeItem('jwt');
           localStorage.removeItem('email', email);
           localStorage.removeItem('password', password);
+          window.clearInterval(jwtTokenRefresh);
           dispatch(loginMissing());
         });
     }
@@ -414,7 +415,7 @@ export function logout(channels) {
     localStorage.removeItem('bvc_jwt');
     localStorage.removeItem('email');
     localStorage.removeItem('password');
-    window.clearTimeout(jwtTokenRefresh);
+    window.clearInterval(jwtTokenRefresh);
     disconnectFromChannels(channels);
     dispatch(clearAssociatedData());
     dispatch(logoutSuccess());

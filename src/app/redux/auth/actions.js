@@ -219,11 +219,7 @@ export function checkLogin() {
         })
         .catch(error => {
           localStorage.removeItem('jwt');
-          if (localStorage.getItem('email') && localStorage.getItem('password')) {
-            login(localStorage.getItem('email'), localStorage.getItem('password'));
-          } else {
-            dispatch(loginMissing());
-          }
+          dispatch(loginMissing());
         });
     }
     else {

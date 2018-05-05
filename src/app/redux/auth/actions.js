@@ -219,6 +219,8 @@ export function checkLogin() {
         })
         .catch(error => {
           localStorage.removeItem('jwt');
+          localStorage.removeItem('email', email);
+          localStorage.removeItem('password', password);
           dispatch(loginMissing());
         });
     }

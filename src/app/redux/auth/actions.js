@@ -338,8 +338,8 @@ export function resetPassword(password, confirmPassword, token) {
 var jwtTokenRefresh = window.setTimeout(login(localStorage.getItem('email'), localStorage.getItem('password')), (13000 * 1000));
 
 // logs user out on window/tab close
-window.onunload = function(){
-  if (window.performance.navigation.type !== window.performance.navigation.TYPE_RELOAD) {
+window.onbeforeunload = function(){
+  if (performance.navigation.type !== performance.navigation.TYPE_RELOAD) {
     localStorage.removeItem('jwt');
     localStorage.removeItem('bvc_jwt');
     localStorage.removeItem('email');

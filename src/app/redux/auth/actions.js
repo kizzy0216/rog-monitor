@@ -339,7 +339,7 @@ var jwtTokenRefresh = window.setTimeout(login(localStorage.getItem('email'), loc
 
 // logs user out on window/tab close
 window.onunload = function(){
-  if (window.performance.navigation.type !== 0) {
+  if (window.performance.navigation.type !== 1) {
     localStorage.removeItem('jwt');
     localStorage.removeItem('bvc_jwt');
     localStorage.removeItem('email');

@@ -335,21 +335,7 @@ export function resetPassword(password, confirmPassword, token) {
 }
 
 // set timout function to call login function to refresh token
-var jwtTokenRefresh = window.setTimeout(login(localStorage.getItem('email'), localStorage.getItem('password')), (13000 * 1000));
-
-// logs user out on window/tab close
-window.onbeforeunload = function(){
-  if (performance.navigation.type !== 1) {
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('bvc_jwt');
-    localStorage.removeItem('email');
-    localStorage.removeItem('password');
-    window.clearTimeout(jwtTokenRefresh);
-    return (dispatch) => {
-      clearAssociatedData();
-    }
-  }
-};
+var jwtTokenRefresh = window.setTimeout(login(localStorage.getItem('email'), localStorage.getItem('password')), (580 * 1000));
 
 export function login(email, password) {
   return (dispatch) => {

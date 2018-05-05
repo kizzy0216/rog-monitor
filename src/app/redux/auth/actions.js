@@ -360,9 +360,12 @@ export function login(email, password) {
             jwt: resp.data.jwt
           };
 
-          localStorage.setItem('email', email);
-          localStorage.setItem('password', password);
           localStorage.setItem('jwt', resp.data.jwt);
+
+          if (localStorage.getItem('email') === null) {
+            localStorage.setItem('email', email);
+            localStorage.setItem('password', password);
+          }
 
           dispatch(loginSuccess(user));
           dispatch(loginInProcess(false));

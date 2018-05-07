@@ -339,7 +339,6 @@ class AddAlertModal extends Component {
   }
 
   convertToMilitaryFormat = (time) => {
-    console.log(time);
     time = parseInt(time);
     let minutes = moment.duration(time, 'seconds').minutes();
     let seconds = moment.duration(time, 'seconds').seconds();

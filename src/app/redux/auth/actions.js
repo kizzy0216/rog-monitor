@@ -219,9 +219,11 @@ export function checkLogin() {
         })
         .catch(error => {
           localStorage.removeItem('jwt');
-          localStorage.removeItem('email', email);
-          localStorage.removeItem('password', password);
-          window.clearInterval(jwtTokenRefresh);
+          if(typeof(localStorage.getItem("email")) !== 'undefined'){
+            localStorage.removeItem('email', email);
+            localStorage.removeItem('password', password);
+            window.clearInterval(jwtTokenRefresh);
+          };
           dispatch(loginMissing());
         });
     }
@@ -333,8 +335,8 @@ export function resetPassword(password, confirmPassword, token) {
   }
 }
 
-// set timout function to call login function to refresh token
-var jwtTokenRefresh = window.setInterval(login(localStorage.getItem('email'), localStorage.getItem('password')), (580 * 1000));
+// set timout variable to call login function to refresh token
+var jwtTokenRefresh;
 
 export function login(email, password) {
   return (dispatch) => {
@@ -366,6 +368,7 @@ export function login(email, password) {
           if (localStorage.getItem('email') === null) {
             localStorage.setItem('email', email);
             localStorage.setItem('password', password);
+            jwtTokenRefresh = window.setInterval(login(email, password), (580 * 1000));
           }
 
           dispatch(loginSuccess(user));

@@ -220,8 +220,8 @@ export function checkLogin() {
         .catch(error => {
           localStorage.removeItem('jwt');
           if(typeof(localStorage.getItem("email")) !== 'undefined'){
-            localStorage.removeItem('email', email);
-            localStorage.removeItem('password', password);
+            localStorage.removeItem('email');
+            localStorage.removeItem('password');
             window.clearInterval(jwtTokenRefresh);
           };
           dispatch(loginMissing());

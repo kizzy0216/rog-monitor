@@ -56,7 +56,7 @@ function registerValidSW(swUrl) {
               // the fresh content will have been added to the cache.
               // It's the perfect time to display a "New content is
               // available; please refresh." message in your web app.
-              console.log('New content is available; please refresh.');
+              alert('Changes are happening at ROG Security! We just updated our code. Please refresh this page.');
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a
@@ -93,7 +93,7 @@ function checkValidServiceWorker(swUrl) {
       }
     })
     .catch(() => {
-      console.log(
+      alert(
         'No internet connection found. App is running in offline mode.'
       );
     });

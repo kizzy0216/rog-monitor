@@ -43,11 +43,6 @@ const UserSettingsForm = Form.create()(
               <CustomInput style={styles.input} handleSave={onCreate} value1={userData.phone} closeEditMode={updateUserSuccess} />
             )}
           </FormItem>
-          <FormItem label='Email' {...formItemLayout}>
-            {getFieldDecorator('email')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.email} closeEditMode={updateUserSuccess} />
-            )}
-          </FormItem>
         </Form>
       </Modal>
     );

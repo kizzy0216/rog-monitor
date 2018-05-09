@@ -111,7 +111,7 @@ class CameraCard extends Component {
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
               <Col span={20} offset={2}>
-                <p style={{textAlign: 'center'}}>{this.formatDatetime(this.props.updatedAt)}</p>
+                <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
               </Col>
             </Row>) :
             (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
@@ -119,7 +119,7 @@ class CameraCard extends Component {
                 <EditCamera data={this.props} />
               </Col>
               <Col span={20}>
-                <p style={{textAlign: 'center'}}>{this.formatDatetime(this.props.updatedAt)}</p>
+                <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
               </Col>
               <Col span={2}>
                 <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>

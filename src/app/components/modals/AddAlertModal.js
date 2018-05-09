@@ -56,15 +56,11 @@ const AddAlertForm = Form.create()(
                         step={1} onChange={sliderValue} value={loiteringSeconds}/>
               </Col>
               <Col span={4}>
-                <p style={styles.LDtimeRight}>30:00</p>
+                <p style={styles.LDtimeRight}>30:00 Min</p>
               </Col>
             </Row>}
             {deleteButton && canvasMode &&
             <div>
-                <span style={styles.currentalertDetails}>
-                Trigger Id: {currentAlertDetails.currentAlertId}
-                </span>
-              <br/>
               <span style={styles.currentalertDetails}>
                 Trigger Type: {(currentAlertDetails.currentAlertType === 'RA') ? 'Restricted Area' : ((currentAlertDetails.currentAlertType === 'LD') ? 'Loitering Detection' : 'Virtual Wall')}
                 </span>

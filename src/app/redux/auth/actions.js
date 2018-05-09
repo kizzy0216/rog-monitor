@@ -221,7 +221,6 @@ export function checkLogin() {
           localStorage.removeItem('jwt');
           if(typeof(localStorage.getItem("email")) !== 'undefined'){
             localStorage.removeItem('email');
-            localStorage.removeItem('password');
             window.clearInterval(jwtTokenRefresh);
           };
           dispatch(loginMissing());
@@ -365,9 +364,8 @@ export function login(email, password) {
 
           localStorage.setItem('jwt', resp.data.jwt);
 
-          if (localStorage.getItem('email') === null) {
+          if (jwtTokenRefresh === null) {
             localStorage.setItem('email', email);
-            localStorage.setItem('password', password);
             jwtTokenRefresh = window.setInterval(login(email, password), (580 * 1000));
           }
 
@@ -417,7 +415,6 @@ export function logout(channels) {
     localStorage.removeItem('jwt');
     localStorage.removeItem('bvc_jwt');
     localStorage.removeItem('email');
-    localStorage.removeItem('password');
     window.clearInterval(jwtTokenRefresh);
     disconnectFromChannels(channels);
     dispatch(clearAssociatedData());
@@ -570,7 +567,7 @@ export function checkBVCAuthToken() {
     const jwt = localStorage.getItem('bvc_jwt');
     if (jwt) {
       dispatch(loginSuccess(jwt));
-    } else if (localStorage.getItem('email') && localStorage.getItem('password')) {
+    } else if (localStorage.getItem('email')) {
       authenticateBVCServer();
     } else {
       dispatch(loginMissing());

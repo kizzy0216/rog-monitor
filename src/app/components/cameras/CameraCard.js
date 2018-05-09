@@ -118,9 +118,9 @@ class CameraCard extends Component {
               <Col span={2}>
                 <EditCamera data={this.props} />
               </Col>
-              {/* <Col span={20}>
+              <Col span={20}>
                 <p style={{textAlign: 'center'}}>{this.formatDatetime(this.props.timestamp)}</p>
-              </Col> */}
+              </Col>
               <Col span={2}>
                 <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
                   <Icon type='delete' />

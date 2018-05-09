@@ -8,7 +8,6 @@ import logoFull from '../../assets/img/logo-full.png';
 import { login } from '../redux/auth/actions';
 import RegisterBtn from '../components/navigation/RegisterBtn';
 import RequestInviteModal from '../components/modals/RequestInviteModal';
-import { authenticateBVCServer } from '../redux/auth/actions';
 import RequestPasswordResetModal from '../components/modals/RequestPasswordResetModal';
 
 const FormItem = Form.Item;
@@ -28,7 +27,6 @@ class Login extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         this.props.login(values.email, values.password);
-        this.props.authenticateBVCServer();
       }
 
     });
@@ -277,7 +275,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     login: (email, password) => dispatch(login(email, password)),
-    authenticateBVCServer: () => dispatch(authenticateBVCServer())
   }
 }
 

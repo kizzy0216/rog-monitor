@@ -213,14 +213,17 @@ export function checkLogin() {
             ...resp.data,
             jwt
           };
-
           dispatch(loginSuccess(user));
           dispatch(fetchReceivedInvites(user));
+          if (jwtTokenRefresh === null) {
+            dispatch(login(localStorage.getItem('email'), localStorage.getItem('password')));
+          }
         })
         .catch(error => {
           localStorage.removeItem('jwt');
-          if(typeof(localStorage.getItem("email")) !== 'undefined'){
+          if(jwtTokenRefresh !== null){
             localStorage.removeItem('email');
+            localStorage.removeItem('password');
             window.clearInterval(jwtTokenRefresh);
           };
           dispatch(loginMissing());
@@ -335,7 +338,7 @@ export function resetPassword(password, confirmPassword, token) {
 }
 
 // set timout variable to call login function to refresh token
-var jwtTokenRefresh;
+var jwtTokenRefresh = null;
 
 export function login(email, password) {
   return (dispatch) => {
@@ -361,13 +364,16 @@ export function login(email, password) {
             ...resp.data.user,
             jwt: resp.data.jwt
           };
-
           localStorage.setItem('jwt', resp.data.jwt);
+          typeof(localStorage.getItem('email') == 'undefined') ? localStorage.setItem('email', email) : '';
+          typeof(localStorage.getItem('password') == 'undefined') ? localStorage.setItem('password', password) : '';
 
           if (jwtTokenRefresh === null) {
-            localStorage.setItem('email', email);
-            localStorage.setItem('password', password);
-            jwtTokenRefresh = window.setInterval(login(localStorage.getItem('email'), localStorage.getItem('password')), (580 * 1000));
+            jwtTokenRefresh = window.setInterval(
+              function(){
+                dispatch(login(email, password));
+              }, (570 * 1000), [email, password]
+            );
           }
 
           dispatch(loginSuccess(user));
@@ -388,8 +394,7 @@ export function login(email, password) {
           if (error.response) {
             if (error.response.status === 500) {
               errorMessage = 'Server error';
-            }
-            else if (error.response.status === 422) {
+            } else if (error.response.status === 422) {
               errorMessage = error.response.data.errors.detail;
             }
           }
@@ -418,6 +423,7 @@ export function logout(channels) {
     localStorage.removeItem('email');
     localStorage.removeItem('password');
     window.clearInterval(jwtTokenRefresh);
+    jwtTokenRefresh = null;
     disconnectFromChannels(channels);
     dispatch(clearAssociatedData());
     dispatch(logoutSuccess());
@@ -550,7 +556,6 @@ export function getPasswordResetRequest(token) {
         dispatch(getPasswordResetRequestSuccess(resp.data.data));
       })
       .catch(error => {
-        console.log(error);
         let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
         if (error.response.status === 404) {
           let errMessage = 'Invalid request: 404';

@@ -222,10 +222,11 @@ export function checkLogin() {
         .catch(error => {
           localStorage.removeItem('jwt');
           localStorage.removeItem('bvc_jwt');
+          localStorage.removeItem('email');
+          localStorage.removeItem('password');
           if(jwtTokenRefresh !== null){
-            localStorage.removeItem('email');
-            localStorage.removeItem('password');
             window.clearInterval(jwtTokenRefresh);
+            jwtTokenRefresh = null;
           };
           dispatch(loginMissing());
         });

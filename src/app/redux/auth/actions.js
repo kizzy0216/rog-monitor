@@ -221,6 +221,7 @@ export function checkLogin() {
         })
         .catch(error => {
           localStorage.removeItem('jwt');
+          localStorage.removeItem('bvc_jwt');
           if(jwtTokenRefresh !== null){
             localStorage.removeItem('email');
             localStorage.removeItem('password');

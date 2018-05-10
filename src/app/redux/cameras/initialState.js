@@ -16,6 +16,6 @@ export default {
   editCameraInProcess: false,
   editCameraSuccess: false,
   editCameraError: '',
-  cameraConnectionEnabled: true,
+  cameraConnectionEnabled: false,
   cameraConnectionId: ''
 }

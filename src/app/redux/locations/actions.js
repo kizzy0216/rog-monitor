@@ -287,7 +287,7 @@ export function addLocationCamera(user, location, name, rtspUrl, username = "adm
 export function checkBvcCameraConnection(user, cameraId) {
   return (dispatch) => {
     let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/connectedOnce`;
-    const bvc_jwt = sessionStorage.getItem('bvc_jwt');
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
     let timeout = 90;
     let checkBvc = setInterval(function(){

@@ -220,7 +220,7 @@ export function createAlert(alertCoordinates, alertType, cameraId, duration, dir
   return (dispatch) => {
     dispatch(createAlertInProcess(true));
     dispatch(createAlertError(false));
-    const bvc_jwt = sessionStorage.getItem('bvc_jwt');
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
 
     let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/${cameraId}/alerts`;
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
@@ -253,7 +253,7 @@ export function fetchPolygonAlert(cameraId) {
     dispatch(fetchPolygonAlertInProcess(true));
     dispatch(fetchPolygonAlertInSuccess(false));
 
-    const bvc_jwt = sessionStorage.getItem('bvc_jwt');
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
 
     let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/${cameraId}/alerts`;
     let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
@@ -275,7 +275,7 @@ export function deletePolygonAlert(cameraId, alertId) {
   return (dispatch) => {
     dispatch(deletePolygonAlertInProcess(true));
 
-    const bvc_jwt = sessionStorage.getItem('bvc_jwt');
+    const bvc_jwt = localStorage.getItem('bvc_jwt');
 
     let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/${cameraId}/alerts/${alertId}`;
     let config = {headers: {Authorization: 'JWT' + ' ' + bvc_jwt}};
@@ -297,7 +297,7 @@ export function deletePolygonAlert(cameraId, alertId) {
     return (dispatch) => {
       // dispatch(registerCameraInProcess(true));
 
-      const bvc_jwt = sessionStorage.getItem('bvc_jwt');
+      const bvc_jwt = localStorage.getItem('bvc_jwt');
 
       let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/user/${userId}/cameras`;
       let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};

@@ -571,7 +571,7 @@ export function getPasswordResetRequest(token) {
 
 export function checkBVCAuthToken() {
   return (dispatch) => {
-    const jwt = sessionStorage.getItem('bvc_jwt');
+    const jwt = localStorage.getItem('bvc_jwt');
     if (jwt) {
       dispatch(loginSuccess(jwt));
     } else {
@@ -591,7 +591,7 @@ export function authenticateBVCServer() {
       .then((resp) => {
         const bvc_authToken = resp.data.access_token;
 
-        sessionStorage.setItem('bvc_jwt', bvc_authToken);
+        localStorage.setItem('bvc_jwt', bvc_authToken);
 
         dispatch(bvcAuthSuccess(bvc_authToken));
         dispatch(bvcAuthInProcess(true));

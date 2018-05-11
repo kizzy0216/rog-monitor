@@ -159,7 +159,7 @@ export function fetchCameraAuthRtspUrl(user, cameraId) {
 export function updatePreviewImage(cameraId) {
   return (dispatch) => {
     let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/update_thumbnail`;
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
+    const bvc_jwt = sessionStorage.getItem('bvc_jwt');
     let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
     let data = {'image': null}
 
@@ -270,7 +270,7 @@ export function deleteCamera(user, cameraId) {
 export function toggleCameraConnection(cameraId, flag) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/enabled`;
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
+    const bvc_jwt = sessionStorage.getItem('bvc_jwt');
     let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
     let data = {value: flag}
     axios.put(url, data, bvc_config)
@@ -286,7 +286,7 @@ export function toggleCameraConnection(cameraId, flag) {
 export function checkCameraConnection(cameraId) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/enabled`;
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
+    const bvc_jwt = sessionStorage.getItem('bvc_jwt');
     let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
     axios.get(url, bvc_config)
       .then((response) => {

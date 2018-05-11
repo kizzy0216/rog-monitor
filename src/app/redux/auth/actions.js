@@ -221,7 +221,6 @@ export function checkLogin() {
         })
         .catch(error => {
           sessionStorage.removeItem('jwt');
-          sessionStorage.removeItem('bvc_jwt');
           sessionStorage.removeItem('email');
           sessionStorage.removeItem('password');
           if(jwtTokenRefresh !== null){

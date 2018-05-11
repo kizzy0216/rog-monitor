@@ -420,7 +420,6 @@ function disconnectFromChannels(channels) {
 export function logout(channels) {
   return (dispatch) => {
     sessionStorage.removeItem('jwt');
-    sessionStorage.removeItem('bvc_jwt');
     sessionStorage.removeItem('email');
     sessionStorage.removeItem('password');
     window.clearInterval(jwtTokenRefresh);

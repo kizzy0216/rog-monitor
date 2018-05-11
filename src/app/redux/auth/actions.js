@@ -204,7 +204,7 @@ export function resetResetPasswordSuccess() {
 
 export function checkLogin() {
   return (dispatch) => {
-    const jwt = localStorage.getItem('jwt');
+    const jwt = sessionStorage.getItem('jwt');
     if (jwt) {
       let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
       axios.get(url, {headers: {Authorization: jwt}})
@@ -216,14 +216,14 @@ export function checkLogin() {
           dispatch(loginSuccess(user));
           dispatch(fetchReceivedInvites(user));
           if (jwtTokenRefresh === null) {
-            dispatch(login(localStorage.getItem('email'), localStorage.getItem('password')));
+            dispatch(login(sessionStorage.getItem('email'), sessionStorage.getItem('password')));
           }
         })
         .catch(error => {
-          localStorage.removeItem('jwt');
-          localStorage.removeItem('bvc_jwt');
-          localStorage.removeItem('email');
-          localStorage.removeItem('password');
+          sessionStorage.removeItem('jwt');
+          sessionStorage.removeItem('bvc_jwt');
+          sessionStorage.removeItem('email');
+          sessionStorage.removeItem('password');
           if(jwtTokenRefresh !== null){
             window.clearInterval(jwtTokenRefresh);
             jwtTokenRefresh = null;
@@ -366,9 +366,9 @@ export function login(email, password) {
             ...resp.data.user,
             jwt: resp.data.jwt
           };
-          localStorage.setItem('jwt', resp.data.jwt);
-          typeof(localStorage.getItem('email') == 'undefined') ? localStorage.setItem('email', email) : '';
-          typeof(localStorage.getItem('password') == 'undefined') ? localStorage.setItem('password', password) : '';
+          sessionStorage.setItem('jwt', resp.data.jwt);
+          typeof(sessionStorage.getItem('email') == 'undefined') ? sessionStorage.setItem('email', email) : '';
+          typeof(sessionStorage.getItem('password') == 'undefined') ? sessionStorage.setItem('password', password) : '';
 
           if (jwtTokenRefresh === null) {
             jwtTokenRefresh = window.setInterval(
@@ -420,10 +420,10 @@ function disconnectFromChannels(channels) {
 
 export function logout(channels) {
   return (dispatch) => {
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('bvc_jwt');
-    localStorage.removeItem('email');
-    localStorage.removeItem('password');
+    sessionStorage.removeItem('jwt');
+    sessionStorage.removeItem('bvc_jwt');
+    sessionStorage.removeItem('email');
+    sessionStorage.removeItem('password');
     window.clearInterval(jwtTokenRefresh);
     jwtTokenRefresh = null;
     disconnectFromChannels(channels);
@@ -573,7 +573,7 @@ export function getPasswordResetRequest(token) {
 
 export function checkBVCAuthToken() {
   return (dispatch) => {
-    const jwt = localStorage.getItem('bvc_jwt');
+    const jwt = sessionStorage.getItem('bvc_jwt');
     if (jwt) {
       dispatch(loginSuccess(jwt));
     } else {
@@ -593,7 +593,7 @@ export function authenticateBVCServer() {
       .then((resp) => {
         const bvc_authToken = resp.data.access_token;
 
-        localStorage.setItem('bvc_jwt', bvc_authToken);
+        sessionStorage.setItem('bvc_jwt', bvc_authToken);
 
         dispatch(bvcAuthSuccess(bvc_authToken));
         dispatch(bvcAuthInProcess(true));

@@ -373,7 +373,7 @@ export function login(email, password) {
             jwtTokenRefresh = window.setInterval(
               function(){
                 dispatch(login(email, password));
-              }, (12 * 60 * 60 * 1000), [email, password]
+              }, (30 * 60 * 1000), [email, password]
             );
           }
 

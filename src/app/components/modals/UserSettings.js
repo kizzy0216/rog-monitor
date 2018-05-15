@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import store from '../../redux/store';
-import { Icon, Modal, Form, Input, Button } from 'antd';
+import { Icon, Modal, Form, Input, Button, message } from 'antd';
 const FormItem = Form.Item;
+
+import { updateUser } from '../../redux/users/actions';
 
 import CustomInput from '../../components/formitems/CustomInput';
 
 const UserSettingsForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, name, email, phone} = props;
+    const {onCancel, visible, onCreate, updateUser, form, userData, updateUserSuccess} = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -25,19 +28,19 @@ const UserSettingsForm = Form.create()(
              footer={[null, null]}
       >
         <Form>
-          <FormItem label='Name' {...formItemLayout}>
-            {getFieldDecorator('name')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={name} />
+          <FormItem label='First Name' {...formItemLayout}>
+            {getFieldDecorator('firstName')(
+              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.firstName} closeEditMode={updateUserSuccess} />
+            )}
+          </FormItem>
+          <FormItem label='Last Name' {...formItemLayout}>
+            {getFieldDecorator('lastName')(
+              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.lastName} closeEditMode={updateUserSuccess} />
             )}
           </FormItem>
           <FormItem label='Phone' {...formItemLayout}>
             {getFieldDecorator('phone')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={phone} />
-            )}
-          </FormItem>
-          <FormItem label='Email' {...formItemLayout}>
-            {getFieldDecorator('email')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={email} />
+              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.phone} closeEditMode={updateUserSuccess} />
             )}
           </FormItem>
         </Form>
@@ -48,15 +51,18 @@ const UserSettingsForm = Form.create()(
 
 class UserSettings extends Component {
   constructor(props) {
-    const {user} = store.getState().auth;
     super(props);
     this.state = {
       visible: false,
-      name: user.firstName + ' ' + user.lastName,
-      email: user.email,
-      phone: user.phone
     }
   }
+
+  userData = {
+    firstName: this.props.user.firstName,
+    lastName: this.props.user.lastName,
+    phone: this.props.user.phone,
+    email: this.props.user.phone
+  };
 
   cancelSaveButton = () => {
     this.setState({hidden: !this.state.hidden})
@@ -74,37 +80,46 @@ class UserSettings extends Component {
         return;
       }
 
-      const data = {
-        name: this.state.name,
-        email: this.state.email,
-        phone: this.state.phone
-      };
+      let userData = {};
 
       switch (e.target.id) {
-        case 'name':
-          this.setState({name: e.target.value});
-          data.name = e.target.value;
+        case 'firstName':
+          this.setState({first_name: e.target.value.trim()});
+          userData.first_name = e.target.value.trim();
+          break;
+
+        case 'lastName':
+          this.setState({last_name: e.target.value.trim()});
+          userData.last_name = e.target.value.trim();
           break;
 
         case 'phone':
-          this.setState({phone: e.target.value});
-          data.phone = e.target.value;
+          this.setState({phone: e.target.value.trim()});
+          userData.phone = e.target.value.trim();
           break;
 
         case 'email':
-          this.setState({email: e.target.value});
-          data.email = e.target.value;
+          this.setState({email: e.target.value.trim()});
+          userData.email = e.target.value.trim();
           break;
 
       }
-
-      // console.log('Received values of form: ', data);
-      this.setState({visible: true});
+      this.props.updateUser(this.props.user, userData);
     });
   };
-  saveFormRef = (form) => {
-    this.form = form;
-  };
+
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.updateUserError && this.props.updateUserError !== nextProps.updateUserError) {
+      message.error(nextProps.updateUserError);
+    }
+    if (nextProps.updateUserSuccess && this.props.updateUserSuccess !== nextProps.updateUserSuccess) {
+      message.success('Settings Saved.');
+      this.userData = nextProps.userData
+    }
+    if (nextProps.updateUserInProgress && this.props.updateUserInProgress !== nextProps.updateUserInProgress) {
+      message.warning('Updating Settings.');
+    }
+  }
 
   render() {
     return (
@@ -115,24 +130,21 @@ class UserSettings extends Component {
           <span>User Settings</span>
         </div>
         <UserSettingsForm
-          ref={this.saveFormRef}
+          ref={(form) => this.form = form}
           visible={this.state.visible}
-          name={this.state.name}
-          email={this.state.email}
-          phone={this.state.phone}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           cancelSaveButton={this.cancelSaveButton}
           cancelSave={this.state.hidden}
           error={this.state.error}
-          updatelicenses={this.updateInputValue}
+          userData={this.userData}
+          updateUserInProcess={this.props.updateUserInProcess}
+          updateUserSuccess={this.props.updateUserSuccess}
         />
       </div>
     );
   }
 }
-
-const {user} = store.getState().auth;
 
 const styles = {
   modal: {
@@ -143,4 +155,21 @@ const styles = {
     textAlign: 'center'
   }
 };
-export default UserSettings;
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user,
+    userData: state.users.userData.data,
+    updateUserInProgress: state.users.updateUserInProgress,
+    updateUserError: state.users.updateUserError,
+    updateUserSuccess: state.users.updateUserSuccess,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateUser: (user, userData) => dispatch(updateUser(user, userData)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserSettings);

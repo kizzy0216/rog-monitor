@@ -52,7 +52,8 @@ class RefreshPreviewImage extends Component {
 
 const styles = {
   getThumbnailBtn: {
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    float: 'right'
   },
 }
 

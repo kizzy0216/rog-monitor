@@ -204,7 +204,7 @@ export function resetResetPasswordSuccess() {
 
 export function checkLogin() {
   return (dispatch) => {
-    const jwt = localStorage.getItem('jwt');
+    const jwt = sessionStorage.getItem('jwt');
     if (jwt) {
       let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
       axios.get(url, {headers: {Authorization: jwt}})
@@ -213,12 +213,20 @@ export function checkLogin() {
             ...resp.data,
             jwt
           };
-
           dispatch(loginSuccess(user));
           dispatch(fetchReceivedInvites(user));
+          if (jwtTokenRefresh === null) {
+            dispatch(login(sessionStorage.getItem('email'), sessionStorage.getItem('password')));
+          }
         })
         .catch(error => {
-          localStorage.removeItem('jwt');
+          sessionStorage.removeItem('jwt');
+          sessionStorage.removeItem('email');
+          sessionStorage.removeItem('password');
+          if(jwtTokenRefresh !== null){
+            window.clearInterval(jwtTokenRefresh);
+            jwtTokenRefresh = null;
+          };
           dispatch(loginMissing());
         });
     }
@@ -330,6 +338,9 @@ export function resetPassword(password, confirmPassword, token) {
   }
 }
 
+// set timout variable to call login function to refresh token
+var jwtTokenRefresh = null;
+
 export function login(email, password) {
   return (dispatch) => {
     dispatch(loginInProcess(true));
@@ -354,16 +365,22 @@ export function login(email, password) {
             ...resp.data.user,
             jwt: resp.data.jwt
           };
+          sessionStorage.setItem('jwt', resp.data.jwt);
+          typeof(sessionStorage.getItem('email') == 'undefined') ? sessionStorage.setItem('email', email) : '';
+          typeof(sessionStorage.getItem('password') == 'undefined') ? sessionStorage.setItem('password', password) : '';
 
-          localStorage.setItem('jwt', resp.data.jwt);
+          if (jwtTokenRefresh === null) {
+            jwtTokenRefresh = window.setInterval(
+              function(){
+                dispatch(login(email, password));
+              }, (30 * 60 * 1000), [email, password]
+            );
+          }
 
           dispatch(loginSuccess(user));
           dispatch(loginInProcess(false));
-
-
+          dispatch(authenticateBVCServer());
           dispatch(fetchReceivedInvites(user));
-
-          // dispatch(trackEventAnalytics('User', 'Sign In', 'Sign In Success'));
 
           const loginEvent = {
             email: resp.data.user.email,
@@ -378,12 +395,12 @@ export function login(email, password) {
           if (error.response) {
             if (error.response.status === 500) {
               errorMessage = 'Server error';
-            }
-            else if (error.response.status === 422) {
+            } else if (error.response.status === 422) {
               errorMessage = error.response.data.errors.detail;
             }
           }
           else {
+            console.log(error);
             errorMessage = 'Error logging in. Please try again later.';
           }
 
@@ -402,8 +419,11 @@ function disconnectFromChannels(channels) {
 
 export function logout(channels) {
   return (dispatch) => {
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('bvc_jwt');
+    sessionStorage.removeItem('jwt');
+    sessionStorage.removeItem('email');
+    sessionStorage.removeItem('password');
+    window.clearInterval(jwtTokenRefresh);
+    jwtTokenRefresh = null;
     disconnectFromChannels(channels);
     dispatch(clearAssociatedData());
     dispatch(logoutSuccess());
@@ -536,7 +556,6 @@ export function getPasswordResetRequest(token) {
         dispatch(getPasswordResetRequestSuccess(resp.data.data));
       })
       .catch(error => {
-        console.log(error);
         let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
         if (error.response.status === 404) {
           let errMessage = 'Invalid request: 404';
@@ -555,8 +574,7 @@ export function checkBVCAuthToken() {
     const jwt = localStorage.getItem('bvc_jwt');
     if (jwt) {
       dispatch(loginSuccess(jwt));
-    }
-    else {
+    } else {
       dispatch(loginMissing());
     }
   }

@@ -99,6 +99,13 @@ const cameras = (state = initialState, action) => {
         username: action.username
       }
 
+    case types.CAMERA_CONNECTION_ENABLED:
+      return {
+        ...state,
+        cameraConnectionEnabled: action.cameraConnectionEnabled,
+        cameraConnectionId: action.cameraConnectionId
+      }
+
     default:
       return state;
   }

@@ -6,6 +6,7 @@ import CustomInput from "../formitems/CustomInput";
 import {createAlert, fetchPolygonAlert, deletePolygonAlert} from '../../redux/alerts/actions';
 import {connect} from 'react-redux';
 import moment from 'moment';
+import loading from '../../../assets/img/TempCameraImage.jpeg';
 
 const FormItem = Form.Item;
 const AddAlertForm = Form.create()(
@@ -24,6 +25,7 @@ const AddAlertForm = Form.create()(
         xs: {span: 16},
       },
     };
+
     return (
       <Modal title={`Edit ${cameraName}`}
              visible={visible}
@@ -34,7 +36,10 @@ const AddAlertForm = Form.create()(
       >
         <Form>
           <FormItem style={styles.alertsHideSHow}>
-            <img src={alertImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad}/>
+            {alertImg === null ?
+              <img src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />:
+              <img src={alertImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
+            }
             {canvasMode &&
             <CustomCanvas width={imageDimensions.width} height={imageDimensions.height}
                           alertPointDirection={alertPointDirection}
@@ -43,23 +48,19 @@ const AddAlertForm = Form.create()(
 
             {canvasMode && (currentAlertDetails.currentAlertType === 'LD') &&
             <Row>
-              <Col span={4}>
-                {(convertToMilitaryFormat(loiteringSeconds) === undefined) ? '00:00:00' : convertToMilitaryFormat(loiteringSeconds)}
+              <Col span={4} style={styles.LDtimeLeft}>
+                {(convertToMilitaryFormat(loiteringSeconds) === undefined) ? '00:00' : convertToMilitaryFormat(loiteringSeconds)}
               </Col>
               <Col span={16}>
-                <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={86400}
+                <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
                         step={1} onChange={sliderValue} value={loiteringSeconds}/>
               </Col>
               <Col span={4}>
-                24:00:00
+                <p style={styles.LDtimeRight}>30:00 Min</p>
               </Col>
             </Row>}
             {deleteButton && canvasMode &&
             <div>
-                <span style={styles.currentalertDetails}>
-                Trigger Id: {currentAlertDetails.currentAlertId}
-                </span>
-              <br/>
               <span style={styles.currentalertDetails}>
                 Trigger Type: {(currentAlertDetails.currentAlertType === 'RA') ? 'Restricted Area' : ((currentAlertDetails.currentAlertType === 'LD') ? 'Loitering Detection' : 'Virtual Wall')}
                 </span>
@@ -325,9 +326,19 @@ class AddAlertModal extends Component {
     }
   };
 
-  convertToMilitaryFormat = (seconds) => {
-    seconds = parseInt(seconds);
-    let format = Math.floor(moment.duration(seconds, 'seconds').asHours()) + ':' + moment.duration(seconds, 'seconds').minutes() + ':' + moment.duration(seconds, 'seconds').seconds();
+  formatNumberLength = (num, length) => {
+    var r = "" + num;
+    while (r.length < length) {
+        r = "0" + r;
+    }
+    return r;
+  }
+
+  convertToMilitaryFormat = (time) => {
+    time = parseInt(time);
+    let minutes = moment.duration(time, 'seconds').minutes();
+    let seconds = moment.duration(time, 'seconds').seconds();
+    let format = this.formatNumberLength(minutes, 2) + ':' + this.formatNumberLength(seconds, 2);
 
     return format;
   }
@@ -389,7 +400,8 @@ const styles = {
     float: 'left'
   },
   form: {
-    position: 'relative'
+    position: 'relative',
+    float: 'left'
   },
   alertType: {
     textAlign: 'center'
@@ -411,6 +423,13 @@ const styles = {
   },
   currentalertDetails: {
     float: 'left'
+  },
+  LDtimeLeft: {
+    paddingRight: 5
+  },
+  LDtimeRight: {
+    float: 'left',
+    paddingLeft: 5
   }
 };
 

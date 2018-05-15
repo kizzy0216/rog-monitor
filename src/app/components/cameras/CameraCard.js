@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Icon, Row, Col, Popconfirm, message, Button } from 'antd';
+import { Card, Icon, Row, Col, Popconfirm, message, Button, Switch } from 'antd';
+import moment, { lang } from 'moment';
 
 import Recorder from '../video/Recorder';
 import EditCamera from '../cameras/EditCamera';
-
 import { deleteCamera } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
+import ToggleCameraConnection from '../buttons/ToggleCameraConnection';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
 import cameraConnectError from '../../../assets/img/connectError.jpeg'
 
@@ -20,6 +21,11 @@ class CameraCard extends Component {
     this.state = {
       flag: false
     }
+  }
+
+  formatDatetime = (timestamp) => {
+    const dt = moment(timestamp);
+    return `${dt.format('L')} ${dt.format('LT')}`;
   }
 
   deleteCamera = () => {
@@ -50,19 +56,9 @@ class CameraCard extends Component {
           this.props.image.original = nextProps.refreshCameraImage
         }
       }
-      if (nextProps.id === nextProps.refreshCameraErrorId) {
-        if (nextProps.refreshCameraError && nextProps.refreshCameraError !== this.props.refreshCameraError) {
-          message.error(nextProps.refreshCameraError);
-        }
-      }
       if (nextProps.id === nextProps.imageUpdateInProgressId) {
         if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
           message.warning('Retrieving preview image. This may take up to 90 seconds.');
-        }
-      }
-      if (nextProps.id === nextProps.imageUpdateSuccessId) {
-        if (nextProps.imageUpdateSuccess && nextProps.imageUpdateSuccess !== this.props.imageUpdateSuccess) {
-          message.success('Preview image retrieved!');
         }
       }
     }
@@ -76,15 +72,29 @@ class CameraCard extends Component {
             <Col style={styles.cameraCardTitle}>{this.props.name}</Col>
           </Row>
           <Row>
-            <div style={styles.refreshImage}>
-              <RefreshPreviewImage data={this.props}/>
-
-              <span style={styles.alertModal}>
-                {this.props.cameraLocation.myRole === 'viewer' ?
-                  ('') :
-                  <AddAlertModal data={this.props}/>
-                }
-              </span>
+            <div>
+              {this.props.cameraLocation.myRole === 'viewer' ?
+                (<div></div>) :
+                <div>
+                  <Col span={8} style={styles.alertModal}>
+                    <AddAlertModal
+                      data={this.props}
+                    />
+                  </Col>
+                  <Col span={8} style={styles.cameraConnectionSwitch}>
+                    <ToggleCameraConnection
+                      id={this.props.id}
+                    />
+                  </Col>
+                </div>
+              }
+              <div>
+                <Col span={8} style={styles.refreshImage}>
+                  <RefreshPreviewImage
+                    data={this.props}
+                  />
+                </Col>
+              </div>
             </div>
           </Row>
           <Row>
@@ -99,13 +109,19 @@ class CameraCard extends Component {
             </div>
           </Row>
           {this.props.cameraLocation.myRole === 'viewer' ?
-            (<span></span>) :
-
+            (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
+              <Col span={20} offset={2}>
+                <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
+              </Col>
+            </Row>) :
             (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
               <Col span={2}>
                 <EditCamera data={this.props} />
               </Col>
-              <Col span={2} offset={20}>
+              <Col span={20}>
+                <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
+              </Col>
+              <Col span={2}>
                 <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
                   <Icon type='delete' />
                 </Popconfirm>
@@ -156,14 +172,14 @@ const styles = {
     marginTop: 10
   },
   refreshImage: {
-    textAlign: 'right',
-    padding: '0 15px'
+    float: 'right'
   },
   alertModal: {
-    float: 'left'
+    marginTop: 6.5
   },
-  getThumbnailBtn: {
-    backgroundColor: 'white'
+  cameraConnectionSwitch: {
+    textAlign: 'center',
+    marginTop: 5
   }
 }
 const mapStateToProps = (state) => {

@@ -9,7 +9,7 @@ const AddLocationForm = Form.create()(
   (props) => {
     const {visible, onCancel, onCreate, form, addLocationInProcess} = props;
     const {getFieldDecorator} = form;
-    
+
     return (
       <Modal title='Add a Location'
         visible={visible}
@@ -73,7 +73,6 @@ class AddLocationModal extends Component {
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.addLocationSuccess && this.props.addLocationSuccess !== nextProps.addLocationSuccess) {
       if (this.props.linkText === "Add Location") {
-        message.success('Location added.');
         this.resetFields();
         this.setState({visible: false});
       }

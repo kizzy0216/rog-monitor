@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Icon, Row, Col, Popconfirm, message, Button, Switch } from 'antd';
+import { Card, Icon, Row, Col, Popconfirm, Button, Switch } from 'antd';
 import moment, { lang } from 'moment';
 
 import Recorder from '../video/Recorder';
@@ -54,11 +54,6 @@ class CameraCard extends Component {
       if (nextProps.id === nextProps.refreshCameraId){
         if (this.props.image.original !== nextProps.refreshCameraImage && this.props.refreshCameraId === nextProps.refreshCameraId) {
           this.props.image.original = nextProps.refreshCameraImage
-        }
-      }
-      if (nextProps.id === nextProps.imageUpdateInProgressId) {
-        if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
-          message.warning('Retrieving preview image. This may take up to 90 seconds.');
         }
       }
     }

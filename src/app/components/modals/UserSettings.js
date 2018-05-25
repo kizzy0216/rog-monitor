@@ -116,9 +116,6 @@ class UserSettings extends Component {
       message.success('Settings Saved.');
       this.userData = nextProps.userData
     }
-    if (nextProps.updateUserInProgress && this.props.updateUserInProgress !== nextProps.updateUserInProgress) {
-      message.warning('Updating Settings.');
-    }
   }
 
   render() {

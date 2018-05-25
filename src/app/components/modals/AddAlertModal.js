@@ -14,7 +14,7 @@ const AddAlertForm = Form.create()(
     const {
       onCancel, alerts, sliderValue, loiteringSeconds, deleteStatus, deleteButton, alertInProcess, alertExtras, deleteAlert, visible, saveCancel, form, cameraName, alertPointDirection, handleSaveCancel,
       alertImg, handleVisibility, visibility, showAlert, canvasMode, onImgLoad, imageDimensions,
-      convertToMilitaryFormat, currentAlertDetails, direction, fetchAletInProcess
+      convertToMilitaryFormat, currentAlertDetails, direction, fetchAlertInProcess
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -89,7 +89,7 @@ const AddAlertForm = Form.create()(
             >
               {
                 !saveCancel && <a>
-                  <CustomInput alert={true} visibility={visibility} fetchAletInProcess={fetchAletInProcess}/>
+                  <CustomInput alert={true} visibility={visibility} fetchAlertInProcess={fetchAlertInProcess}/>
                 </a>
               }
             </Popover>
@@ -375,7 +375,7 @@ class AddAlertModal extends Component {
           convertToMilitaryFormat={this.convertToMilitaryFormat}
           currentAlertDetails={this.alertDetails}
           direction={this.direction}
-          fetchAletInProcess={this.props.fetchPolygonAlertInProcess}
+          fetchAlertInProcess={this.props.fetchPolygonAlertInProcess}
         />
       </div>
     );

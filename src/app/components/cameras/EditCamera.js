@@ -93,7 +93,6 @@ class EditCamera extends Component {
 
       this.props.editCamera(this.props.user, this.props.data.id, cameraData);
       this.setState({visible: true});
-      message.warning('Saving your update.');
       this.setState({flag: true});
     });
   };
@@ -106,7 +105,6 @@ class EditCamera extends Component {
           this.setState({flag: false});
         }
         if (nextProps.editCameraSuccess === true) {
-          message.success('Camera updated.');
           this.setState({flag: false});
           this.cameraData = nextProps.data;
         }

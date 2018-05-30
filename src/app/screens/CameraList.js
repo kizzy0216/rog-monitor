@@ -45,10 +45,6 @@ class CameraList extends Component {
       this.props.trackEventAnalytics('location owned', locationOwnedEvent);
     }
 
-    if (nextProps.deleteCameraSuccess && nextProps.deleteCameraSuccess !== this.props.deleteCameraSuccess) {
-      message.success('Camera deleted.');
-    }
-
     if (nextProps.deleteCameraError && nextProps.deleteCameraError !== this.props.deleteCameraError) {
       message.error(nextProps.deleteCameraError);
     }

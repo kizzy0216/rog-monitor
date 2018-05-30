@@ -122,10 +122,6 @@ class EditLocationModal extends Component {
       message.error(nextProps.editLocationError);
     }
 
-    if (nextProps.removeLocationSuccess && this.props.removeLocationSuccess !== nextProps.removeLocationSuccess) {
-      message.success('Location removed.');
-    }
-
     if (nextProps.removeLocationError && this.props.removeLocationError !== nextProps.removeLocationError) {
       message.error(nextProps.removeLocationError);
     }

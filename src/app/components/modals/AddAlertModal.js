@@ -49,7 +49,7 @@ const AddAlertForm = Form.create()(
             {canvasMode && (currentAlertDetails.currentAlertType === 'LD') &&
             <Row>
               <Col span={4} style={styles.LDtimeLeft}>
-                {(convertToMilitaryFormat(loiteringSeconds) === undefined) ? '00:00' : convertToMilitaryFormat(loiteringSeconds)}
+                {(convertToMilitaryFormat(loiteringSeconds) === undefined) || (isNaN(loiteringSeconds)) ? '00:00' : convertToMilitaryFormat(loiteringSeconds)}
               </Col>
               <Col span={16}>
                 <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}

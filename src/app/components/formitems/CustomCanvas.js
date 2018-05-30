@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {Icon} from 'antd';
 require('fabric');
 
 class CustomCanvas extends Component {
@@ -60,73 +61,68 @@ class CustomCanvas extends Component {
         })
       }
 
-      fabricCanvas.on('mouse:down', function (options) {
-        if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
-
-          fabricCanvas.getObjects().forEach((entry) => {
-            if (entry.type === 'RA') {
-              entry.setColor('#FF0000');
-            }
-            if (entry.type === 'LD') {
-              entry.setColor('#0092f8');
-            }
-            if (entry.type === 'VW') {
-              entry.set({fill: '#FF0000', stroke: '#FF0000'});
-            }
-            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
-              entry.set({fill: '#36d850', stroke: '#36d850'});
-            }
-          });
-
-          fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
-          console.log(fabricCanvas.getActiveObject());
-        }
-      });
-      document.getElementById('prev_button').addEventListener('click', function () {
-        if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
-          fabricCanvas.getObjects().forEach((entry) => {
-            if (entry.type === 'RA') {
-              entry.setColor('#FF0000');
-            }
-            if (entry.type === 'LD') {
-              entry.setColor('#0092f8');
-            }
-            if (entry.type === 'VW') {
-              entry.set({fill: '#FF0000', stroke: '#FF0000'});
-            }
-            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
-              entry.set({fill: '#36d850', stroke: '#36d850'});
-            }
-          });
-          fabricCanvas.setActiveObject(nThis.prevItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
-          fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
-          console.log(fabricCanvas.getActiveObject());
-        }
+      // fabricCanvas.on('mouse:down', function (options) {
+      //   if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
+      //
+      //     fabricCanvas.getObjects().forEach((entry) => {
+      //       if (entry.type === 'RA') {
+      //         entry.setColor('#FF0000');
+      //       }
+      //       if (entry.type === 'LD') {
+      //         entry.setColor('#0092f8');
+      //       }
+      //       if (entry.type === 'VW') {
+      //         entry.set({fill: '#FF0000', stroke: '#FF0000'});
+      //       }
+      //       if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+      //         entry.set({fill: '#36d850', stroke: '#36d850'});
+      //       }
+      //     });
+      //
+      //     fabricCanvas.getActiveObject().setColor('#36d850');
+      //     nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+      //   }
+      // });
+      document.getElementById('prev_button').addEventListener('click', function (options) {
+        fabricCanvas.getObjects().forEach((entry) => {
+          if (entry.type === 'RA') {
+            entry.setColor('#FF0000');
+          }
+          if (entry.type === 'LD') {
+            entry.setColor('#0092f8');
+          }
+          if (entry.type === 'VW') {
+            entry.set({fill: '#FF0000', stroke: '#FF0000'});
+          }
+          if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+            entry.set({fill: '#36d850', stroke: '#36d850'});
+          }
+        });
+        fabricCanvas.setActiveObject(nThis.prevItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
+        fabricCanvas.getActiveObject().setColor('#36d850');
+        nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+        fabricCanvas.renderAll();
       });
 
-      document.getElementById('next_button').addEventListener('click', function () {
-        if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
-          fabricCanvas.getObjects().forEach((entry) => {
-            if (entry.type === 'RA') {
-              entry.setColor('#FF0000');
-            }
-            if (entry.type === 'LD') {
-              entry.setColor('#0092f8');
-            }
-            if (entry.type === 'VW') {
-              entry.set({fill: '#FF0000', stroke: '#FF0000'});
-            }
-            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
-              entry.set({fill: '#36d850', stroke: '#36d850'});
-            }
-          });
-          fabricCanvas.setActiveObject(nThis.nextItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
-          fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
-          console.log(fabricCanvas.getActiveObject());
-        }
+      document.getElementById('next_button').addEventListener('click', function (options) {
+        fabricCanvas.getObjects().forEach((entry) => {
+          if (entry.type === 'RA') {
+            entry.setColor('#FF0000');
+          }
+          if (entry.type === 'LD') {
+            entry.setColor('#0092f8');
+          }
+          if (entry.type === 'VW') {
+            entry.set({fill: '#FF0000', stroke: '#FF0000'});
+          }
+          if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+            entry.set({fill: '#36d850', stroke: '#36d850'});
+          }
+        });
+        fabricCanvas.setActiveObject(nThis.nextItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
+        fabricCanvas.getActiveObject().setColor('#36d850');
+        nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+        fabricCanvas.renderAll();
       });
     }
     else {
@@ -588,12 +584,14 @@ class CustomCanvas extends Component {
 
   render() {
     return (
-      <div id="canvas-contain">
-        <div>
-          <button id="prev_button">Previous</button>
-          <button id="next_button">Next!</button>
+      <div>
+        <div id="canvas-contain">
+          <canvas id='canvas' style={styles.canvas}/>
         </div>
-        <canvas id='canvas' style={styles.canvas}/>
+        <div style={styles.prevNext}>
+          <Icon id="prev_button" type="step-backward" />
+          <Icon id="next_button" type="step-forward" />
+        </div>
       </div>
     )
   }
@@ -602,6 +600,16 @@ class CustomCanvas extends Component {
 const styles = {
   canvas: {
     position: 'relative'
+  },
+  prevNext: {
+    textAlign: 'center',
+    fontSize: 24
+  },
+  prevButton: {
+
+  },
+  nextButton: {
+
   }
 };
 

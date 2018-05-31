@@ -38,7 +38,6 @@ class App extends Component {
 
   checkBrowser() {
     this.isChrome = !!window.chrome && !!window.chrome.webstore;
-    console.log(this.isChrome);
   }
 
   render() {

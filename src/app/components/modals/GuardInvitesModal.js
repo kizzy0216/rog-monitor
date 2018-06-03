@@ -16,7 +16,7 @@ const GuardInvites = (props) => {
       >
         {props.invites.map(invite => (
           <Row key={invite.id} type='flex' justify='start' style={styles.invitesListContainer}>
-            <Col xs={{span: 11, offset: 1}} style={styles.adminNameContainer}>
+            <Col xs={{span: 24}} sm={{span: 11, offset: 1}} style={styles.adminNameContainer}>
               <Col xs={{span: 24}} style={styles.adminName}>
                 {invite.inviterName}
                 <p style={styles.date}>{moment(invite.timestamp).format('MMM D')}</p>
@@ -25,7 +25,7 @@ const GuardInvites = (props) => {
                 Invited to guard: {invite.location.name}
               </Col>
             </Col>
-            <Col xs={{span: 11}} style={styles.acceptRejectButtons}>
+            <Col xs={{span: 24}} sm={{span: 11}} style={styles.acceptRejectButtons}>
               <Col xs={{span: 12}} onClick={() => props.acceptInviteInProcess ? '' : props.acceptInvite(props.user, invite)}>
                 <Col xs={{span: 24}}>
                   <Button style={styles.button}>Accept</Button>

@@ -4,47 +4,63 @@ import { Icon, Modal, Button, Badge, Row, Col, message } from 'antd';
 import moment from 'moment';
 import { acceptInvite, rejectInvite } from '../../redux/invites/actions';
 
-const GuardInvites = (props) => (
-  <Modal
-    title='Guard Invitations'
-    visible={props.visible}
-    style={styles.modal}
-    onCancel={props.onCancel}
-    footer={[null, null]}
-  >
-    {props.invites.map(invite => (
-      <Row key={invite.id} type='flex' justify='start' style={styles.invitesListContainer}>
-        <Col xs={{span: 11, offset: 1}} style={styles.adminNameContainer}>
-          <Col xs={{span: 24}} style={styles.adminName}>
-            {invite.inviterName}
-            <p style={styles.date}>{moment(invite.timestamp).format('MMM D')}</p>
-          </Col>
-          <Col xs={{span: 24}}>
-            Invited to guard: {invite.location.name}
-          </Col>
-        </Col>
-        <Col xs={{span: 11}} style={styles.acceptRejectButtons}>
-          <Col xs={{span: 12}} onClick={() => props.acceptInviteInProcess ? '' : props.acceptInvite(props.user, invite)}>
-            <Col xs={{span: 24}}>
-              <Button style={styles.button}>Accept</Button>
+const GuardInvites = (props) => {
+  if (props.invites.length){
+    return (
+      <Modal
+        title='Guard Invitations'
+        visible={props.visible}
+        style={styles.modal}
+        onCancel={props.onCancel}
+        footer={[null, null]}
+      >
+        {props.invites.map(invite => (
+          <Row key={invite.id} type='flex' justify='start' style={styles.invitesListContainer}>
+            <Col xs={{span: 11, offset: 1}} style={styles.adminNameContainer}>
+              <Col xs={{span: 24}} style={styles.adminName}>
+                {invite.inviterName}
+                <p style={styles.date}>{moment(invite.timestamp).format('MMM D')}</p>
+              </Col>
+              <Col xs={{span: 24}}>
+                Invited to guard: {invite.location.name}
+              </Col>
             </Col>
-            <Col xs={{span: 24}}>
-              <Icon type='check' />
+            <Col xs={{span: 11}} style={styles.acceptRejectButtons}>
+              <Col xs={{span: 12}} onClick={() => props.acceptInviteInProcess ? '' : props.acceptInvite(props.user, invite)}>
+                <Col xs={{span: 24}}>
+                  <Button style={styles.button}>Accept</Button>
+                </Col>
+                <Col xs={{span: 24}}>
+                  <Icon type='check' />
+                </Col>
+              </Col>
+              <Col xs={{span: 12}} style={styles.buttonBorder} onClick={() => props.rejectInviteInProcess ? '' : props.rejectInvite(props.user, invite)}>
+                <Col xs={{span: 24}}>
+                  <Button style={styles.button}>Reject</Button>
+                </Col>
+                <Col xs={{span: 24}}>
+                  <Icon type='close' />
+                </Col>
+              </Col>
             </Col>
-          </Col>
-          <Col xs={{span: 12}} style={styles.buttonBorder} onClick={() => props.rejectInviteInProcess ? '' : props.rejectInvite(props.user, invite)}>
-            <Col xs={{span: 24}}>
-              <Button style={styles.button}>Reject</Button>
-            </Col>
-            <Col xs={{span: 24}}>
-              <Icon type='close' />
-            </Col>
-          </Col>
-        </Col>
-      </Row>
-    ))}
-  </Modal>
-);
+          </Row>
+        ))}
+      </Modal>
+    )
+  } else {
+    return (
+      <Modal
+        title='Guard Invitations'
+        visible={props.visible}
+        style={styles.modal}
+        onCancel={props.onCancel}
+        footer={[null, null]}
+      >
+        <div>No pending location invitations.</div>
+      </Modal>
+    )
+  }
+};
 
 class GuardInvitesModal extends Component {
   constructor(props) {

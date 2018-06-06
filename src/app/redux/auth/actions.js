@@ -268,8 +268,8 @@ export function register(email, firstName, lastName, phone, password, confirmPas
         dispatch(trackEventAnalytics('registration', registrationEvent));
 
         /*-- Needed for Woopra Trigger event --*/
-        registrationEvent.registration_status = 'Registration Completed';
-        setInterval(dispatch(trackEventAnalytics('registration', registrationEvent)), 1000);
+        // registrationEvent.registration_status = 'Registration Completed';
+        // setInterval(dispatch(trackEventAnalytics('registration', registrationEvent)), 1000);
       })
       .catch((error) => {
         let errMessage = 'Error registering. Please try again later';
@@ -316,8 +316,8 @@ export function resetPassword(password, confirmPassword, token) {
         dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent));
 
         /*-- Needed for Woopra Trigger event --*/
-        resetPasswordEvent.reset_password_status = 'Password Reset Completed';
-        setInterval(dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent)), 1000);
+        // resetPasswordEvent.reset_password_status = 'Password Reset Completed';
+        // setInterval(dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent)), 1000);
       })
       .catch((error) => {
         let errMessage = 'Error resetting your password. Please try again later';
@@ -458,8 +458,8 @@ export function sendInvitationEmail(email) {
 
 
     /*-- Needed for Woopra Trigger event --*/
-    invitationEvent.invite_status = 'Invitation Received';
-    setInterval(dispatch(trackEventAnalytics('invitation', invitationEvent)), 1000);
+    // invitationEvent.invite_status = 'Invitation Received';
+    // setInterval(dispatch(trackEventAnalytics('invitation', invitationEvent)), 1000);
 
     axios.post(url, data)
       .then(resp => {
@@ -525,8 +525,8 @@ export function sendPasswordResetRequestEmail(email) {
 
 
     /*-- Needed for Woopra Trigger event --*/
-    passwordResetRequestEvent.invite_status = 'PasswordResetRequest Received';
-    setInterval(dispatch(trackEventAnalytics('passwordResetRequest', passwordResetRequestEvent)), 1000);
+    // passwordResetRequestEvent.invite_status = 'PasswordResetRequest Received';
+    // setInterval(dispatch(trackEventAnalytics('passwordResetRequest', passwordResetRequestEvent)), 1000);
 
     axios.post(url, data)
       .then(resp => {
@@ -619,7 +619,7 @@ export function authenticateBVCServer() {
 export function initialiseAnalyticsEngine() {
   return (dispatch) => {
     // initialiseGoogleAnalytics();
-    initialiseWoopraAnalytics();
+    // initialiseWoopraAnalytics();
   }
 }
 
@@ -627,14 +627,14 @@ export function trackEventAnalytics(event, data) {
 
   return (dispatch) => {
 
-    woopra.identify(data);
-
-    if ((event === 'registration') || (event === 'invitation')) {
-      woopra.track(event, data);
-    }
-    else {
-      woopra.track(data);
-    }
+    // woopra.identify(data);
+    //
+    // if ((event === 'registration') || (event === 'invitation')) {
+    //   woopra.track(event, data);
+    // }
+    // else {
+    //   woopra.track(data);
+    // }
   }
 }
 

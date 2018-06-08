@@ -24,18 +24,18 @@ const EditLocationForm = Form.create()(
              visible={visible}
              style={styles.modal}
              onCancel={onCancel}
-             footer={[null, null]}
+             onOk={onCreate}
+             okText='Save'
+             cancelText='Cancel'
       >
         <Form>
           <FormItem label='Name' {...formItemLayout}>
-            {getFieldDecorator('name')(
-              <CustomInput
+            {getFieldDecorator('name', {
+              'initialValue': location.name
+            })(
+              <Input
                 style={styles.input}
-                type='text'
-                handleSave={onCreate}
-                value1={location.name}
-                buttonsDisabled={editLocationInProcess}
-                closeEditMode={editLocationSuccess}
+                placeholder="Location Name"
               />
             )}
           </FormItem>
@@ -44,13 +44,9 @@ const EditLocationForm = Form.create()(
               rules: [{required: true, message: 'Please enter the location street address'}],
               initialValue: location.address1
             })(
-              <CustomInput
+              <Input
                 style={styles.input}
-                type='text'
-                handleSave={onCreate}
-                value1={location.address1}
-                buttonsDisabled={editLocationInProcess}
-                closeEditMode={editLocationSuccess}
+                placeholder="Street Address"
               />
             )}
           </FormItem>
@@ -59,28 +55,20 @@ const EditLocationForm = Form.create()(
               rules: [{required: true, message: 'Please enter the location city'}],
               initialValue: location.city
             })(
-              <CustomInput
+              <Input
                 style={styles.input}
-                type='text'
-                handleSave={onCreate}
-                value1={location.city}
-                buttonsDisabled={editLocationInProcess}
-                closeEditMode={editLocationSuccess}
+                placeholder="City"
               />
             )}
           </FormItem>
           <FormItem label='State' {...formItemLayout}>
             {getFieldDecorator('state', {
               rules: [{required: true, message: 'Please enter the location state'}],
-              initialValue: location.city
+              initialValue: location.state
             })(
-              <CustomInput
+              <Input
                 style={styles.input}
-                type='text'
-                handleSave={onCreate}
-                value1={location.state}
-                buttonsDisabled={editLocationInProcess}
-                closeEditMode={editLocationSuccess}
+                placeholder="State"
               />
             )}
           </FormItem>
@@ -89,13 +77,9 @@ const EditLocationForm = Form.create()(
               rules: [{required: true, message: 'Please enter the location zip code'}],
               initialValue: location.zip
             })(
-              <CustomInput
+              <Input
                 style={styles.input}
-                type='text'
-                handleSave={onCreate}
-                value1={location.zip}
-                buttonsDisabled={editLocationInProcess}
-                closeEditMode={editLocationSuccess}
+                placeholder="Zip Code"
               />
             )}
           </FormItem>
@@ -141,11 +125,8 @@ class EditLocationModal extends Component {
       if (err) {
         return;
       }
-
-      let locationData = {};
-      locationData[e.target.id] = e.target.value.trim();
-
-      this.props.editLocation(this.props.user, this.props.selectedLocation, locationData);
+      console.log(values);
+      this.props.editLocation(this.props.user, this.props.selectedLocation, values);
     });
   };
 

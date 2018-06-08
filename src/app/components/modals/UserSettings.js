@@ -25,22 +25,30 @@ const UserSettingsForm = Form.create()(
              visible={visible}
              style={styles.modal}
              onCancel={onCancel}
-             footer={[null, null]}
+             onOk={onCreate}
+             okText='Save'
+             cancelText='Cancel'
       >
         <Form>
           <FormItem label='First Name' {...formItemLayout}>
-            {getFieldDecorator('firstName')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.firstName} closeEditMode={updateUserSuccess} />
+            {getFieldDecorator('firstName', {
+              'initialValue': userData.firstName
+            })(
+              <Input placeholder="First Name" style={styles.input} />
             )}
           </FormItem>
           <FormItem label='Last Name' {...formItemLayout}>
-            {getFieldDecorator('lastName')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.lastName} closeEditMode={updateUserSuccess} />
+            {getFieldDecorator('lastName', {
+              'initialValue': userData.lastName
+            })(
+              <Input placeholder="Last Name" style={styles.input}  />
             )}
           </FormItem>
           <FormItem label='Phone' {...formItemLayout}>
-            {getFieldDecorator('phone')(
-              <CustomInput style={styles.input} handleSave={onCreate} value1={userData.phone} closeEditMode={updateUserSuccess} />
+            {getFieldDecorator('phone', {
+              'initialValue': userData.phone
+            })(
+              <Input placeholder="Phone" style={styles.input} />
             )}
           </FormItem>
         </Form>
@@ -80,31 +88,7 @@ class UserSettings extends Component {
         return;
       }
 
-      let userData = {};
-
-      switch (e.target.id) {
-        case 'firstName':
-          this.setState({first_name: e.target.value.trim()});
-          userData.first_name = e.target.value.trim();
-          break;
-
-        case 'lastName':
-          this.setState({last_name: e.target.value.trim()});
-          userData.last_name = e.target.value.trim();
-          break;
-
-        case 'phone':
-          this.setState({phone: e.target.value.trim()});
-          userData.phone = e.target.value.trim();
-          break;
-
-        case 'email':
-          this.setState({email: e.target.value.trim()});
-          userData.email = e.target.value.trim();
-          break;
-
-      }
-      this.props.updateUser(this.props.user, userData);
+      this.props.updateUser(this.props.user, values);
     });
   };
 

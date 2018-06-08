@@ -24,7 +24,9 @@ const CameraLicensesForm = Form.create()(
              visible={visible}
              style={styles.modal}
              onCancel={onCancel}
-             footer={[null, null]}
+             onOk={onCreate}
+             okText='Save'
+             cancelText='Cancel'
       >
         <Form>
           <FormItem>
@@ -39,18 +41,22 @@ const CameraLicensesForm = Form.create()(
             </Button>
           </FormItem>
           <FormItem label='Name' {...formItemLayout}>
-            {getFieldDecorator('name')(
-              <CustomInput style={styles.input} type='text' handleSave={onCreate} value1={cameraData.name}/>
+            {getFieldDecorator('name', {
+              'initialValue': cameraData.name
+            })(
+              <Input style={styles.input} type='text' placeholder="Camera Name" />
             )}
           </FormItem>
           <FormItem label='Username' {...formItemLayout}>
-            {getFieldDecorator('username')(
-              <CustomInput style={styles.input} type='text' handleSave={onCreate} value1={cameraData.username}/>
+            {getFieldDecorator('username', {
+              'initialValue': cameraData.username
+            })(
+              <Input style={styles.input} type='text' placeholder="Camera Username" />
             )}
           </FormItem>
           <FormItem label='Password' {...formItemLayout}>
             {getFieldDecorator('password')(
-              <CustomInput style={styles.input} type='password' handleSave={onCreate} value1="********" />
+              <Input style={styles.input} type='password' placeholder="********" />
             )}
           </FormItem>
         </Form>
@@ -88,10 +94,7 @@ class EditCamera extends Component {
         return;
       }
 
-      let cameraData = {};
-      cameraData[e.target.id] = e.target.value.trim();
-
-      this.props.editCamera(this.props.user, this.props.data.id, cameraData);
+      this.props.editCamera(this.props.user, this.props.data.id, values);
       this.setState({visible: true});
       this.setState({flag: true});
     });

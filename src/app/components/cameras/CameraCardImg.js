@@ -12,7 +12,7 @@ class CameraCardImg extends Component {
       image: loading
     };
   }
-d
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.data.image.original) {
       this.setState({image: nextProps.data.image.original});

@@ -12,9 +12,8 @@ class CameraCardImg extends Component {
       image: loading
     };
   }
-
+d
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.data.image.original) {
       this.setState({image: nextProps.data.image.original});
     } else if (nextProps.bvcCameraConnectionFail && nextProps.bvcCameraConnectionFailId === nextProps.data.id) {

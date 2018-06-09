@@ -88,19 +88,14 @@ class AddCameraModal extends Component {
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.addLocationCameraSuccess && this.props.addLocationCameraSuccess !== nextProps.addLocationCameraSuccess) {
-      message.success('Camera added!');
       this.resetFields();
       this.props.toggleAddCameraModalVisibility();
-      setTimeout(() => {message.warning('Connecting to live stream. This could take up to 90 seconds.');}, 3500);
     }
     if (nextProps.addLocationCameraError !== '' && this.props.addLocationCameraError !== nextProps.addLocationCameraError) {
       message.error(nextProps.addLocationCameraError);
     }
     if(nextProps.addedCameraData !== '' && nextProps.addedCameraData !== this.props.addedCameraData) {
       this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data.data);
-    }
-    if(nextProps.bvcCameraConnection && nextProps.bvcCameraConnection !== this.props.bvcCameraConnection){
-      message.success('Live stream connected!');
     }
     if(nextProps.bvcCameraConnectionFail && nextProps.bvcCameraConnectionFail !== this.props.bvcCameraConnectionFail){
       message.error('Camera stream could not connect.');

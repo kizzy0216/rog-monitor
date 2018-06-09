@@ -35,7 +35,7 @@ function updateUserSuccess(bool, user) {
   }
 }
 
-export function updateUser(user, userData) {
+export function updateUser(user, values) {
   return (dispatch) => {
     dispatch(updateUserError(''));
     dispatch(updateUserSuccess(false));
@@ -43,11 +43,16 @@ export function updateUser(user, userData) {
     let config = {headers: {Authorization: user.jwt}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
     const data = {
-      user: userData
+      user: {
+        first_name: values.firstName,
+        last_name: values.lastName,
+        phone: values.phone
+      }
     };
 
     axios.patch(url, data, config)
       .then((response) => {
+        console.log(response);
         dispatch(updateUserData(response));
         dispatch(updateUserSuccess(true));
         dispatch(updateUserInProgress(false));

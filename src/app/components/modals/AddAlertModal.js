@@ -12,9 +12,7 @@ const FormItem = Form.Item;
 const AddAlertForm = Form.create()(
   (props) => {
     const {
-      onCancel, alerts, sliderValue, loiteringSeconds, deleteStatus, deleteButton, alertInProcess, alertExtras, deleteAlert, visible, saveCancel, form, cameraName, alertPointDirection, handleSaveCancel,
-      alertImg, handleVisibility, visibility, showAlert, canvasMode, onImgLoad, imageDimensions,
-      convertToMilitaryFormat, currentAlertDetails, direction, fetchAletInProcess
+      onCancel, alerts, sliderValue, loiteringSeconds, deleteStatus, deleteButton, alertInProcess, alertExtras, deleteAlert, visible, saveCancel, form, cameraName, alertPointDirection, handleSaveCancel, alertImg, handleVisibility, visibility, showAlert, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentAlertDetails, direction, fetchAlertInProcess
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -49,7 +47,7 @@ const AddAlertForm = Form.create()(
             {canvasMode && (currentAlertDetails.currentAlertType === 'LD') &&
             <Row>
               <Col span={4} style={styles.LDtimeLeft}>
-                {(convertToMilitaryFormat(loiteringSeconds) === undefined) ? '00:00' : convertToMilitaryFormat(loiteringSeconds)}
+                {convertToMilitaryFormat(loiteringSeconds)}
               </Col>
               <Col span={16}>
                 <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
@@ -89,7 +87,7 @@ const AddAlertForm = Form.create()(
             >
               {
                 !saveCancel && <a>
-                  <CustomInput alert={true} visibility={visibility} fetchAletInProcess={fetchAletInProcess}/>
+                  <CustomInput alert={true} visibility={visibility} fetchAlertInProcess={fetchAlertInProcess}/>
                 </a>
               }
             </Popover>
@@ -336,11 +334,15 @@ class AddAlertModal extends Component {
 
   convertToMilitaryFormat = (time) => {
     time = parseInt(time);
-    let minutes = moment.duration(time, 'seconds').minutes();
-    let seconds = moment.duration(time, 'seconds').seconds();
-    let format = this.formatNumberLength(minutes, 2) + ':' + this.formatNumberLength(seconds, 2);
+    if ((isNaN(time)) || (time === undefined)) {
+      return '00:00';
+    } else {
+      let minutes = moment.duration(time, 'seconds').minutes();
+      let seconds = moment.duration(time, 'seconds').seconds();
+      let format = this.formatNumberLength(minutes, 2) + ':' + this.formatNumberLength(seconds, 2);
 
-    return format;
+      return format;
+    }
   }
 
   render() {
@@ -375,7 +377,7 @@ class AddAlertModal extends Component {
           convertToMilitaryFormat={this.convertToMilitaryFormat}
           currentAlertDetails={this.alertDetails}
           direction={this.direction}
-          fetchAletInProcess={this.props.fetchPolygonAlertInProcess}
+          fetchAlertInProcess={this.props.fetchPolygonAlertInProcess}
         />
       </div>
     );

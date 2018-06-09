@@ -45,10 +45,6 @@ class CameraList extends Component {
       this.props.trackEventAnalytics('location owned', locationOwnedEvent);
     }
 
-    if (nextProps.deleteCameraSuccess && nextProps.deleteCameraSuccess !== this.props.deleteCameraSuccess) {
-      message.success('Camera deleted.');
-    }
-
     if (nextProps.deleteCameraError && nextProps.deleteCameraError !== this.props.deleteCameraError) {
       message.error(nextProps.deleteCameraError);
     }
@@ -79,10 +75,10 @@ class CameraList extends Component {
       return (
         <div>
           <Row type='flex' justify='center' align='middle' style={styles.cameraOptions}>
-            <Col xs={{span: 2}} sm={{span: 1}}>
+            {/* <Col xs={{span: 2}} sm={{span: 1}}>
               {this.props.selectedLocation.myRole}
-            </Col>
-            <Col xs={{span: 12}} sm={{span: 6}}>
+            </Col> */}
+            <Col xs={{span: 14}} sm={{span: 6}}>
               <Select style={styles.select} value={this.props.selectedLocation.name}
                       onSelect={(value, option) => this.selectLocation(option.props.location)}>
                 {this.props.locations.map(location => (

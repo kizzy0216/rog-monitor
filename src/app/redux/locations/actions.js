@@ -227,7 +227,7 @@ export function fetchLocations(user) {
   }
 }
 
-export function addLocationCamera(user, location, name, rtspUrl, username = "admin", password) {
+export function addLocationCamera(user, location, name, rtspUrl, username, password) {
   return (dispatch) => {
     dispatch(addLocationCameraError(''));
     dispatch(addLocationCameraInProcess(true));
@@ -430,9 +430,6 @@ export function removeGuard(user, guard) {
     axios.delete(url, config)
     .then(response => {
       dispatch(fetchLocations(user));
-      dispatch(removeLocationSuccess(true));
-      dispatch(removeLocationSuccess(false));
-      dispatch(clearLocationData());
     })
     .catch((error) => {
       dispatch(removeGuardError('Error removing guard.'));

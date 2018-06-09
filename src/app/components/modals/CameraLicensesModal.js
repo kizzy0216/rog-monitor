@@ -46,9 +46,6 @@ const CameraLicensesForm = Form.create()(
             })(
               <Input id='1' disabled={true/*!cancelSave*/} type='text' style={styles.input} onChange={updatelicenses} className='cameraLicensesFormInput' />
             )}
-            {!cancelSave && <Icon type='edit' style={styles.editLicenses} onClick={cancelSaveButton}/>}
-            {cancelSave &&
-            <span style={styles.cancelSaveBtn}><Button onClick={cancelSaveButton} style={styles.cancelLicensesBtn} className='cancelLicensesBtn'>Cancel</Button><Button type='primary' onClick={onCreate} style={styles.saveLicensesBtn} className='saveLicensesBtn'>Save</Button></span>}
           </FormItem>
           <FormItem label='Used:' {...formItemLayout}>
             {getFieldDecorator('used', {
@@ -157,7 +154,7 @@ const styles = {
   input: {
     width: 50,
     textAlign: 'center',
-    marginTop: 0,
+    marginTop: 5,
     float: 'left'
   },
   modal: {

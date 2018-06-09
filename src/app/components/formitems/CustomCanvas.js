@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {Icon} from 'antd';
 require('fabric');
 
 class CustomCanvas extends Component {
@@ -10,6 +11,7 @@ class CustomCanvas extends Component {
   activeLine;
   activeShape = false;
   canvasPointArray = [];
+  i = 0;
 
   constructor(props) {
     super(props);
@@ -61,7 +63,6 @@ class CustomCanvas extends Component {
 
       fabricCanvas.on('mouse:down', function (options) {
         if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
-
           fabricCanvas.getObjects().forEach((entry) => {
             if (entry.type === 'RA') {
               entry.setColor('#FF0000');
@@ -79,6 +80,51 @@ class CustomCanvas extends Component {
 
           fabricCanvas.getActiveObject().setColor('#36d850');
           nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+        }
+      });
+      document.getElementById('prev_button').addEventListener('click', function (options) {
+        if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
+          fabricCanvas.getObjects().forEach((entry) => {
+            if (entry.type === 'RA') {
+              entry.setColor('#FF0000');
+            }
+            if (entry.type === 'LD') {
+              entry.setColor('#0092f8');
+            }
+            if (entry.type === 'VW') {
+              entry.set({fill: '#FF0000', stroke: '#FF0000'});
+            }
+            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+              entry.set({fill: '#36d850', stroke: '#36d850'});
+            }
+          });
+          fabricCanvas.setActiveObject(nThis.prevItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
+          fabricCanvas.getActiveObject().setColor('#36d850');
+          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+          fabricCanvas.renderAll();
+        }
+      });
+
+      document.getElementById('next_button').addEventListener('click', function (options) {
+        if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
+          fabricCanvas.getObjects().forEach((entry) => {
+            if (entry.type === 'RA') {
+              entry.setColor('#FF0000');
+            }
+            if (entry.type === 'LD') {
+              entry.setColor('#0092f8');
+            }
+            if (entry.type === 'VW') {
+              entry.set({fill: '#FF0000', stroke: '#FF0000'});
+            }
+            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+              entry.set({fill: '#36d850', stroke: '#36d850'});
+            }
+          });
+          fabricCanvas.setActiveObject(nThis.nextItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
+          fabricCanvas.getActiveObject().setColor('#36d850');
+          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+          fabricCanvas.renderAll();
         }
       });
     }
@@ -446,6 +492,19 @@ class CustomCanvas extends Component {
     canvas.selection = true;
   }
 
+  nextItem(arr) {
+      this.i = this.i + 1; // increase i by one
+      this.i = this.i % arr.length; // if we've gone too high, start from `0` again
+      return arr[this.i]; // give us back the item of where we are now
+  }
+  prevItem(arr) {
+      if (this.i === 0) { // i would become 0
+          this.i = arr.length; // so put it at the other end of the array
+      }
+      this.i = this.i - 1; // decrease by one
+      return arr[this.i]; // give us back the item of where we are now
+  }
+
   static lineObject(points, color) {
     return new fabric.Line(points, {
       strokeWidth: 2,
@@ -528,8 +587,14 @@ class CustomCanvas extends Component {
 
   render() {
     return (
-      <div id="canvas-contain">
-        <canvas id='canvas' style={styles.canvas}/>
+      <div>
+        <div id="canvas-contain">
+          <canvas id='canvas' style={styles.canvas}/>
+        </div>
+        <div style={styles.prevNext}>
+          <Icon id="prev_button" type="step-backward" />
+          <Icon id="next_button" type="step-forward" />
+        </div>
       </div>
     )
   }
@@ -538,6 +603,16 @@ class CustomCanvas extends Component {
 const styles = {
   canvas: {
     position: 'relative'
+  },
+  prevNext: {
+    textAlign: 'center',
+    fontSize: 24
+  },
+  prevButton: {
+
+  },
+  nextButton: {
+
   }
 };
 

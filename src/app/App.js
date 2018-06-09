@@ -8,12 +8,14 @@ import { listenForNewAlerts } from './redux/alerts/actions';
 import store from './redux/store';
 
 class App extends Component {
+  isChrome;
   constructor(props) {
     super(props);
-    
+
     this.state = {
       currentUser: null,
-      loading: true
+      loading: true,
+      socketSet: false
     }
   }
 
@@ -21,20 +23,29 @@ class App extends Component {
     store.subscribe(this.onStoreUpdate.bind(this));
     store.dispatch(checkLogin());
     store.dispatch(initialiseAnalyticsEngine());
+    this.checkBrowser();
   }
 
   onStoreUpdate() {
     const { user } = store.getState().auth;
     if (this.state.currentUser !== user) {
       this.setState({currentUser: user});
-      if (user) {
-        store.dispatch(listenForNewAlerts(user))
+      if (user && this.state.socketSet == false) {
+        this.setState({socketSet: true});
+        store.dispatch(listenForNewAlerts(user));
       }
     }
     this.setState({loading: false});
   }
 
+  checkBrowser() {
+    this.isChrome = !!window.chrome && !!window.chrome.webstore;
+  }
+
   render() {
+    if (!this.isChrome) {
+      alert('Only Google Chrome is supported. Please note that features may not work properly when using this browser.')
+    }
     if (this.state.loading) {
       return (<div>Loading</div>)
     }

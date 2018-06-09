@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Icon, Row, Col, Popconfirm, message, Button, Switch } from 'antd';
+import { Card, Icon, Row, Col, Popconfirm, Button, Switch } from 'antd';
 import moment, { lang } from 'moment';
 
 import Recorder from '../video/Recorder';
@@ -11,9 +11,8 @@ import { trackEventAnalytics } from '../../redux/auth/actions';
 import AddAlertModal from '../modals/AddAlertModal';
 import { registerCamera } from '../../redux/alerts/actions';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
+import CameraCardImg from './CameraCardImg';
 import ToggleCameraConnection from '../buttons/ToggleCameraConnection';
-import loading from '../../../assets/img/TempCameraImage.jpeg'
-import cameraConnectError from '../../../assets/img/connectError.jpeg'
 
 class CameraCard extends Component {
   constructor(props) {
@@ -56,11 +55,6 @@ class CameraCard extends Component {
           this.props.image.original = nextProps.refreshCameraImage
         }
       }
-      if (nextProps.id === nextProps.imageUpdateInProgressId) {
-        if (nextProps.imageUpdateInProgress && nextProps.imageUpdateInProgress !== this.props.imageUpdateInProgress) {
-          message.warning('Retrieving preview image. This may take up to 90 seconds.');
-        }
-      }
     }
   }
 
@@ -97,16 +91,8 @@ class CameraCard extends Component {
               </div>
             </div>
           </Row>
-          <Row>
-            <div style={styles.cameraCardImgContainer} onClick={() => this.viewCameraStream()}>
-              {this.props.image.original ?
-                <img src={this.props.image.original} style={styles.cameraCardImg} /> :
-                ((this.props.bvcCameraConnectionFail) && (this.props.id === this.props.bvcCameraConnectionFailId)) ?
-                  <img src={cameraConnectError} style={styles.cameraCardImg} /> :
-                  <img src={loading} style={styles.cameraCardImg} />
-              }
-
-            </div>
+          <Row onClick={() => this.viewCameraStream()}>
+            <CameraCardImg data={this.props} />
           </Row>
           {this.props.cameraLocation.myRole === 'viewer' ?
             (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
@@ -148,26 +134,6 @@ const styles = {
   cameraCardTitle: {
     wordBreak: 'break-word'
   },
-  cameraCardImgContainer: {
-    backgroundColor: 'white',
-    height: 170,
-    position: 'relative',
-    margin: '0 auto',
-    paddingLeft: 0,
-    paddingRight: 0
-  },
-  cameraCardImg: {
-    position: 'absolute',
-    maxWidth: '100%',
-    maxHeight: '100%',
-    width: 'auto',
-    height: 'auto',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    margin: 'auto'
-  },
   cameraCardButtons: {
     marginTop: 10
   },
@@ -192,9 +158,7 @@ const mapStateToProps = (state) => {
     refreshCameraError: state.cameras.refreshCameraError,
     refreshCameraErrorId: state.cameras.refreshCameraErrorId,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
-    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId,
-    bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail,
-    bvcCameraConnectionFailId: state.locations.bvcCameraConnectionFailId
+    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId
   }
 };
 const mapDispatchToProps = (dispatch) => {

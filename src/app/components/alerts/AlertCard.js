@@ -6,6 +6,7 @@ import moment, { lang } from 'moment';
 import axios from 'axios';
 
 import { deleteAlert } from '../../redux/alerts/actions';
+import ExpandAlertModal from '../modals/ExpandAlertModal';
 
 class _AlertCard extends Component {
   constructor(props) {
@@ -30,8 +31,8 @@ class _AlertCard extends Component {
   render() {
     return (
       <Card>
-        <div style={styles.alertCardImgContainer} onClick={() => this.playAlertVideo()}>
-          <img src={this.props.image.original} style={styles.alertCardImg} />
+        <div style={styles.alertCardImgContainer}>
+          <ExpandAlertModal data={this.props} />
         </div>
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.type}</Col>
@@ -64,18 +65,6 @@ const styles = {
     margin: '0 auto',
     paddingLeft: 0,
     paddingRight: 0
-  },
-  alertCardImg: {
-    position: 'absolute',
-    maxWidth: '100%',
-    maxHeight: '100%',
-    width: 'auto',
-    height: 'auto',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    margin: 'auto'
   }
 }
 

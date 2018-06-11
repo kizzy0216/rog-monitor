@@ -44,7 +44,7 @@ class App extends Component {
 
   render() {
     if (!this.isChrome) {
-      alert('Only Google Chrome is supported. Please note that features may not work properly when using this browser.')
+      alert('Only Google Chrome broswer (Not The App) is supported. Please note that features may not work properly when using this browser.')
     }
     if (this.state.loading) {
       return (<div>Loading</div>)

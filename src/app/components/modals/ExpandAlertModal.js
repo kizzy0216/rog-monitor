@@ -17,7 +17,6 @@ const ExpandAlertForm = Form.create()(
         onCancel={onCancel}
         footer={[null, null]}
         width="80vw"
-        top="25px"
       >
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{alertType}</Col>
@@ -75,7 +74,8 @@ class ExpandAlertModal extends Component {
 const styles = {
   modal: {
     textAlign: 'center',
-    wordBreak: 'break-word'
+    wordBreak: 'break-word',
+    top: '25px'
   },
   alertCardImg: {
     position: 'absolute',

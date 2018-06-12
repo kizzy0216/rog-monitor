@@ -48,7 +48,7 @@ const CameraLicensesForm = Form.create()(
             )}
           </FormItem>
           <FormItem label='Rtsp Url' {...formItemLayout}>
-            {getFieldDecorator('rtspUrl', {
+            {getFieldDecorator('rtsp_url', {
               'initialValue': cameraData.rtspUrl
             })(
               <Input style={styles.input} type='text' disabled />
@@ -85,7 +85,6 @@ class EditCamera extends Component {
   cameraData = {
     image: this.props.data.image.original,
     name: this.props.data.name,
-    rtspUrl: this.props.data.rtspUrl,
     username: this.props.data.username,
     password: '****'
   };
@@ -101,7 +100,8 @@ class EditCamera extends Component {
       if (err) {
         return;
       }
-
+      values.location_id = this.props.data.cameraLocation.id;
+      values.rtsp_url = this.props.data.rtspUrl;
       this.props.editCamera(this.props.user, this.props.data.id, values);
       this.setState({visible: true});
       this.setState({flag: true});

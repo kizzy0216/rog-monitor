@@ -215,13 +215,8 @@ export function editCamera(user, cameraId, cameraData) {
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/cameras/${cameraId}`;
     let config = {headers: {Authorization: user.jwt}};
-    console.log(cameraData);
     let data = {
-      camera: {
-        name: cameraData.name,
-        username: cameraData.username,
-        password: cameraData.password
-      }
+      camera: cameraData
     };
 
     axios.patch(url, data, config)

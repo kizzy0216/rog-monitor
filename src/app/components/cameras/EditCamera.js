@@ -116,6 +116,7 @@ class EditCamera extends Component {
           this.setState({flag: false});
         }
         if (nextProps.editCameraSuccess === true) {
+          message.success("Camera Updated");
           this.setState({flag: false});
           this.cameraData = nextProps.data;
         }

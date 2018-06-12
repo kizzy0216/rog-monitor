@@ -23,7 +23,7 @@ const ExpandAlertForm = Form.create()(
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{cameraName} at {locationName}</Col>
           <Col style={styles.alertDateTime} xs={24} sm={24} md={12} lg={12} xl={12}>{formatDatetime(timestamp)}</Col>
         </Row>
-        <Row><img src={alertImg} /></Row>
+        <Row><img src={alertImg} style={styles.expandedImg} /></Row>
       </Modal>
     );
   }
@@ -76,10 +76,6 @@ const styles = {
     textAlign: 'center',
     wordBreak: 'break-word'
   },
-  image: {
-    width: '100%',
-    float: 'left'
-  },
   alertCardImg: {
     position: 'absolute',
     maxWidth: '100%',
@@ -99,6 +95,9 @@ const styles = {
   alertDateTime: {
     fontSize: 10,
     paddingTop: 5
+  },
+  expandedImg: {
+    maxWidth: '80vw'
   }
 };
 

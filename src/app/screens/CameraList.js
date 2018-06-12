@@ -113,7 +113,8 @@ class CameraList extends Component {
                 <CameraOptionButtons
                   user={this.props.user}
                   selectedLocation={this.props.selectedLocation}
-                  visible={this.state.locationButtonsVisible} />
+                  visible={this.state.locationButtonsVisible}
+                  locations={this.props.locations}/>
               )
             }
           </Row>

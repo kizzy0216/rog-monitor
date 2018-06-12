@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Icon, Menu, Dropdown, Tooltip } from 'antd';
+import { Row, Col, Icon, Menu, Dropdown, Tooltip, message } from 'antd';
 
 import AddCameraModal from '../modals/AddCameraModal';
 import InviteGuardModal from '../modals/InviteGuardModal';
@@ -29,7 +29,22 @@ class CameraOptionButtons extends Component {
   }
 
   toggleAddCameraModalVisibility = () => {
-    this.setState({addCameraModalVisible: !this.state.addCameraModalVisible})
+    if (this.checkLicenseAvailable() && this.checkLicenseAvailable() >= 1) {
+      this.setState({addCameraModalVisible: !this.state.addCameraModalVisible})
+    } else {
+      message.error("You have reached your license limit. Please send an email requesting additional licenses to help@gorog.co");
+    }
+  }
+
+  checkLicenseAvailable = () => {
+    if (this.props.locations.length) {
+      return  this.props.locations.map(location => location.cameras && location.myRole === 'owner' ? location.cameras : [])
+                .reduce((a, b) => a.concat(b))
+                .length;
+    }
+    else {
+      return 0;
+    }
   }
 
   toggleInviteGuardModalVisibility = () => {

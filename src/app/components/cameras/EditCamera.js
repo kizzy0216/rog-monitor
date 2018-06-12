@@ -48,7 +48,7 @@ const CameraLicensesForm = Form.create()(
             )}
           </FormItem>
           <FormItem label='Rtsp Url' {...formItemLayout}>
-            {getFieldDecorator('rtspurl', {
+            {getFieldDecorator('rtspUrl', {
               'initialValue': cameraData.rtspUrl
             })(
               <Input style={styles.input} type='text' disabled />

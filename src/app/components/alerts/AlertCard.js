@@ -38,7 +38,6 @@ class _AlertCard extends Component {
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.type}</Col>
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.camera.name} at {this.props.camera.location.name}</Col>
           <Col style={styles.alertDateTime} xs={24} sm={24} md={12} lg={12} xl={12}>{this.formatDatetime(this.props.timestamp)}</Col>
-          <Col style={styles.alertDelete} xs={24} sm={24} md={12} lg={12} xl={12} onClick={this.deleteAlert}><Icon type='close-square' /></Col>
         </Row>
       </Card>
     )

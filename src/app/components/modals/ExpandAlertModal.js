@@ -20,9 +20,9 @@ const ExpandAlertForm = Form.create()(
         top="25px"
       >
         <Row type='flex' justify='space-between'>
-          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{alertType}</Col>
-          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{cameraName} at {locationName}</Col>
-          <Col style={styles.alertDateTime} xs={24} sm={24} md={12} lg={12} xl={12}>{formatDatetime(timestamp)}</Col>
+          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{alertType}</Col>
+          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{cameraName} at {locationName}</Col>
+          <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp)}</Col>
         </Row>
         <Row><img src={alertImg} style={styles.expandedImg} /></Row>
       </Modal>
@@ -90,11 +90,11 @@ const styles = {
     margin: 'auto'
   },
   alertType: {
-    fontSize: 10,
+    fontSize: 14,
     paddingTop: 5
   },
   alertDateTime: {
-    fontSize: 10,
+    fontSize: 14,
     paddingTop: 5
   },
   expandedImg: {

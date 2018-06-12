@@ -16,7 +16,7 @@ const ExpandAlertForm = Form.create()(
         style={styles.modal}
         onCancel={onCancel}
         footer={[null, null]}
-        width="80vw"
+        width="90vw"
       >
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{alertType}</Col>
@@ -98,7 +98,7 @@ const styles = {
     paddingTop: 5
   },
   expandedImg: {
-    maxWidth: '70vw'
+    maxWidth: '80vw'
   }
 };
 

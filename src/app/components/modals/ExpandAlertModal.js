@@ -17,6 +17,7 @@ const ExpandAlertForm = Form.create()(
         onCancel={onCancel}
         footer={[null, null]}
         width="80vw"
+        top="25px"
       >
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{alertType}</Col>

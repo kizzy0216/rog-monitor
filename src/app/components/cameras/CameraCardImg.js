@@ -13,6 +13,14 @@ class CameraCardImg extends Component {
     };
   }
 
+  componentWillMount() {
+    if (this.props.data.image.original) {
+      this.setState({image: this.props.data.image.original});
+    } else if (this.props.bvcCameraConnectionFail && this.props.bvcCameraConnectionFailId === this.props.data.id) {
+      this.setState({image: cameraConnectError});
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.data.image.original) {
       this.setState({image: nextProps.data.image.original});

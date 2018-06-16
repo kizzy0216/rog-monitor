@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Modal, Form, Input, Button, message } from 'antd';
-import CustomInput from '../../components/formitems/CustomInput';
+import { Row, Col, Icon, Modal, Form, Input, Button, message, TimePicker, Select, Popconfirm } from 'antd';
+import moment from 'moment';
 
 import { editCamera } from '../../redux/cameras/actions'
 import loading from '../../../assets/img/TempCameraImage.jpeg'
 
+const Option = Select.Option;
 const FormItem = Form.Item;
 const CameraLicensesForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, cameraData} = props;
+    const {onCancel, visible, onCreate, form, cameraData, addDaysToObject, addEndTimeToObject, addStartTimeToObject, changeTimeWindow, resetData} = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -40,14 +41,14 @@ const CameraLicensesForm = Form.create()(
               <Icon type='reload'></Icon>Test Live View
             </Button>
           </FormItem>
-          <FormItem label='Name' {...formItemLayout}>
+          <FormItem label='Camera Name' {...formItemLayout}>
             {getFieldDecorator('name', {
               'initialValue': cameraData.name
             })(
               <Input style={styles.input} type='text' placeholder="Camera Name" />
             )}
           </FormItem>
-          <FormItem label='Rtsp Url' {...formItemLayout}>
+          <FormItem label='URL' {...formItemLayout}>
             {getFieldDecorator('rtsp_url', {
               'initialValue': cameraData.rtspUrl
             })(
@@ -66,6 +67,115 @@ const CameraLicensesForm = Form.create()(
               <Input style={styles.input} type='password' placeholder="********" />
             )}
           </FormItem>
+          <FormItem label="Camera Time Zone">
+            {getFieldDecorator('time_zone', {
+              'initialValue': cameraData.time_zone
+            })(
+              <Select
+                style={styles.timeZone}
+                showSearch
+                placeholder="Enter Time Zone"
+                optionFilterProp="children"
+                default="UTC"
+                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                >
+                <Option value="UTC">Universal Coordinated Time (UTC)</Option>
+                <Option value="ECT">European Central Time (UTC+1:00)</Option>
+                <Option value="EET">Eastern European Time (UTC+2:00)</Option>
+                <Option value="EAT">Eastern African Time (UTC+3:00)</Option>
+                <Option value="MET">Middle East Time (UTC+3:30)</Option>
+                <Option value="NET">Near East Time (UTC+4:00)</Option>
+                <Option value="PLT">Pakistan Lahore Time (UTC+5:00)</Option>
+                <Option value="IST">India Standard Time (UTC:5:30)</Option>
+                <Option value="BST">Bangladesh Standard Time (UTC+6:00)</Option>
+                <Option value="VST">Vietnam Standard Time (UTC+7:00)</Option>
+                <Option value="CTT">China Taiwan Time (UTC+8:00)</Option>
+                <Option value="JST">Japan Standard Time (UTC+9:00)</Option>
+                <Option value="ACT">Australia Central Time (UTC+9:30)</Option>
+                <Option value="AET">Australia Eastern Time (UTC+10:00)</Option>
+                <Option value="SST">Solomon Standard Time (UTC+11:00)</Option>
+                <Option value="NST">New Zealand Standard Time</Option>
+                <Option value="MIT">Midway Islands Time (UTC+12:00)</Option>
+                <Option value="HST">Hawaii Standard Time (UTC-11:00)</Option>
+                <Option value="AST">Alaska Standard Time (UTC-10:00)</Option>
+                <Option value="PST">Pacific Standard Time (UTC-9:00)</Option>
+                <Option value="MST">Mountain Standard Time (UTC-7:00)</Option>
+                <Option value="CST">Central Standard Time (UTC-6:00)</Option>
+                <Option value="EST">Eastern Standard Time (UTC-5:00)</Option>
+                <Option value="PRT">Puerto Rico and US Virgin Islands Time (UTC-4:00)</Option>
+                <Option value="CNT">Canada Newfoundland Time (UTC-3:30)</Option>
+                <Option value="AGT">Argentina Standard Time (UTC-3:00)</Option>
+                <Option value="CAT">Central African Time (UTC-1:00)</Option>
+              </Select>
+            )}
+          </FormItem>
+          <div style={styles.borderBox}>
+            <FormItem label="Alert Time Windows" {...formItemLayout}>
+              {getFieldDecorator('time_window_select', {
+                'initialValue': cameraData.time_window_select
+              })(
+                <Select
+                  placeholder="Select Time Window"
+                  style={styles.alertTimeWindowSelect}
+                  onChange={changeTimeWindow}
+                  >
+                  <Option value="0">First</Option>
+                  <Option value="1">Second</Option>
+                  <Option value="2">Third</Option>
+                </Select>
+              )}
+            </FormItem>
+            <FormItem label="Select Alert Days">
+              {getFieldDecorator('days_of_week', {
+                'initialValue': cameraData.days_of_week
+              })(
+                <Select
+                  mode="multiple"
+                  onChange={addDaysToObject}
+                  placeholder="Select Alert Days"
+                  style={styles.dayPicker}
+                >
+                  <Option key="monday" value="monday">Monday</Option>
+                  <Option key="tuesday" value="tuesday">Tuesday</Option>
+                  <Option key="wednesday" value="wednesday">Wednesday</Option>
+                  <Option key="thursday" value="thursday">Thursday</Option>
+                  <Option key="friday" value="friday">Friday</Option>
+                  <Option key="saturday" value="saturday">Saturday</Option>
+                  <Option key="sunday" value="sunday">Sunday</Option>
+                </Select>
+              )}
+            </FormItem>
+            <div span={24} className="ant-form-item-label">
+              <label>Set Alert Time Window</label>
+            </div>
+            <Row>
+              <FormItem span={12} style={{float: 'left', width: '50%'}}>
+                {getFieldDecorator('start', {
+                  'initialValue': cameraData.start
+                })(
+                  <TimePicker
+                    span={8}
+                    style={{margin: '0 auto'}}
+                    onChange={addStartTimeToObject}
+                    defaultOpenValue={moment('00:00', 'HH:mm')} format={'HH:mm'} />
+                )}
+              </FormItem>
+              <FormItem span={12} style={{float: 'right', width: '50%'}}>
+                {getFieldDecorator('stop', {
+                  'initialValue': cameraData.stop
+                })(
+                  <TimePicker
+                    span={8}
+                    style={{margin: '0 auto'}}
+                    onChange={addEndTimeToObject}
+                    defaultOpenValue={moment('00:00', 'HH:mm')} format={'HH:mm'} />
+                )}</FormItem>
+            </Row>
+            <Row>
+              <Button type="danger" icon="close" onClick={resetData}>Clear Alert Time Window</Button>
+            </Row>
+            <div>&nbsp;</div>
+          </div>
         </Form>
       </Modal>
     );
@@ -78,7 +188,24 @@ class EditCamera extends Component {
     this.state = {
       visible: false,
       error: false,
-      flag: false
+      flag: false,
+      alertTimeWindows: {
+        0: {
+          "start": '00:00',
+          "stop": '00:00',
+          "daysOfWeek": 'monday'
+        },
+        1: {
+          "start": "11:11",
+          "stop": "11:11",
+          "daysOfWeek": "tuesday"
+        },
+        2: {
+          "start": "22:22",
+          "stop": "22:22",
+          "daysOfWeek": "wednesady"
+        },
+      }
     }
   }
 
@@ -108,6 +235,41 @@ class EditCamera extends Component {
     });
   };
 
+  handleChangeTimeWindow = (fieldValue) => {
+    let alertTimeWindow = this.state.alertTimeWindows[fieldValue];
+    let start = moment(alertTimeWindow['start'], "HH:mm");
+    let stop = moment(alertTimeWindow['stop'], "HH:mm");
+
+    this.form.setFieldsValue({days_of_week: alertTimeWindow['daysOfWeek']});
+    this.form.setFieldsValue({start: start});
+    this.form.setFieldsValue({stop: stop});
+  }
+
+  handleAddDaysToObject = (fieldValue) => {
+    // add value to state
+    console.log(fieldValue);
+  }
+
+  handleAddStartTimeToObject = (fieldValue) => {
+    // add value to state
+    console.log(fieldValue);
+  }
+
+  handleAddEndTimeToObject = (fieldValue) => {
+    // add value to state
+    console.log(fieldValue);
+  }
+
+  handleResetData = () => {
+    let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
+    console.log(timeWindowSelect);
+    console.log(this.props.data);
+    // remove the data from the fields in the object using the above index.
+    // insert code here...
+    // clear form data
+    this.form.resetFields('days_of_week', 'start', 'stop');
+  }
+
   componentWillReceiveProps(nextProps){
     if (this.props.data.id === nextProps.data.id) {
       if (this.state.flag == true) {
@@ -133,6 +295,11 @@ class EditCamera extends Component {
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
+          resetData={this.handleResetData}
+          changeTimeWindow={this.handleChangeTimeWindow}
+          addDaysToObject={this.handleAddDaysToObject}
+          addStartTimeToObject={this.hendleAddStartTimeToObject}
+          addEndTimeToObject={this.handleAddEndTimeToObject}
           error={this.state.error}
           cameraData={this.props.data}
         />
@@ -156,6 +323,18 @@ const styles = {
   },
   image: {
     width: '50%'
+  },
+  timeZone: {
+    width: '80%'
+  },
+  borderBox: {
+    border: 'solid 1px #bfbfbf'
+  },
+  dayPicker: {
+    width: '80%',
+  },
+  alertTimeWindowSelect: {
+    width: '60%'
   }
 };
 

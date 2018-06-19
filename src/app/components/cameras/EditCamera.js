@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { Row, Col, Icon, Modal, Form, Input, Button, message, TimePicker, Select, Popconfirm } from 'antd';
 import moment from 'moment';
 
-import { editCamera } from '../../redux/cameras/actions'
+import { editCamera, updateTimeWindowData, clearTimeWindowData } from '../../redux/cameras/actions'
 import loading from '../../../assets/img/TempCameraImage.jpeg'
 
 const Option = Select.Option;
 const FormItem = Form.Item;
 const CameraLicensesForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, cameraData, addDaysToObject, addEndTimeToObject, addStartTimeToObject, changeTimeWindow, resetData} = props;
+    const {onCancel, visible, onCreate, form, cameraData, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData} = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -111,27 +111,23 @@ const CameraLicensesForm = Form.create()(
           </FormItem>
           <div style={styles.borderBox}>
             <FormItem label="Alert Time Windows" {...formItemLayout}>
-              {getFieldDecorator('time_window_select', {
-                'initialValue': cameraData.time_window_select
-              })(
+              {getFieldDecorator('time_window_select', {})(
                 <Select
                   placeholder="Select Time Window"
                   style={styles.alertTimeWindowSelect}
                   onChange={changeTimeWindow}
                   >
-                  <Option value="0">First</Option>
-                  <Option value="1">Second</Option>
-                  <Option value="2">Third</Option>
+                  <Option value={0}>First</Option>
+                  <Option value={1}>Second</Option>
+                  <Option value={2}>Third</Option>
                 </Select>
               )}
             </FormItem>
             <FormItem label="Select Alert Days">
-              {getFieldDecorator('days_of_week', {
-                'initialValue': cameraData.days_of_week
-              })(
+              {getFieldDecorator('days_of_week', {})(
                 <Select
                   mode="multiple"
-                  onChange={addDaysToObject}
+                  onChange={updateDataDaysOfWeek}
                   placeholder="Select Alert Days"
                   style={styles.dayPicker}
                 >
@@ -150,29 +146,29 @@ const CameraLicensesForm = Form.create()(
             </div>
             <Row>
               <FormItem span={12} style={{float: 'left', width: '50%'}}>
-                {getFieldDecorator('start', {
-                  'initialValue': cameraData.start
-                })(
+                {getFieldDecorator('start', {})(
                   <TimePicker
                     span={8}
                     style={{margin: '0 auto'}}
-                    onChange={addStartTimeToObject}
-                    defaultOpenValue={moment('00:00', 'HH:mm')} format={'HH:mm'} />
+                    onChange={updateDataStart}
+                    defaultOpenValue={moment('00:00', 'HH:mm')}
+                    allowEmpty={true}
+                    format={'HH:mm'} />
                 )}
               </FormItem>
               <FormItem span={12} style={{float: 'right', width: '50%'}}>
-                {getFieldDecorator('stop', {
-                  'initialValue': cameraData.stop
-                })(
+                {getFieldDecorator('stop', {})(
                   <TimePicker
                     span={8}
                     style={{margin: '0 auto'}}
-                    onChange={addEndTimeToObject}
-                    defaultOpenValue={moment('00:00', 'HH:mm')} format={'HH:mm'} />
+                    onChange={updateDataStop}
+                    defaultOpenValue={moment('00:00', 'HH:mm')}
+                    allowEmpty={true}
+                    format={'HH:mm'} />
                 )}</FormItem>
             </Row>
             <Row>
-              <Button type="danger" icon="close" onClick={resetData}>Clear Alert Time Window</Button>
+              <Button type="danger" icon="close" onClick={resetData}>Clear Current Alert Time Form</Button>
             </Row>
             <div>&nbsp;</div>
           </div>
@@ -189,32 +185,9 @@ class EditCamera extends Component {
       visible: false,
       error: false,
       flag: false,
-      alertTimeWindows: {
-        0: {
-          "start": '00:00',
-          "stop": '00:00',
-          "daysOfWeek": 'monday'
-        },
-        1: {
-          "start": "11:11",
-          "stop": "11:11",
-          "daysOfWeek": "tuesday"
-        },
-        2: {
-          "start": "22:22",
-          "stop": "22:22",
-          "daysOfWeek": "wednesady"
-        },
-      }
     }
   }
 
-  cameraData = {
-    image: this.props.data.image.original,
-    name: this.props.data.name,
-    username: this.props.data.username,
-    password: '****'
-  };
   showModal = () => {
     this.setState({visible: true});
   };
@@ -236,38 +209,54 @@ class EditCamera extends Component {
   };
 
   handleChangeTimeWindow = (fieldValue) => {
-    let alertTimeWindow = this.state.alertTimeWindows[fieldValue];
-    let start = moment(alertTimeWindow['start'], "HH:mm");
-    let stop = moment(alertTimeWindow['stop'], "HH:mm");
+    let alertTimeWindow = this.props.alertWindow[fieldValue];
+    let start = moment(alertTimeWindow.start, "HH:mm");
+    let stop = moment(alertTimeWindow.stop, "HH:mm");
 
-    this.form.setFieldsValue({days_of_week: alertTimeWindow['daysOfWeek']});
+    this.form.setFieldsValue({days_of_week: alertTimeWindow.daysOfWeek});
     this.form.setFieldsValue({start: start});
     this.form.setFieldsValue({stop: stop});
   }
 
-  handleAddDaysToObject = (fieldValue) => {
-    // add value to state
-    console.log(fieldValue);
+  handleUpdateStart = (fieldValue) => {
+    let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
+    if (typeof timeWindowSelect !== 'undefined') {
+      this.props.updateTimeWindowData(timeWindowSelect, this.props.alertWindow, moment(fieldValue).format('HH:mm').toString(), 'start');
+    } else {
+      message.error('Please select which Alert Time Window you want to store this in. Your changes will not be saved!');
+    }
   }
 
-  handleAddStartTimeToObject = (fieldValue) => {
-    // add value to state
-    console.log(fieldValue);
+  handleUpdateStop = (fieldValue) => {
+    let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
+    if (typeof timeWindowSelect !== 'undefined') {
+      this.props.updateTimeWindowData(timeWindowSelect, this.props.alertWindow, moment(fieldValue).format('HH:mm').toString(), 'stop');
+    } else {
+      message.error('Please select which Alert Time Window you want to store this in. Your changes will not be saved!');
+    }
   }
 
-  handleAddEndTimeToObject = (fieldValue) => {
-    // add value to state
-    console.log(fieldValue);
+  handleUpdateDaysOfWeek = (fieldValue) => {
+    let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
+    if (typeof timeWindowSelect !== 'undefined') {
+      this.props.updateTimeWindowData(timeWindowSelect, this.props.alertWindow, fieldValue, 'daysOfWeek');
+    } else {
+      message.error('Please select which Alert Time Window you want to store this in. Your changes will not be saved!');
+    }
   }
 
   handleResetData = () => {
+    this.form.resetFields('days_of_week');
+    this.form.setFieldsValue({start: null});
+    this.form.setFieldsValue({stop: null});
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
-    console.log(timeWindowSelect);
-    console.log(this.props.data);
-    // remove the data from the fields in the object using the above index.
+    if (typeof timeWindowSelect !== 'undefined') {
+      this.props.clearTimeWindowData(timeWindowSelect, this.props.alertWindow);
+    }
+  }
+
+  componentWillMount(){
     // insert code here...
-    // clear form data
-    this.form.resetFields('days_of_week', 'start', 'stop');
   }
 
   componentWillReceiveProps(nextProps){
@@ -297,9 +286,9 @@ class EditCamera extends Component {
           onCreate={this.handleCreate}
           resetData={this.handleResetData}
           changeTimeWindow={this.handleChangeTimeWindow}
-          addDaysToObject={this.handleAddDaysToObject}
-          addStartTimeToObject={this.hendleAddStartTimeToObject}
-          addEndTimeToObject={this.handleAddEndTimeToObject}
+          updateDataStart={this.handleUpdateStart}
+          updateDataStop={this.handleUpdateStop}
+          updateDataDaysOfWeek={this.handleUpdateDaysOfWeek}
           error={this.state.error}
           cameraData={this.props.data}
         />
@@ -344,12 +333,15 @@ const mapStateToProps = (state) => {
     editCameraInProcess: state.cameras.editCameraInProcess,
     editCameraError: state.cameras.editCameraError,
     editCameraSuccess: state.cameras.editCameraSuccess,
+    alertWindow: state.cameras.alertWindow
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     editCamera: (user, camera, cameraData) => dispatch(editCamera(user, camera, cameraData)),
+    updateTimeWindowData: (timeWindowSelect, values, fieldValue, fieldName) => dispatch(updateTimeWindowData(timeWindowSelect, values, fieldValue, fieldName)),
+    clearTimeWindowData: (timeWindowSelect, values) => dispatch(clearTimeWindowData(timeWindowSelect, values))
   }
 }
 

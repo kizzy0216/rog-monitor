@@ -8,6 +8,7 @@ import * as types from './actionTypes';
 import { Socket } from '../../../lib/phoenix/phoenix';
 
 import { fetchLocations } from '../locations/actions';
+import moment from 'moment';
 
 function fetchInProcess(bool) {
   return {
@@ -135,6 +136,13 @@ function cameraConnectionEnabled(bool, cameraId) {
   }
 }
 
+function updateAlertTimeWindowData(values) {
+  return {
+    type: types.UPDATE_ALERT_TIME_WINDOWS_DATA,
+    alertWindow: values
+  }
+}
+
 export function fetchCameraAuthRtspUrl(user, cameraId) {
   return (dispatch) => {
     dispatch(fetchInProcess(true));
@@ -240,6 +248,23 @@ export function editCamera(user, cameraId, cameraData) {
         dispatch(editCameraError(''));
         dispatch(editCameraInProcess(false));
       });
+  }
+}
+
+export function updateTimeWindowData(timeWindowSelect, values, fieldValue, fieldName) {
+  return (dispatch) => {
+    values[timeWindowSelect][fieldName] = fieldValue;
+    dispatch(updateAlertTimeWindowData(values));
+  };
+}
+
+export function clearTimeWindowData(timeWindowSelect, values) {
+  return (dispatch) => {
+    values[timeWindowSelect]['daysOfWeek'] = [];
+    values[timeWindowSelect]['start'] = null;
+    values[timeWindowSelect]['stop'] = null;
+    console.log(values);
+    dispatch(updateAlertTimeWindowData(values));
   }
 }
 

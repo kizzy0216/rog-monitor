@@ -106,6 +106,12 @@ const cameras = (state = initialState, action) => {
         cameraConnectionId: action.cameraConnectionId
       }
 
+    case types.UPDATE_ALERT_TIME_WINDOWS_DATA:
+      return {
+        ...state,
+        alertWindow: action.alertWindow
+      }
+
     default:
       return state;
   }

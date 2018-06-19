@@ -1,3 +1,4 @@
+import moment from 'moment';
 export default {
   authRtspUrl: null,
   fetchInProcess: false,
@@ -17,5 +18,23 @@ export default {
   editCameraSuccess: false,
   editCameraError: '',
   cameraConnectionEnabled: false,
-  cameraConnectionId: ''
+  cameraConnectionId: '',
+  time_zone: null,
+  alertWindow: {
+    0: {
+      start: null,
+      stop: null,
+      daysOfWeek: []
+    },
+    1: {
+      start: null,
+      stop: null,
+      daysOfWeek: []
+    },
+    2: {
+      start: null,
+      stop: null,
+      daysOfWeek: []
+    }
+  }
 }

@@ -210,8 +210,14 @@ class EditCamera extends Component {
 
   handleChangeTimeWindow = (fieldValue) => {
     let alertTimeWindow = this.props.alertWindow[fieldValue];
-    let start = moment(alertTimeWindow.start, "HH:mm");
-    let stop = moment(alertTimeWindow.stop, "HH:mm");
+    let start = alertTimeWindow.start;
+    let stop = alertTimeWindow.stop;
+    if (start !== null) {
+      start = moment(alertTimeWindow.start, "HH:mm");
+    }
+    if (stop !== null) {
+      stop = moment(alertTimeWindow.stop, "HH:mm");
+    }
 
     this.form.setFieldsValue({days_of_week: alertTimeWindow.daysOfWeek});
     this.form.setFieldsValue({start: start});

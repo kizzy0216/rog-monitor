@@ -10,7 +10,7 @@ const Option = Select.Option;
 const FormItem = Form.Item;
 const CameraLicensesForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, cameraData, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData} = props;
+    const {onCancel, visible, onCreate, form, cameraData, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow} = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -128,6 +128,7 @@ const CameraLicensesForm = Form.create()(
                 <Select
                   mode="multiple"
                   onChange={updateDataDaysOfWeek}
+                  onBlur={checkForWindow}
                   placeholder="Select Alert Days"
                   style={styles.dayPicker}
                 >
@@ -151,6 +152,7 @@ const CameraLicensesForm = Form.create()(
                     span={8}
                     style={{margin: '0 auto'}}
                     onChange={updateDataStart}
+                    onOpenChange={(open: false), checkForWindow}
                     defaultOpenValue={moment('00:00', 'HH:mm')}
                     allowEmpty={true}
                     format={'HH:mm'} />
@@ -162,6 +164,7 @@ const CameraLicensesForm = Form.create()(
                     span={8}
                     style={{margin: '0 auto'}}
                     onChange={updateDataStop}
+                    onOpenChange={(open: false), checkForWindow}
                     defaultOpenValue={moment('00:00', 'HH:mm')}
                     allowEmpty={true}
                     format={'HH:mm'} />
@@ -200,6 +203,11 @@ class EditCamera extends Component {
       if (err) {
         return;
       }
+      delete values.start;
+      delete values.stop;
+      delete values.days_of_week;
+      delete values.time_window_select;
+      values.alertWindow = this.props.alertWindow;
       values.location_id = this.props.data.cameraLocation.id;
       values.rtsp_url = this.props.data.rtspUrl;
       this.props.editCamera(this.props.user, this.props.data.id, values);
@@ -228,17 +236,22 @@ class EditCamera extends Component {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
       this.props.updateTimeWindowData(timeWindowSelect, this.props.alertWindow, moment(fieldValue).format('HH:mm').toString(), 'start');
-    } else {
-      message.error('Please select which Alert Time Window you want to store this in. Your changes will not be saved!');
     }
   }
 
   handleUpdateStop = (fieldValue) => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      this.props.updateTimeWindowData(timeWindowSelect, this.props.alertWindow, moment(fieldValue).format('HH:mm').toString(), 'stop');
-    } else {
-      message.error('Please select which Alert Time Window you want to store this in. Your changes will not be saved!');
+      let startTime = this.props.alertWindow[timeWindowSelect].start;
+      if (startTime !== null) {
+        if (moment(startTime, 'HH:mm').isBefore(fieldValue, 'minute')) {
+          this.props.updateTimeWindowData(timeWindowSelect, this.props.alertWindow, moment(fieldValue).format('HH:mm').toString(), 'stop');
+        } else {
+          message.error('Please select a time that is after the start time.');
+        }
+      } else {
+        message.error('Please select a start time before selecting a stop time.');
+      }
     }
   }
 
@@ -246,8 +259,6 @@ class EditCamera extends Component {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
       this.props.updateTimeWindowData(timeWindowSelect, this.props.alertWindow, fieldValue, 'daysOfWeek');
-    } else {
-      message.error('Please select which Alert Time Window you want to store this in. Your changes will not be saved!');
     }
   }
 
@@ -261,8 +272,12 @@ class EditCamera extends Component {
     }
   }
 
-  componentWillMount(){
-    // insert code here...
+  handleCheckForWindow = () => {
+    let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
+    if (typeof timeWindowSelect == 'undefined') {
+      message.error('Please select which Alert Time Window you want to store this in. Your changes will not be saved!');
+      this.handleResetData();
+    }
   }
 
   componentWillReceiveProps(nextProps){
@@ -294,6 +309,7 @@ class EditCamera extends Component {
           changeTimeWindow={this.handleChangeTimeWindow}
           updateDataStart={this.handleUpdateStart}
           updateDataStop={this.handleUpdateStop}
+          checkForWindow={this.handleCheckForWindow}
           updateDataDaysOfWeek={this.handleUpdateDaysOfWeek}
           error={this.state.error}
           cameraData={this.props.data}

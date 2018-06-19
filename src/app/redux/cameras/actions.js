@@ -220,7 +220,7 @@ export function editCamera(user, cameraId, cameraData) {
   return (dispatch) => {
     dispatch(editCameraError(''));
     dispatch(editCameraInProcess(true));
-
+    
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/cameras/${cameraId}`;
     let config = {headers: {Authorization: user.jwt}};
     let data = {
@@ -263,7 +263,6 @@ export function clearTimeWindowData(timeWindowSelect, values) {
     values[timeWindowSelect]['daysOfWeek'] = [];
     values[timeWindowSelect]['start'] = null;
     values[timeWindowSelect]['stop'] = null;
-    console.log(values);
     dispatch(updateAlertTimeWindowData(values));
   }
 }

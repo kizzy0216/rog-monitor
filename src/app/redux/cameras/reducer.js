@@ -109,7 +109,7 @@ const cameras = (state = initialState, action) => {
     case types.UPDATE_ALERT_TIME_WINDOWS_DATA:
       return {
         ...state,
-        alertWindow: action.alertWindow
+        alert_windows: action.alert_windows
       }
 
     default:

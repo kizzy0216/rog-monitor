@@ -139,7 +139,7 @@ function cameraConnectionEnabled(bool, cameraId) {
 function updateAlertTimeWindowData(values) {
   return {
     type: types.UPDATE_ALERT_TIME_WINDOWS_DATA,
-    alertWindow: values
+    alert_windows: values
   }
 }
 
@@ -220,7 +220,7 @@ export function editCamera(user, cameraId, cameraData) {
   return (dispatch) => {
     dispatch(editCameraError(''));
     dispatch(editCameraInProcess(true));
-    
+
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/cameras/${cameraId}`;
     let config = {headers: {Authorization: user.jwt}};
     let data = {

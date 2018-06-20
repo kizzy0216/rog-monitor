@@ -20,7 +20,7 @@ export default {
   cameraConnectionEnabled: false,
   cameraConnectionId: '',
   time_zone: null,
-  alertWindow: {
+  alert_windows: {
     0: {
       start: null,
       stop: null,

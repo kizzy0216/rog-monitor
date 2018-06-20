@@ -19,22 +19,5 @@ export default {
   editCameraError: '',
   cameraConnectionEnabled: false,
   cameraConnectionId: '',
-  time_zone: null,
-  alert_windows: {
-    0: {
-      start: null,
-      stop: null,
-      daysOfWeek: []
-    },
-    1: {
-      start: null,
-      stop: null,
-      daysOfWeek: []
-    },
-    2: {
-      start: null,
-      stop: null,
-      daysOfWeek: []
-    }
-  }
+  time_zone: null
 }

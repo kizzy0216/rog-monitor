@@ -207,7 +207,7 @@ class EditCamera extends Component {
       delete values.stop;
       delete values.days_of_week;
       delete values.time_window_select;
-      values.alert_windows = this.props.alert_windows;
+      values.alert_windows = this.props.data.alert_windows;
       values.location_id = this.props.data.cameraLocation.id;
       values.rtsp_url = this.props.data.rtspUrl;
       this.props.editCamera(this.props.user, this.props.data.id, values);
@@ -217,7 +217,7 @@ class EditCamera extends Component {
   };
 
   handleChangeTimeWindow = (fieldValue) => {
-    let alertTimeWindow = this.props.alert_windows[fieldValue];
+    let alertTimeWindow = this.props.data.alert_windows[fieldValue];
     let start = alertTimeWindow.start;
     let stop = alertTimeWindow.stop;
     if (start !== null) {
@@ -235,17 +235,17 @@ class EditCamera extends Component {
   handleUpdateStart = (fieldValue) => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      this.props.updateTimeWindowData(timeWindowSelect, this.props.alert_windows, moment(fieldValue).format('HH:mm').toString(), 'start');
+      this.props.updateTimeWindowData(timeWindowSelect, this.props.data.alert_windows, moment(fieldValue).format('HH:mm').toString(), 'start');
     }
   }
 
   handleUpdateStop = (fieldValue) => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      let startTime = this.props.alert_windows[timeWindowSelect].start;
+      let startTime = this.props.data.alert_windows[timeWindowSelect].start;
       if (startTime !== null) {
         if (moment(startTime, 'HH:mm').isBefore(fieldValue, 'minute')) {
-          this.props.updateTimeWindowData(timeWindowSelect, this.props.alert_windows, moment(fieldValue).format('HH:mm').toString(), 'stop');
+          this.props.updateTimeWindowData(timeWindowSelect, this.props.data.alert_windows, moment(fieldValue).format('HH:mm').toString(), 'stop');
         } else {
           message.error('Please select a time that is after the start time.');
         }
@@ -258,7 +258,7 @@ class EditCamera extends Component {
   handleUpdateDaysOfWeek = (fieldValue) => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      this.props.updateTimeWindowData(timeWindowSelect, this.props.alert_windows, fieldValue, 'daysOfWeek');
+      this.props.updateTimeWindowData(timeWindowSelect, this.props.data.alert_windows, fieldValue, 'daysOfWeek');
     }
   }
 
@@ -268,7 +268,7 @@ class EditCamera extends Component {
     this.form.setFieldsValue({stop: null});
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      this.props.clearTimeWindowData(timeWindowSelect, this.props.alert_windows);
+      this.props.clearTimeWindowData(timeWindowSelect, this.props.data.alert_windows);
     }
   }
 
@@ -279,7 +279,7 @@ class EditCamera extends Component {
       this.handleResetData();
     }
   }
-
+  
   componentWillReceiveProps(nextProps){
     if (this.props.data.id === nextProps.data.id) {
       if (this.state.flag == true) {
@@ -354,8 +354,7 @@ const mapStateToProps = (state) => {
     user: state.auth.user,
     editCameraInProcess: state.cameras.editCameraInProcess,
     editCameraError: state.cameras.editCameraError,
-    editCameraSuccess: state.cameras.editCameraSuccess,
-    alert_windows: state.cameras.alert_windows
+    editCameraSuccess: state.cameras.editCameraSuccess
   }
 }
 

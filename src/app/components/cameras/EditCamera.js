@@ -274,12 +274,16 @@ class EditCamera extends Component {
 
   handleCheckForWindow = () => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
+    let daysOfWeek = this.form.getFieldProps('days_of_week').value;
     if (typeof timeWindowSelect == 'undefined') {
       message.error('Please select which Alert Time Window you want to store this in. Your changes will not be saved!');
       this.handleResetData();
+    } else if (daysOfWeek === undefined || daysOfWeek.length == 0) {
+      message.error('Please select the days you would like the alert time to be active. Your changes will not be saved!');
+      this.handleResetData();
     }
   }
-  
+
   componentWillReceiveProps(nextProps){
     if (this.props.data.id === nextProps.data.id) {
       if (this.state.flag == true) {

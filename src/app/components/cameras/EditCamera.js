@@ -187,7 +187,7 @@ class EditCamera extends Component {
     this.state = {
       visible: false,
       error: false,
-      flag: false,
+      flag: false
     }
   }
 

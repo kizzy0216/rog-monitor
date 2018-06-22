@@ -8,7 +8,6 @@ import * as types from './actionTypes';
 import { Socket } from '../../../lib/phoenix/phoenix';
 
 import { fetchLocations } from '../locations/actions';
-import moment from 'moment';
 
 function fetchInProcess(bool) {
   return {

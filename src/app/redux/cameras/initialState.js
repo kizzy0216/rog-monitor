@@ -17,5 +17,6 @@ export default {
   editCameraSuccess: false,
   editCameraError: '',
   cameraConnectionEnabled: false,
-  cameraConnectionId: ''
+  cameraConnectionId: '',
+  time_zone: null
 }

@@ -32,6 +32,9 @@ body{
 .ant-form-item{
   margin-bottom: 17.4px !important;
 }
+.ant-select-selection{
+  border-radius: 0;
+}
 .ant-form-item-with-help{
   margin-bottom: 0px !important;
 }
@@ -53,6 +56,19 @@ body{
   width: 60%;
   text-align: center;
   border-radius: 0px;
+}
+.ant-modal-body .ant-select-selection__placeholder{
+  text-align: center;
+}
+.ant-modal-body .ant-time-picker{
+  padding: 5px;
+}
+.ant-modal-body .ant-time-picker-input{
+  width: 100%;
+  text-align: left;
+}
+.ant-modal-body span.ant-time-picker-icon{
+  padding-top: 1.1px;
 }
 .ant-modal-body .has-error.has-feedback:after, .ant-modal-body .has-success.has-feedback:after, .ant-modal-body .has-warning.has-feedback:after, .ant-modal-body .is-validating.has-feedback:after{
   right: 20%;

@@ -135,6 +135,13 @@ function cameraConnectionEnabled(bool, cameraId) {
   }
 }
 
+function updateAlertTimeWindowData(values) {
+  return {
+    type: types.UPDATE_ALERT_TIME_WINDOWS_DATA,
+    alert_windows: values
+  }
+}
+
 export function fetchCameraAuthRtspUrl(user, cameraId) {
   return (dispatch) => {
     dispatch(fetchInProcess(true));
@@ -240,6 +247,22 @@ export function editCamera(user, cameraId, cameraData) {
         dispatch(editCameraError(''));
         dispatch(editCameraInProcess(false));
       });
+  }
+}
+
+export function updateTimeWindowData(timeWindowSelect, values, fieldValue, fieldName) {
+  return (dispatch) => {
+    values[timeWindowSelect][fieldName] = fieldValue;
+    dispatch(updateAlertTimeWindowData(values));
+  };
+}
+
+export function clearTimeWindowData(timeWindowSelect, values) {
+  return (dispatch) => {
+    values[timeWindowSelect]['daysOfWeek'] = [];
+    values[timeWindowSelect]['start'] = null;
+    values[timeWindowSelect]['stop'] = null;
+    dispatch(updateAlertTimeWindowData(values));
   }
 }
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Icon, Modal, Form, Input, Button, message, TimePicker, Select, Popconfirm } from 'antd';
+import { Row, Icon, Modal, Form, Input, Button, message, TimePicker, Select } from 'antd';
 import moment from 'moment';
 
 import { editCamera, updateTimeWindowData, clearTimeWindowData } from '../../redux/cameras/actions'

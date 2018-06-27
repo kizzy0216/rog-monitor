@@ -214,7 +214,7 @@ class EditCamera extends Component {
       delete values.time_window_select;
       values.alert_windows = this.props.data.alert_windows;
       values.location_id = this.props.data.cameraLocation.id;
-      values.rtsp_url = str.trim(this.props.data.rtspUrl);
+      values.rtsp_url = this.props.data.rtspUrl.trim();
       this.props.editCamera(this.props.user, this.props.data.id, values);
       this.setState({visible: false});
       this.setState({flag: true});

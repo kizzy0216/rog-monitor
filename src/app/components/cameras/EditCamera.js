@@ -120,9 +120,9 @@ const CameraLicensesForm = Form.create()(
                   style={styles.alertTimeWindowSelect}
                   onChange={changeTimeWindow}
                   >
-                  <Option value={0}>Custom 1</Option>
-                  <Option value={1}>Custom 2</Option>
-                  <Option value={2}>Custom 3</Option>
+                  <Option value={0}>Window 1</Option>
+                  <Option value={1}>Window 2</Option>
+                  <Option value={2}>Window 3</Option>
                 </Select>
               )}
             </FormItem>
@@ -146,7 +146,7 @@ const CameraLicensesForm = Form.create()(
               )}
             </FormItem>
             <div span={24} className="ant-form-item-label">
-              <label>Set Time Window</label>
+              <label>Set Time Window {cameraData.time_zone ? "("+cameraData.time_zone+")" : ''}</label>
             </div>
             <Row>
               <FormItem span={12} style={{float: 'left', width: '50%'}}>
@@ -158,6 +158,7 @@ const CameraLicensesForm = Form.create()(
                     onOpenChange={(open: false), checkForWindow}
                     defaultOpenValue={moment('00:00', 'HH:mm')}
                     allowEmpty={true}
+                    placeholder="Start Time"
                     format={'HH:mm'} />
                 )}
               </FormItem>
@@ -170,6 +171,7 @@ const CameraLicensesForm = Form.create()(
                     onOpenChange={(open: false), checkForWindow}
                     defaultOpenValue={moment('00:00', 'HH:mm')}
                     allowEmpty={true}
+                    placeholder="End Time"
                     format={'HH:mm'} />
                 )}</FormItem>
             </Row>

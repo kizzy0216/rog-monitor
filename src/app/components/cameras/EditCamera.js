@@ -10,7 +10,7 @@ const Option = Select.Option;
 const FormItem = Form.Item;
 const CameraLicensesForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, cameraData, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow} = props;
+    const {onCancel, visible, onCreate, form, cameraData, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, updateTimeZone, time_zone} = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -77,6 +77,7 @@ const CameraLicensesForm = Form.create()(
                 placeholder="Enter Time Zone"
                 optionFilterProp="children"
                 default="UTC"
+                onChange={updateTimeZone}
                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                 >
                 <Option value="UTC">Universal Coordinated Time (UTC)</Option>
@@ -146,7 +147,7 @@ const CameraLicensesForm = Form.create()(
               )}
             </FormItem>
             <div span={24} className="ant-form-item-label">
-              <label>Set Time Window {cameraData.time_zone ? "("+cameraData.time_zone+")" : ''}</label>
+              <label>Set Time Window {time_zone ? "("+time_zone+")" : ''}</label>
             </div>
             <Row>
               <FormItem span={12} style={{float: 'left', width: '50%'}}>
@@ -192,7 +193,8 @@ class EditCamera extends Component {
     this.state = {
       visible: false,
       error: false,
-      flag: false
+      flag: false,
+      time_zone: this.props.data.time_zone
     }
   }
 
@@ -220,6 +222,10 @@ class EditCamera extends Component {
       this.setState({flag: true});
     });
   };
+
+  handleUpdateTimeZone = (fieldValue) => {
+    this.setState({time_zone: fieldValue});
+  }
 
   handleChangeTimeWindow = (fieldValue) => {
     let alertTimeWindow = this.props.data.alert_windows[fieldValue];
@@ -312,6 +318,7 @@ class EditCamera extends Component {
         <CameraLicensesForm
           ref={(form) => this.form = form}
           visible={this.state.visible}
+          time_zone={this.state.time_zone}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           resetData={this.handleResetData}
@@ -320,6 +327,7 @@ class EditCamera extends Component {
           updateDataStop={this.handleUpdateStop}
           checkForWindow={this.handleCheckForWindow}
           updateDataDaysOfWeek={this.handleUpdateDaysOfWeek}
+          updateTimeZone={this.handleUpdateTimeZone}
           error={this.state.error}
           cameraData={this.props.data}
         />

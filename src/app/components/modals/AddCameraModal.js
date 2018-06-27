@@ -120,7 +120,7 @@ class AddCameraModal extends Component {
         this.props.addLocationCamera(this.props.user,
                                      this.props.selectedLocation,
                                      values.name,
-                                     values.rtspUrl,
+                                     str.trim(values.rtspUrl),
                                      values.username,
                                      values.password);
       });

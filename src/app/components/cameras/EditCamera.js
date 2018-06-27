@@ -26,7 +26,7 @@ const CameraLicensesForm = Form.create()(
              style={styles.modal}
              onCancel={onCancel}
              onOk={onCreate}
-             okText='Save'
+             okText='Done'
              cancelText='Cancel'
       >
         <Form>
@@ -110,16 +110,19 @@ const CameraLicensesForm = Form.create()(
             )}
           </FormItem>
           <div style={styles.borderBox}>
-            <FormItem label="Alert Time Windows" {...formItemLayout}>
+            <div className="ant-form-item-label">
+              <label>Set Custom Alert Silence Windows</label>
+            </div>
+            <FormItem label="Custom Time Window" {...formItemLayout}>
               {getFieldDecorator('time_window_select', {})(
                 <Select
                   placeholder="Select Time Window"
                   style={styles.alertTimeWindowSelect}
                   onChange={changeTimeWindow}
                   >
-                  <Option value={0}>First</Option>
-                  <Option value={1}>Second</Option>
-                  <Option value={2}>Third</Option>
+                  <Option value={0}>Custom 1</Option>
+                  <Option value={1}>Custom 2</Option>
+                  <Option value={2}>Custom 3</Option>
                 </Select>
               )}
             </FormItem>
@@ -129,7 +132,7 @@ const CameraLicensesForm = Form.create()(
                   mode="multiple"
                   onChange={updateDataDaysOfWeek}
                   onBlur={checkForWindow}
-                  placeholder="Select Alert Days"
+                  placeholder="Select Days"
                   style={styles.dayPicker}
                 >
                   <Option key="monday" value="monday">Monday</Option>
@@ -143,7 +146,7 @@ const CameraLicensesForm = Form.create()(
               )}
             </FormItem>
             <div span={24} className="ant-form-item-label">
-              <label>Set Alert Time Window</label>
+              <label>Set Time Window</label>
             </div>
             <Row>
               <FormItem span={12} style={{float: 'left', width: '50%'}}>
@@ -171,7 +174,7 @@ const CameraLicensesForm = Form.create()(
                 )}</FormItem>
             </Row>
             <Row>
-              <Button type="danger" icon="close" onClick={resetData}>Clear Current Alert Time Form</Button>
+              <Button type="danger" icon="close" onClick={resetData}>Clear Silence Window</Button>
             </Row>
             <div>&nbsp;</div>
           </div>
@@ -211,7 +214,7 @@ class EditCamera extends Component {
       values.location_id = this.props.data.cameraLocation.id;
       values.rtsp_url = this.props.data.rtspUrl;
       this.props.editCamera(this.props.user, this.props.data.id, values);
-      this.setState({visible: true});
+      this.setState({visible: false});
       this.setState({flag: true});
     });
   };
@@ -292,7 +295,7 @@ class EditCamera extends Component {
           this.setState({flag: false});
         }
         if (nextProps.editCameraSuccess === true) {
-          message.success("Camera Updated");
+          // message.success("Camera Updated");
           this.setState({flag: false});
           this.cameraData = nextProps.data;
         }

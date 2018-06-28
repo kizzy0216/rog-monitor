@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   HashRouter as Router,
   Route,
   Redirect,
   Switch
 } from 'react-router-dom';
-import { Layout, Row, Col } from 'antd';
+import { Layout, Row, Col, Icon, Button } from 'antd';
 const { Header, Sider, Content } = Layout;
 
 import Hamburger from './Hamburger';
@@ -18,12 +19,15 @@ import CameraDetails from '../../screens/CameraDetails';
 import CameraCreate from '../../screens/CameraCreate';
 import CameraStream from '../../screens/CameraStream';
 
-export default class AppRouter extends Component {
+import { muteSound } from '../../redux/users/actions';
+
+class AppRouter extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      collapsed: true
+      collapsed: true,
+      mute: false
     }
   }
 
@@ -31,6 +35,11 @@ export default class AppRouter extends Component {
     this.setState({
       collapsed: !this.state.collapsed
     });
+  }
+
+  toggleMute = () => {
+    this.setState({mute: !this.state.mute});
+    this.props.muteSound(this.props.user, !this.state.mute);
   }
 
   render() {
@@ -43,7 +52,11 @@ export default class AppRouter extends Component {
               collapsed={this.state.collapsed}
               toggleCollapsed={this.toggleCollapsed.bind(this)} />
             <NavigationMenu style={styles.menu}/>
-            {/* <Col xs={{span: 0}} sm={{span: 12}} style={{float: 'right'}}><h3 style={styles.chromeText}>ROG Monitor requires the Google Chrome web browser.</h3></Col> */}
+            <div style={styles.headerButton}>
+              <Button type="ghost" shape="circle" icon="sound" size={"large"} style={styles.muteButton} onClick={this.toggleMute}>
+                {this.state.mute == true ? <Icon type="close" style={styles.muteIcon} /> : ''}
+              </Button>
+            </div>
           </Header>
 
           <Sider collapsed={this.state.collapsed} collapsedWidth={0} style={styles.sider}>
@@ -76,7 +89,7 @@ const styles = {
     width: '100%',
     zIndex: 1 // Required for Content to scroll under Header
   },
-  chromeText: {
+  headerButton: {
     color: 'white',
     float: 'right',
     marginTop: -55,
@@ -94,5 +107,28 @@ const styles = {
   content: {
     marginTop: 60,
     zIndex: 0 // Required for Content to scroll under Header
+  },
+  muteButton: {
+    color: 'white'
+  },
+  muteIcon: {
+    position: 'absolute',
+    right: 5,
+    top: 5,
+    fontSize: 30
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    muteSound: (user, mute) => dispatch(muteSound(user, mute)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppRouter);

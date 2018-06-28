@@ -5,7 +5,8 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
-import { loginMissing } from '../auth/actions'
+import { Socket } from '../../../lib/phoenix/phoenix';
+import { listenForNewAlerts } from '../alerts/actions';
 
 function updateUserData(userData) {
   return{
@@ -61,5 +62,22 @@ export function updateUser(user, values) {
         dispatch(updateUserError(error));
         dispatch(updateUserInProgress(false));
       });
+  }
+}
+
+export function muteSound(user, mute) {
+  return (dispatch) => {
+    user.mute = mute;
+    updateUserData(user);
+    let channelName = `alerts:user-${user.id}`;
+    let params = {token: user.jwt};
+    let ws = new Socket(`${process.env.REACT_APP_ROG_WS_URL}/socket`, {params});
+    let channel = ws.channel(channelName, {});
+
+    channel.leave()
+      .receive('ok', resp => {
+        dispatch(listenForNewAlerts(user));
+      })
+      .receive('error', resp => console.log(`Unable to join channel ${channelName}`));
   }
 }

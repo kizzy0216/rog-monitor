@@ -127,18 +127,20 @@ function channelConnected(channel) {
   }
 }
 
-function newAlert(alert) {
-  var audio = new Audio(newAlertSound);
-  audio.play();
+function newAlert(alert, mute) {
+  if (mute !== true) {
+    var audio = new Audio(newAlertSound);
+    audio.play();
+  }
   return {
     type: types.NEW_ALERT,
     alert
   }
 }
 
-function handleNewAlert(channel) {
+function handleNewAlert(channel, user) {
   return (dispatch) => {
-    channel.on('new_alert', alert => dispatch(newAlert(alert)));
+    channel.on('new_alert', alert => dispatch(newAlert(alert, user.mute)));
   }
 }
 
@@ -161,7 +163,7 @@ export function listenForNewAlerts(user) {
     channel.join()
       .receive('ok', resp => {
         dispatch(channelConnected(channel));
-        dispatch(handleNewAlert(channel));
+        dispatch(handleNewAlert(channel, user));
       })
       .receive('error', resp => console.log(`Unable to join channel ${channelName}`));
   }

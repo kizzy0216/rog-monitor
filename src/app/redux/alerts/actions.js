@@ -5,6 +5,7 @@ import initialState from './initialState';
 
 import { Socket } from '../../../lib/phoenix/phoenix';
 import newAlertSound from '../../../assets/audio/newAlert.mp3';
+import { updateUserData } from '../users/actions';
 import * as types from './actionTypes';
 
 function fetchInProcess(bool) {
@@ -127,18 +128,23 @@ function channelConnected(channel) {
   }
 }
 
-function newAlert(alert) {
-  var audio = new Audio(newAlertSound);
-  audio.play();
+function newAlert(alert, mute) {
+  if (mute === false) {
+    var audio = new Audio(newAlertSound);
+    audio.play();
+  }
   return {
     type: types.NEW_ALERT,
     alert
   }
 }
 
-function handleNewAlert(channel) {
+function handleNewAlert(channel, user) {
   return (dispatch) => {
-    channel.on('new_alert', alert => dispatch(newAlert(alert)));
+    if (typeof user.mute == 'undefined') {
+      user.mute = false;
+    }
+    channel.on('new_alert', alert => dispatch(newAlert(alert, user.mute)));
   }
 }
 
@@ -161,9 +167,12 @@ export function listenForNewAlerts(user) {
     channel.join()
       .receive('ok', resp => {
         dispatch(channelConnected(channel));
-        dispatch(handleNewAlert(channel));
+        dispatch(handleNewAlert(channel, user));
       })
       .receive('error', resp => console.log(`Unable to join channel ${channelName}`));
+
+    user.channel = channel;
+    dispatch(updateUserData(user));
   }
 }
 

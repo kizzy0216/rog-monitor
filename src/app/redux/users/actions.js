@@ -5,9 +5,10 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
-import { loginMissing } from '../auth/actions'
+import { Socket } from '../../../lib/phoenix/phoenix';
+import { listenForNewAlerts } from '../alerts/actions';
 
-function updateUserData(userData) {
+export function updateUserData(userData) {
   return{
     type: types.UPDATE_USER_DATA,
     userData: userData
@@ -61,5 +62,18 @@ export function updateUser(user, values) {
         dispatch(updateUserError(error));
         dispatch(updateUserInProgress(false));
       });
+  }
+}
+
+export function muteSound(user, mute) {
+  return (dispatch) => {
+    user.mute = mute;
+    updateUserData(user);
+
+    user.channel.leave()
+      .receive('ok', resp => {
+        dispatch(listenForNewAlerts(user));
+      })
+      .receive('error', resp => console.log(`Unable to leave channel ${channelName}`));
   }
 }

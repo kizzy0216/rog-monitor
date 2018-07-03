@@ -12,7 +12,7 @@ const FormItem = Form.Item;
 const AddAlertForm = Form.create()(
   (props) => {
     const {
-      onCancel, alerts, sliderValue, loiteringSeconds, deleteStatus, deleteButton, alertInProcess, alertExtras, deleteAlert, visible, saveCancel, form, cameraName, alertPointDirection, handleSaveCancel, alertImg, handleVisibility, visibility, showAlert, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentAlertDetails, direction, fetchAlertInProcess
+      onCancel, alerts, sliderValue, loiteringSeconds, deleteStatus, deleteButton, alertInProcess, alertExtras, deleteAlert, visible, saveCancel, form, cameraName, alertPointDirection, handleSaveCancel, alertImg, handleVisibility, visibility, showAlert, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentAlertDetails, direction, fetchAlertInProcess, newLoiteringAlert
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -50,8 +50,14 @@ const AddAlertForm = Form.create()(
                 {convertToMilitaryFormat(loiteringSeconds)}
               </Col>
               <Col span={16}>
-                <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
+                {/* TODO put ternary statement to render disabled if importing data */}
+                {newLoiteringAlert === true ?
+                  <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
                         step={1} onChange={sliderValue} value={loiteringSeconds}/>
+                  :
+                  <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
+                          step={1} onChange={sliderValue} value={loiteringSeconds} disabled />
+                  }
               </Col>
               <Col span={4}>
                 <p style={styles.LDtimeRight}>30:00 Min</p>
@@ -127,7 +133,8 @@ class AddAlertModal extends Component {
       alerts: false,
       deleteButton: false,
       loiteringSeconds: 0,
-      alertType: ''
+      alertType: '',
+      newLoiteringAlert: false
     }
 
     this.onImgLoad = this.onImgLoad.bind(this);
@@ -254,6 +261,8 @@ class AddAlertModal extends Component {
         this.setState({saveCancel: !this.state.saveCancel});
         this.alertDetails.currentAlertType = 'LD';
         this.setState({alertType: 'LD'});
+        this.setState({newLoiteringAlert: true});
+        this.setState({loiteringSeconds: 0});
         break;
 
       case 'VW':
@@ -285,6 +294,7 @@ class AddAlertModal extends Component {
 
           case 'LD':
             this.props.createAlert(this.alertDetails.polygonPoints[0], this.state.alertType, this.props.data.id, this.state.loiteringSeconds);
+            this.setState({loiteringSeconds: 0});
             break;
 
           case 'VW':
@@ -300,6 +310,7 @@ class AddAlertModal extends Component {
     }
     this.alertDetails.polygonPoints.length = 0;
     this.setState({canvasMode: false});
+    this.setState({newLoiteringAlert: false});
   };
 
   fetchAlerts = (checked) => {
@@ -378,6 +389,7 @@ class AddAlertModal extends Component {
           currentAlertDetails={this.alertDetails}
           direction={this.direction}
           fetchAlertInProcess={this.props.fetchPolygonAlertInProcess}
+          newLoiteringAlert={this.state.newLoiteringAlert}
         />
       </div>
     );

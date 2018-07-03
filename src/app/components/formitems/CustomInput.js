@@ -41,7 +41,7 @@ class CustomInput extends Component {
     if(this.props.alert === true){
         return (
           <span>
-            {this.props.fetchAletInProcess &&
+            {this.props.fetchAlertInProcess &&
             <div>
               <Spin tip="Fetching Alerts..." />
             </div>

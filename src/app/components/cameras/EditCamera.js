@@ -3,15 +3,16 @@ import { connect } from 'react-redux';
 import { Row, Icon, Modal, Form, Input, Button, message, TimePicker, Select } from 'antd';
 import moment from 'moment';
 
-import { editCamera, updateTimeWindowData, clearTimeWindowData } from '../../redux/cameras/actions'
-import loading from '../../../assets/img/TempCameraImage.jpeg'
+import { editCamera, updateTimeWindowData, clearTimeWindowData } from '../../redux/cameras/actions';
+import loading from '../../../assets/img/TempCameraImage.jpeg';
+import RtspStream from '../video/RtspStream';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
 const CameraLicensesForm = Form.create()(
   (props) => {
     const {onCancel, visible, onCreate, form, cameraData, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, updateTimeZone, time_zone} = props;
-    const {getFieldDecorator} = form;
+    const {getFieldDecorator, fullRtspUrl} = form;
     const formItemLayout = {
       labelCol: {
         xs: { span: 8 },
@@ -30,10 +31,12 @@ const CameraLicensesForm = Form.create()(
              cancelText='Cancel'
       >
         <Form>
-          <FormItem>
-            {cameraData.image.original ?
-              <img src={cameraData.image.original} style={styles.image} /> :
-              <img src={loading} style={styles.image} />
+          <FormItem style={styles.videoContainer}>
+            {props.fullRtspUrl ?
+              (<RtspStream rtspUrl={props.fullRtspUrl} />) :
+              (
+                <p style={styles.videoContainerText}>No Video Available</p>
+              )
             }
           </FormItem>
           <FormItem>
@@ -194,7 +197,8 @@ class EditCamera extends Component {
       visible: false,
       error: false,
       flag: false,
-      time_zone: this.props.data.time_zone
+      time_zone: this.props.data.time_zone,
+      fullRtspUrl: null
     }
   }
 
@@ -203,6 +207,7 @@ class EditCamera extends Component {
   };
   handleCancel = () => {
     this.setState({visible: false});
+    this.setState({fullRtspUrl: null});
   };
   handleCreate = (e) => {
     const form = this.form;
@@ -220,6 +225,7 @@ class EditCamera extends Component {
       this.props.editCamera(this.props.user, this.props.data.id, values);
       this.setState({visible: false});
       this.setState({flag: true});
+      this.setState({fullRtspUrl: null});
     });
   };
 
@@ -295,6 +301,23 @@ class EditCamera extends Component {
     }
   }
 
+  getFullRtspUrl = (rtspUrl, username, password) => {
+    const parts = rtspUrl.split(/(rtsp:\/\/)/);
+    parts.splice(2, 0, `${username}:${password}@`);
+    console.log(parts.join(''));
+    return parts.join('');
+  }
+
+  testLiveView = () => {
+    const form = this.form;
+    form.validateFields(['rtsp_url', 'username', 'password'], (err, values) => {
+      if (err) return;
+      this.setState({fullRtspUrl: null}, () => {
+        this.setState({fullRtspUrl: this.getFullRtspUrl(values.rtsp_url, values.username, values.password)});
+      });
+    })
+  }
+
   componentWillReceiveProps(nextProps){
     if (this.props.data.id === nextProps.data.id) {
       if (this.state.flag == true) {
@@ -330,6 +353,8 @@ class EditCamera extends Component {
           updateTimeZone={this.handleUpdateTimeZone}
           error={this.state.error}
           cameraData={this.props.data}
+          testLiveView={this.testLiveView}
+          fullRtspUrl={this.state.fullRtspUrl}
         />
       </div>
     );
@@ -363,6 +388,16 @@ const styles = {
   },
   alertTimeWindowSelect: {
     width: '60%'
+  },
+  videoContainer: {
+    backgroundColor: 'black',
+    height: 130,
+    width: 230,
+    color: 'white',
+    margin: '0 auto'
+  },
+  videoContainerText: {
+    paddingTop: 50
   }
 };
 

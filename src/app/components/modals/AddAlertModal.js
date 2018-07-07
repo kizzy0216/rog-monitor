@@ -35,8 +35,8 @@ const AddAlertForm = Form.create()(
         <Form>
           <FormItem style={styles.alertsHideSHow}>
             {alertImg === null ?
-              <img src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />:
-              <img src={alertImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
+              <img id="alertImg" src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />:
+              <img id="alertImg" src={alertImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
             }
             {canvasMode &&
             <CustomCanvas width={imageDimensions.width} height={imageDimensions.height}

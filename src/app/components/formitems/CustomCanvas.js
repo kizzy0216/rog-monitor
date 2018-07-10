@@ -17,9 +17,7 @@ class CustomCanvas extends Component {
     super(props);
     this.state = {
       canvas: null,
-      image: this.props.image,
-      height: this.props.height,
-      width: this.props.width
+      image: this.props.image
     }
   }
 
@@ -36,86 +34,87 @@ class CustomCanvas extends Component {
       };
 
       /* ---> Genereate Polygons from point array <--- */
-      const fabricCanvas = nThis.loadPolygons(nThis, alertedPolygonAtrributes);
+      this.setState((prevState, props) => {
+        let fabricCanvas = nThis.loadPolygons(nThis, alertedPolygonAtrributes);
+        fabricCanvas.on('mouse:down', function (options) {
+          if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
+            fabricCanvas.getObjects().forEach((entry) => {
+              if (entry.type === 'RA') {
+                entry.setColor('#FF0000');
+              }
+              if (entry.type === 'LD') {
+                entry.setColor('#0092f8');
+              }
+              if (entry.type === 'VW') {
+                entry.set({fill: '#FF0000', stroke: '#FF0000'});
+              }
+              if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+                entry.set({fill: '#36d850', stroke: '#36d850'});
+              }
+            });
 
-      fabricCanvas.on('mouse:down', function (options) {
-        if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
-          fabricCanvas.getObjects().forEach((entry) => {
-            if (entry.type === 'RA') {
-              entry.setColor('#FF0000');
-            }
-            if (entry.type === 'LD') {
-              entry.setColor('#0092f8');
-            }
-            if (entry.type === 'VW') {
-              entry.set({fill: '#FF0000', stroke: '#FF0000'});
-            }
-            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
-              entry.set({fill: '#36d850', stroke: '#36d850'});
-            }
-          });
+            fabricCanvas.getActiveObject().setColor('#36d850');
+            nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+          }
+        });
+        document.getElementById('prev_button').addEventListener('click', function (options) {
+          if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
+            fabricCanvas.getObjects().forEach((entry) => {
+              if (entry.type === 'RA') {
+                entry.setColor('#FF0000');
+              }
+              if (entry.type === 'LD') {
+                entry.setColor('#0092f8');
+              }
+              if (entry.type === 'VW') {
+                entry.set({fill: '#FF0000', stroke: '#FF0000'});
+              }
+              if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+                entry.set({fill: '#36d850', stroke: '#36d850'});
+              }
+            });
+            fabricCanvas.setActiveObject(nThis.prevItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
+            fabricCanvas.getActiveObject().setColor('#36d850');
+            nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+            fabricCanvas.renderAll();
+          }
+        });
 
-          fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
-        }
-      });
-      document.getElementById('prev_button').addEventListener('click', function (options) {
-        if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
-          fabricCanvas.getObjects().forEach((entry) => {
-            if (entry.type === 'RA') {
-              entry.setColor('#FF0000');
-            }
-            if (entry.type === 'LD') {
-              entry.setColor('#0092f8');
-            }
-            if (entry.type === 'VW') {
-              entry.set({fill: '#FF0000', stroke: '#FF0000'});
-            }
-            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
-              entry.set({fill: '#36d850', stroke: '#36d850'});
-            }
-          });
-          fabricCanvas.setActiveObject(nThis.prevItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
-          fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
-          fabricCanvas.renderAll();
-        }
-      });
-
-      document.getElementById('next_button').addEventListener('click', function (options) {
-        if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
-          fabricCanvas.getObjects().forEach((entry) => {
-            if (entry.type === 'RA') {
-              entry.setColor('#FF0000');
-            }
-            if (entry.type === 'LD') {
-              entry.setColor('#0092f8');
-            }
-            if (entry.type === 'VW') {
-              entry.set({fill: '#FF0000', stroke: '#FF0000'});
-            }
-            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
-              entry.set({fill: '#36d850', stroke: '#36d850'});
-            }
-          });
-          fabricCanvas.setActiveObject(nThis.nextItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
-          fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
-          fabricCanvas.renderAll();
-        }
+        document.getElementById('next_button').addEventListener('click', function (options) {
+          if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
+            fabricCanvas.getObjects().forEach((entry) => {
+              if (entry.type === 'RA') {
+                entry.setColor('#FF0000');
+              }
+              if (entry.type === 'LD') {
+                entry.setColor('#0092f8');
+              }
+              if (entry.type === 'VW') {
+                entry.set({fill: '#FF0000', stroke: '#FF0000'});
+              }
+              if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+                entry.set({fill: '#36d850', stroke: '#36d850'});
+              }
+            });
+            fabricCanvas.setActiveObject(nThis.nextItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
+            fabricCanvas.getActiveObject().setColor('#36d850');
+            nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+            fabricCanvas.renderAll();
+          }
+        });
+        return {canvas: fabricCanvas};
       });
       window.addEventListener("resize", function(options) {
-        let height = document.getElementById("alertImg").clientHeight;
-        let width = document.getElementById("alertImg").clientWidth;
-        nThis.setState({height: height});
-        nThis.setState({width: width});
-        const fabricCanvas = nThis.loadPolygons(nThis, alertedPolygonAtrributes);
-        fabricCanvas.setHeight(height);
-        fabricCanvas.setWidth(width);
+        nThis.setState({canvas: nThis.loadPolygons(nThis, alertedPolygonAtrributes)});
       });
     }
     else {
-      fabricCanvas.on('mouse:down', function (options) {
+      nThis.setState((prevState, props) => {
+        let newCanvas = nThis.canvas();
+        newCanvas.renderAll();
+        return {canvas: newCanvas}
+      });
+      nThis.state.canvas.on('mouse:down', function (options) {
         if (nThis.props.alertType === 'RA' || nThis.props.alertType === 'LD') {
           if (nThis.pointArray.length > 0) {
             if (options.target && options.target.id === nThis.pointArray[0].id) {
@@ -125,7 +124,7 @@ class CustomCanvas extends Component {
                   x: entry.left,
                   y: entry.top
                 });
-                fabricCanvas.remove(entry);
+                nThis.state.canvas.remove(entry);
               });
 
 
@@ -133,11 +132,11 @@ class CustomCanvas extends Component {
                 fill: (nThis.props.alertType === 'RA') ? "#FF0000" : ((nThis.props.alertType === 'LD') ? '#0092f8' : '#00cd78')
               };
 
-              nThis.generatePolygon(fabricCanvas, points, nThis.lineArray, alertedPolygonAtrributes);
+              nThis.generatePolygon(nThis.state.canvas, points, nThis.lineArray, alertedPolygonAtrributes);
 
               let canvasPointArray = [];
               for (let i = 0; i < nThis.pointArray.length; i++) {
-                canvasPointArray.push([nThis.pointArray[i].left / fabricCanvas.width, nThis.pointArray[i].top / fabricCanvas.height]);
+                canvasPointArray.push([nThis.pointArray[i].left / nThis.state.canvas.width, nThis.pointArray[i].top / nThis.state.canvas.height]);
               }
               nThis.props.alertPointDirection(canvasPointArray, undefined);
             }
@@ -145,7 +144,7 @@ class CustomCanvas extends Component {
         }
 
         if (nThis.polygonMode) {
-          nThis.addPoint(fabricCanvas, nThis.pointArray, nThis.lineArray, options);
+          nThis.addPoint(nThis.state.canvas, nThis.pointArray, nThis.lineArray, options);
         }
 
 
@@ -160,44 +159,44 @@ class CustomCanvas extends Component {
               });
             });
 
-            nThis.generateVirtualWall(fabricCanvas, points, '');
+            nThis.generateVirtualWall(nThis.state.canvas, points, '');
             nThis.canvasPointArray.length = 0;
             for (let i = 0; i < nThis.pointArray.length; i++) {
-              nThis.canvasPointArray.push([nThis.pointArray[i].left / fabricCanvas.width, nThis.pointArray[i].top / fabricCanvas.height]);
+              nThis.canvasPointArray.push([nThis.pointArray[i].left / nThis.state.canvas.width, nThis.pointArray[i].top / nThis.state.canvas.height]);
             }
             nThis.pointArray.length = 0;
             nThis.props.alertPointDirection(nThis.canvasPointArray, 'rightLeft');
           }
-          if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
+          if (nThis.state.canvas.getActiveObject() !== undefined && nThis.state.canvas.getActiveObject() !== null) {
             let virtualWallDetails = {
-              id: fabricCanvas.getActiveObject().id,
-              left: fabricCanvas.getActiveObject().left,
-              top: fabricCanvas.getActiveObject().top,
-              rotateAngle: fabricCanvas.getActiveObject().angle
+              id: nThis.state.canvas.getActiveObject().id,
+              left: nThis.state.canvas.getActiveObject().left,
+              top: nThis.state.canvas.getActiveObject().top,
+              rotateAngle: nThis.state.canvas.getActiveObject().angle
             };
 
             let directionCircle;
-            switch (fabricCanvas.getActiveObject().id) {
+            switch (nThis.state.canvas.getActiveObject().id) {
               case 'rightLeft':
                 virtualWallDetails.id = 'right';
-                fabricCanvas.remove(fabricCanvas.getActiveObject());
+                nThis.state.canvas.remove(nThis.state.canvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
-                fabricCanvas.add(directionCircle);
+                nThis.state.canvas.add(directionCircle);
                 break;
               case 'right':
                 virtualWallDetails.id = 'left';
-                fabricCanvas.remove(fabricCanvas.getActiveObject());
+                nThis.state.canvas.remove(nThis.state.canvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, Math.PI, 0, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
-                fabricCanvas.add(directionCircle);
+                nThis.state.canvas.add(directionCircle);
                 break;
               case 'left':
                 virtualWallDetails.id = 'rightLeft';
-                fabricCanvas.remove(fabricCanvas.getActiveObject());
+                nThis.state.canvas.remove(nThis.state.canvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2 * Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
-                fabricCanvas.add(directionCircle);
+                nThis.state.canvas.add(directionCircle);
                 break;
             }
             nThis.props.alertPointDirection(nThis.canvasPointArray, virtualWallDetails.id);
@@ -206,7 +205,7 @@ class CustomCanvas extends Component {
         }
       });
 
-      fabricCanvas.on('touch:gesture', function (options) {
+      nThis.state.canvas.on('touch:gesture', function (options) {
         if (nThis.props.alertType === 'RA' || nThis.props.alertType === 'LD') {
           if (nThis.pointArray.length > 0) {
             if (options.target && options.target.id === nThis.pointArray[0].id) {
@@ -216,7 +215,7 @@ class CustomCanvas extends Component {
                   x: entry.left,
                   y: entry.top
                 });
-                fabricCanvas.remove(entry);
+                nThis.state.canvas.remove(entry);
               });
 
 
@@ -224,11 +223,11 @@ class CustomCanvas extends Component {
                 fill: (nThis.props.alertType === 'RA') ? "#FF0000" : ((nThis.props.alertType === 'LD') ? '#0092f8' : '#00cd78')
               };
 
-              nThis.generatePolygon(fabricCanvas, points, nThis.lineArray, alertedPolygonAtrributes);
+              nThis.generatePolygon(nThis.state.canvas, points, nThis.lineArray, alertedPolygonAtrributes);
 
               let canvasPointArray = [];
               for (let i = 0; i < nThis.pointArray.length; i++) {
-                canvasPointArray.push([nThis.pointArray[i].left / fabricCanvas.width, nThis.pointArray[i].top / fabricCanvas.height]);
+                canvasPointArray.push([nThis.pointArray[i].left / nThis.state.canvas.width, nThis.pointArray[i].top / nThis.state.canvas.height]);
               }
               nThis.props.alertPointDirection(canvasPointArray, undefined);
             }
@@ -236,7 +235,7 @@ class CustomCanvas extends Component {
         }
 
         if (nThis.polygonMode) {
-          nThis.addPoint(fabricCanvas, nThis.pointArray, nThis.lineArray, options);
+          nThis.addPoint(nThis.state.canvas, nThis.pointArray, nThis.lineArray, options);
         }
 
 
@@ -251,44 +250,44 @@ class CustomCanvas extends Component {
               });
             });
 
-            nThis.generateVirtualWall(fabricCanvas, points, '');
+            nThis.generateVirtualWall(nThis.state.canvas, points, '');
             nThis.canvasPointArray.length = 0;
             for (let i = 0; i < nThis.pointArray.length; i++) {
-              nThis.canvasPointArray.push([nThis.pointArray[i].left / fabricCanvas.width, nThis.pointArray[i].top / fabricCanvas.height]);
+              nThis.canvasPointArray.push([nThis.pointArray[i].left / nThis.state.canvas.width, nThis.pointArray[i].top / nThis.state.canvas.height]);
             }
             nThis.pointArray.length = 0;
             nThis.props.alertPointDirection(nThis.canvasPointArray, 'rightLeft');
           }
-          if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
+          if (nThis.state.canvas.getActiveObject() !== undefined && nThis.state.canvas.getActiveObject() !== null) {
             let virtualWallDetails = {
-              id: fabricCanvas.getActiveObject().id,
-              left: fabricCanvas.getActiveObject().left,
-              top: fabricCanvas.getActiveObject().top,
-              rotateAngle: fabricCanvas.getActiveObject().angle
+              id: nThis.state.canvas.getActiveObject().id,
+              left: nThis.state.canvas.getActiveObject().left,
+              top: nThis.state.canvas.getActiveObject().top,
+              rotateAngle: nThis.state.canvas.getActiveObject().angle
             };
 
             let directionCircle;
-            switch (fabricCanvas.getActiveObject().id) {
+            switch (nThis.state.canvas.getActiveObject().id) {
               case 'rightLeft':
                 virtualWallDetails.id = 'right';
-                fabricCanvas.remove(fabricCanvas.getActiveObject());
+                nThis.state.canvas.remove(nThis.state.canvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
-                fabricCanvas.add(directionCircle);
+                nThis.state.canvas.add(directionCircle);
                 break;
               case 'right':
                 virtualWallDetails.id = 'left';
-                fabricCanvas.remove(fabricCanvas.getActiveObject());
+                nThis.state.canvas.remove(nThis.state.canvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, Math.PI, 0, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
-                fabricCanvas.add(directionCircle);
+                nThis.state.canvas.add(directionCircle);
                 break;
               case 'left':
                 virtualWallDetails.id = 'rightLeft';
-                fabricCanvas.remove(fabricCanvas.getActiveObject());
+                nThis.state.canvas.remove(nThis.state.canvas.getActiveObject());
                 directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2 * Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
-                fabricCanvas.add(directionCircle);
+                nThis.state.canvas.add(directionCircle);
                 break;
             }
             nThis.props.alertPointDirection(nThis.canvasPointArray, virtualWallDetails.id);
@@ -298,12 +297,12 @@ class CustomCanvas extends Component {
       });
 
 
-      fabricCanvas.on('mouse:up', function (options) {
+      nThis.state.canvas.on('mouse:up', function (options) {
       });
 
-      fabricCanvas.on('mouse:move', function (options) {
+      nThis.state.canvas.on('mouse:move', function (options) {
         if (nThis.activeLine && nThis.activeLine.class === "line") {
-          const pointer = fabricCanvas.getPointer(options.e);
+          const pointer = nThis.state.canvas.getPointer(options.e);
 
           nThis.activeLine.set({x2: pointer.x, y2: pointer.y});
 
@@ -317,14 +316,14 @@ class CustomCanvas extends Component {
             points: points
           });
 
-          fabricCanvas.renderAll();
+          nThis.state.canvas.renderAll();
         }
-        fabricCanvas.renderAll();
+        nThis.state.canvas.renderAll();
       });
 
-      fabricCanvas.on('touch:drag', function (options) {
+      nThis.state.canvas.on('touch:drag', function (options) {
         if (nThis.activeLine && nThis.activeLine.class === "line") {
-          const pointer = fabricCanvas.getPointer(options.e);
+          const pointer = nThis.state.canvas.getPointer(options.e);
 
           nThis.activeLine.set({x2: pointer.x, y2: pointer.y});
 
@@ -338,9 +337,9 @@ class CustomCanvas extends Component {
             points: points
           });
 
-          fabricCanvas.renderAll();
+          nThis.state.canvas.renderAll();
         }
-        fabricCanvas.renderAll();
+        nThis.state.canvas.renderAll();
       });
 
       this.drawPolygon();
@@ -349,18 +348,22 @@ class CustomCanvas extends Component {
   }
 
   loadPolygons = (nThis, alertedPolygonAtrributes) => {
-    const fabricCanvas = this.canvas();
-    fabricCanvas.renderAll();
+    let height = document.getElementById("alertImg").clientHeight;
+    let width = document.getElementById("alertImg").clientWidth;
+    let newCanvas = nThis.canvas();
+    newCanvas.setHeight(height);
+    newCanvas.setWidth(width);
+    newCanvas.renderAll();
 
     if (this.props.polygonData !== null && this.props.polygonData !== undefined) {
       this.props.polygonData.alerts.forEach((entry) => {
         let points = [];
         entry.points.forEach(function (value) {
           points.push({
-            x: value[0] * nThis.state.width,
-            y: value[1] * nThis.state.height
+            x: value[0] * width,
+            y: value[1] * height
           });
-          fabricCanvas.remove(value);
+          newCanvas.remove(value);
         });
 
         alertedPolygonAtrributes['fill'] = (entry.type === 'RA') ? "#FF0000" : ((entry.type === 'LD') ? '#0092f8' : '#00cd78');
@@ -368,13 +371,13 @@ class CustomCanvas extends Component {
         alertedPolygonAtrributes['type'] = entry.type;
         alertedPolygonAtrributes['duration'] = entry.duration;
         if (entry.type === 'VW') {
-          this.generateVirtualWall(fabricCanvas, points, entry.direction, entry.id);
+          this.generateVirtualWall(newCanvas, points, entry.direction, entry.id);
         } else {
-          let polygon = this.generatePolygon(fabricCanvas, points, this.lineArray, alertedPolygonAtrributes);
+          let polygon = this.generatePolygon(newCanvas, points, this.lineArray, alertedPolygonAtrributes);
         }
       })
     }
-    return fabricCanvas;
+    return newCanvas;
   }
 
   generatePolygon(canvas, points, lineArray, polygonAttributes) {

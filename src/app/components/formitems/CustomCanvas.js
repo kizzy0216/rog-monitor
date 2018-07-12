@@ -337,6 +337,9 @@ class CustomCanvas extends Component {
       this.drawPolygon();
     }
 
+    window.addEventListener("resize", function() {
+        location.reload(true);
+    });
   }
 
   loadPolygons = (nThis, fabricCanvas, alertedPolygonAtrributes) => {

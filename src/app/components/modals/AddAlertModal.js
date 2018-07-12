@@ -214,11 +214,6 @@ class AddAlertModal extends Component {
     else if (this.props.polygonData !== nextProps.polygonData) {
       this.setState({canvasMode: true});
     }
-    window.addEventListener("resize", function() {
-      if (nThis.state.visible) {
-        location.reload(true);
-      }
-    });
   }
 
   showModal = () => {

@@ -18,7 +18,8 @@ class CustomCanvas extends Component {
     this.state = {
       canvas: null,
       image: this.props.image,
-      test: 0
+      width: this.props.width,
+      height: this.props.height
     }
   }
 

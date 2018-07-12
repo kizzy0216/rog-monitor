@@ -12,7 +12,7 @@ const alerts = (state = initialState, action) => {
     case types.FETCH_ALERTS_IN_PROCESS:
       return {
         ...state,
-        fetchInProcess: action.bool        
+        fetchInProcess: action.bool
       }
 
     case types.FETCH_ALERTS_ERROR:
@@ -20,10 +20,9 @@ const alerts = (state = initialState, action) => {
         ...state,
         fetchError: action.fetchError
       }
-    
+
     case types.NEW_ALERT:
       if (state.newAlerts.filter(alert => alert.id).includes(action.alert.id)) {
-        // Avoid duplicates for alerts sent through different channels
         return state;
       }
       else {
@@ -32,14 +31,14 @@ const alerts = (state = initialState, action) => {
           newAlerts: [action.alert, ...state.newAlerts]
         }
       }
-    
+
     case types.MERGE_NEW_ALERTS:
       return {
         ...state,
         alerts: [...state.newAlerts, ...state.alerts],
         newAlerts: []
-      }  
-    
+      }
+
     case types.CLEAR_ALERT_DATA:
       return {
         ...state,
@@ -47,17 +46,17 @@ const alerts = (state = initialState, action) => {
         newAlerts: action.newAlerts,
         channels: action.channels
       }
-    
+
     case types.CHANNEL_CONNECTED:
       return {
         ...state,
         channels: [...state.channels, action.channel]
       }
-    
+
     case types.DELETE_ALERT_IN_PROCESS:
       return {
         ...state,
-        deleteInProcess: action.bool        
+        deleteInProcess: action.bool
       }
 
     case types.DELETE_ALERT_ERROR:
@@ -65,13 +64,13 @@ const alerts = (state = initialState, action) => {
         ...state,
         deleteError: action.deleteError
       }
-    
+
     case types.DELETE_ALERT_SUCCESS:
       return {
         ...state,
         alerts: state.alerts.filter(alert => alert.id != action.alertId)
       }
-    
+
     case types.CLEAR_ALL_ALERTS:
       return {
         ...state,

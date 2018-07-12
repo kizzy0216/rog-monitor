@@ -24,6 +24,7 @@ class CustomCanvas extends Component {
 
   componentDidMount() {
     const nThis = this;
+    let fabricCanvas = nThis.canvas();
 
     const fabricCanvas = this.canvas();
     fabricCanvas.renderAll();
@@ -38,28 +39,7 @@ class CustomCanvas extends Component {
       };
 
       /* ---> Genereate Polygons from point array <--- */
-      if (this.props.polygonData !== null && this.props.polygonData !== undefined) {
-        this.props.polygonData.alerts.forEach((entry) => {
-          let points = [];
-          entry.points.forEach(function (value) {
-            points.push({
-              x: value[0] * nThis.props.width,
-              y: value[1] * nThis.props.height
-            });
-            fabricCanvas.remove(value);
-          });
-
-          alertedPolygonAtrributes['fill'] = (entry.type === 'RA') ? "#FF0000" : ((entry.type === 'LD') ? '#0092f8' : '#00cd78');
-          alertedPolygonAtrributes['id'] = (entry.id !== undefined) ? entry.id : '';
-          alertedPolygonAtrributes['type'] = entry.type;
-          alertedPolygonAtrributes['duration'] = entry.duration;
-          if (entry.type === 'VW') {
-            this.generateVirtualWall(fabricCanvas, points, entry.direction, entry.id);
-          } else {
-            let polygon = this.generatePolygon(fabricCanvas, points, this.lineArray, alertedPolygonAtrributes);
-          }
-        })
-      }
+      fabricCanvas = nThis.loadPolygons(nThis, fabricCanvas, alertedPolygonAtrributes);
 
       fabricCanvas.on('mouse:down', function (options) {
         if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
@@ -127,8 +107,7 @@ class CustomCanvas extends Component {
           fabricCanvas.renderAll();
         }
       });
-    }
-    else {
+    } else {
       fabricCanvas.on('mouse:down', function (options) {
         if (nThis.props.alertType === 'RA' || nThis.props.alertType === 'LD') {
           if (nThis.pointArray.length > 0) {
@@ -360,6 +339,32 @@ class CustomCanvas extends Component {
       this.drawPolygon();
     }
 
+  }
+
+  loadPolygons = (nThis, fabricCanvas, alertedPolygonAtrributes) => {
+    if (this.props.polygonData !== null && this.props.polygonData !== undefined) {
+      this.props.polygonData.alerts.forEach((entry) => {
+        let points = [];
+        entry.points.forEach(function (value) {
+          points.push({
+            x: value[0] * nThis.state.width,
+            y: value[1] * nThis.state.height
+          });
+          fabricCanvas.remove(value);
+        });
+
+        alertedPolygonAtrributes['fill'] = (entry.type === 'RA') ? "#FF0000" : ((entry.type === 'LD') ? '#0092f8' : '#00cd78');
+        alertedPolygonAtrributes['id'] = (entry.id !== undefined) ? entry.id : '';
+        alertedPolygonAtrributes['type'] = entry.type;
+        alertedPolygonAtrributes['duration'] = entry.duration;
+        if (entry.type === 'VW') {
+          this.generateVirtualWall(fabricCanvas, points, entry.direction, entry.id);
+        } else {
+          let polygon = this.generatePolygon(fabricCanvas, points, this.lineArray, alertedPolygonAtrributes);
+        }
+      })
+    }
+    return fabricCanvas;
   }
 
   generatePolygon(canvas, points, lineArray, polygonAttributes) {

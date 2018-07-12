@@ -26,9 +26,6 @@ class CustomCanvas extends Component {
     const nThis = this;
     let fabricCanvas = nThis.canvas();
 
-    const fabricCanvas = this.canvas();
-    fabricCanvas.renderAll();
-
     if (this.props.getAlerts === true) {
       const alertedPolygonAtrributes = {
         stroke: '#000',

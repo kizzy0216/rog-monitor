@@ -18,14 +18,16 @@ class CustomCanvas extends Component {
     this.state = {
       canvas: null,
       image: this.props.image,
-      height: this.props.height,
-      width: this.props.width
+      test: 0
     }
   }
 
   componentDidMount() {
     const nThis = this;
     let fabricCanvas = nThis.canvas();
+
+    const fabricCanvas = this.canvas();
+    fabricCanvas.renderAll();
 
     if (this.props.getAlerts === true) {
       const alertedPolygonAtrributes = {

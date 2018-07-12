@@ -112,6 +112,14 @@ export function mergeNewAlerts() {
   }
 }
 
+// export function updateCanvasWidthHeight(width, height) {
+//   return {
+//     type: types.UPDATE_CANVAS_WIDTH_HEIGHT,
+//     width: width,
+//     height: height
+//   }
+// }
+
 export function clearAlertData() {
   return {
     type: types.CLEAR_ALERT_DATA,

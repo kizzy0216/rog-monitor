@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {Icon} from 'antd';
-// import { updateCanvasWidthHeight } from '../../redux/alerts/actions';
 require('fabric');
 
 class CustomCanvas extends Component {
@@ -627,9 +626,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    // updateCanvasWidthHeight: (width, height) => dispatch(updateCanvasWidthHeight(width, height))
-  }
+  return {}
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CustomCanvas));

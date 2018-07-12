@@ -23,7 +23,6 @@ const alerts = (state = initialState, action) => {
 
     case types.NEW_ALERT:
       if (state.newAlerts.filter(alert => alert.id).includes(action.alert.id)) {
-        // Avoid duplicates for alerts sent through different channels
         return state;
       }
       else {
@@ -119,12 +118,6 @@ const alerts = (state = initialState, action) => {
         ...state,
         fetchPolygonAlertInProcess: action.bool
       }
-    // case types.UPDATE_CANVAS_WIDTH_HEIGHT:
-    //   return {
-    //     ...state,
-    //     width: action.width,
-    //     height: action.height
-    //   }
     default:
       return state;
   }

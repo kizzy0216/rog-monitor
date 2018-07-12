@@ -218,16 +218,6 @@ class AddAlertModal extends Component {
       if (nThis.state.visible) {
         location.reload(true);
       }
-      // let height = document.getElementById("alertImg").clientHeight;
-      // let width = document.getElementById("alertImg").clientWidth;
-      // // figure out how to remove the old canvas before generating the new one
-      // nThis.props.updateCanvasWidthHeight(width, height);
-      // nThis.setState({width: width});
-      // nThis.setState({height: height});
-      // const fabricCanvas = nThis.loadPolygons(nThis, nThis.canvas(), alertedPolygonAtrributes);
-      // fabricCanvas.setWidth(width);
-      // fabricCanvas.setHeight(height);
-      // fabricCanvas.calcOffset();
     });
   }
 

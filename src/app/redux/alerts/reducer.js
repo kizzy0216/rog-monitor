@@ -9,6 +9,13 @@ const alerts = (state = initialState, action) => {
         alerts: action.alerts
       }
 
+    case types.FETCH_ALERTS_SUCCESS_WITH_PAGINATION:
+      return {
+        ...state,
+        alerts: action.alerts,
+        pagination: action.pagination
+      }
+      
     case types.FETCH_ALERTS_IN_PROCESS:
       return {
         ...state,

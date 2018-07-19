@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Button, Pagination } from 'antd';
 
 import AlertCard from '../components/alerts/AlertCard';
 
@@ -33,6 +33,10 @@ class Alerts extends Component {
     });
   }
 
+  handlePaginationChange = (page, pageSize) => {
+    this.props.actions.fetchAlertsWithPagination(this.props.user, page);
+  }
+
   render() {
     if (this.props.alerts.length) {
       return (
@@ -42,6 +46,13 @@ class Alerts extends Component {
               <Button onClick={this.clearAlerts}>Clear All</Button>
             </Col>
           </Row> */}
+          <Row type='flex' justify='center'>
+            <Pagination
+              defaultCurrent={this.props.pagination.page_number}
+              total={this.props.pagination.page_size}
+              onChange={this.handlePaginationChange}
+            />
+          </Row>
           <Row><Col>&nbsp;</Col></Row>
           <Row type='flex' justify='start'>
             {this.props.alerts.map(alert => (
@@ -85,7 +96,8 @@ const mapStateToProps = (state) => {
     rummage: state.alerts.rummage,
     fetchError: state.alerts.fetchError,
     fetchInProcess: state.alerts.fetchInProcess,
-    deleteInProcess: state.alerts.deleteInProcess
+    deleteInProcess: state.alerts.deleteInProcess,
+    pagination: state.alerts.pagination
   }
 }
 

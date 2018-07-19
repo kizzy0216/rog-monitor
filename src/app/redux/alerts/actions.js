@@ -29,6 +29,14 @@ function fetchSuccess(alerts) {
   }
 }
 
+function fetchSuccessWithPagination(alerts, pagination) {
+  return {
+    type: types.FETCH_ALERTS_SUCCESS_WITH_PAGINATION,
+    alerts,
+    pagination: pagination
+  }
+}
+
 function deleteInProcess(bool) {
   return {
     type: types.DELETE_ALERT_IN_PROCESS,
@@ -186,7 +194,32 @@ export function fetchAlerts(user) {
     let config = {headers: {Authorization: user.jwt}}
     axios.get(url, config)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.data));
+        dispatch(fetchSuccessWithPagination(response.data.data, response.data.pagination));
+      })
+      .catch((error) => {
+        dispatch(fetchError('Error fetching alerts'));
+      })
+      .finally(() => {
+        dispatch(fetchError(''));
+        dispatch(fetchInProcess(false));
+      });
+  }
+}
+
+export function fetchAlertsWithPagination(user, page) {
+  return (dispatch) => {
+    dispatch(fetchError(''));
+    dispatch(fetchInProcess(true));
+
+
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/alerts`;
+    let config = {headers: {Authorization: user.jwt}}
+    let data = {
+      page: page
+    }
+    axios.post(url, data, config)
+      .then((response) => {
+        dispatch(fetchSuccessWithPagination(response.data.data, response.data.pagination));
       })
       .catch((error) => {
         dispatch(fetchError('Error fetching alerts'));

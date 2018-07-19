@@ -45,7 +45,7 @@ class App extends Component {
 
   render() {
     if (!this.isChrome && this.state.displayed == false) {
-      alert('Only Google Chrome browser (Not The App) is supported. Please note that features may not work properly when using this browser.');
+      alert('Live video requires the Google Chrome web browser.');
       this.setState({displayed: true})
     }
     if (this.state.loading) {

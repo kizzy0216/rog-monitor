@@ -49,7 +49,7 @@ class Alerts extends Component {
           <Row type='flex' justify='center'>
             <Pagination
               defaultCurrent={this.props.pagination.page_number}
-              total={this.props.pagination.page_size}
+              total={this.props.pagination.total_entries}
               onChange={this.handlePaginationChange}
             />
           </Row>

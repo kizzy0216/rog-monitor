@@ -194,7 +194,6 @@ export function fetchAlerts(user) {
     let config = {headers: {Authorization: user.jwt}}
     axios.get(url, config)
       .then((response) => {
-        console.log(response);
         dispatch(fetchSuccessWithPagination(response.data.data, response.data.pagination));
       })
       .catch((error) => {

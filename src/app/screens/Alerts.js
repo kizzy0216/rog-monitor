@@ -34,7 +34,7 @@ class Alerts extends Component {
   }
 
   handlePaginationChange = (page, pageSize) => {
-    this.props.actions.fetchAlertsWithPagination(this.props.user, page);
+    this.props.actions.fetchAlertsWithPagination(this.props.user, page, pageSize);
   }
 
   render() {
@@ -48,6 +48,7 @@ class Alerts extends Component {
           </Row> */}
           <Row type='flex' justify='center'>
             <Pagination
+              pageSize={20}
               defaultCurrent={this.props.pagination.page_number}
               total={this.props.pagination.total_entries}
               onChange={this.handlePaginationChange}

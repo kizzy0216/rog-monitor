@@ -13,7 +13,10 @@ class NavigationMenu extends Component {
       notification.open({
         message: 'Alert:',
         description: `${alert.type} by ${alert.camera.name} at ${alert.camera.location.name}`,
-        duration: 5
+        duration: 5,
+        style: {
+        marginTop: 30
+      },
       });
     }
   }

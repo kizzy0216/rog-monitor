@@ -49,6 +49,7 @@ class Alerts extends Component {
           <Row type='flex' justify='center'>
             <Pagination
               showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+              hideOnSinglePage={true}
               pageSize={20}
               defaultCurrent={this.props.pagination.page_number}
               total={this.props.pagination.total_entries}

@@ -217,11 +217,15 @@ class AddAlertModal extends Component {
   }
 
   showModal = () => {
-    this.setState({visible: true});
-    this.alertDetails['id'] = this.props.data.id;
-    this.setState({saveCancel: false});
-    this.setState({canvasMode: !this.state.canvasMode});
-    this.fetchAlerts(true);
+    if (typeof window.orientation !== 'undefined') {
+      alert('Sorry, alert trigger creation not currently supported on mobile devices.');
+    } else {
+      this.setState({visible: true});
+      this.alertDetails['id'] = this.props.data.id;
+      this.setState({saveCancel: false});
+      this.setState({canvasMode: !this.state.canvasMode});
+      this.fetchAlerts(true);
+    }
   };
 
   handleCancel = () => {

@@ -138,13 +138,20 @@ class AddCameraModal extends Component {
   }
 
   testLiveView = () => {
-    const form = this.form;
-    form.validateFields(['rtspUrl', 'username', 'password'], (err, values) => {
-      if (err) return;
-      this.setState({fullRtspUrl: null}, () => {
-        this.setState({fullRtspUrl: this.getFullRtspUrl(values.rtspUrl, values.username, values.password)});
-      });
-    })
+    let isChrome = !!window.chrome && !!window.chrome.webstore;
+    let isFirefox = typeof InstallTrigger !== 'undefined';
+    let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    if (!this.chrome && !isFirefox && !isOpera) {
+      alert('Sorry, live video requires the desktop Chrome, Firefox, or Opera web browser.');
+    } else {
+      const form = this.form;
+      form.validateFields(['rtspUrl', 'username', 'password'], (err, values) => {
+        if (err) return;
+        this.setState({fullRtspUrl: null}, () => {
+          this.setState({fullRtspUrl: this.getFullRtspUrl(values.rtspUrl, values.username, values.password)});
+        });
+      })
+    }
   }
 
   render() {

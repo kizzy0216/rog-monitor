@@ -15,8 +15,7 @@ class App extends Component {
     this.state = {
       currentUser: null,
       loading: true,
-      socketSet: false,
-      displayed: false
+      socketSet: false
     }
   }
 
@@ -24,7 +23,6 @@ class App extends Component {
     store.subscribe(this.onStoreUpdate.bind(this));
     store.dispatch(checkLogin());
     store.dispatch(initialiseAnalyticsEngine());
-    this.checkBrowser();
   }
 
   onStoreUpdate() {
@@ -39,15 +37,7 @@ class App extends Component {
     this.setState({loading: false});
   }
 
-  checkBrowser() {
-    this.isChrome = !!window.chrome && !!window.chrome.webstore;
-  }
-
   render() {
-    if (!this.isChrome && this.state.displayed == false) {
-      alert('Live video requires the Google Chrome web browser.');
-      this.setState({displayed: true})
-    }
     if (this.state.loading) {
       return (<div>Loading</div>)
     }

@@ -232,11 +232,16 @@ export function addLocationCamera(user, location, name, rtspUrl, username, passw
     dispatch(addLocationCameraError(''));
     dispatch(addLocationCameraInProcess(true));
 
+    let index = rtspUrl.indexOf(":");
+    let protocol = rtspUrl.substr(0, index + 3).toLowerCase();
+    let urlAddress = rtspUrl.substr(index + 3);
+    let lowerCaseUrl = (protocol + urlAddress);
+
     let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/cameras`;
     let data = {
       camera: {
         'location_id': location.id,
-        'rtsp_url': rtspUrl,
+        'rtsp_url': lowerCaseUrl,
         name,
         username,
         password

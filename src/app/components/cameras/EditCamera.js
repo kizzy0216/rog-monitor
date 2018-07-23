@@ -302,17 +302,18 @@ class EditCamera extends Component {
   }
 
   getFullRtspUrl = (rtspUrl, username, password) => {
-    const parts = rtspUrl.split(/(rtsp:\/\/)/);
-    parts.splice(2, 0, `${username}:${password}@`);
-    console.log(parts.join(''));
-    return parts.join('');
+    let index = rtspUrl.indexOf(":");
+    let protocol = rtspUrl.substr(0, index + 3).toLowerCase();
+    let urlAddress = rtspUrl.substr(index + 3);
+    let lowerCaseUrl = (protocol + `${username}:${password}@` + urlAddress);
+    return lowerCaseUrl;
   }
 
   testLiveView = () => {
     let isChrome = !!window.chrome && !!window.chrome.webstore;
     let isFirefox = typeof InstallTrigger !== 'undefined';
     let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-    if (!this.chrome && !isFirefox && !isOpera) {
+    if (!isChrome && !isFirefox && !isOpera) {
       alert('Sorry, live video requires the desktop Chrome, Firefox, or Opera web browser.');
     } else {
       const form = this.form;

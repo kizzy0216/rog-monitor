@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Icon, Modal, Form, Input, Button, message, TimePicker, Select } from 'antd';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import { editCamera, updateTimeWindowData, clearTimeWindowData } from '../../redux/cameras/actions';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
@@ -11,7 +11,7 @@ const Option = Select.Option;
 const FormItem = Form.Item;
 const CameraLicensesForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, cameraData, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, updateTimeZone, time_zone} = props;
+    const {onCancel, visible, onCreate, form, cameraData, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, updateTimeZone, time_zone, createSelectItems} = props;
     const {getFieldDecorator, fullRtspUrl} = form;
     const formItemLayout = {
       labelCol: {
@@ -82,34 +82,8 @@ const CameraLicensesForm = Form.create()(
                 default="UTC"
                 onChange={updateTimeZone}
                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                >
-                <Option value="UTC">Universal Coordinated Time</Option>
-                <Option value="ECT">European Central Time</Option>
-                <Option value="EET">Eastern European Time</Option>
-                <Option value="EAT">Eastern African Time</Option>
-                <Option value="MET">Middle East Time</Option>
-                <Option value="NET">Near East Time</Option>
-                <Option value="PLT">Pakistan Lahore Time</Option>
-                <Option value="IST">India Time</Option>
-                <Option value="BST">Bangladesh Time</Option>
-                <Option value="VST">Vietnam Time</Option>
-                <Option value="CTT">China Taiwan Time</Option>
-                <Option value="JST">Japan Time</Option>
-                <Option value="ACT">Australia Central Time</Option>
-                <Option value="AET">Australia Eastern Time</Option>
-                <Option value="SST">Solomon Time</Option>
-                <Option value="NST">New Zealand Time</Option>
-                <Option value="MIT">Midway Islands Time</Option>
-                <Option value="HST">Hawaii Time</Option>
-                <Option value="AST">Alaska Time</Option>
-                <Option value="PST">Pacific Time</Option>
-                <Option value="MST">Mountain Time</Option>
-                <Option value="CST">Central Time</Option>
-                <Option value="EST">Eastern Time</Option>
-                <Option value="PRT">Puerto Rico and US Virgin Islands Time</Option>
-                <Option value="CNT">Canada Newfoundland Time</Option>
-                <Option value="AGT">Argentina Time</Option>
-                <Option value="CAT">Central African Time</Option>
+              >
+                {props.createSelectItems()}
               </Select>
             )}
           </FormItem>
@@ -205,6 +179,18 @@ class EditCamera extends Component {
   showModal = () => {
     this.setState({visible: true});
   };
+  handleCreateSelectItems = () => {
+    if (this.state.visible == true) {
+      let timezoneNames = moment.tz.names();
+      let items = [];
+      for (var i = 0; i < timezoneNames.length; i++) {
+        if (!items.includes(timezoneNames[i])) {
+          items.push(<Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Option>);
+        }
+      }
+      return items;
+    }
+  }
   handleCancel = () => {
     this.setState({visible: false});
     this.setState({fullRtspUrl: null});
@@ -358,6 +344,7 @@ class EditCamera extends Component {
           updateDataStop={this.handleUpdateStop}
           checkForWindow={this.handleCheckForWindow}
           updateDataDaysOfWeek={this.handleUpdateDaysOfWeek}
+          createSelectItems={this.handleCreateSelectItems}
           updateTimeZone={this.handleUpdateTimeZone}
           error={this.state.error}
           cameraData={this.props.data}

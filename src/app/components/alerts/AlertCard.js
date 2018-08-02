@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Icon } from 'antd';
-import moment, { lang } from 'moment';
+import moment from 'moment-timezone';
 import axios from 'axios';
 
 import { deleteAlert } from '../../redux/alerts/actions';
@@ -13,8 +13,8 @@ class _AlertCard extends Component {
     super(props);
   }
 
-  formatDatetime = (timestamp) => {
-    const dt = moment(timestamp);
+  formatDatetime = (timestamp, timezone) => {
+    const dt = moment.tz(timestamp, timezone);
     return `${dt.format('L')} ${dt.format('LT')}`;
   }
 
@@ -36,8 +36,9 @@ class _AlertCard extends Component {
         </div>
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.type}</Col>
-          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.camera.name} at {this.props.camera.location.name}</Col>
-          <Col style={styles.alertDateTime} xs={24} sm={24} md={12} lg={12} xl={12}>{this.formatDatetime(this.props.timestamp)}</Col>
+          <Col style={styles.cameraNameLocation} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.camera.name} at {this.props.camera.location.name}</Col>
+          <Col style={styles.alertDateTime} xs={24}>{this.formatDatetime(this.props.timestamp, this.props.camera.time_zone)}</Col>
+          <Col style={styles.alertTimeZone} xs={24}>{ this.props.camera.time_zone}</Col>
         </Row>
       </Card>
     )
@@ -47,11 +48,22 @@ class _AlertCard extends Component {
 const styles = {
   alertType: {
     fontSize: 10,
-    paddingTop: 5
+    paddingTop: 5,
+    textAlign: 'left'
+  },
+  cameraNameLocation: {
+    fontSize: 10,
+    paddingTop: 5,
+    textAlign: 'right'
   },
   alertDateTime: {
     fontSize: 10,
-    paddingTop: 5
+    paddingTop: 10,
+    textAlign: 'center'
+  },
+  alertTimeZone: {
+    fontSize: 10,
+    textAlign: 'center'
   },
   alertDelete: {
     fontSize: 12,

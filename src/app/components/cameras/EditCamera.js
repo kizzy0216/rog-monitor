@@ -185,7 +185,9 @@ class EditCamera extends Component {
       let items = [];
       for (var i = 0; i < timezoneNames.length; i++) {
         if (!items.includes(timezoneNames[i])) {
-          items.push(<Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Option>);
+          if (timezoneNames[i] !== "US/Pacific-New") {
+            items.push(<Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Option>);
+          }
         }
       }
       return items;

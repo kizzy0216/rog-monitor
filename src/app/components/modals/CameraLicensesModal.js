@@ -63,7 +63,7 @@ const CameraLicensesForm = Form.create()(
           </FormItem>
         </Form>
         <div style={styles.subscriptionAgreement}>
-          <a target='_blank' href='https://www.gorog.co/license.html'>Subscription Agreement</a>
+          <a target='_blank' href='https://www.gorog.co/subscription-agreement'>Subscription Agreement</a>
         </div>
       </Modal>
     );

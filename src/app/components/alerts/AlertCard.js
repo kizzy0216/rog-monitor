@@ -36,7 +36,7 @@ class _AlertCard extends Component {
         </div>
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.type}</Col>
-          <Col style={styles.cameraNameLocation} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.camera.name} at {this.props.camera.location.name}</Col>
+          <Col style={styles.cameraNameCameraGroup} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.camera.name} at {this.props.camera.cameraGroup.name}</Col>
           <Col style={styles.alertDateTime} xs={24}>{this.formatDatetime(this.props.timestamp, this.props.camera.time_zone)}</Col>
           <Col style={styles.alertTimeZone} xs={24}>{ this.props.camera.time_zone}</Col>
         </Row>
@@ -51,7 +51,7 @@ const styles = {
     paddingTop: 5,
     textAlign: 'left'
   },
-  cameraNameLocation: {
+  cameraNameCameraGroup: {
     fontSize: 10,
     paddingTop: 5,
     textAlign: 'right'

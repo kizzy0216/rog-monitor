@@ -63,8 +63,8 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail,
-    bvcCameraConnectionFailId: state.locations.bvcCameraConnectionFailId
+    bvcCameraConnectionFail: state.cameraGroups.bvcCameraConnectionFail,
+    bvcCameraConnectionFailId: state.cameraGroups.bvcCameraConnectionFailId
   }
 }
 

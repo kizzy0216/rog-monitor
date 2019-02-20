@@ -42,7 +42,7 @@ export function updateUser(user, values) {
     dispatch(updateUserSuccess(false));
     dispatch(updateUserInProgress(true));
     let config = {headers: {Authorization: user.jwt}};
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}`;
     const data = {
       user: {
         first_name: values.firstName,

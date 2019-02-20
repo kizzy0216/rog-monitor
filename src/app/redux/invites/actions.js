@@ -5,7 +5,7 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
-import { fetchLocations } from '../locations/actions';
+import { fetchCameraGroups } from '../cameraGroups/actions';
 
 function fetchReceivedInProcess(bool) {
   return {
@@ -97,7 +97,7 @@ export function fetchReceivedInvites(user) {
     dispatch(fetchReceivedInProcess(true));
     dispatch(fetchReceivedError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/location_guard_invitations`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group`;
     let config = {headers: {Authorization: user.jwt}};
 
     axios.get(url, config)
@@ -120,14 +120,14 @@ export function acceptInvite(user, invite) {
     dispatch(acceptInviteInProcess(true));
     dispatch(acceptInviteError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/location_guard_invitations/accept`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${invite.camera_groups_id}/privileges`;
     let config = {headers: {Authorization: user.jwt}};
-    let data = {id: invite.id}
+    data = ''
 
     axios.post(url, data, config)
     .then(response => {
       dispatch(acceptInviteSuccess(invite));
-      dispatch(fetchLocations(user));
+      dispatch(fetchCameraGroups(user));
     })
     .catch((error) => {
       console.log('Error accepting invitation: ', error.response);
@@ -145,7 +145,7 @@ export function rejectInvite(user, invite, InProcess) {
     dispatch(rejectInviteError(''));
     dispatch(rejectInviteInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/location_guard_invitations/${invite.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invite.id}`;
     let config = {headers: {Authorization: user.jwt}};
 
     axios.delete(url, config)
@@ -167,12 +167,12 @@ export function rescindInvite(user, invite) {
     dispatch(rescindInviteError(''));
     dispatch(rescindInviteInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/location_guard_invitations/${invite.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invite.id}`;
     let config = {headers: {Authorization: user.jwt}};
 
     axios.delete(url, config)
     .then(response => {
-      dispatch(fetchLocations(user));
+      dispatch(fetchCameraGroups(user));
     })
     .catch((error) => {
       dispatch(rescindInviteError('Error rescinding invitation.'));

@@ -338,7 +338,7 @@ class CustomCanvas extends Component {
     }
 
     window.addEventListener("resize", function() {
-        location.reload(true);
+        cameraGroup.reload(true);
     });
   }
 

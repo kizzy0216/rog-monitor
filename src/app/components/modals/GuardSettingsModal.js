@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Icon, Modal, Button, Row, Col, message } from 'antd';
 
 import { rescindInvite } from '../../redux/invites/actions';
-import { removeGuard } from '../../redux/locations/actions';
+import { removeGuard } from '../../redux/cameraGroups/actions';
 
 const GuardSettings = (props) => {
   if (props.invites.length || props.guards.length) {
@@ -113,10 +113,10 @@ class GuardSettingsModal extends Component {
           visible={this.state.visible}
           onCancel={this.handleCancel}
           user={this.props.user}
-          guards={this.props.selectedLocation.guards.filter(guard => guard.user.id !== this.props.user.id)}
+          guards={this.props.selectedCameraGroup.guards.filter(guard => guard.user.id !== this.props.user.id)}
           removeGuard={this.props.removeGuard}
           removeGuardInProcess={this.props.removeGuardInProcess}
-          invites={this.props.selectedLocation.locationGuardInvitations}
+          invites={this.props.selectedCameraGroup.cameraGroupGuardInvitations}
           rescindInvite={this.props.rescindInvite}
           rescindInviteInProcess={this.props.rescindInviteInProcess}
         />
@@ -163,11 +163,11 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    removeGuardInProcess: state.locations.removeGuardInProcess,
-    removeGuardError: state.locations.removeGuardError,
+    removeGuardInProcess: state.cameraGroups.removeGuardInProcess,
+    removeGuardError: state.cameraGroups.removeGuardError,
     rescindInviteInProcess: state.invites.rescindInviteInProcess,
     rescindInviteError: state.invites.rescindInviteError,
-    selectedLocation: state.locations.selectedLocation
+    selectedCameraGroup: state.cameraGroups.selectedCameraGroup
   }
 }
 

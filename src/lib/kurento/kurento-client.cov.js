@@ -16598,7 +16598,7 @@ module.exports={
   "_id": "elliptic@6.4.0",
   "_inBundle": false,
   "_integrity": "sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=",
-  "_location": "/elliptic",
+  "_cameraGroup": "/elliptic",
   "_phantomChildren": {},
   "_requested": {
     "type": "range",
@@ -34325,7 +34325,7 @@ function noop(error, result) {
  *        have access to the resource. In case of local files, the user running 
  *        the process must have read permissions over the file. For network 
  *        resources, the path to the resource must be accessible: IP and port 
- *        access not blocked, correct credentials, etc.The resource location 
+ *        access not blocked, correct credentials, etc.The resource cameraGroup 
  *        can’t be changed after the player is created, and a new player should 
  *        be created for streaming a different resource.
  *        </p>
@@ -34619,7 +34619,7 @@ function noop(error, result) {
  *        Provides the functionality to store contents. The recorder can store 
  *        in local files or in a network resource. It receives a media stream 
  *        from another MediaElement (i.e. the source), and stores it in the 
- *        designated location.
+ *        designated cameraGroup.
  *        </p>
  *        <p>
  *        The following information has to be provided In order to create a 
@@ -34679,7 +34679,7 @@ function noop(error, result) {
  *        <p>
  *        </p>
  *        Recording will start as soon as the user invokes the record method. 
- *        The recorder will then store, in the location indicated, the media 
+ *        The recorder will then store, in the cameraGroup indicated, the media 
  *        that the source is sending to the endpoint’s sink. If no media is 
  *        being received, or no endpoint has been connected, then the 
  *        destination will be empty. The recorder starts storing information 
@@ -48683,7 +48683,7 @@ http.request = function (opts, cb) {
 	// Normally, the page is loaded from http or https, so not specifying a protocol
 	// will result in a (valid) protocol-relative url. However, this won't work if
 	// the protocol is something else, like 'file:'
-	var defaultProtocol = global.location.protocol.search(/^https?:$/) === -1 ? 'http:' : ''
+	var defaultProtocol = global.cameraGroup.protocol.search(/^https?:$/) === -1 ? 'http:' : ''
 
 	var protocol = opts.protocol || defaultProtocol
 	var host = opts.hostname || opts.host
@@ -48768,7 +48768,7 @@ function getXHR () {
 	if (global.XMLHttpRequest) {
 		xhr = new global.XMLHttpRequest()
 		// If XDomainRequest is available (ie only, where xhr might not work
-		// cross domain), use the page location. Otherwise use example.com
+		// cross domain), use the page cameraGroup. Otherwise use example.com
 		// Note: this doesn't actually make an http request.
 		try {
 			xhr.open('GET', global.XDomainRequest ? '/' : 'https://example.com')
@@ -54039,7 +54039,7 @@ function handleHixieUpgrade(req, socket, upgradeHead, cb) {
         wshost = req.headers.host;
     else
         wshost = req.headers['x-forwarded-host'];
-    var location = ((req.headers['x-forwarded-proto'] === 'https' || socket.encrypted) ? 'wss' : 'ws') + '://' + wshost + req.url
+    var cameraGroup = ((req.headers['x-forwarded-proto'] === 'https' || socket.encrypted) ? 'wss' : 'ws') + '://' + wshost + req.url
       , protocol = req.headers['sec-websocket-protocol'];
 
     // build the response header and return a Buffer
@@ -54048,7 +54048,7 @@ function handleHixieUpgrade(req, socket, upgradeHead, cb) {
           'HTTP/1.1 101 Switching Protocols'
         , 'Upgrade: WebSocket'
         , 'Connection: Upgrade'
-        , 'Sec-WebSocket-Location: ' + location
+        , 'Sec-WebSocket-CameraGroup: ' + cameraGroup
       ];
       if (typeof protocol != 'undefined') headers.push('Sec-WebSocket-Protocol: ' + protocol);
       if (typeof origin != 'undefined') headers.push('Sec-WebSocket-Origin: ' + origin);

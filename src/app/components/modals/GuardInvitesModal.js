@@ -22,7 +22,7 @@ const GuardInvites = (props) => {
                 <p style={styles.date}>{moment(invite.timestamp).format('MMM D')}</p>
               </Col>
               <Col xs={{span: 24}}>
-                Invited to guard: {invite.location.name}
+                Invited to guard: {invite.cameraGroup.name}
               </Col>
             </Col>
             <Col xs={{span: 24}} sm={{span: 11}} style={styles.acceptRejectButtons}>
@@ -56,7 +56,7 @@ const GuardInvites = (props) => {
         onCancel={props.onCancel}
         footer={[null, null]}
       >
-        <div>No pending location invitations.</div>
+        <div>No pending cameraGroup invitations.</div>
       </Modal>
     )
   }

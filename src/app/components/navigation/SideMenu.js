@@ -4,7 +4,7 @@ import { Menu, Icon } from 'antd';
 import LogoutItem from './LogoutItem';
 
 import UserSettings from '../../components/modals/UserSettings';
-import AddLocationModal from  '../../components/modals/AddLocationModal';
+import AddCameraGroupModal from  '../../components/modals/AddCameraGroupModal';
 import GuardInvitesModal from '../../components/modals/GuardInvitesModal';
 import CameraLicensesModal from '../../components/modals/CameraLicensesModal';
 
@@ -14,7 +14,7 @@ const SideMenu = () => (
       <UserSettings />
     </Menu.Item>
     <Menu.Item key='2'>
-      <AddLocationModal linkText='Add Location' />
+      <AddCameraGroupModal linkText='Add CameraGroup' />
     </Menu.Item>
     <Menu.Item key='3'>
       <CameraLicensesModal />

@@ -3,17 +3,17 @@ import { Row, Col, Icon, Menu, Dropdown, Tooltip, message } from 'antd';
 
 import AddCameraModal from '../modals/AddCameraModal';
 import InviteGuardModal from '../modals/InviteGuardModal';
-import EditLocationModal from '../modals/EditLocationModal';
+import EditCameraGroupModal from '../modals/EditCameraGroupModal';
 import GuardSettingsModal from '../modals/GuardSettingsModal';
 
 //here
 const SettingsMenu = (props) => (
   <Menu>
     <Menu.Item>
-      <EditLocationModal selectedLocation={props.selectedLocation} />
+      <EditCameraGroupModal selectedCameraGroup={props.selectedCameraGroup} />
     </Menu.Item>
     <Menu.Item>
-      <GuardSettingsModal selectedLocation={props.selectedLocation} />
+      <GuardSettingsModal selectedCameraGroup={props.selectedCameraGroup} />
     </Menu.Item>
   </Menu>
 )
@@ -38,8 +38,8 @@ class CameraOptionButtons extends Component {
   }
 
   checkLicensesUsed = () => {
-    if (this.props.locations.length) {
-      return  this.props.locations.map(location => location.cameras && location.myRole === 'owner' ? location.cameras : [])
+    if (this.props.cameraGroups.length) {
+      return  this.props.cameraGroups.map(cameraGroup => cameraGroup.cameras && cameraGroup.myRole === 'owner' ? cameraGroup.cameras : [])
                 .reduce((a, b) => a.concat(b))
                 .length;
     }
@@ -63,21 +63,21 @@ class CameraOptionButtons extends Component {
             </Tooltip>
             <AddCameraModal
               user={this.props.user}
-              selectedLocation={this.props.selectedLocation}
+              selectedCameraGroup={this.props.selectedCameraGroup}
               visible={this.state.addCameraModalVisible}
               toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)} />
           </Col>
           <Col xs={{span: 8}}>
-            <Tooltip title='Share Location' placement='bottom'>
+            <Tooltip title='Share CameraGroup' placement='bottom'>
               <Icon style={styles.share} type='share-alt' onClick={this.toggleInviteGuardModalVisibility}/>
             </Tooltip>
             <InviteGuardModal
-              selectedLocation={this.props.selectedLocation}
+              selectedCameraGroup={this.props.selectedCameraGroup}
               visible={this.state.inviteGuardModalVisible}
               toggleInviteGuardModalVisibility={this.toggleInviteGuardModalVisibility.bind(this)} />
           </Col>
           <Col xs={{span: 8}}>
-            <Dropdown selectedLocation={this.props.selectedLocation} overlay={<SettingsMenu selectedLocation={this.props.selectedLocation} />}>
+            <Dropdown selectedCameraGroup={this.props.selectedCameraGroup} overlay={<SettingsMenu selectedCameraGroup={this.props.selectedCameraGroup} />}>
               <Icon style={styles.edit} type='setting'/>
             </Dropdown>
           </Col>

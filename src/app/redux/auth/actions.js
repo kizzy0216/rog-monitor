@@ -2,7 +2,7 @@ import ReactGA from 'react-ga';
 import axios from 'axios';
 require('promise.prototype.finally').shim();
 
-import { clearLocationData } from '../locations/actions';
+import { clearCameraGroupData } from '../cameraGroups/actions';
 import { clearCameraData } from '../cameras/actions';
 import { clearInvitesData } from '../invites/actions';
 import { clearAlertData } from '../alerts/actions';
@@ -206,7 +206,7 @@ export function checkLogin() {
   return (dispatch) => {
     const jwt = sessionStorage.getItem('jwt');
     if (jwt) {
-      let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
+      let url = `${process.env.REACT_APP_ROG_API_URL}/users`;
       axios.get(url, {headers: {Authorization: jwt}})
         .then(resp => {
           const user = {
@@ -241,17 +241,11 @@ export function register(email, firstName, lastName, phone, password, confirmPas
     dispatch(registerError(''));
     dispatch(registerInProcess(true));
 
-    const url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/register`;
+    const url = `${process.env.REACT_APP_ROG_API_URL}/users`;
     const data = {
-      invitation_token: token,
-      user: {
-        first_name: firstName,
-        last_name: lastName,
-        password_confirm: confirmPassword,
-        email,
-        phone,
-        password
-      }
+      auth_token: token,
+      email,
+      password
     };
 
     axios.post(url, data)
@@ -290,17 +284,16 @@ export function register(email, firstName, lastName, phone, password, confirmPas
   }
 }
 
-export function resetPassword(password, confirmPassword, token) {
+export function resetPassword(new_password, confirmPassword, token) {
   return (dispatch) => {
     dispatch(resetPasswordError(''));
     dispatch(resetPasswordInProcess(true));
 
-    const url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/reset_password`;
+    const url = `${process.env.REACT_APP_ROG_API_URL}/reset-password/${token}`;
     const data = {
-      password_reset_token: token,
       user: {
         password_confirm: confirmPassword,
-        password
+        new_password
       }
     };
 
@@ -358,7 +351,7 @@ export function login(email, password) {
       dispatch(loginError('Please enter a password'));
     }
     else {
-      let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/sessions`;
+      let url = `${process.env.REACT_APP_ROG_API_URL}/authenticate`;
       axios.post(url, {session: {email: cleanEmail, password: cleanPassword}})
         .then((resp) => {
           const user = {
@@ -366,8 +359,8 @@ export function login(email, password) {
             jwt: resp.data.jwt
           };
           sessionStorage.setItem('jwt', resp.data.jwt);
-          typeof(sessionStorage.getItem('email') == 'undefined') ? sessionStorage.setItem('email', email) : '';
-          typeof(sessionStorage.getItem('password') == 'undefined') ? sessionStorage.setItem('password', password) : '';
+          sessionStorage.setItem('email', email);
+          sessionStorage.setItem('password', password);
 
           if (jwtTokenRefresh === null) {
             jwtTokenRefresh = window.setInterval(
@@ -410,7 +403,7 @@ export function login(email, password) {
     }
   }
 }
-
+// TODO: remove this function and replace with FCM logic
 function disconnectFromChannels(channels) {
   for (const channel of channels) {
     channel.leave();
@@ -432,7 +425,7 @@ export function logout(channels) {
 
 export function clearAssociatedData() {
   return (dispatch) => {
-    dispatch(clearLocationData());
+    dispatch(clearCameraGroupData());
     dispatch(clearCameraData());
     dispatch(clearInvitesData());
     dispatch(clearAlertData());
@@ -445,7 +438,7 @@ export function sendInvitationEmail(email) {
     dispatch(sendInvitationInProcess(true));
 
     const invitationEmail = email.trim();
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/invitations`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/join-rog`;
     let data = {invitation: {email: invitationEmail}};
 
     const invitationEvent = {
@@ -468,7 +461,7 @@ export function sendInvitationEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Error sending invitation. Please try again later.';
-        if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.email) {
+        if (error.response.data.errors.email) {
           errMessage = 'An invitation has already been sent to this email.';
         }
 
@@ -486,7 +479,7 @@ export function getInvitation(token) {
     dispatch(getInvitationError(''));
     dispatch(getInvitationInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/invitations/${token}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${token}`;
     axios.get(url)
       .then(resp => {
         dispatch(getInvitationSuccess(resp.data.data));
@@ -512,7 +505,7 @@ export function sendPasswordResetRequestEmail(email) {
     dispatch(sendPasswordResetRequestInProcess(true));
 
     const passwordResetRequestEmail = email.trim();
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset_request`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/forgot-password`;
     let data = {request: {email: passwordResetRequestEmail}};
 
     const passwordResetRequestEvent = {
@@ -550,7 +543,7 @@ export function getPasswordResetRequest(token) {
     dispatch(getPasswordResetRequestError(''));
     dispatch(getPasswordResetRequestInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset_form/${token}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${token}`;
     axios.get(url)
       .then(resp => {
         dispatch(getPasswordResetRequestSuccess(resp.data.data));
@@ -568,7 +561,7 @@ export function getPasswordResetRequest(token) {
       })
   }
 }
-
+// TODO: delete the bvc functions and replace the logic with the appropriate api calls
 export function checkBVCAuthToken() {
   return (dispatch) => {
     const jwt = localStorage.getItem('bvc_jwt');

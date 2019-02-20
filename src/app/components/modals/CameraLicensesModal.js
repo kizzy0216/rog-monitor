@@ -5,7 +5,7 @@ const FormItem = Form.Item;
 
 const CameraLicensesForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, cancelSave, cancelSaveButton, error, cameraLicenses, locations, updatelicenses} = props;
+    const {onCancel, visible, onCreate, form, cancelSave, cancelSaveButton, error, cameraLicenses, cameraGroups, updatelicenses} = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
       labelCol: {
@@ -17,9 +17,9 @@ const CameraLicensesForm = Form.create()(
     };
 
     const getUsedLicenses = () => {
-      if (locations.length) {
-        return  locations
-                  .map(location => location.cameras && location.myRole === 'owner' ? location.cameras : [])
+      if (cameraGroups.length) {
+        return  cameraGroups
+                  .map(cameraGroup => cameraGroup.cameras && cameraGroup.myRole === 'owner' ? cameraGroup.cameras : [])
                   .reduce((a, b) => a.concat(b))
                   .length;
       }
@@ -142,7 +142,7 @@ class CameraLicenses extends Component {
           cancelSave={this.state.hidden}
           error={this.state.error}
           cameraLicenses={this.props.user.cameraLicenses}
-          locations={this.props.locations}
+          cameraGroups={this.props.cameraGroups}
           updatelicenses={this.updateInputValue}
         />
       </div>
@@ -191,7 +191,7 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    locations: state.locations.locations
+    cameraGroups: state.cameraGroups.cameraGroups
   }
 }
 

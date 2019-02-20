@@ -12,7 +12,7 @@ class NavigationMenu extends Component {
 
       notification.open({
         message: 'Alert:',
-        description: `${alert.type} by ${alert.camera.name} at ${alert.camera.location.name}`,
+        description: `${alert.type} by ${alert.camera.name} at ${alert.camera.cameraGroup.name}`,
         duration: 5,
         style: {
         marginTop: 30
@@ -26,7 +26,7 @@ class NavigationMenu extends Component {
       this.props.mergeNewAlerts();
     }
 
-    if (path == this.props.location.pathname) {
+    if (path == this.props.cameraGroup.pathname) {
       window.window.scrollTo(0, 0);
     }
     else {
@@ -40,8 +40,8 @@ class NavigationMenu extends Component {
         theme='dark'
         mode='horizontal'
         style={this.props.style}
-        selectedKeys={[this.props.location.pathname]}
-        defaultSelectedKeys={[this.props.location.pathname]}
+        selectedKeys={[this.props.cameraGroup.pathname]}
+        defaultSelectedKeys={[this.props.cameraGroup.pathname]}
         onClick={({key}) => this.goToPath(key)}>
         <Menu.Item key='/cameras'>
           <Badge>

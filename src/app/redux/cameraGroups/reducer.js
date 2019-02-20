@@ -1,14 +1,14 @@
 import initialState from './initialState';
 import * as types from './actionTypes';
 
-const locations = (state = initialState, action) => {
+const cameraGroups = (state = initialState, action) => {
   switch (action.type) {
     case types.FETCH_LOCATIONS_SUCCESS:
       return {
         ...state,
-        locations: action.locations,
-        selectedLocation: action.locations.find(location => location.id === state.selectedLocation.id) ||
-                          state.selectedLocation
+        cameraGroups: action.cameraGroups,
+        selectedCameraGroup: action.cameraGroups.find(cameraGroup => cameraGroup.id === state.selectedCameraGroup.id) ||
+                          state.selectedCameraGroup
       }
 
     case types.FETCH_LOCATIONS_IN_PROCESS:
@@ -26,104 +26,104 @@ const locations = (state = initialState, action) => {
     case types.LOCATION_SELECTED:
       return {
         ...state,
-        selectedLocation: action.selectedLocation
+        selectedCameraGroup: action.selectedCameraGroup
       }
 
     case types.CLEAR_LOCATION_DATA:
       return {
         ...state,
-        locations: action.locations,
-        selectedLocation: action.selectedLocation
+        cameraGroups: action.cameraGroups,
+        selectedCameraGroup: action.selectedCameraGroup
       }
 
     case types.ADD_LOCATION_CAMERA_ERROR:
       return {
         ...state,
-        addLocationCameraError: action.addLocationCameraError
+        addCameraGroupCameraError: action.addCameraGroupCameraError
       }
 
     case types.ADD_LOCATION_CAMERA_IN_PROCESS:
       return {
         ...state,
-        addLocationCameraInProcess: action.addLocationCameraInProcess
+        addCameraGroupCameraInProcess: action.addCameraGroupCameraInProcess
       }
 
     case types.ADD_LOCATION_CAMERA_SUCCESS:
       return {
         ...state,
-        addLocationCameraSuccess: action.addLocationCameraSuccess
+        addCameraGroupCameraSuccess: action.addCameraGroupCameraSuccess
       }
 
     case types.ADD_LOCATION_ERROR:
       return {
         ...state,
-        addLocationError: action.addLocationError
+        addCameraGroupError: action.addCameraGroupError
       }
 
     case types.ADD_LOCATION_IN_PROCESS:
       return {
         ...state,
-        addLocationInProcess: action.addLocationInProcess
+        addCameraGroupInProcess: action.addCameraGroupInProcess
       }
 
     case types.ADD_LOCATION_SUCCESS:
       return {
         ...state,
-        addLocationSuccess: action.addLocationSuccess
+        addCameraGroupSuccess: action.addCameraGroupSuccess
       }
 
       case types.REMOVE_LOCATION_ERROR:
         return {
           ...state,
-          removeLocationError: action.removeLocationError
+          removeCameraGroupError: action.removeCameraGroupError
         }
 
       case types.REMOVE_LOCATION_IN_PROCESS:
         return {
           ...state,
-          removeLocationInProcess: action.removeLocationInProcess
+          removeCameraGroupInProcess: action.removeCameraGroupInProcess
         }
 
       case types.REMOVE_LOCATION_SUCCESS:
         return {
           ...state,
-          removeLocationSuccess: action.removeLocationSuccess
+          removeCameraGroupSuccess: action.removeCameraGroupSuccess
         }
 
     case types.SHARE_LOCATION_IN_PROCESS:
       return {
         ...state,
-        shareLocationInProcess: action.shareLocationInProcess
+        shareCameraGroupInProcess: action.shareCameraGroupInProcess
       }
 
     case types.SHARE_LOCATION_ERROR:
       return {
         ...state,
-        shareLocationError: action.shareLocationError
+        shareCameraGroupError: action.shareCameraGroupError
       }
 
     case types.SHARE_LOCATION_SUCCESS:
       return {
         ...state,
-        shareLocationSuccess: action.shareLocationSuccess
+        shareCameraGroupSuccess: action.shareCameraGroupSuccess
       }
 
     case types.EDIT_LOCATION_IN_PROCESS:
       return {
         ...state,
-        editLocationInProcess: action.editLocationInProcess
+        editCameraGroupInProcess: action.editCameraGroupInProcess
       }
 
     case types.EDIT_LOCATION_SUCCESS:
       return {
         ...state,
-        editLocationSuccess: action.editLocationSuccess
+        editCameraGroupSuccess: action.editCameraGroupSuccess
       }
 
     case types.EDIT_LOCATION_ERROR:
       return {
         ...state,
-        editLocationError: action.editLocationError
+        editCameraGroupError: action.editCameraGroupError
       }
 
     case types.REMOVE_GUARD_IN_PROCESS:
@@ -162,4 +162,4 @@ const locations = (state = initialState, action) => {
   }
 }
 
-export default locations;
+export default cameraGroups;

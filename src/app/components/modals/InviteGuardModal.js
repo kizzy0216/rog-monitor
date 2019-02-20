@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import { Button, Modal, Form, Input, Icon, message } from 'antd';
 const FormItem = Form.Item;
 
-import { shareLocation } from '../../redux/locations/actions';
+import { shareCameraGroup } from '../../redux/cameraGroups/actions';
 
 const InviteGuardForm = Form.create()(
   (props) => {
-    const {visible, onCancel, onCreate, form, selectedLocation, shareLocationInProcess} = props;
+    const {visible, onCancel, onCreate, form, selectedCameraGroup, shareCameraGroupInProcess} = props;
     const {getFieldDecorator} = form;
     
     return (
-      <Modal title={`Invite Guard to View ${selectedLocation.name}'s Cameras`}
+      <Modal title={`Invite Guard to View ${selectedCameraGroup.name}'s Cameras`}
         visible={visible}
         okText='Create'
         onCancel={onCancel}
@@ -31,8 +31,8 @@ const InviteGuardForm = Form.create()(
 
           </FormItem>
           <FormItem>
-            <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={shareLocationInProcess}>
-              <Icon type={shareLocationInProcess ? 'loading' : 'share-alt'} />Invite
+            <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={shareCameraGroupInProcess}>
+              <Icon type={shareCameraGroupInProcess ? 'loading' : 'share-alt'} />Invite
             </Button>
           </FormItem>
         </Form>
@@ -43,10 +43,10 @@ const InviteGuardForm = Form.create()(
 
 class InviteGuardModal extends Component {
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.shareLocationError && this.props.shareLocationError !== nextProps.shareLocationError) {
-      message.error(nextProps.shareLocationError);
+    if (nextProps.shareCameraGroupError && this.props.shareCameraGroupError !== nextProps.shareCameraGroupError) {
+      message.error(nextProps.shareCameraGroupError);
     }
-    else if (nextProps.shareLocationSuccess && this.props.shareLocationSuccess !== nextProps.shareLocationSuccess) {
+    else if (nextProps.shareCameraGroupSuccess && this.props.shareCameraGroupSuccess !== nextProps.shareCameraGroupSuccess) {
       message.success('Invitation sent.');
       this.form.resetFields();
     }
@@ -64,7 +64,7 @@ class InviteGuardModal extends Component {
         return;
       }
 
-      this.props.shareLocation(this.props.user, this.props.selectedLocation.id, values.email);
+      this.props.shareCameraGroup(this.props.user, this.props.selectedCameraGroup.id, values.email);
     });
   };
 
@@ -80,8 +80,8 @@ class InviteGuardModal extends Component {
           visible={this.props.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
-          selectedLocation={this.props.selectedLocation}
-          shareLocationInProcess={this.props.shareLocationInProcess}
+          selectedCameraGroup={this.props.selectedCameraGroup}
+          shareCameraGroupInProcess={this.props.shareCameraGroupInProcess}
         />
       </div>
     );
@@ -89,7 +89,7 @@ class InviteGuardModal extends Component {
 }
 
 const styles = {
-  selectedLocationText: {
+  selectedCameraGroupText: {
     fontSize: 18,
     fontWeight: 600,
     marginTop: -20
@@ -99,15 +99,15 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    shareLocationInProcess: state.locations.shareLocationInProcess,
-    shareLocationError: state.locations.shareLocationError,
-    shareLocationSuccess: state.locations.shareLocationSuccess
+    shareCameraGroupInProcess: state.cameraGroups.shareCameraGroupInProcess,
+    shareCameraGroupError: state.cameraGroups.shareCameraGroupError,
+    shareCameraGroupSuccess: state.cameraGroups.shareCameraGroupSuccess
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    shareLocation: (user, locationId, email) => dispatch(shareLocation(user, locationId, email))
+    shareCameraGroup: (user, cameraGroupId, email) => dispatch(shareCameraGroup(user, cameraGroupId, email))
   }
 }
 

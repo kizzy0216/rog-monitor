@@ -23,80 +23,80 @@ function fetchError(error) {
   }
 }
 
-function fetchSuccess(locations) {
+function fetchSuccess(cameraGroups) {
   return {
     type: types.FETCH_LOCATIONS_SUCCESS,
-    locations
+    cameraGroups
   }
 }
 
-function locationSelected(selectedLocation) {
+function cameraGroupSelected(selectedCameraGroup) {
   return {
     type: types.LOCATION_SELECTED,
-    selectedLocation
+    selectedCameraGroup
   }
 }
 
-function addLocationInProcess(bool) {
+function addCameraGroupInProcess(bool) {
   return {
     type: types.ADD_LOCATION_IN_PROCESS,
-    addLocationInProcess: bool
+    addCameraGroupInProcess: bool
   }
 }
 
-function addLocationError(error) {
+function addCameraGroupError(error) {
   return {
     type: types.ADD_LOCATION_ERROR,
-    addLocationError: error
+    addCameraGroupError: error
   }
 }
 
-function addLocationSuccess(bool) {
+function addCameraGroupSuccess(bool) {
   return {
     type: types.ADD_LOCATION_SUCCESS,
-    addLocationSuccess: bool
+    addCameraGroupSuccess: bool
   }
 }
 
-function removeLocationInProcess(bool) {
+function removeCameraGroupInProcess(bool) {
   return {
     type: types.REMOVE_LOCATION_IN_PROCESS,
-    removeLocationInProcess: bool
+    removeCameraGroupInProcess: bool
   }
 }
 
-function removeLocationError(error) {
+function removeCameraGroupError(error) {
   return {
     type: types.REMOVE_LOCATION_ERROR,
-    removeLocationError: error
+    removeCameraGroupError: error
   }
 }
 
-function removeLocationSuccess(bool) {
+function removeCameraGroupSuccess(bool) {
   return {
     type: types.REMOVE_LOCATION_SUCCESS,
-    removeLocationSuccess: bool
+    removeCameraGroupSuccess: bool
   }
 }
 
-function addLocationCameraInProcess(bool) {
+function addCameraGroupCameraInProcess(bool) {
   return {
     type: types.ADD_LOCATION_CAMERA_IN_PROCESS,
-    addLocationCameraInProcess: bool
+    addCameraGroupCameraInProcess: bool
   }
 }
 
-function addLocationCameraError(error) {
+function addCameraGroupCameraError(error) {
   return {
     type: types.ADD_LOCATION_CAMERA_ERROR,
-    addLocationCameraError: error
+    addCameraGroupCameraError: error
   }
 }
 
-function addLocationCameraSuccess(bool) {
+function addCameraGroupCameraSuccess(bool) {
   return {
     type: types.ADD_LOCATION_CAMERA_SUCCESS,
-    addLocationCameraSuccess: bool
+    addCameraGroupCameraSuccess: bool
   }
 }
 
@@ -107,45 +107,45 @@ function addedCameraData(cameraData) {
   }
 }
 
-function shareLocationInProcess(bool) {
+function shareCameraGroupInProcess(bool) {
   return {
     type: types.SHARE_LOCATION_IN_PROCESS,
-    shareLocationInProcess: bool
+    shareCameraGroupInProcess: bool
   }
 }
 
-function shareLocationError(error) {
+function shareCameraGroupError(error) {
   return {
     type: types.SHARE_LOCATION_ERROR,
-    shareLocationError: error
+    shareCameraGroupError: error
   }
 }
 
-function shareLocationSuccess(bool) {
+function shareCameraGroupSuccess(bool) {
   return {
     type: types.SHARE_LOCATION_SUCCESS,
-    shareLocationSuccess: bool
+    shareCameraGroupSuccess: bool
   }
 }
 
-function editLocationInProcess(bool) {
+function editCameraGroupInProcess(bool) {
   return {
     type: types.EDIT_LOCATION_IN_PROCESS,
-    editLocationInProcess: bool
+    editCameraGroupInProcess: bool
   }
 }
 
-function editLocationSuccess(bool) {
+function editCameraGroupSuccess(bool) {
   return {
     type: types.EDIT_LOCATION_SUCCESS,
-    editLocationSuccess: bool
+    editCameraGroupSuccess: bool
   }
 }
 
-function editLocationError(error) {
+function editCameraGroupError(error) {
   return {
     type: types.EDIT_LOCATION_ERROR,
-    editLocationError: error
+    editCameraGroupError: error
   }
 }
 
@@ -163,17 +163,17 @@ function removeGuardError(error) {
   }
 }
 
-export function clearLocationData() {
+export function clearCameraGroupData() {
   return {
       type: types.CLEAR_LOCATION_DATA,
-      locations: initialState.locations,
-      selectedLocation: initialState.selectedLocation
+      cameraGroups: initialState.cameraGroups,
+      selectedCameraGroup: initialState.selectedCameraGroup
   }
 }
 
-export function selectLocation(location) {
+export function selectCameraGroup(cameraGroup) {
   return (dispatch) => {
-    dispatch(locationSelected(location));
+    dispatch(cameraGroupSelected(cameraGroup));
   }
 }
 
@@ -192,33 +192,33 @@ export function bvcCameraConnectionFail(bool, id) {
   }
 }
 
-function parseLocations(locations, user) {
-  locations = locations.map(location => {
-    let myRole = location.guards.find(guard => guard.user.id == user.id).role;
+function parseCameraGroups(cameraGroups, user) {
+  cameraGroups = cameraGroups.map(cameraGroup => {
+    let myRole = cameraGroup.guards.find(guard => guard.user.id == user.id).role;
 
     return {
-      ...location,
+      ...cameraGroup,
       myRole
     }
   });
 
-  return locations;
+  return cameraGroups;
 }
 
-export function fetchLocations(user) {
+export function fetchCameraGroups(user) {
   return (dispatch) => {
     dispatch(fetchInProcess(true));
     dispatch(fetchError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/locations`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups`;
     let config = {headers: {Authorization: user.jwt}};
 
     axios.get(url, config)
       .then(response => {
-        dispatch(fetchSuccess(parseLocations(response.data.data, user)));
+        dispatch(fetchSuccess(parseCameraGroups(response.data.data, user)));
       })
       .catch(error => {
-        console.log('Error fetching locations: ', error);
+        console.log('Error fetching cameraGroups: ', error);
         dispatch(fetchError(true));
       })
       .finally(() => {
@@ -227,20 +227,20 @@ export function fetchLocations(user) {
   }
 }
 
-export function addLocationCamera(user, location, name, rtspUrl, username, password) {
+export function addCameraGroupCamera(user, cameraGroup, name, rtspUrl, username, password) {
   return (dispatch) => {
-    dispatch(addLocationCameraError(''));
-    dispatch(addLocationCameraInProcess(true));
+    dispatch(addCameraGroupCameraError(''));
+    dispatch(addCameraGroupCameraInProcess(true));
 
     let index = rtspUrl.indexOf(":");
     let protocol = rtspUrl.substr(0, index + 3).toLowerCase();
     let urlAddress = rtspUrl.substr(index + 3);
     let lowerCaseUrl = (protocol + urlAddress);
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/cameras`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras`;
     let data = {
       camera: {
-        'location_id': location.id,
+        'cameraGroup_id': cameraGroup.id,
         'rtsp_url': lowerCaseUrl,
         name,
         username,
@@ -258,9 +258,9 @@ export function addLocationCamera(user, location, name, rtspUrl, username, passw
     let config = {headers: {Authorization: user.jwt}};
     axios.post(url, data, config)
       .then((response) => {
-        dispatch(fetchLocations(user));
-        dispatch(addLocationCameraSuccess(true));
-        dispatch(addLocationCameraSuccess(false));
+        dispatch(fetchCameraGroups(user));
+        dispatch(addCameraGroupCameraSuccess(true));
+        dispatch(addCameraGroupCameraSuccess(false));
         dispatch(addedCameraData(response));
 
         cameraAddEvent.status = 'Add Camera Success';
@@ -273,23 +273,23 @@ export function addLocationCamera(user, location, name, rtspUrl, username, passw
           if (error.response.data.error) {
             errMessage = error.response.data.error;
           }
-          else if (error.response.data.errors && error.response.data.errors.location_camera_name) {
-            errMessage = `This location already has a camera named ${name}`;
+          else if (error.response.data.errors && error.response.data.errors.cameraGroup_camera_name) {
+            errMessage = `This cameraGroup already has a camera named ${name}`;
           }
         }
-        dispatch(addLocationCameraError(errMessage));
+        dispatch(addCameraGroupCameraError(errMessage));
 
         cameraAddEvent.status = 'Add Camera Failed';
         dispatch(trackEventAnalytics('add camera', cameraAddEvent));
       })
       .finally(() => {
-        dispatch(addLocationCameraError(''));
-        dispatch(addLocationCameraInProcess(false));
+        dispatch(addCameraGroupCameraError(''));
+        dispatch(addCameraGroupCameraInProcess(false));
       });
   }
 }
-
-export function checkBvcCameraConnection(user, cameraId) {
+// TODO: re-work this function to hit the recos in the API and get the status for that camera id
+export function checkCameraConnection(user, cameraId) {
   return (dispatch) => {
     let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/connectedOnce`;
     const bvc_jwt = localStorage.getItem('bvc_jwt');
@@ -313,98 +313,98 @@ export function checkBvcCameraConnection(user, cameraId) {
   }
 }
 
-export function addNewLocation(user, location) {
+export function addNewCameraGroup(user, cameraGroup) {
   return (dispatch) => {
-    dispatch(addLocationError(''));
-    dispatch(addLocationInProcess(true));
+    dispatch(addCameraGroupError(''));
+    dispatch(addCameraGroupInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/locations`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups`;
     let config = {headers: {Authorization: user.jwt}};
 
     let data = {
-      location: {
-        name: location.name,
-        address1: location.address1,
-        city: location.city,
-        state: location.state,
-        zip: location.zip
+      cameraGroup: {
+        name: cameraGroup.name,
+        address1: cameraGroup.address1,
+        city: cameraGroup.city,
+        state: cameraGroup.state,
+        zip: cameraGroup.zip
       }
     };
 
     axios.post(url, data, config)
       .then((response) => {
-        dispatch(fetchLocations(user));
-        dispatch(addLocationSuccess(true));
-        dispatch(addLocationSuccess(false));
-        dispatch(selectLocation(response.data.data));
+        dispatch(fetchCameraGroups(user));
+        dispatch(addCameraGroupSuccess(true));
+        dispatch(addCameraGroupSuccess(false));
+        dispatch(selectCameraGroup(response.data.data));
       })
       .catch((error) => {
         let errMessage = 'Error creating camera. Please try again later.';
         if (error.response && error.response.data && error.response.data.errors) {
-          if (error.response.data.errors.location_name) {
-            errMessage = `You already have a location named ${location.name}`;
+          if (error.response.data.errors.cameraGroup_name) {
+            errMessage = `You already have a cameraGroup named ${cameraGroup.name}`;
           }
         }
-        dispatch(addLocationError(errMessage));
+        dispatch(addCameraGroupError(errMessage));
       })
       .finally(() => {
-        dispatch(addLocationError(''));
-        dispatch(addLocationInProcess(false));
+        dispatch(addCameraGroupError(''));
+        dispatch(addCameraGroupInProcess(false));
       });
   }
 }
 
-export function removeLocation(user, location) {
+export function removeCameraGroup(user, cameraGroup) {
   return (dispatch) => {
-    dispatch(removeLocationError(''));
-    dispatch(removeLocationInProcess(true));
+    dispatch(removeCameraGroupError(''));
+    dispatch(removeCameraGroupInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/locations/${location.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/cameraGroups/${cameraGroup.id}`;
     let config = {headers: {Authorization: user.jwt}};
 
     axios.delete(url, config)
       .then((response) => {
-        dispatch(fetchLocations(user));
-        dispatch(removeLocationSuccess(true));
-        dispatch(removeLocationSuccess(false));
-        dispatch(clearLocationData());
+        dispatch(fetchCameraGroups(user));
+        dispatch(removeCameraGroupSuccess(true));
+        dispatch(removeCameraGroupSuccess(false));
+        dispatch(clearCameraGroupData());
       })
       .catch((error) => {
-        let errMessage = 'Error removing location. Please try again later.';
-        dispatch(removeLocationError(errMessage));
+        let errMessage = 'Error removing cameraGroup. Please try again later.';
+        dispatch(removeCameraGroupError(errMessage));
       })
       .finally(() => {
-        dispatch(removeLocationError(''));
-        dispatch(removeLocationInProcess(false));
+        dispatch(removeCameraGroupError(''));
+        dispatch(removeCameraGroupInProcess(false));
       });
   }
 }
 
-export function shareLocation(user, locationId, inviteeEmail) {
+export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
   return (dispatch) => {
-    dispatch(shareLocationError(''));
-    dispatch(shareLocationInProcess(true));
+    dispatch(shareCameraGroupError(''));
+    dispatch(shareCameraGroupInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/location_guard_invitations`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/invitations`;
     let config = {headers: {Authorization: user.jwt}};
 
     let data = {
-      location_guard_invitation: {
-        location_id: locationId, invitee_email: inviteeEmail, role: 'viewer'
+      cameraGroup_guard_invitation: {
+        cameraGroup_id: cameraGroupId, invitee_email: inviteeEmail, role: 'viewer'
       }
     };
 
     axios.post(url, data, config)
       .then((response) => {
-        dispatch(fetchLocations(user));
-        dispatch(shareLocationSuccess(true));
-        dispatch(shareLocationSuccess(false));
+        dispatch(fetchCameraGroups(user));
+        dispatch(shareCameraGroupSuccess(true));
+        dispatch(shareCameraGroupSuccess(false));
       })
       .catch((error) => {
-        let errMessage = 'Error sharing location. Please try again later.';
+        let errMessage = 'Error sharing cameraGroup. Please try again later.';
         if (error.response && error.response.data) {
           if (error.response.data.errors) {
-            if (error.response.data.errors.location_guard_invitation) {
+            if (error.response.data.errors.cameraGroup_guard_invitation) {
               errMessage = 'You have already sent an invitation to this email.';
             }
             else if (error.response.data.errors.invitee) {
@@ -415,26 +415,26 @@ export function shareLocation(user, locationId, inviteeEmail) {
             errMessage = error.response.data.error;
           }
         }
-        dispatch(shareLocationError(errMessage));
+        dispatch(shareCameraGroupError(errMessage));
       })
       .finally(() => {
-        dispatch(shareLocationError(''));
-        dispatch(shareLocationInProcess(false));
+        dispatch(shareCameraGroupError(''));
+        dispatch(shareCameraGroupInProcess(false));
       });
   }
 }
 
-export function removeGuard(user, guard) {
+export function removeCameraGroupPrivilege(user, cameraGroupId, cameraGroupPrivilegeId) {
   return (dispatch) => {
     dispatch(removeGuardError(''));
     dispatch(removeGuardInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/guards/${guard.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-group/${cameraGroupId}/privileges/${cameraGroupPrivilegeId}`;
     let config = {headers: {Authorization: user.jwt}};
 
     axios.delete(url, config)
     .then(response => {
-      dispatch(fetchLocations(user));
+      dispatch(fetchCameraGroups(user));
     })
     .catch((error) => {
       dispatch(removeGuardError('Error removing guard.'));
@@ -446,32 +446,32 @@ export function removeGuard(user, guard) {
   }
 }
 
-export function editLocation(user, location, locationData) {
+export function editCameraGroup(user, cameraGroup, cameraGroupData) {
   return (dispatch) => {
-    dispatch(editLocationError(''));
-    dispatch(editLocationInProcess(true));
+    dispatch(editCameraGroupError(''));
+    dispatch(editCameraGroupInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/locations/${location.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}`;
     let config = {headers: {Authorization: user.jwt}};
 
     let data = {
-      location: locationData
+      cameraGroup: cameraGroupData
     };
 
     axios.patch(url, data, config)
       .then((response) => {
-        dispatch(fetchLocations(user));
-        dispatch(editLocationSuccess(true));
-        dispatch(editLocationSuccess(false));
+        dispatch(fetchCameraGroups(user));
+        dispatch(editCameraGroupSuccess(true));
+        dispatch(editCameraGroupSuccess(false));
       })
       .catch((error) => {
-        let errMessage = 'Error editing camera. Please try again later.';
+        let errMessage = 'Error editing camera group. Please try again later.';
         if (error.response && error.response.data && error.response.data.errors) {
           let errors = error.response.data.errors;
           let key = Object.entries(errors)[0][0];
           let value = Object.entries(errors)[0][1];
-          if (key === 'location_name' && value[0] === 'has already been taken') {
-            errMessage = `You alread have a location named ${locationData['name']}`
+          if (key === 'cameraGroup_name' && value[0] === 'has already been taken') {
+            errMessage = `You alread have a cameraGroup named ${cameraGroupData['name']}`
           }
           else {
             let fieldMap = {
@@ -484,11 +484,11 @@ export function editLocation(user, location, locationData) {
             errMessage = `${fieldMap[key]} ${value}`;
           }
         }
-        dispatch(editLocationError(errMessage));
+        dispatch(editCameraGroupError(errMessage));
       })
       .finally(() => {
-        dispatch(editLocationError(''));
-        dispatch(editLocationInProcess(false));
+        dispatch(editCameraGroupError(''));
+        dispatch(editCameraGroupInProcess(false));
       });
   }
 }

@@ -35,7 +35,7 @@ class CameraCard extends Component {
     const cameraViewEvent = {
       email: this.props.user.email,
       name: this.props.user.firstName+ ' ' +this.props.user.lastName,
-      location_viewed: this.props.cameraLocation.name,
+      cameraGroup_viewed: this.props.cameraCameraGroup.name,
       camera_viewed: this.props.name
     };
 
@@ -45,7 +45,7 @@ class CameraCard extends Component {
   }
 
   componentWillMount = () => {
-    this.props.registerCamera(this.props.user.id, this.props.cameraLocation.cameras);
+    this.props.registerCamera(this.props.user.id, this.props.cameraCameraGroup.cameras);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -67,7 +67,7 @@ class CameraCard extends Component {
           </Row>
           <Row>
             <div>
-              {this.props.cameraLocation.myRole === 'viewer' ?
+              {this.props.cameraCameraGroup.myRole === 'viewer' ?
                 (<div></div>) :
                 <div>
                   <Col span={8} style={styles.alertModal}>
@@ -94,7 +94,7 @@ class CameraCard extends Component {
           <Row onClick={() => this.viewCameraStream()}>
             <CameraCardImg data={this.props} />
           </Row>
-          {this.props.cameraLocation.myRole === 'viewer' ?
+          {this.props.cameraCameraGroup.myRole === 'viewer' ?
             (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
               <Col span={20} offset={2}>
                 <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>

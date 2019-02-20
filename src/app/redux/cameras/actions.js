@@ -7,7 +7,7 @@ import * as types from './actionTypes';
 
 import { Socket } from '../../../lib/phoenix/phoenix';
 
-import { fetchLocations } from '../locations/actions';
+import { fetchCameraGroups } from '../cameraGroups/actions';
 
 function fetchInProcess(bool) {
   return {
@@ -142,16 +142,16 @@ function updateAlertTimeWindowData(values) {
   }
 }
 
-export function fetchCameraAuthRtspUrl(user, cameraId) {
+export function fetchCameraUrl(user, cameraGroupsId, cameraId) {
   return (dispatch) => {
     dispatch(fetchInProcess(true));
     dispatch(fetchError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/cameras/${cameraId}/auth_rtsp_url`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupsId}/cameras/${cameraId}`;
     let config = {headers: {Authorization: user.jwt}};
     axios.get(url, config)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.data.authRtspUrl));
+        dispatch(fetchSuccess(response.data.data.camera_url));
       })
       .catch((error) => {
         console.log('Error fetching camera: ', error);
@@ -163,14 +163,14 @@ export function fetchCameraAuthRtspUrl(user, cameraId) {
   }
 }
 
-export function updatePreviewImage(cameraId) {
+export function updatePreviewImage(user, cameraGroupsId, cameraId) {
   return (dispatch) => {
-    let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/update_thumbnail`;
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
-    let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
-    let data = {'image': null}
+    let url = `${process.env.REACT_APP_BVC_SERVER}/users/${user.id}/camera-groups/${cameraGroupsId}/cameras/${cameraId}/image`;
 
-    axios.post(bvc_url, data, bvc_config)
+    let config = {headers: {Authorization: user.jwt}};
+    let data = ''
+
+    axios.post(url, data, config)
       .then((response) => {
         dispatch(imageUpdateInProgress(true, cameraId));
       })
@@ -180,7 +180,7 @@ export function updatePreviewImage(cameraId) {
       })
   }
 }
-
+// TODO: examine weather we can delete this function
 export function listenForNewImageThumbnails(user) {
   return (dispatch) => {
     let channelName = `images:user`;
@@ -215,12 +215,12 @@ export function newImage(camera) {
   }
 }
 
-export function editCamera(user, cameraId, cameraData) {
+export function editCamera(user, cameraGroupsId, cameraId, cameraData) {
   return (dispatch) => {
     dispatch(editCameraError(''));
     dispatch(editCameraInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/cameras/${cameraId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupsId}/cameras/${cameraId}`;
     let config = {headers: {Authorization: user.jwt}};
     let data = {
       camera: cameraData
@@ -229,7 +229,7 @@ export function editCamera(user, cameraId, cameraData) {
     axios.patch(url, data, config)
       .then((response) => {
         dispatch(updateCamera(response.data.data));
-        dispatch(fetchLocations(user));
+        dispatch(fetchCameraGroups(user));
         dispatch(editCameraSuccess(true));
         dispatch(editCameraSuccess(false));
       })
@@ -237,7 +237,7 @@ export function editCamera(user, cameraId, cameraData) {
         let errMessage = 'Error editing camera. Please try again later.';
         if (typeof error.response.data.error !== 'undefined') {
           if (error.response.data.error === 'has already been used') {
-            errMessage = `This location already has a camera with that name.`
+            errMessage = `This cameraGroup already has a camera with that name.`
           }
         }
         dispatch(editCameraError(errMessage));
@@ -266,16 +266,16 @@ export function clearTimeWindowData(timeWindowSelect, values) {
   }
 }
 
-export function deleteCamera(user, cameraId) {
+export function deleteCamera(user, cameraGroupsId, cameraId) {
   return (dispatch) => {
     dispatch(deleteCameraError(''));
     dispatch(deleteCameraInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/cameras/${cameraId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/user/${user.id}/camera-groups/${cameraGroupsId}/cameras/${cameraId}`;
     let config = {headers: {Authorization: user.jwt}};
     axios.delete(url, config)
       .then((response) => {
-        dispatch(fetchLocations(user));
+        dispatch(fetchCameraGroups(user));
         dispatch(deleteCameraSuccess(true));
         dispatch(deleteCameraSuccess(false));
       })
@@ -288,14 +288,13 @@ export function deleteCamera(user, cameraId) {
       });
   }
 }
-
-export function toggleCameraConnection(cameraId, flag) {
+// TODO: this logic is now in the update_camera function in the api. edit this function to match this
+export function toggleCameraConnection(user, cameraId, flag) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/enabled`;
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
-    let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/camera/${cameraId}/enabled`;
+    let config = {headers: {Authorization: user.jwt}};
     let data = {value: flag}
-    axios.put(url, data, bvc_config)
+    axios.patch(url, data, config)
       .then((response) => {
         dispatch(checkCameraConnection(cameraId));
       })
@@ -304,10 +303,10 @@ export function toggleCameraConnection(cameraId, flag) {
       })
   }
 }
-
+// TODO: this logic is now in the update_camera function in the api. edit this function to match this
 export function checkCameraConnection(cameraId) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/enabled`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/api/camera/${cameraId}/enabled`;
     const bvc_jwt = localStorage.getItem('bvc_jwt');
     let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
     axios.get(url, bvc_config)

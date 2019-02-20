@@ -3,35 +3,35 @@ import { connect } from 'react-redux';
 import { Icon, Modal, Form, Input, Button, message } from 'antd';
 const FormItem = Form.Item;
 
-import { addNewLocation } from '../../redux/locations/actions';
+import { addNewCameraGroup } from '../../redux/cameraGroups/actions';
 
-const AddLocationForm = Form.create()(
+const AddCameraGroupForm = Form.create()(
   (props) => {
-    const {visible, onCancel, onCreate, form, addLocationInProcess} = props;
+    const {visible, onCancel, onCreate, form, addCameraGroupInProcess} = props;
     const {getFieldDecorator} = form;
 
     return (
-      <Modal title='Add a Location'
+      <Modal title='Add a CameraGroup'
         visible={visible}
         style={styles.modal}
         onCancel={onCancel}
         onOk={onCreate}
         okText='Submit'
         cancelText='Cancel'
-        confirmLoading={addLocationInProcess}
+        confirmLoading={addCameraGroupInProcess}
       >
-        <div style={styles.error}>{props.addLocationError}</div>
-        <Form style={styles.addLocationForm}>
+        <div style={styles.error}>{props.addCameraGroupError}</div>
+        <Form style={styles.addCameraGroupForm}>
           <FormItem hasFeedback>
             {getFieldDecorator('name', {
-              rules: [{required: true, message: 'Please enter a name for the location'}],
+              rules: [{required: true, message: 'Please enter a name for the cameraGroup'}],
             })(
               <Input size='large' id='1' placeholder='Name' style={styles.input}/>
             )}
           </FormItem>
           <FormItem style={styles.streetAddressField}>
             {getFieldDecorator('address1', {
-              rules: [{required: true, message: 'Please enter the location street address'}]
+              rules: [{required: true, message: 'Please enter the cameraGroup street address'}]
             })(
               <Input size='large' id='2' placeholder='Street address' style={styles.input}/>
             )}
@@ -39,21 +39,21 @@ const AddLocationForm = Form.create()(
           </FormItem>
           <FormItem>
             {getFieldDecorator('city', {
-              rules: [{required: true, message: 'Please enter the location city'}]
+              rules: [{required: true, message: 'Please enter the cameraGroup city'}]
             })(
               <Input size='large' placeholder='City' style={styles.input}/>
             )}
           </FormItem>
           <FormItem>
             {getFieldDecorator('state', {
-              rules: [{required: true, message: 'Please enter the location state'}]
+              rules: [{required: true, message: 'Please enter the cameraGroup state'}]
             })(
               <Input size='large' placeholder='State' style={styles.input}/>
             )}
           </FormItem>
           <FormItem>
             {getFieldDecorator('zip', {
-              rules: [{required: true, message: 'Please enter the location zip code'}]
+              rules: [{required: true, message: 'Please enter the cameraGroup zip code'}]
             })(
               <Input size='large' id='3' placeholder='Zip code' style={styles.input}/>
             )}
@@ -64,22 +64,22 @@ const AddLocationForm = Form.create()(
   }
 );
 
-class AddLocationModal extends Component {
+class AddCameraGroupModal extends Component {
   state = {
     confirmLoading: false,
     visible: false
   };
 
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.addLocationSuccess && this.props.addLocationSuccess !== nextProps.addLocationSuccess) {
-      if (this.props.linkText === "Add Location") {
+    if (nextProps.addCameraGroupSuccess && this.props.addCameraGroupSuccess !== nextProps.addCameraGroupSuccess) {
+      if (this.props.linkText === "Add CameraGroup") {
         this.resetFields();
         this.setState({visible: false});
       }
     }
 
-    if (nextProps.addLocationError && this.props.addLocationError !== nextProps.addLocationError) {
-      message.error(nextProps.addLocationError);
+    if (nextProps.addCameraGroupError && this.props.addCameraGroupError !== nextProps.addCameraGroupError) {
+      message.error(nextProps.addCameraGroupError);
     }
   };
 
@@ -101,7 +101,7 @@ class AddLocationModal extends Component {
     form.validateFields((err, values) => {
       if (err) return;
 
-      this.props.addNewLocation(this.props.user, values);
+      this.props.addNewCameraGroup(this.props.user, values);
     });
   };
 
@@ -117,13 +117,13 @@ class AddLocationModal extends Component {
           &nbsp;&nbsp;
           <span>{this.props.linkText}</span>
         </div>
-        <AddLocationForm
+        <AddCameraGroupForm
           ref={this.saveFormRef}
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
-          addLocationError={this.props.addLocationError}
-          addLocationInProcess={this.props.addLocationInProcess}
+          addCameraGroupError={this.props.addCameraGroupError}
+          addCameraGroupInProcess={this.props.addCameraGroupInProcess}
         />
       </div>
     );
@@ -134,12 +134,12 @@ const styles = {
   modal: {
     textAlign: 'center'
   },
-  addLocation: {
+  addCameraGroup: {
     float: 'left',
     fontSize: 18,
     paddingLeft: 10
   },
-  cameraLocationCaption: {
+  cameraCameraGroupCaption: {
     margin: '0 auto',
     textAlign: 'left',
     width: '60%',
@@ -161,16 +161,16 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    addLocationError: state.locations.addLocationError,
-    addLocationSuccess: state.locations.addLocationSuccess,
-    addLocationInProcess: state.locations.addLocationInProcess
+    addCameraGroupError: state.cameraGroups.addCameraGroupError,
+    addCameraGroupSuccess: state.cameraGroups.addCameraGroupSuccess,
+    addCameraGroupInProcess: state.cameraGroups.addCameraGroupInProcess
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addNewLocation: (user, location) => dispatch(addNewLocation(user, location))
+    addNewCameraGroup: (user, cameraGroup) => dispatch(addNewCameraGroup(user, cameraGroup))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddLocationModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AddCameraGroupModal);

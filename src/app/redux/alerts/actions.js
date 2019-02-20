@@ -162,7 +162,7 @@ function clearAllAlerts() {
   }
 }
 
-
+// TODO: change this function to use FCM logic
 export function listenForNewAlerts(user) {
   return (dispatch) => {
     let channelName = `alerts:user-${user.id}`;
@@ -190,7 +190,7 @@ export function fetchAlerts(user) {
     dispatch(fetchInProcess(true));
 
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/alerts`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts`;
     let config = {headers: {Authorization: user.jwt}}
     axios.get(url, config)
       .then((response) => {
@@ -205,14 +205,14 @@ export function fetchAlerts(user) {
       });
   }
 }
-
+// TODO: change this function to load alerts with pagination on this side of the code.
 export function fetchAlertsWithPagination(user, page) {
   return (dispatch) => {
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/alerts`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts`;
     let config = {headers: {Authorization: user.jwt}}
     let data = {
       page: page
@@ -236,7 +236,7 @@ export function deleteAlert(user, alertId) {
     dispatch(deleteInProcess(true));
     dispatch(deleteError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me/alerts/${alertId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts/${alertId}`;
     let config = {headers: {Authorization: user.jwt}};
     axios.delete(url, config)
       .then(response => {
@@ -258,14 +258,13 @@ export function clearAlerts() {
 }
 
 
-export function createAlert(alertCoordinates, alertType, cameraId, duration, direction) {
+export function createAlertTrigger(alertCoordinates, alertType, cameraGroupId, cameraId, duration, direction) {
   return (dispatch) => {
     dispatch(createAlertInProcess(true));
     dispatch(createAlertError(false));
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
 
-    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/${cameraId}/alerts`;
-    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+    let urlAlert = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/${cameras}/${cameraId}/triggers`;
+    let config = {headers: {Authorization: user.jwt}};
 
     let alertData = {type: alertType, points: alertCoordinates};
     if(duration !== undefined){
@@ -290,15 +289,13 @@ export function createAlert(alertCoordinates, alertType, cameraId, duration, dir
   }
 }
 
-export function fetchPolygonAlert(cameraId) {
+export function fetchPolygonAlertTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
   return (dispatch) => {
     dispatch(fetchPolygonAlertInProcess(true));
     dispatch(fetchPolygonAlertInSuccess(false));
 
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
-
-    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/${cameraId}/alerts`;
-    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+    let urlAlert = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}`;
+    let config = {headers: {Authorization: user.jwt}};
 
     axios.get(urlAlert, config)
       .then((resp) => {
@@ -313,14 +310,12 @@ export function fetchPolygonAlert(cameraId) {
   }
 }
 
-export function deletePolygonAlert(cameraId, alertId) {
+export function deletePolygonAlertTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
   return (dispatch) => {
     dispatch(deletePolygonAlertInProcess(true));
 
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
-
-    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/cameras/${cameraId}/alerts/${alertId}`;
-    let config = {headers: {Authorization: 'JWT' + ' ' + bvc_jwt}};
+    let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}`;
+    let config = {headers: {Authorization: user.jwt}};
 
     axios.delete(urlAlert, config)
       .then((resp) => {
@@ -334,7 +329,7 @@ export function deletePolygonAlert(cameraId, alertId) {
       })
   }
 }
-
+// TODO: examine if thie function is still needed
   export function registerCamera(userId, cameraDetails) {
     return (dispatch) => {
       // dispatch(registerCameraInProcess(true));

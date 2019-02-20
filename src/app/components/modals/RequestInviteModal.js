@@ -89,7 +89,7 @@ class RequestInviteModal extends Component {
 }
 
 const styles = {
-  selectedLocationText: {
+  selectedCameraGroupText: {
     fontSize: 18,
     fontWeight: 600,
     marginTop: -20

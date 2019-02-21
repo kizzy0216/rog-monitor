@@ -288,10 +288,10 @@ export function deleteCamera(user, cameraGroupsId, cameraId) {
       });
   }
 }
-// TODO: this logic is now in the update_camera function in the api. edit this function to match this
-export function toggleCameraConnection(user, cameraId, flag) {
+
+export function toggleCameraEnabled(user, cameraGroupId, cameraId, flag) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/camera/${cameraId}/enabled`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}`;
     let config = {headers: {Authorization: user.jwt}};
     let data = {value: flag}
     axios.patch(url, data, config)
@@ -303,12 +303,11 @@ export function toggleCameraConnection(user, cameraId, flag) {
       })
   }
 }
-// TODO: this logic is now in the update_camera function in the api. edit this function to match this
-export function checkCameraConnection(cameraId) {
+
+export function checkCameraEnabled(user, cameraId) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/camera/${cameraId}/enabled`;
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
-    let bvc_config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}`;
+    let bvc_config = {headers: {Authorization: user.jwt}};
     axios.get(url, bvc_config)
       .then((response) => {
         dispatch(cameraConnectionEnabled(response.data.enabled, cameraId));

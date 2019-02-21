@@ -11,7 +11,7 @@ import CameraOptionButtons from '../components/cameras/CameraOptionButtons';
 import { listenForNewImageThumbnails } from '../redux/cameras/actions';
 import * as cameraGroupActions from '../redux/cameraGroups/actions';
 import { trackEventAnalytics } from '../redux/auth/actions';
-import { removeGuard } from '../redux/cameraGroups/actions';
+import { removeCameraGroupPrivilege } from '../redux/cameraGroups/actions';
 
 class CameraList extends Component {
   constructor(props) {
@@ -53,8 +53,8 @@ class CameraList extends Component {
       message.error(nextProps.rescindInviteError);
     }
 
-    if (nextProps.removeGuardError && nextProps.removeGuardError !== this.props.removeGuardError) {
-      message.error(nextProps.removeGuardError);
+    if (nextProps.removeCameraGroupPrivilegeError && nextProps.removeCameraGroupPrivilegeError !== this.props.removeCameraGroupPrivilegeError) {
+      message.error(nextProps.removeCameraGroupPrivilegeError);
     }
   }
 
@@ -92,8 +92,8 @@ class CameraList extends Component {
                   this.props.selectedCameraGroup.guards.map(guard => (
                     guard.user.id == this.props.user.id ?
                       <Tooltip key={guard.id} title='Remove CameraGroup' placement='bottom'>
-                        <Popconfirm title="Are you sure you want to stop viewing this cameraGroup? This action cannot be undone." onConfirm={() => this.props.removeGuardInProcess ? '' : this.props.removeGuard(this.props.user, guard)} okText="Yes, remove cameraGroup" cancelText="Nevermind">
-                          <Button type="danger" icon="close" className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeGuardInProcess} disabled={this.props.removeGuardInProcess}></Button>
+                        <Popconfirm title="Are you sure you want to stop viewing this cameraGroup? This action cannot be undone." onConfirm={() => this.props.removeCameraGroupPrivilegeInProcess ? '' : this.props.removeCameraGroupPrivilege(this.props.user, guard)} okText="Yes, remove cameraGroup" cancelText="Nevermind">
+                          <Button type="danger" icon="close" className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeCameraGroupPrivilegeInProcess} disabled={this.props.removeCameraGroupPrivilegeInProcess}></Button>
                         </Popconfirm>
                       </Tooltip>
                     :
@@ -171,8 +171,8 @@ const mapStateToProps = (state) => {
     fetchInProcess: state.cameraGroups.fetchInProcess,
     deleteCameraSuccess: state.cameras.deleteCameraSuccess,
     deleteCameraError: state.cameras.deleteCameraError,
-    removeGuardInProcess: state.cameraGroups.removeGuardInProcess,
-    removeGuardError: state.cameraGroups.removeGuardError
+    removeCameraGroupPrivilegeInProcess: state.cameraGroups.removeCameraGroupPrivilegeInProcess,
+    removeCameraGroupPrivilegeError: state.cameraGroups.removeCameraGroupPrivilegeError
   }
 };
 
@@ -182,7 +182,7 @@ const mapDispatchToProps = (dispatch) => {
     addCameraGroupCamera: (user, cameraGroup, name, rtspUrl, username, password) => dispatch(addCameraGroupCamera(user, cameraGroup, name, rtspUrl, username, password)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
     listenForNewImageThumbnails: (user) => dispatch(listenForNewImageThumbnails(user)),
-    removeGuard: (user, guard) => dispatch(removeGuard(user, guard)),
+    removeCameraGroupPrivilege: (user, guard) => dispatch(removeCameraGroupPrivilege(user, guard)),
   }
 };
 

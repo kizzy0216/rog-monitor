@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom';
 import {Icon, Modal, Form, Spin, Button, Popover, message, Slider, Row, Col} from 'antd';
 import CustomCanvas from '../../components/formitems/CustomCanvas';
 import CustomInput from "../formitems/CustomInput";
-import {createAlert, fetchPolygonAlert, deletePolygonAlert} from '../../redux/alerts/actions';
+import {createAlertTrigger, fetchPolygonAlertTrigger, deletePolygonAlertTrigger} from '../../redux/alerts/actions';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
@@ -196,15 +196,15 @@ class AddAlertModal extends Component {
       if (nextProps.fetchAlertSuccess === true) {
         this.setState({canvasMode: true});
       }
-      if (nextProps.createAlertSuccess !== this.props.createAlertSuccess && this.alertDetails['id'] !== undefined) {
+      if (nextProps.createAlertTriggerSuccess !== this.props.createAlertTriggerSuccess && this.alertDetails['id'] !== undefined) {
         this.setState({canvasMode: false});
-        this.props.fetchPolygonAlert(this.alertDetails['id']);
+        this.props.fetchPolygonAlertTrigger(this.alertDetails['id']);
         this.alertDetails['id'] = undefined;
         this.setState({saveCancel: false});
       }
       if (nextProps.deleteAlertSuccess !== this.props.deleteAlertSuccess && this.alertDetails['id'] !== undefined) {
         this.setState({canvasMode: false});
-        this.props.fetchPolygonAlert(this.alertDetails['id']);
+        this.props.fetchPolygonAlertTrigger(this.alertDetails['id']);
         this.alertDetails['id'] = undefined;
         this.setState({deleteButton: false});
         this.setState({saveCancel: false});
@@ -294,16 +294,16 @@ class AddAlertModal extends Component {
 
         switch (this.state.alertType) {
           case 'RA':
-            this.props.createAlert(this.alertDetails.polygonPoints[0], this.state.alertType, this.props.data.id);
+            this.props.createAlertTrigger(this.alertDetails.polygonPoints[0], this.state.alertType, this.props.data.id);
             break;
 
           case 'LD':
-            this.props.createAlert(this.alertDetails.polygonPoints[0], this.state.alertType, this.props.data.id, this.state.loiteringSeconds);
+            this.props.createAlertTrigger(this.alertDetails.polygonPoints[0], this.state.alertType, this.props.data.id, this.state.loiteringSeconds);
             this.setState({loiteringSeconds: 0});
             break;
 
           case 'VW':
-            this.props.createAlert(this.alertDetails.polygonPoints[0], this.state.alertType, this.props.data.id, undefined, this.alertDetails.direction);
+            this.props.createAlertTrigger(this.alertDetails.polygonPoints[0], this.state.alertType, this.props.data.id, undefined, this.alertDetails.direction);
             break;
 
         }
@@ -322,7 +322,7 @@ class AddAlertModal extends Component {
     if (checked === true) {
       this.setState({alerts: true});
       this.setState({deleteButton: false});
-      this.props.fetchPolygonAlert(this.props.data.id);
+      this.props.fetchPolygonAlertTrigger(this.props.data.id);
     }
     else {
       this.setState({canvasMode: false});
@@ -334,7 +334,7 @@ class AddAlertModal extends Component {
   deleteAlert = () => {
     if (this.alertDetails.currentAlertId !== 0 && this.alertDetails.currentAlertType !== '') {
       this.alertDetails['id'] = this.props.data.id;
-      this.props.deletePolygonAlert(this.props.data.id, this.alertDetails.currentAlertId);
+      this.props.deletePolygonAlertTrigger(this.props.data.id, this.alertDetails.currentAlertId);
       this.alertDetails.currentAlertId = 0;
       this.alertDetails.currentAlertType = '';
     }
@@ -386,14 +386,14 @@ class AddAlertModal extends Component {
           alertExtras={this.alertExtras}
           deleteAlert={this.deleteAlert}
           deleteButton={this.state.deleteButton}
-          alertInProcess={this.props.createAlertInProcess}
+          alertInProcess={this.props.createAlertTriggerInProcess}
           deleteStatus={this.props.deleteAlertInProcess}
           sliderValue={this.sliderValue}
           loiteringSeconds={this.state.loiteringSeconds}
           convertToMilitaryFormat={this.convertToMilitaryFormat}
           currentAlertDetails={this.alertDetails}
           direction={this.direction}
-          fetchAlertInProcess={this.props.fetchPolygonAlertInProcess}
+          fetchAlertInProcess={this.props.fetchPolygonAlertTriggerInProcess}
           newLoiteringAlert={this.state.newLoiteringAlert}
         />
       </div>
@@ -454,21 +454,21 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    createAlertSuccess: state.alerts.createAlertSuccess,
-    createAlertError: state.alerts.createAlertError,
-    createAlertInProcess: state.alerts.createAlertInProcess,
+    createAlertTriggerSuccess: state.alerts.createAlertTriggerSuccess,
+    createAlertTriggerError: state.alerts.createAlertTriggerError,
+    createAlertTriggerInProcess: state.alerts.createAlertTriggerInProcess,
     polygonData: state.alerts.polygonData,
     deleteAlertSuccess: state.alerts.deleteAlertSuccess,
     deleteAlertInProcess: state.alerts.deleteAlertInProcess,
-    fetchPolygonAlertInProcess: state.alerts.fetchPolygonAlertInProcess,
+    fetchPolygonAlertTriggerInProcess: state.alerts.fetchPolygonAlertTriggerInProcess,
     fetchAlertSuccess: state.alerts.fetchAlertSuccess
   }
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    createAlert: (alertCoordinates, alertType, cameraId, duration, direction) => dispatch(createAlert(alertCoordinates, alertType, cameraId, duration, direction)),
-    fetchPolygonAlert: (cameraId) => dispatch(fetchPolygonAlert(cameraId)),
-    deletePolygonAlert: (cameraId, alertId) => dispatch(deletePolygonAlert(cameraId, alertId))
+    createAlertTrigger: (alertCoordinates, alertType, cameraId, duration, direction) => dispatch(createAlertTrigger(alertCoordinates, alertType, cameraId, duration, direction)),
+    fetchPolygonAlertTrigger: (cameraId) => dispatch(fetchPolygonAlertTrigger(cameraId)),
+    deletePolygonAlertTrigger: (cameraId, alertId) => dispatch(deletePolygonAlertTrigger(cameraId, alertId))
 
   }
 };

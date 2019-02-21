@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Icon, Switch } from 'antd';
-import { toggleCameraConnection } from '../../redux/cameras/actions';
-import { checkCameraConnection } from '../../redux/cameras/actions';
+import { toggleCameraEnabled } from '../../redux/cameras/actions';
+import { checkCameraEnabled } from '../../redux/cameras/actions';
 
 class ToggleCameraConnection extends Component {
 
-  toggleCameraConnection = (enabled) => {
-    this.props.toggleCameraConnection(this.props.id, enabled);
+  toggleCameraEnabled = (enabled) => {
+    this.props.toggleCameraEnabled(this.props.id, enabled);
   }
 
   componentWillMount = () => {
-    this.props.checkCameraConnection(this.props.id);
+    this.props.checkCameraEnabled(this.props.id);
   }
 
   shouldComponentUpdate = (nextProps) => {
@@ -29,7 +29,7 @@ class ToggleCameraConnection extends Component {
       <Switch
         checkedChildren={<Icon type="check" />}
         unCheckedChildren={<Icon type="cross" />}
-        onChange={() => this.toggleCameraConnection(!enabled)}
+        onChange={() => this.toggleCameraEnabled(!enabled)}
         checked={enabled}
       />
     );
@@ -45,8 +45,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    toggleCameraConnection: (cameraId, cameraConnectionEnabled) => dispatch(toggleCameraConnection(cameraId, cameraConnectionEnabled)),
-    checkCameraConnection: (cameraId) => dispatch(checkCameraConnection(cameraId))
+    toggleCameraEnabled: (cameraId, cameraConnectionEnabled) => dispatch(toggleCameraEnabled(cameraId, cameraConnectionEnabled)),
+    checkCameraEnabled: (cameraId) => dispatch(checkCameraEnabled(cameraId))
   }
 }
 

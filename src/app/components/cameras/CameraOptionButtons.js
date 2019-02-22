@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Row, Col, Icon, Menu, Dropdown, Tooltip, message } from 'antd';
 
 import AddCameraModal from '../modals/AddCameraModal';
-import InviteGuardModal from '../modals/InviteGuardModal';
+import ShareCameraGroupModal from '../modals/ShareCameraGroupModal';
 import EditCameraGroupModal from '../modals/EditCameraGroupModal';
-import GuardSettingsModal from '../modals/GuardSettingsModal';
+import CameraGroupPrivilegeSettingsModal from '../modals/CameraGroupPrivilegeSettingsModal';
 
 //here
 const SettingsMenu = (props) => (
@@ -13,7 +13,7 @@ const SettingsMenu = (props) => (
       <EditCameraGroupModal selectedCameraGroup={props.selectedCameraGroup} />
     </Menu.Item>
     <Menu.Item>
-      <GuardSettingsModal selectedCameraGroup={props.selectedCameraGroup} />
+      <CameraGroupPrivilegeSettingsModal selectedCameraGroup={props.selectedCameraGroup} />
     </Menu.Item>
   </Menu>
 )
@@ -24,7 +24,7 @@ class CameraOptionButtons extends Component {
 
     this.state = {
       addCameraModalVisible: false,
-      inviteGuardModalVisible: false,
+      shareCameraGroupModalVisible: false,
     }
   }
 
@@ -48,8 +48,8 @@ class CameraOptionButtons extends Component {
     }
   }
 
-  toggleInviteGuardModalVisibility = () => {
-    this.setState({inviteGuardModalVisible: !this.state.inviteGuardModalVisible})
+  toggleShareCameraGroupModalVisibility = () => {
+    this.setState({shareCameraGroupModalVisible: !this.state.shareCameraGroupModalVisible})
   }
 
   render() {
@@ -69,12 +69,12 @@ class CameraOptionButtons extends Component {
           </Col>
           <Col xs={{span: 8}}>
             <Tooltip title='Share CameraGroup' placement='bottom'>
-              <Icon style={styles.share} type='share-alt' onClick={this.toggleInviteGuardModalVisibility}/>
+              <Icon style={styles.share} type='share-alt' onClick={this.toggleShareCameraGroupModalVisibility}/>
             </Tooltip>
-            <InviteGuardModal
+            <ShareCameraGroupModal
               selectedCameraGroup={this.props.selectedCameraGroup}
-              visible={this.state.inviteGuardModalVisible}
-              toggleInviteGuardModalVisibility={this.toggleInviteGuardModalVisibility.bind(this)} />
+              visible={this.state.shareCameraGroupModalVisible}
+              toggleShareCameraGroupModalVisibility={this.toggleShareCameraGroupModalVisibility.bind(this)} />
           </Col>
           <Col xs={{span: 8}}>
             <Dropdown selectedCameraGroup={this.props.selectedCameraGroup} overlay={<SettingsMenu selectedCameraGroup={this.props.selectedCameraGroup} />}>

@@ -8,7 +8,7 @@ import Recorder from '../video/Recorder';
 import EditCamera from '../cameras/EditCamera';
 import { deleteCamera } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
-import AddAlertModal from '../modals/AddAlertModal';
+import TriggerModal from '../modals/TriggerModal';
 import { registerCamera } from '../../redux/alerts/actions';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import CameraCardImg from './CameraCardImg';
@@ -71,7 +71,7 @@ class CameraCard extends Component {
                 (<div></div>) :
                 <div>
                   <Col span={8} style={styles.alertModal}>
-                    <AddAlertModal
+                    <TriggerModal
                       data={this.props}
                     />
                   </Col>

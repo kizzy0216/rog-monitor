@@ -5,7 +5,7 @@ import LogoutItem from './LogoutItem';
 
 import UserSettings from '../../components/modals/UserSettings';
 import AddCameraGroupModal from  '../../components/modals/AddCameraGroupModal';
-import GuardInvitesModal from '../../components/modals/GuardInvitesModal';
+import CameraGroupInvitesModal from '../../components/modals/CameraGroupInvitesModal';
 import CameraLicensesModal from '../../components/modals/CameraLicensesModal';
 
 const SideMenu = () => (
@@ -20,7 +20,7 @@ const SideMenu = () => (
       <CameraLicensesModal />
     </Menu.Item>
     <Menu.Item key='4'>
-      <GuardInvitesModal />
+      <CameraGroupInvitesModal />
     </Menu.Item>
     <Menu.Item key='5'>
       <LogoutItem/>

@@ -176,7 +176,7 @@ export function selectCameraGroup(cameraGroup) {
     dispatch(cameraGroupSelected(cameraGroup));
   }
 }
-
+// TODO: change the two functions below to work with the new recos in the API
 export function bvcCameraConnection(bool) {
   return {
     type: types.BVC_CAMERA_CONNECTION,

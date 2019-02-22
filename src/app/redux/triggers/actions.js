@@ -62,10 +62,59 @@ function deleteTriggerInProcess(bool) {
   }
 }
 
+function createTriggerTimeWindowInProcess(bool) {
+  return {
+    type: types.CREATE_TRIGGER_TIME_WINDOW_IN_PROCESS,
+    bool
+  }
+}
+
+function createTriggerTimeWindowSuccess(bool) {
+  return {
+    type: types.CREATE_TRIGGER_TIME_WINDOW_SUCCESS,
+    bool
+  }
+}
+
+function createTriggerTimeWindowError(bool) {
+  return{
+    type: types.CREATE_TRIGGER_TIME_WINDOW_ERROR,
+    bool
+  }
+}
+
+function updateTriggerTimeWindowInProcess(bool) {
+  return {
+    type: types.UPDATE_TRIGGER_TIME_WINDOW_IN_PROCESS,
+    bool
+  }
+}
+
+function updateTriggerTimeWindowSuccess(bool) {
+  return {
+    type: types.UPDATE_TRIGGER_TIME_WINDOW_SUCCESS,
+    bool
+  }
+}
+
+function deleteTriggerTimeWindowInProcess(bool) {
+  return {
+    type: types.DELETE_TRIGGER_TIME_WINDOW_IN_PROCESS,
+    bool
+  }
+}
+
+function deleteTriggerTimeWindowSuccess(bool) {
+  return {
+    type: types.DELETE_TRIGGER_TIME_WINDOW_SUCCESS,
+    bool
+  }
+}
+
 function updateTriggerTimeWindowData(values) {
   return {
     type: types.UPDATE_TRIGGER_TIME_WINDOWS_DATA,
-    trigger_windows: values
+    trigger_time_windows: values
   }
 }
 
@@ -85,26 +134,34 @@ export function clearTimeWindowData(timeWindowSelect, values) {
   }
 }
 
-// TODO: build create, update, delete functions for trigger_time_windows
-
-export function createTrigger(triggerCoordinates, triggerType, cameraGroupId, cameraId, duration, direction) {
+export function createTrigger(triggerCoordinates, triggerType, cameraGroupId, cameraId, triggerDuration, direction, timeWindows, shared) {
   return (dispatch) => {
     dispatch(createTriggerInProcess(true));
     dispatch(createTriggerError(false));
 
-    let urlTrigger = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/${cameras}/${cameraId}/triggers`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers`;
     let config = {headers: {Authorization: user.jwt}};
-    // TODO: Get time_windows data out of the cameraData and split it into its own data variable.
-    // TODO: Add target_type and time_windows to the data being sent.
-    let triggerData = {triggerType: triggerType, vertices: triggerCoordinates};
+    let triggerData = {
+      trigger_type: triggerType,
+      vertices: triggerCoordinates
+    };
+    // Add target_type to the data being sent in a future update.
     if(duration !== undefined){
-      triggerData['duration'] = duration;
+      triggerData['trigger_duration'] = triggerDuration;
     }
     if(direction !== undefined){
       triggerData['direction'] = direction;
     }
 
-    axios.post(urlTrigger, triggerData, config)
+    if (shared !== undefined) {
+      triggerData['shared'] = shared;
+    }
+
+    if (timeWindows !== undefined) {
+      triggerData['time_windows'] = timeWindows;
+    }
+
+    axios.post(url, triggerData, config)
       .then((resp) => {
         dispatch(createTriggerSuccess(true));
       })
@@ -123,10 +180,10 @@ export function fetchTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
     dispatch(fetchTriggerInProcess(true));
     dispatch(fetchTriggerInSuccess(false));
 
-    let urlTrigger = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}`;
     let config = {headers: {Authorization: user.jwt}};
 
-    axios.get(urlTrigger, config)
+    axios.get(url, config)
       .then((resp) => {
         dispatch(fetchTriggerSuccess(resp.data));
         dispatch(fetchTriggerInSuccess(true));
@@ -143,10 +200,10 @@ export function deleteTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
   return (dispatch) => {
     dispatch(deleteTriggerInProcess(true));
 
-    let urlTrigger = `${process.env.REACT_APP_BVC_SERVER}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}`;
+    let url = `${process.env.REACT_APP_BVC_SERVER}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}`;
     let config = {headers: {Authorization: user.jwt}};
 
-    axios.delete(urlTrigger, config)
+    axios.delete(url, config)
       .then((resp) => {
         dispatch(deleteTriggerSuccess(true));
       })
@@ -155,6 +212,78 @@ export function deleteTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
       .finally(() => {
         dispatch(deleteTriggerInProcess(false));
         dispatch(deleteTriggerSuccess(false));
+      })
+  }
+}
+
+export function createTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow) {
+  return (dispatch) => {
+    dispatch(createTriggerTimeWindowInProcess(true));
+
+    let url = `users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows`;
+    let config = {headers: {Authorization: user.jwt}};
+    let data = {
+      days_of_week: timeWindow.daysOfWeek,
+      start_at: timeWindow.startAt,
+      end_at: timeWindow.endAt
+    };
+
+    axios.post(url, data, config)
+      .then((resp) => {
+        dispatch(createTriggerTimeWindowSuccess(true));
+      })
+      .catch((error) => {
+        dispatch(createTriggerTimeWindowError(true));
+      })
+      .finally(() => {
+        dispatch(createTriggerTimeWindowSuccess(false));
+        dispatch(createTriggerTimeWindowInProcess(false));
+      })
+  }
+}
+
+export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow) {
+  return (dispatch) => {
+    dispatch(updateTriggerTimeWindowInProcess(true));
+
+    let url = `users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows/${timeWindow.id}`;
+    let config = {headers: {Authorization: user.jwt}};
+    let data = {
+      days_of_week: timeWindow.daysOfWeek,
+      start_at: timeWindow.startAt,
+      end_at: timeWindow.endAt
+    };
+
+    axios.patch(url, data, config)
+      .then((resp) => {
+        dispatch(updateTriggerTimeWindowSuccess(true));
+      })
+      .catch((error) => {
+
+      })
+      .finally(() => {
+        dispatch(updateTriggerTimeWindowSuccess(false));
+        dispatch(updateTriggerTimeWindowInProcess(false));
+      })
+  }
+}
+
+export function deleteTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow) {
+  return (dispatch) => {
+    dispatch(deleteTriggerTimeWindowInProcess(true));
+
+    let url = `users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows/${timeWindow.id}`;
+    let config = {headers: {Authorization: user.jwt}};
+
+    axios.delete(url, config)
+      .then((resp) => {
+        dispatch(deleteTriggerTimeWindowSuccess(true));
+      })
+      .catch((error) => {
+      })
+      .finally(() => {
+        dispatch(deleteTriggerTimeWindowInProcess(false));
+        dispatch(deleteTriggerTimeWindowSuccess(false));
       })
   }
 }

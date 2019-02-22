@@ -71,6 +71,48 @@ const triggers = (state = initialState, action) => {
         triggers: state.triggers.filter(trigger => trigger.id != action.triggerId)
       }
 
+    case types.CREATE_TRIGGER_TIME_WINDOW_IN_PROCESS:
+      return {
+        ...state,
+        createTriggerTimeWindowInProcess: action.bool
+      }
+
+    case types.CREATE_TRIGGER_TIME_WINDOW_SUCCESS:
+      return {
+        ...state,
+        createTriggerTimeWindowSuccess: action.bool
+      }
+
+    case types.CREATE_TRIGGER_TIME_WINDOW_ERROR:
+      return {
+        ...state,
+        createTriggerTimeWindowError: action.bool
+      }
+
+    case types.UPDATE_TRIGGER_TIME_WINDOW_IN_PROCESS:
+      return {
+        ...state,
+        updateTriggerTimeWindowInProcess: action.bool
+      }
+
+    case types.UPDATE_TRIGGER_TIME_WINDOW_SUCCESS:
+      return {
+        ...state,
+        updateTriggerTimeWindowSuccess: action.bool
+      }
+
+    case types.DELETE_TRIGGER_TIME_WINDOW_IN_PROCESS:
+      return {
+        ...state,
+        deleteTriggerTimeWindowInProcess: action.bool
+      }
+
+    case types.DELETE_TRIGGER_TIME_WINDOW_SUCCESS:
+      return {
+        ...state,
+        deleteTriggerTimeWindowSuccess: action.bool
+      }
+
     case types.CLEAR_ALL_TRIGGERS:
       return {
         ...state,

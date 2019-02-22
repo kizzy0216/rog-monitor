@@ -6,6 +6,6 @@ export default {
   deleteTriggerSuccess: false,
   createTriggerInProcess: false,
   deleteTriggerInProcess: false,
-  fetchPolygonTriggerInProcess: false,
+  fetchTriggerInProcess: false,
   fetchTriggerSuccess: false
 }

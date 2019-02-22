@@ -200,7 +200,7 @@ export function deleteTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
   return (dispatch) => {
     dispatch(deleteTriggerInProcess(true));
 
-    let url = `${process.env.REACT_APP_BVC_SERVER}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}`;
     let config = {headers: {Authorization: user.jwt}};
 
     axios.delete(url, config)
@@ -220,7 +220,7 @@ export function createTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
   return (dispatch) => {
     dispatch(createTriggerTimeWindowInProcess(true));
 
-    let url = `users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows`;
     let config = {headers: {Authorization: user.jwt}};
     let data = {
       days_of_week: timeWindow.daysOfWeek,
@@ -246,7 +246,7 @@ export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
   return (dispatch) => {
     dispatch(updateTriggerTimeWindowInProcess(true));
 
-    let url = `users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows/${timeWindow.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows/${timeWindow.id}`;
     let config = {headers: {Authorization: user.jwt}};
     let data = {
       days_of_week: timeWindow.daysOfWeek,
@@ -272,7 +272,7 @@ export function deleteTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
   return (dispatch) => {
     dispatch(deleteTriggerTimeWindowInProcess(true));
 
-    let url = `users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows/${timeWindow.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows/${timeWindow.id}`;
     let config = {headers: {Authorization: user.jwt}};
 
     axios.delete(url, config)

@@ -259,7 +259,6 @@ export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
         dispatch(updateTriggerTimeWindowSuccess(true));
       })
       .catch((error) => {
-
       })
       .finally(() => {
         dispatch(updateTriggerTimeWindowSuccess(false));

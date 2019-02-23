@@ -439,7 +439,7 @@ export function sendInvitationEmail(email) {
 
     const invitationEmail = email.trim();
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/join-rog`;
-    let data = {invitation: {email: invitationEmail}};
+    let data = {email: invitationEmail};
 
     const invitationEvent = {
       email: invitationEmail,
@@ -460,10 +460,11 @@ export function sendInvitationEmail(email) {
         dispatch(sendInvitationSuccess(false));
       })
       .catch(error => {
+        alert(error);
         let errMessage = 'Error sending invitation. Please try again later.';
-        if (error.response.data.errors.email) {
-          errMessage = 'An invitation has already been sent to this email.';
-        }
+        // if (error.response.data.errors.email) {
+        //   errMessage = 'An invitation has already been sent to this email.';
+        // }
 
         dispatch(sendInvitationError(errMessage));
       })

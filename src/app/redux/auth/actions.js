@@ -460,7 +460,7 @@ export function sendInvitationEmail(email) {
         dispatch(sendInvitationSuccess(false));
       })
       .catch(error => {
-        alert(error);
+        console.log(error);
         let errMessage = 'Error sending invitation. Please try again later.';
         // if (error.response.data.errors.email) {
         //   errMessage = 'An invitation has already been sent to this email.';

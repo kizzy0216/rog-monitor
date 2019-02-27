@@ -352,7 +352,7 @@ export function login(email, password) {
     }
     else {
       let url = `${process.env.REACT_APP_ROG_API_URL}/authenticate`;
-      axios.post(url, {session: {email: cleanEmail, password: cleanPassword}})
+      axios.post(url, {email: cleanEmail, password: cleanPassword})
         .then((resp) => {
           const user = {
             ...resp.data.user,
@@ -460,12 +460,8 @@ export function sendInvitationEmail(email) {
         dispatch(sendInvitationSuccess(false));
       })
       .catch(error => {
-        console.log(error);
+        // console.log(error);
         let errMessage = 'Error sending invitation. Please try again later.';
-        // if (error.response.data.errors.email) {
-        //   errMessage = 'An invitation has already been sent to this email.';
-        // }
-
         dispatch(sendInvitationError(errMessage));
       })
       .finally(() => {
@@ -483,7 +479,7 @@ export function getInvitation(token) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${token}`;
     axios.get(url)
       .then(resp => {
-        dispatch(getInvitationSuccess(resp.data.data));
+        dispatch(getInvitationSuccess(resp.data));
       })
       .catch(error => {
         let errMessage = 'Error getting invitation. Please try again later.';
@@ -507,7 +503,7 @@ export function sendPasswordResetRequestEmail(email) {
 
     const passwordResetRequestEmail = email.trim();
     let url = `${process.env.REACT_APP_ROG_API_URL}/forgot-password`;
-    let data = {request: {email: passwordResetRequestEmail}};
+    let data = {email: passwordResetRequestEmail};
 
     const passwordResetRequestEvent = {
       email: passwordResetRequestEmail,

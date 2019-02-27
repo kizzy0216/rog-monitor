@@ -160,7 +160,7 @@ class Register extends Component {
                       {this.state.phoneError ?
                         ''
                       :
-                        <div style={styles.phoneCaption} class="ant-form-explain">Standard call, messaging or data rates may apply</div>
+                        <div style={styles.phoneCaption} className="ant-form-explain">Standard call, messaging or data rates may apply</div>
                       }
                       <FormItem label='Password' hasFeedback>
                         {getFieldDecorator('password', {

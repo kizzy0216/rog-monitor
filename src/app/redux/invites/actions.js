@@ -98,7 +98,7 @@ export function fetchReceivedInvites(user) {
     dispatch(fetchReceivedError(''));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.get(url, config)
     .then(response => {
@@ -121,7 +121,7 @@ export function acceptInvite(user, invite) {
     dispatch(acceptInviteError(''));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${invite.camera_groups_id}/privileges`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     data = ''
 
     axios.post(url, data, config)
@@ -146,7 +146,7 @@ export function rejectInvite(user, invite, InProcess) {
     dispatch(rejectInviteInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invite.id}`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.delete(url, config)
     .then(response => {
@@ -168,7 +168,7 @@ export function rescindInvite(user, invite) {
     dispatch(rescindInviteInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invite.id}`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.delete(url, config)
     .then(response => {

@@ -135,7 +135,7 @@ export function fetchAlerts(user) {
 
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts`;
-    let config = {headers: {Authorization: user.jwt}}
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {
         // todo add pagination here. Do this by counting the results and building a next page, previous page, and page selector functions in javascript which will show/hide by numerical index the data.
@@ -157,7 +157,7 @@ export function deleteAlert(user, alertId) {
     dispatch(deleteError(''));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts/${alertId}`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     axios.delete(url, config)
       .then(response => {
         dispatch(deleteSuccess(alertId));

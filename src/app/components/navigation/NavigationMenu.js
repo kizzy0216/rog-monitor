@@ -26,7 +26,7 @@ class NavigationMenu extends Component {
       this.props.mergeNewAlerts();
     }
 
-    if (path == this.props.cameraGroup.pathname) {
+    if (path == this.props.location.pathname) {
       window.window.scrollTo(0, 0);
     }
     else {
@@ -40,8 +40,8 @@ class NavigationMenu extends Component {
         theme='dark'
         mode='horizontal'
         style={this.props.style}
-        selectedKeys={[this.props.cameraGroup.pathname]}
-        defaultSelectedKeys={[this.props.cameraGroup.pathname]}
+        selectedKeys={[this.props.location.pathname]}
+        defaultSelectedKeys={[this.props.location.pathname]}
         onClick={({key}) => this.goToPath(key)}>
         <Menu.Item key='/cameras'>
           <Badge>

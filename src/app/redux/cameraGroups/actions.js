@@ -11,91 +11,91 @@ import { locale } from 'moment';
 
 function fetchInProcess(bool) {
   return {
-    type: types.FETCH_LOCATIONS_IN_PROCESS,
+    type: types.FETCH_CAMERA_GROUPS_IN_PROCESS,
     fetchInProcess: bool
   }
 }
 
 function fetchError(error) {
   return {
-    type: types.FETCH_LOCATIONS_ERROR,
+    type: types.FETCH_CAMERA_GROUPS_ERROR,
     fetchError: error
   }
 }
 
 function fetchSuccess(cameraGroups) {
   return {
-    type: types.FETCH_LOCATIONS_SUCCESS,
+    type: types.FETCH_CAMERA_GROUPS_SUCCESS,
     cameraGroups
   }
 }
 
 function cameraGroupSelected(selectedCameraGroup) {
   return {
-    type: types.LOCATION_SELECTED,
+    type: types.CAMERA_GROUP_SELECTED,
     selectedCameraGroup
   }
 }
 
 function addCameraGroupInProcess(bool) {
   return {
-    type: types.ADD_LOCATION_IN_PROCESS,
+    type: types.ADD_CAMERA_GROUP_IN_PROCESS,
     addCameraGroupInProcess: bool
   }
 }
 
 function addCameraGroupError(error) {
   return {
-    type: types.ADD_LOCATION_ERROR,
+    type: types.ADD_CAMERA_GROUP_ERROR,
     addCameraGroupError: error
   }
 }
 
 function addCameraGroupSuccess(bool) {
   return {
-    type: types.ADD_LOCATION_SUCCESS,
+    type: types.ADD_CAMERA_GROUP_SUCCESS,
     addCameraGroupSuccess: bool
   }
 }
 
 function removeCameraGroupInProcess(bool) {
   return {
-    type: types.REMOVE_LOCATION_IN_PROCESS,
+    type: types.REMOVE_CAMERA_GROUP_IN_PROCESS,
     removeCameraGroupInProcess: bool
   }
 }
 
 function removeCameraGroupError(error) {
   return {
-    type: types.REMOVE_LOCATION_ERROR,
+    type: types.REMOVE_CAMERA_GROUP_ERROR,
     removeCameraGroupError: error
   }
 }
 
 function removeCameraGroupSuccess(bool) {
   return {
-    type: types.REMOVE_LOCATION_SUCCESS,
+    type: types.REMOVE_CAMERA_GROUP_SUCCESS,
     removeCameraGroupSuccess: bool
   }
 }
 
 function addCameraGroupCameraInProcess(bool) {
   return {
-    type: types.ADD_LOCATION_CAMERA_IN_PROCESS,
+    type: types.ADD_CAMERA_GROUP_CAMERA_IN_PROCESS,
     addCameraGroupCameraInProcess: bool
   }
 }
 
 function addCameraGroupCameraError(error) {
   return {
-    type: types.ADD_LOCATION_CAMERA_ERROR,
+    type: types.ADD_CAMERA_GROUP_CAMERA_ERROR,
     addCameraGroupCameraError: error
   }
 }
 
 function addCameraGroupCameraSuccess(bool) {
   return {
-    type: types.ADD_LOCATION_CAMERA_SUCCESS,
+    type: types.ADD_CAMERA_GROUP_CAMERA_SUCCESS,
     addCameraGroupCameraSuccess: bool
   }
 }
@@ -109,42 +109,42 @@ function addedCameraData(cameraData) {
 
 function shareCameraGroupInProcess(bool) {
   return {
-    type: types.SHARE_LOCATION_IN_PROCESS,
+    type: types.SHARE_CAMERA_GROUP_IN_PROCESS,
     shareCameraGroupInProcess: bool
   }
 }
 
 function shareCameraGroupError(error) {
   return {
-    type: types.SHARE_LOCATION_ERROR,
+    type: types.SHARE_CAMERA_GROUP_ERROR,
     shareCameraGroupError: error
   }
 }
 
 function shareCameraGroupSuccess(bool) {
   return {
-    type: types.SHARE_LOCATION_SUCCESS,
+    type: types.SHARE_CAMERA_GROUP_SUCCESS,
     shareCameraGroupSuccess: bool
   }
 }
 
 function editCameraGroupInProcess(bool) {
   return {
-    type: types.EDIT_LOCATION_IN_PROCESS,
+    type: types.EDIT_CAMERA_GROUP_IN_PROCESS,
     editCameraGroupInProcess: bool
   }
 }
 
 function editCameraGroupSuccess(bool) {
   return {
-    type: types.EDIT_LOCATION_SUCCESS,
+    type: types.EDIT_CAMERA_GROUP_SUCCESS,
     editCameraGroupSuccess: bool
   }
 }
 
 function editCameraGroupError(error) {
   return {
-    type: types.EDIT_LOCATION_ERROR,
+    type: types.EDIT_CAMERA_GROUP_ERROR,
     editCameraGroupError: error
   }
 }
@@ -165,7 +165,7 @@ function removeGuardError(error) {
 
 export function clearCameraGroupData() {
   return {
-      type: types.CLEAR_LOCATION_DATA,
+      type: types.CLEAR_CAMERA_GROUP_DATA,
       cameraGroups: initialState.cameraGroups,
       selectedCameraGroup: initialState.selectedCameraGroup
   }
@@ -211,7 +211,7 @@ export function fetchCameraGroups(user) {
     dispatch(fetchError(''));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.get(url, config)
       .then(response => {
@@ -255,7 +255,7 @@ export function addCameraGroupCamera(user, cameraGroup, name, rtspUrl, username,
       camera_added: name
     };
 
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     axios.post(url, data, config)
       .then((response) => {
         dispatch(fetchCameraGroups(user));
@@ -319,7 +319,7 @@ export function addNewCameraGroup(user, cameraGroup) {
     dispatch(addCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     let data = {
       cameraGroup: {
@@ -360,7 +360,7 @@ export function removeCameraGroup(user, cameraGroup) {
     dispatch(removeCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/cameraGroups/${cameraGroup.id}`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.delete(url, config)
       .then((response) => {
@@ -386,7 +386,7 @@ export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
     dispatch(shareCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/invitations`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     let data = {
       cameraGroup_guard_invitation: {
@@ -430,7 +430,7 @@ export function removeCameraGroupPrivilege(user, cameraGroupId, cameraGroupPrivi
     dispatch(removeGuardInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-group/${cameraGroupId}/privileges/${cameraGroupPrivilegeId}`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.delete(url, config)
     .then(response => {
@@ -452,7 +452,7 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
     dispatch(editCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}`;
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     let data = {
       cameraGroup: cameraGroupData

@@ -7,6 +7,8 @@ import * as types from './actionTypes';
 
 import { Socket } from '../../../lib/phoenix/phoenix';
 import { listenForNewAlerts } from '../alerts/actions';
+import { fetchReceivedInvites } from '../invites/actions';
+import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login} from '../auth/actions';
 
 export function updateUserData(userData) {
   return{
@@ -36,12 +38,54 @@ function updateUserSuccess(bool, user) {
   }
 }
 
+export function readUser(jwt, jwtTokenRefresh) {
+  return(dispatch) => {
+    let config = {headers: {Authorization: 'Bearer '+jwt}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users`;
+    axios.get(url, config)
+      .then((resp) => {
+        const user = {
+          ...resp.data,
+          jwt: jwt
+        }
+        sessionStorage.setItem('jwt', jwt);
+        sessionStorage.setItem('email', email);
+        sessionStorage.setItem('password', password);
+
+        if (jwtTokenRefresh === null) {
+          jwtTokenRefresh = window.setInterval(
+            function(){
+              dispatch(login(email, password));
+            }, (30 * 60 * 1000), [email, password]
+          );
+        }
+        dispatch(loginSuccess(user));
+        dispatch(loginInProcess(false));
+        dispatch(fetchReceivedInvites(user));
+
+        const loginEvent = {
+          email: resp.data.email,
+          name: resp.data.firstName + ' ' + resp.data.lastName,
+          last_login: new Date().toString().split(' ').splice(1, 4).join(' ')
+        };
+
+        dispatch(trackEventAnalytics('login', loginEvent));
+      })
+      .catch(error => {
+        console.log(error);
+        let errorMessage = 'Error fetching user data. Please try again later.';
+        dispatch(loginError(errorMessage));
+        dispatch(loginInProcess(false));
+      });
+  }
+}
+
 export function updateUser(user, values) {
   return (dispatch) => {
     dispatch(updateUserError(''));
     dispatch(updateUserSuccess(false));
     dispatch(updateUserInProgress(true));
-    let config = {headers: {Authorization: user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}`;
     const data = {
       user: {
@@ -53,7 +97,6 @@ export function updateUser(user, values) {
 
     axios.patch(url, data, config)
       .then((response) => {
-        console.log(response);
         dispatch(updateUserData(response));
         dispatch(updateUserSuccess(true));
         dispatch(updateUserInProgress(false));

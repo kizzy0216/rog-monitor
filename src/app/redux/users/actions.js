@@ -38,7 +38,7 @@ function updateUserSuccess(bool, user) {
   }
 }
 
-export function readUser(jwt, jwtTokenRefresh) {
+export function readUser(jwt, jwtTokenRefresh, email, password) {
   return(dispatch) => {
     let config = {headers: {Authorization: 'Bearer '+jwt}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/users`;
@@ -52,11 +52,12 @@ export function readUser(jwt, jwtTokenRefresh) {
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('password', password);
 
+        // figure out a way to pass this to global if we set it
         if (jwtTokenRefresh === null) {
           jwtTokenRefresh = window.setInterval(
             function(){
               dispatch(login(email, password));
-            }, (30 * 60 * 1000), [email, password]
+            }, (10 * 60 * 1000), [email, password]
           );
         }
         dispatch(loginSuccess(user));
@@ -73,8 +74,11 @@ export function readUser(jwt, jwtTokenRefresh) {
       })
       .catch(error => {
         console.log(error);
-        let errorMessage = 'Error fetching user data. Please try again later.';
-        dispatch(loginError(errorMessage));
+        let errMessage = 'Error fetching user data. Please try again later.';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
+        dispatch(loginError(errMessage));
         dispatch(loginInProcess(false));
       });
   }
@@ -88,11 +92,9 @@ export function updateUser(user, values) {
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}`;
     const data = {
-      user: {
-        first_name: values.firstName,
-        last_name: values.lastName,
-        phone: values.phone
-      }
+      first_name: values.firstName,
+      last_name: values.lastName,
+      email: values.email
     };
 
     axios.patch(url, data, config)
@@ -102,7 +104,11 @@ export function updateUser(user, values) {
         dispatch(updateUserInProgress(false));
       })
       .catch(error => {
-        dispatch(updateUserError(error));
+        let errMessage = 'Error updating user';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
+        dispatch(updateUserError(errMessage));
         dispatch(updateUserInProgress(false));
       });
   }

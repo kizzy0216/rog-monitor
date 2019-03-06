@@ -6,7 +6,7 @@ import { rescindInvite } from '../../redux/invites/actions';
 import { removeCameraGroupPrivilege } from '../../redux/cameraGroups/actions';
 
 const GuardSettings = (props) => {
-  if (props.invites.length || props.guards.length) {
+  if (props.invites.length || props.userCameraGroupPrivileges.length) {
     return (
       <Modal
         title='Guard Settings'

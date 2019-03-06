@@ -1,11 +1,8 @@
 export default {
   cameraGroups: [],
-  selectedCameraGroup: {id: null, name: null, cameras: [], guards: []},
+  selectedCameraGroup: {id: null, name: null, cameras: [], userCameraGroupPrivileges: []},
   fetchInProcess: false,
   fetchError: false,
-  addCameraGroupCameraInProcess: false,
-  addCameraGroupCameraError: '',
-  addCameraGroupCameraSuccess: false,
   addCameraGroupInProcess: false,
   addCameraGroupError: '',
   addCameraGroupSuccess: false,
@@ -21,7 +18,7 @@ export default {
   removeCameraGroupError: '',
   removeCameraGroupSuccess: false,
   addedCameraData: '',
-  bvcCameraConnection: false,
-  bvcCameraConnectionFail: false,
-  bvcCameraConnectionFailId: ''
+  cameraConnection: false,
+  cameraConnectionFail: false,
+  cameraConnectionFailId: ''
 }

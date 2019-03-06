@@ -56,7 +56,7 @@ const GuardInvites = (props) => {
         onCancel={props.onCancel}
         footer={[null, null]}
       >
-        <div>No pending cameraGroup invitations.</div>
+        <div>No pending camera group invitations.</div>
       </Modal>
     )
   }

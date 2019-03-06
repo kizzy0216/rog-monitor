@@ -7,6 +7,7 @@ import { Socket } from '../../../lib/phoenix/phoenix';
 import newAlertSound from '../../../assets/audio/newAlert.mp3';
 import { updateUserData } from '../users/actions';
 import * as types from './actionTypes';
+import {isEmpty} from '../helperFunctions';
 
 function fetchInProcess(bool) {
   return {
@@ -109,22 +110,22 @@ function clearAllAlerts() {
 // TODO: change this function to use FCM logic
 export function listenForNewAlerts(user) {
   return (dispatch) => {
-    let channelName = `alerts:user-${user.id}`;
-    let params = {token: user.jwt};
-    let ws = new Socket(`${process.env.REACT_APP_ROG_WS_URL}/socket`, {params});
-
-    ws.connect();
-
-    let channel = ws.channel(channelName, {});
-    channel.join()
-      .receive('ok', resp => {
-        dispatch(channelConnected(channel));
-        dispatch(handleNewAlert(channel, user));
-      })
-      .receive('error', resp => console.log(`Unable to join channel ${channelName}`));
-
-    user.channel = channel;
-    dispatch(updateUserData(user));
+    // let channelName = `alerts:user-${user.id}`;
+    // let params = {token: user.jwt};
+    // let ws = new Socket(`${process.env.REACT_APP_ROG_WS_URL}/socket`, {params});
+    //
+    // ws.connect();
+    //
+    // let channel = ws.channel(channelName, {});
+    // channel.join()
+    //   .receive('ok', resp => {
+    //     dispatch(channelConnected(channel));
+    //     dispatch(handleNewAlert(channel, user));
+    //   })
+    //   .receive('error', resp => console.log(`Unable to join channel ${channelName}`));
+    //
+    // user.channel = channel;
+    // dispatch(updateUserData(user));
   }
 }
 
@@ -139,10 +140,18 @@ export function fetchAlerts(user) {
     axios.get(url, config)
       .then((response) => {
         // todo add pagination here. Do this by counting the results and building a next page, previous page, and page selector functions in javascript which will show/hide by numerical index the data.
-        dispatch(fetchSuccess(response, pagination));
+        if (!isEmpty(response.data)) {
+          dispatch(fetchSuccess(response.data, pagination));
+        } else {
+          dispatch(fetchError('No Alerts Found'));
+        }
       })
       .catch((error) => {
-        dispatch(fetchError('Error fetching alerts'));
+        let errMessage = 'Error fecthing alerts';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
+        dispatch(fetchError(errMessage));
       })
       .finally(() => {
         dispatch(fetchError(''));
@@ -163,7 +172,11 @@ export function deleteAlert(user, alertId) {
         dispatch(deleteSuccess(alertId));
       })
       .catch(error => {
-        dispatch(deleteError('Error deleting alert.'))
+        let errMessage = 'Error deleting alert';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
+        dispatch(deleteError(errMessage));
       })
       .finally(() => {
         dispatch(deleteInProcess(false));
@@ -177,40 +190,41 @@ export function clearAlerts() {
   }
 }
 
-// TODO: examine if thie function is still needed
+// TODO: examine if this function is still needed
   export function registerCamera(userId, cameraDetails) {
     return (dispatch) => {
       // dispatch(registerCameraInProcess(true));
 
-      const bvc_jwt = localStorage.getItem('bvc_jwt');
-
-      let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/user/${userId}/cameras`;
-      let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
-      let cameraData = [];
-      for(let i = 0; i < cameraDetails.length; i++) {
-        cameraData.push({id: cameraDetails[i].id, name: cameraDetails[i].name, url: cameraDetails[i].rtspUrl, enabled: true});
-      }
-      axios.get(urlAlert, config)
-
-        .then((resp) => {
-
-          // Issue with BVC API. It needs all the camera ids to be sent again, else it would delete the not sent ones.
-          for(let i = 0; i < resp.data.cameras.length; i++ ) {
-            if (resp.data.cameras[i].id !== cameraData[i].id) {
-              axios.post(urlAlert, cameraData, config)
-                .then((resp) => {
-                  // dispatch(registerCameraSuccess(true));
-                })
-                .catch((error) => {
-                  // dispatch(registerCameraSuccess(true));
-                })
-
-
-            }
-          }
-
-        })
-        .catch((error) => {
-        })
+      // const jwt = localStorage.getItem('jwt');
+      //
+      // let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/user/${userId}/cameras`;
+      // let config = {headers: {Authorization:'Bearer' + ' ' + jwt}};
+      // let cameraData = [];
+      // for(let i = 0; i < cameraDetails.length; i++) {
+      //   cameraData.push({id: cameraDetails[i].id, name: cameraDetails[i].name, url: cameraDetails[i].rtspUrl, enabled: true});
+      // }
+      // axios.get(urlAlert, config)
+      //
+      //   .then((resp) => {
+      //     dispatch(registerCameraSuccess(true));
+      //     // Issue with BVC API. It needs all the camera ids to be sent again, else it would delete the not sent ones.
+      //     for(let i = 0; i < resp.data.cameras.length; i++ ) {
+      //       if (resp.data.cameras[i].id !== cameraData[i].id) {
+      //         axios.post(urlAlert, cameraData, config)
+      //           .then((resp) => {
+      //             // dispatch(registerCameraSuccess(true));
+      //           })
+      //           .catch((error) => {
+      //             // dispatch(registerCameraSuccess(true));
+      //           })
+      //
+      //
+      //       }
+      //     }
+      //
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   })
     }
 }

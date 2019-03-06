@@ -187,10 +187,11 @@ export function checkLogin() {
     const jwt = sessionStorage.getItem('jwt');
     if (jwt) {
       let url = `${process.env.REACT_APP_ROG_API_URL}/users`;
-      axios.get(url, {headers: {Authorization: jwt}})
+      axios.get(url, {headers: {Authorization: 'Bearer'+' '+jwt}})
         .then(resp => {
           const user = {
-            ...resp.data
+            ...resp.data,
+            jwt: jwt
           };
           dispatch(loginSuccess(user));
           dispatch(fetchReceivedInvites(user));
@@ -246,13 +247,8 @@ export function register(email, firstName, lastName, phone, password, confirmPas
       })
       .catch((error) => {
         let errMessage = 'Error registering. Please try again later';
-        if (error.response && error.response.data && error.response.data.errors) {
-          if (error.response.data.errors.password) {
-            errMessage = error.response.data.errors.password;
-          }
-          else if (error.response.data.errors.token) {
-            errMessage = 'Invalid invitation';
-          }
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
         }
         dispatch(registerError(errMessage));
       })
@@ -288,13 +284,8 @@ export function resetPassword(new_password, confirmPassword, token) {
       })
       .catch((error) => {
         let errMessage = 'Error resetting your password. Please try again later';
-        if (error.response && error.response.data && error.response.data.errors) {
-          if (error.response.data.errors.password) {
-            errMessage = error.response.data.errors.password;
-          }
-          else if (error.response.data.errors.token) {
-            errMessage = 'Invalid request';
-          }
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
         }
         dispatch(resetPasswordError(errMessage));
       })
@@ -328,25 +319,15 @@ export function login(email, password) {
       let url = `${process.env.REACT_APP_ROG_API_URL}/authenticate`;
       axios.post(url, {email: cleanEmail, password: cleanPassword})
         .then((resp) => {
-          dispatch(readUser(resp.data.jwt, jwtTokenRefresh));
+          dispatch(readUser(resp.data.jwt, jwtTokenRefresh, cleanEmail, cleanPassword));
         })
         .catch((error) => {
-          let errorMessage;
-          if (error.response) {
-            if (error.response.status === 500) {
-              errorMessage = 'Server error';
-            } else if (error.response.status === 422) {
-              errorMessage = error.response.data.errors.detail;
-            } else if (error.response.status === 403) {
-              errorMessage = 'Incorrect Password';
-            }
-          }
-          else {
-            console.log(error);
-            errorMessage = 'Error logging in. Please try again later.';
+          let errMessage;
+          if (error.response.data['Error']) {
+            errMessage = error.response.data['Error'];
           }
 
-          dispatch(loginError(errorMessage));
+          dispatch(loginError(errMessage));
           dispatch(loginInProcess(false));
         });
     }
@@ -409,8 +390,10 @@ export function sendInvitationEmail(email) {
         dispatch(sendInvitationSuccess(false));
       })
       .catch(error => {
-        // console.log(error);
         let errMessage = 'Error sending invitation. Please try again later.';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
         dispatch(sendInvitationError(errMessage));
       })
       .finally(() => {
@@ -432,8 +415,8 @@ export function getInvitation(token) {
       })
       .catch(error => {
         let errMessage = 'Error getting invitation. Please try again later.';
-        if (error.response.status === 404) {
-          errMessage = 'Invalid invation';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
         }
 
         dispatch(getInvitationError(errMessage));
@@ -474,7 +457,9 @@ export function sendPasswordResetRequestEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Sorry, we can\'t find that email.';
-
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
         dispatch(sendPasswordResetRequestError(errMessage));
       })
       .finally(() => {
@@ -492,12 +477,12 @@ export function getPasswordResetRequest(token) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${token}`;
     axios.get(url)
       .then(resp => {
-        dispatch(getPasswordResetRequestSuccess(resp.data.data));
+        dispatch(getPasswordResetRequestSuccess(resp.data));
       })
       .catch(error => {
         let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
-        if (error.response.status === 404) {
-          let errMessage = 'Invalid request: 404';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
         }
         dispatch(getPasswordResetRequestError(errMessage));
       })

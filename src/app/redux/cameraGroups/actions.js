@@ -6,8 +6,9 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { trackEventAnalytics } from "../auth/actions";
-import {updatePreviewImage} from "../cameras/actions";
+import {updatePreviewImage, fetchCameraGroupCameras} from "../cameras/actions";
 import { locale } from 'moment';
+import {isEmpty} from '../helperFunctions';
 
 function fetchInProcess(bool) {
   return {
@@ -27,13 +28,6 @@ function fetchSuccess(cameraGroups) {
   return {
     type: types.FETCH_CAMERA_GROUPS_SUCCESS,
     cameraGroups
-  }
-}
-
-function cameraGroupSelected(selectedCameraGroup) {
-  return {
-    type: types.CAMERA_GROUP_SELECTED,
-    selectedCameraGroup
   }
 }
 
@@ -76,27 +70,6 @@ function removeCameraGroupSuccess(bool) {
   return {
     type: types.REMOVE_CAMERA_GROUP_SUCCESS,
     removeCameraGroupSuccess: bool
-  }
-}
-
-function addCameraGroupCameraInProcess(bool) {
-  return {
-    type: types.ADD_CAMERA_GROUP_CAMERA_IN_PROCESS,
-    addCameraGroupCameraInProcess: bool
-  }
-}
-
-function addCameraGroupCameraError(error) {
-  return {
-    type: types.ADD_CAMERA_GROUP_CAMERA_ERROR,
-    addCameraGroupCameraError: error
-  }
-}
-
-function addCameraGroupCameraSuccess(bool) {
-  return {
-    type: types.ADD_CAMERA_GROUP_CAMERA_SUCCESS,
-    addCameraGroupCameraSuccess: bool
   }
 }
 
@@ -163,6 +136,13 @@ function removeGuardError(error) {
   }
 }
 
+function cameraGroupSelected(selectedCameraGroup) {
+  return {
+    type: types.CAMERA_GROUP_SELECTED,
+    selectedCameraGroup
+  }
+}
+
 export function clearCameraGroupData() {
   return {
       type: types.CLEAR_CAMERA_GROUP_DATA,
@@ -171,38 +151,50 @@ export function clearCameraGroupData() {
   }
 }
 
-export function selectCameraGroup(cameraGroup) {
-  return (dispatch) => {
-    dispatch(cameraGroupSelected(cameraGroup));
-  }
-}
 // TODO: change the two functions below to work with the new recos in the API
-export function bvcCameraConnection(bool) {
+export function CameraConnection(bool) {
   return {
-    type: types.BVC_CAMERA_CONNECTION,
-    bvcCameraConnection: bool
+    type: types.CAMERA_CONNECTION,
+    CameraConnection: bool
   }
 }
 
-export function bvcCameraConnectionFail(bool, id) {
+export function CameraConnectionFail(bool, id) {
   return {
-    type: types.BVC_CAMERA_CONNECTION_FAIL,
-    bvcCameraConnectionFail: bool,
-    bvcCameraConnectionFailId: id
+    type: types.CAMERA_CONNECTION_FAIL,
+    CameraConnectionFail: bool,
+    CameraConnectionFailId: id
   }
 }
 
-function parseCameraGroups(cameraGroups, user) {
-  cameraGroups = cameraGroups.map(cameraGroup => {
-    let myRole = cameraGroup.guards.find(guard => guard.user.id == user.id).role;
-
-    return {
-      ...cameraGroup,
-      myRole
+export function selectCameraGroup(user, cameraGroup) {
+  return (dispatch) => {
+    if (cameraGroup !== undefined){
+      dispatch(fetchCameraGroupCameras(user, cameraGroup));
     }
-  });
+  }
+}
 
-  return cameraGroups;
+export function getUserCameraGroupPrivileges(user, cameraGroup) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/privileges`;
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    axios.get(url, config)
+      .then(response => {
+        if (isEmpty(response.data) === false) {
+          cameraGroup.userCameraGroupPrivileges = response.data;
+        } else {
+          cameraGroup.userCameraGroupPrivileges = [];
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        cameraGroup.userCameraGroupPrivileges = [];
+      })
+      .finally(() => {
+        dispatch(cameraGroupSelected(cameraGroup));
+      });
+  }
 }
 
 export function fetchCameraGroups(user) {
@@ -215,101 +207,16 @@ export function fetchCameraGroups(user) {
 
     axios.get(url, config)
       .then(response => {
-        dispatch(fetchSuccess(parseCameraGroups(response.data.data, user)));
+        if (isEmpty(response.data) === false) {
+          dispatch(fetchSuccess(response.data));
+        }
       })
       .catch(error => {
-        console.log('Error fetching cameraGroups: ', error);
         dispatch(fetchError(true));
       })
       .finally(() => {
         dispatch(fetchInProcess(false));
       });
-  }
-}
-
-export function addCameraGroupCamera(user, cameraGroup, name, rtspUrl, username, password) {
-  return (dispatch) => {
-    dispatch(addCameraGroupCameraError(''));
-    dispatch(addCameraGroupCameraInProcess(true));
-
-    let index = rtspUrl.indexOf(":");
-    let protocol = rtspUrl.substr(0, index + 3).toLowerCase();
-    let urlAddress = rtspUrl.substr(index + 3);
-    let lowerCaseUrl = (protocol + urlAddress);
-
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras`;
-    let data = {
-      camera: {
-        'cameraGroup_id': cameraGroup.id,
-        'rtsp_url': lowerCaseUrl,
-        name,
-        username,
-        password
-      }
-    };
-
-    const cameraAddEvent = {
-      email: user.email,
-      name: user.firstName + ' ' + user.lastName,
-      status: '',
-      camera_added: name
-    };
-
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
-    axios.post(url, data, config)
-      .then((response) => {
-        dispatch(fetchCameraGroups(user));
-        dispatch(addCameraGroupCameraSuccess(true));
-        dispatch(addCameraGroupCameraSuccess(false));
-        dispatch(addedCameraData(response));
-
-        cameraAddEvent.status = 'Add Camera Success';
-        dispatch(trackEventAnalytics('add camera', cameraAddEvent));
-        dispatch(checkBvcCameraConnection(user, response.data.data.id));
-      })
-      .catch((error) => {
-        let errMessage = 'Error creating camera. Please try again later.';
-        if (error.response && error.response.data) {
-          if (error.response.data.error) {
-            errMessage = error.response.data.error;
-          }
-          else if (error.response.data.errors && error.response.data.errors.cameraGroup_camera_name) {
-            errMessage = `This cameraGroup already has a camera named ${name}`;
-          }
-        }
-        dispatch(addCameraGroupCameraError(errMessage));
-
-        cameraAddEvent.status = 'Add Camera Failed';
-        dispatch(trackEventAnalytics('add camera', cameraAddEvent));
-      })
-      .finally(() => {
-        dispatch(addCameraGroupCameraError(''));
-        dispatch(addCameraGroupCameraInProcess(false));
-      });
-  }
-}
-// TODO: re-work this function to hit the recos in the API and get the status for that camera id
-export function checkCameraConnection(user, cameraId) {
-  return (dispatch) => {
-    let bvc_url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/connectedOnce`;
-    const bvc_jwt = localStorage.getItem('bvc_jwt');
-    let config = {headers: {Authorization:'JWT' + ' ' + bvc_jwt}};
-    let timeout = 90;
-    let checkBvc = setInterval(function(){
-      if (timeout <= 0){
-        dispatch(bvcCameraConnectionFail(true, cameraId));
-        clearInterval(checkBvc);
-      } else {
-        timeout -= 5;
-      }
-      axios.get(bvc_url, config)
-      .then((response) => {
-          dispatch(bvcCameraConnection(response.data.value));
-          if (response.data.value == true) {
-            clearInterval(checkBvc);
-          }
-      })
-    }, 5000, bvc_url, config);
   }
 }
 
@@ -322,34 +229,26 @@ export function addNewCameraGroup(user, cameraGroup) {
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     let data = {
-      cameraGroup: {
-        name: cameraGroup.name,
-        address1: cameraGroup.address1,
-        city: cameraGroup.city,
-        state: cameraGroup.state,
-        zip: cameraGroup.zip
-      }
+      camera_group_name: cameraGroup.name
     };
 
     axios.post(url, data, config)
       .then((response) => {
         dispatch(fetchCameraGroups(user));
         dispatch(addCameraGroupSuccess(true));
-        dispatch(addCameraGroupSuccess(false));
-        dispatch(selectCameraGroup(response.data.data));
+        dispatch(selectCameraGroup(user, response.data));
       })
       .catch((error) => {
         let errMessage = 'Error creating camera. Please try again later.';
-        if (error.response && error.response.data && error.response.data.errors) {
-          if (error.response.data.errors.cameraGroup_name) {
-            errMessage = `You already have a cameraGroup named ${cameraGroup.name}`;
-          }
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
         }
         dispatch(addCameraGroupError(errMessage));
       })
       .finally(() => {
         dispatch(addCameraGroupError(''));
         dispatch(addCameraGroupInProcess(false));
+        dispatch(addCameraGroupSuccess(false));
       });
   }
 }
@@ -371,6 +270,9 @@ export function removeCameraGroup(user, cameraGroup) {
       })
       .catch((error) => {
         let errMessage = 'Error removing cameraGroup. Please try again later.';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
         dispatch(removeCameraGroupError(errMessage));
       })
       .finally(() => {
@@ -402,18 +304,8 @@ export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
       })
       .catch((error) => {
         let errMessage = 'Error sharing cameraGroup. Please try again later.';
-        if (error.response && error.response.data) {
-          if (error.response.data.errors) {
-            if (error.response.data.errors.cameraGroup_guard_invitation) {
-              errMessage = 'You have already sent an invitation to this email.';
-            }
-            else if (error.response.data.errors.invitee) {
-              errMessage = `${inviteeEmail} is already a guard.`;
-            }
-          }
-          else if (error.response.data.error) {
-            errMessage = error.response.data.error;
-          }
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
         }
         dispatch(shareCameraGroupError(errMessage));
       })
@@ -437,7 +329,11 @@ export function removeCameraGroupPrivilege(user, cameraGroupId, cameraGroupPrivi
       dispatch(fetchCameraGroups(user));
     })
     .catch((error) => {
-      dispatch(removeGuardError('Error removing guard.'));
+      let errMessage = 'Error removing user';
+      if (error.response.data['Error']) {
+        errMessage = error.response.data['Error'];
+      }
+      dispatch(removeGuardError(errMessage));
     })
     .finally(() => {
       dispatch(removeGuardError(''));
@@ -466,23 +362,8 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
       })
       .catch((error) => {
         let errMessage = 'Error editing camera group. Please try again later.';
-        if (error.response && error.response.data && error.response.data.errors) {
-          let errors = error.response.data.errors;
-          let key = Object.entries(errors)[0][0];
-          let value = Object.entries(errors)[0][1];
-          if (key === 'cameraGroup_name' && value[0] === 'has already been taken') {
-            errMessage = `You alread have a cameraGroup named ${cameraGroupData['name']}`
-          }
-          else {
-            let fieldMap = {
-              'name': 'Name',
-              'address1': 'Address',
-              'city': 'City',
-              'state': 'State',
-              'zip': 'Zip code'
-            }
-            errMessage = `${fieldMap[key]} ${value}`;
-          }
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
         }
         dispatch(editCameraGroupError(errMessage));
       })

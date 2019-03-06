@@ -27,6 +27,24 @@ const cameras = (state = initialState, action) => {
           authRtspUrl: action.authRtspUrl,
         }
 
+    case types.ADD_CAMERA_ERROR:
+      return {
+        ...state,
+        addCameraError: action.addCameraError
+      }
+
+    case types.ADD_CAMERA_IN_PROCESS:
+      return {
+        ...state,
+        addCameraInProcess: action.addCameraInProcess
+      }
+
+    case types.ADD_CAMERA_SUCCESS:
+      return {
+        ...state,
+        addCameraSuccess: action.addCameraSuccess
+      }
+
     case types.DELETE_CAMERA_ERROR:
         return {
           ...state,

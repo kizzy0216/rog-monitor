@@ -102,11 +102,16 @@ export function fetchReceivedInvites(user) {
 
     axios.get(url, config)
     .then(response => {
-      dispatch(fetchReceivedSuccess(response.data.data));
+      if (response.data !== ''){
+        dispatch(fetchReceivedSuccess(response.data));
+      }
     })
     .catch((error) => {
-      console.log('Error fetching received invites: ', error);
-      dispatch(fetchReceivedError('Error fetching received invites.'));
+      let errMessage = 'Error fetching recieved invites';
+      if (error.response.data['Error']) {
+        errMessage = error.response.data['Error'];
+      }
+      dispatch(fetchReceivedError(errMessage));
     })
     .finally(() => {
       dispatch(fetchReceivedError(''));
@@ -130,8 +135,11 @@ export function acceptInvite(user, invite) {
       dispatch(fetchCameraGroups(user));
     })
     .catch((error) => {
-      console.log('Error accepting invitation: ', error.response);
-      dispatch(acceptInviteError('Error accepting invitation.'));
+      let errMessage = 'Error accepting invitation';
+      if (error.response.data['Error']) {
+        errMessage = error.response.data['Error'];
+      }
+      dispatch(acceptInviteError(errMessage));
     })
     .finally(() => {
       dispatch(acceptInviteError(''));
@@ -153,7 +161,11 @@ export function rejectInvite(user, invite, InProcess) {
       dispatch(rejectInviteSuccess(invite));
     })
     .catch((error) => {
-      dispatch(rejectInviteError('Error rejecting invitation.'));
+      let errMessage = 'Error rejecting invitation';
+      if (error.response.data['Error']) {
+        errMessage = error.response.data['Error'];
+      }
+      dispatch(rejectInviteError(errMessage));
     })
     .finally(() => {
       dispatch(rejectInviteError(''));
@@ -175,7 +187,11 @@ export function rescindInvite(user, invite) {
       dispatch(fetchCameraGroups(user));
     })
     .catch((error) => {
-      dispatch(rescindInviteError('Error rescinding invitation.'));
+      let errMessage = 'Error rescinding invitation';
+      if (error.response.data['Error']) {
+        errMessage = error.response.data['Error'];
+      }
+      dispatch(rescindInviteError(errMessage));
     })
     .finally(() => {
       dispatch(rescindInviteError(''));

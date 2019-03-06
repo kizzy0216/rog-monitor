@@ -36,24 +36,6 @@ const cameraGroups = (state = initialState, action) => {
         selectedCameraGroup: action.selectedCameraGroup
       }
 
-    case types.ADD_CAMERA_GROUP_CAMERA_ERROR:
-      return {
-        ...state,
-        addCameraGroupCameraError: action.addCameraGroupCameraError
-      }
-
-    case types.ADD_CAMERA_GROUP_CAMERA_IN_PROCESS:
-      return {
-        ...state,
-        addCameraGroupCameraInProcess: action.addCameraGroupCameraInProcess
-      }
-
-    case types.ADD_CAMERA_GROUP_CAMERA_SUCCESS:
-      return {
-        ...state,
-        addCameraGroupCameraSuccess: action.addCameraGroupCameraSuccess
-      }
-
     case types.ADD_CAMERA_GROUP_ERROR:
       return {
         ...state,
@@ -144,17 +126,17 @@ const cameraGroups = (state = initialState, action) => {
         addedCameraData: action.cameraData
       }
 
-    case types.BVC_CAMERA_CONNECTION:
+    case types.CAMERA_CONNECTION:
       return {
         ...state,
-        bvcCameraConnection: action.bvcCameraConnection
+        cameraConnection: action.cameraConnection
       }
 
-      case types.BVC_CAMERA_CONNECTION_FAIL:
+      case types.CAMERA_CONNECTION_FAIL:
         return {
           ...state,
-          bvcCameraConnectionFail: action.bvcCameraConnectionFail,
-          bvcCameraConnectionFailId: action.bvcCameraConnectionFailId
+          cameraConnectionFail: action.cameraConnectionFail,
+          cameraConnectionFailId: action.cameraConnectionFailId
         }
 
     default:

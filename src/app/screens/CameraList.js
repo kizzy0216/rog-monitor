@@ -30,8 +30,10 @@ class CameraList extends Component {
     this.props.listenForNewImageThumbnails(this.props.user);
   }
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.cameraGroups.length && !nextProps.selectedCameraGroup.name) {
-      this.selectCameraGroup(nextProps.cameraGroups[0]);
+    if (nextProps.cameraGroups.length > 0) {
+      if (!nextProps.selectedCameraGroup.name || !('cameras' in nextProps.selectedCameraGroup) || !('userCameraGroupPrivileges' in nextProps.selectedCameraGroup)) {
+        this.selectCameraGroup(nextProps.user, nextProps.cameraGroups[0]);
+      }
     }
 
     if (this.props.selectedCameraGroup.cameras.length > 0) {
@@ -58,8 +60,8 @@ class CameraList extends Component {
     }
   }
 
-  selectCameraGroup = (cameraGroup) => {
-    this.props.actions.selectCameraGroup(cameraGroup);
+  selectCameraGroup = (user, cameraGroup) => {
+    this.props.actions.selectCameraGroup(user, cameraGroup);
   }
 
   toggleCameraGroupButtonsVisability = () => {
@@ -75,24 +77,21 @@ class CameraList extends Component {
       return (
         <div>
           <Row type='flex' justify='center' align='middle' style={styles.cameraOptions}>
-            {/* <Col xs={{span: 2}} sm={{span: 1}}>
-              {this.props.selectedCameraGroup.myRole}
-            </Col> */}
             <Col xs={{span: 14}} sm={{span: 6}}>
               <Select style={styles.select} value={this.props.selectedCameraGroup.name}
-                      onSelect={(value, option) => this.selectCameraGroup(option.props.cameraGroup)}>
+                      onSelect={(value, option) => this.selectCameraGroup(this.props.user, option.props.cameraGroup)}>
                 {this.props.cameraGroups.map(cameraGroup => (
                   <Option key={`cameraGroup-${cameraGroup.id}`} cameraGroup={cameraGroup}>{cameraGroup.name}</Option>
                 ))}
               </Select>
             </Col>
             <Col xs={{span: 2}} sm={{span: 1}} style={styles.toggleCameraGroupOptionsContainer}>
-              {this.props.selectedCameraGroup.myRole === 'viewer' ?
+              {this.props.selectedCameraGroup.userCameraGroupPrivileges === 2 ?
                 (
-                  this.props.selectedCameraGroup.guards.map(guard => (
-                    guard.user.id == this.props.user.id ?
-                      <Tooltip key={guard.id} title='Remove CameraGroup' placement='bottom'>
-                        <Popconfirm title="Are you sure you want to stop viewing this cameraGroup? This action cannot be undone." onConfirm={() => this.props.removeCameraGroupPrivilegeInProcess ? '' : this.props.removeCameraGroupPrivilege(this.props.user, guard)} okText="Yes, remove cameraGroup" cancelText="Nevermind">
+                  this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
+                    userCameraGroupPrivilege.user.id == this.props.user.id ?
+                      <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
+                        <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeCameraGroupPrivilegeInProcess ? '' : this.props.removeCameraGroupPrivilege(this.props.user, userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
                           <Button type="danger" icon="close" className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeCameraGroupPrivilegeInProcess} disabled={this.props.removeCameraGroupPrivilegeInProcess}></Button>
                         </Popconfirm>
                       </Tooltip>
@@ -101,13 +100,13 @@ class CameraList extends Component {
                   ))
                 ) :
                 (
-                  <Tooltip title='Toggle CameraGroup Options' placement='bottom'>
+                  <Tooltip title='Toggle Camera Group Options' placement='bottom'>
                     <Icon style={styles.toggleCameraGroupOptions} type='ellipsis' onClick={this.toggleCameraGroupButtonsVisability} />
                   </Tooltip>
                 )
               }
             </Col>
-            {this.props.selectedCameraGroup.myRole === 'viewer' ?
+            {this.props.selectedCameraGroup.userCameraGroupPrivileges === 2 ?
               (<span></span>) :
               (
                 <CameraOptionButtons
@@ -127,7 +126,7 @@ class CameraList extends Component {
       return (
         <Row type='flex' justify='start' style={styles.cameraGroupContainer}>
           <Button style={styles.noCameraGroupsBtn}>
-            <AddCameraGroupModal linkText='Create a cameraGroup to onboard cameras.' />
+            <AddCameraGroupModal linkText='Create a camera group to onboard cameras.' />
           </Button>
         </Row>
       )
@@ -182,7 +181,7 @@ const mapDispatchToProps = (dispatch) => {
     addCameraGroupCamera: (user, cameraGroup, name, rtspUrl, username, password) => dispatch(addCameraGroupCamera(user, cameraGroup, name, rtspUrl, username, password)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
     listenForNewImageThumbnails: (user) => dispatch(listenForNewImageThumbnails(user)),
-    removeCameraGroupPrivilege: (user, guard) => dispatch(removeCameraGroupPrivilege(user, guard)),
+    removeCameraGroupPrivilege: (user, userCameraGroupPrivilege) => dispatch(removeCameraGroupPrivilege(user, userCameraGroupPrivilege)),
   }
 };
 

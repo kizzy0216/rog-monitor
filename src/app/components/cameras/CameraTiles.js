@@ -6,7 +6,7 @@ import CameraCard from './CameraCard';
 class CameraTiles extends Component {
 
   render() {
-    if (this.props.cameraGroup.cameras.length) {
+    if ('cameras' in this.props.cameraGroup && this.props.cameraGroup.cameras.length > 0) {
       return (
         <Row type='flex' justify='start' style={styles.cameraListContainer}>
           {this.props.cameraGroup.cameras.map(camera => (

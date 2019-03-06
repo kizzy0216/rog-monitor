@@ -189,6 +189,7 @@ export function fetchTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
         dispatch(fetchTriggerInSuccess(true));
       })
       .catch((error) => {
+        console.log(error);
       })
       .finally(() => {
         dispatch(fetchTriggerInProcess(false));
@@ -208,6 +209,7 @@ export function deleteTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
         dispatch(deleteTriggerSuccess(true));
       })
       .catch((error) => {
+        console.log(error);
       })
       .finally(() => {
         dispatch(deleteTriggerInProcess(false));
@@ -259,6 +261,7 @@ export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
         dispatch(updateTriggerTimeWindowSuccess(true));
       })
       .catch((error) => {
+        console.log(error);
       })
       .finally(() => {
         dispatch(updateTriggerTimeWindowSuccess(false));
@@ -279,6 +282,7 @@ export function deleteTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
         dispatch(deleteTriggerTimeWindowSuccess(true));
       })
       .catch((error) => {
+        console.log(error);
       })
       .finally(() => {
         dispatch(deleteTriggerTimeWindowInProcess(false));

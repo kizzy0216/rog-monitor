@@ -4,7 +4,7 @@ import { Button, Modal, Form, Input, Icon, message } from 'antd';
 
 import RtspStream from '../video/RtspStream';
 
-import { addCameraGroupCamera } from '../../redux/cameraGroups/actions';
+import { addCamera } from '../../redux/cameras/actions';
 import { registerCamera } from '../../redux/alerts/actions';
 
 const FormItem = Form.Item;
@@ -21,7 +21,7 @@ const AddCameraForm = Form.create()(
         onOk={onCreate}
         okText='Add'
         cancelText='Cancel'
-        confirmLoading={props.addCameraGroupCameraInProcess}
+        confirmLoading={props.addCameraInProcess}
       >
         <Form>
           <FormItem style={styles.videoContainer}>
@@ -29,7 +29,7 @@ const AddCameraForm = Form.create()(
               (<RtspStream rtspUrl={props.fullRtspUrl} />) :
               (
                 <p style={styles.videoContainerText}>
-                  {props.addCameraGroupCameraInProcess ? 'Adding camera' : 'No Video Available'}
+                  {props.addCameraInProcess ? 'Adding camera' : 'No Video Available'}
                 </p>
               )
             }
@@ -38,7 +38,7 @@ const AddCameraForm = Form.create()(
             <Button key='submit' type='primary' size='large' onClick={props.testLiveView}>
               <Icon type='reload'></Icon>Test Live View
             </Button>
-            <div style={styles.error}>{props.addCameraGroupCameraError}</div>
+            <div style={styles.error}>{props.addCameraError}</div>
           </FormItem>
           <FormItem hasFeedback>
             {getFieldDecorator('name', {rules: [
@@ -87,17 +87,17 @@ class AddCameraModal extends Component {
   };
 
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.addCameraGroupCameraSuccess && this.props.addCameraGroupCameraSuccess !== nextProps.addCameraGroupCameraSuccess) {
+    if (nextProps.addCameraSuccess && this.props.addCameraSuccess !== nextProps.addCameraSuccess) {
       this.resetFields();
       this.props.toggleAddCameraModalVisibility();
     }
-    if (nextProps.addCameraGroupCameraError !== '' && this.props.addCameraGroupCameraError !== nextProps.addCameraGroupCameraError) {
-      message.error(nextProps.addCameraGroupCameraError);
+    if (nextProps.addCameraError !== '' && this.props.addCameraError !== nextProps.addCameraError) {
+      message.error(nextProps.addCameraError);
     }
     if(nextProps.addedCameraData !== '' && nextProps.addedCameraData !== this.props.addedCameraData) {
-      this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data.data);
+      this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data);
     }
-    if(nextProps.bvcCameraConnectionFail && nextProps.bvcCameraConnectionFail !== this.props.bvcCameraConnectionFail){
+    if(nextProps.CameraConnectionFail && nextProps.CameraConnectionFail !== this.props.CameraConnectionFail){
       message.error('Camera stream could not connect.');
     }
   };
@@ -117,7 +117,7 @@ class AddCameraModal extends Component {
     form.validateFields((err, values) => {
       if (err) return;
       this.setState({fullRtspUrl: null}, () => {
-        this.props.addCameraGroupCamera(this.props.user,
+        this.props.addCamera(this.props.user,
                                      this.props.selectedCameraGroup,
                                      values.name,
                                      values.rtspUrl.trim(),
@@ -166,8 +166,8 @@ class AddCameraModal extends Component {
           onCreate={this.handleCreate}
           testLiveView={this.testLiveView}
           fullRtspUrl={this.state.fullRtspUrl}
-          addCameraGroupCameraError={this.props.addCameraGroupCameraError}
-          addCameraGroupCameraInProcess={this.props.addCameraGroupCameraInProcess}
+          addCameraError={this.props.addCameraError}
+          addCameraInProcess={this.props.addCameraInProcess}
         />
       </div>
     );
@@ -192,18 +192,18 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    addCameraGroupCameraError: state.cameraGroups.addCameraGroupCameraError,
-    addCameraGroupCameraSuccess: state.cameraGroups.addCameraGroupCameraSuccess,
-    addCameraGroupCameraInProcess: state.cameraGroups.addCameraGroupCameraInProcess,
+    addCameraError: state.cameraGroups.addCameraError,
+    addCameraSuccess: state.cameraGroups.addCameraSuccess,
+    addCameraInProcess: state.cameraGroups.addCameraInProcess,
     addedCameraData: state.cameraGroups.addedCameraData,
-    bvcCameraConnection: state.cameraGroups.bvcCameraConnection,
-    bvcCameraConnectionFail: state.cameraGroups.bvcCameraConnectionFail
+    CameraConnection: state.cameraGroups.CameraConnection,
+    CameraConnectionFail: state.cameraGroups.CameraConnectionFail
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addCameraGroupCamera: (user, cameraGroup, name, rtspUrl, username, password) => dispatch(addCameraGroupCamera(user, cameraGroup, name, rtspUrl, username, password)),
+    addCamera: (user, cameraGroup, name, rtspUrl, username, password) => dispatch(addCamera(user, cameraGroup, name, rtspUrl, username, password)),
     registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
   }
 }

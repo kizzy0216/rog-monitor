@@ -29,35 +29,6 @@ const AddCameraGroupForm = Form.create()(
               <Input size='large' id='1' placeholder='Name' style={styles.input}/>
             )}
           </FormItem>
-          <FormItem style={styles.streetAddressField}>
-            {getFieldDecorator('address1', {
-              rules: [{required: true, message: 'Please enter the cameraGroup street address'}]
-            })(
-              <Input size='large' id='2' placeholder='Street address' style={styles.input}/>
-            )}
-
-          </FormItem>
-          <FormItem>
-            {getFieldDecorator('city', {
-              rules: [{required: true, message: 'Please enter the cameraGroup city'}]
-            })(
-              <Input size='large' placeholder='City' style={styles.input}/>
-            )}
-          </FormItem>
-          <FormItem>
-            {getFieldDecorator('state', {
-              rules: [{required: true, message: 'Please enter the cameraGroup state'}]
-            })(
-              <Input size='large' placeholder='State' style={styles.input}/>
-            )}
-          </FormItem>
-          <FormItem>
-            {getFieldDecorator('zip', {
-              rules: [{required: true, message: 'Please enter the cameraGroup zip code'}]
-            })(
-              <Input size='large' id='3' placeholder='Zip code' style={styles.input}/>
-            )}
-          </FormItem>
         </Form>
       </Modal>
     );

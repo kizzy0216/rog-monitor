@@ -50482,7 +50482,7 @@ module.exports.WebsocketStream = WebsocketStream
 
 WebsocketStream.prototype.onMessage = function(e) {
   var data = e
-  if (typeof data.data !== 'undefined') data = data.data
+  if (typeof data !== 'undefined') data = data
 
   // type must be a Typed Array (ArrayBufferView)
   var type = this.options.type

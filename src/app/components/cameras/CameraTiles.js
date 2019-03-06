@@ -25,9 +25,9 @@ class CameraTiles extends Component {
       return (
         <Row type='flex' justify='start' style={styles.cameraListContainer}>
           <p style={styles.noCamerasText}>
-            This cameraGroup has no cameras.
+            This camera group has no cameras.
             <br />
-            Add a camera under this cameraGroup to get started.
+            Add a camera under this camera group to get started.
           </p>
         </Row>
       );

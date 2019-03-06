@@ -16,16 +16,22 @@ const CameraLicensesForm = Form.create()(
       },
     };
 
-    const getUsedLicenses = () => {
-      if (cameraGroups.length) {
-        return  cameraGroups
-                  .map(cameraGroup => cameraGroup.cameras && cameraGroup.myRole === 'owner' ? cameraGroup.cameras : [])
-                  .reduce((a, b) => a.concat(b))
-                  .length;
-      }
-      else {
-        return 0;
-      }
+    const countTotalCameraLicenses = () => {
+      let count = 0;
+      cameraLicenses.map(cameraLicense => cameraLicense.id !== null ? count++ : count)
+      return count;
+    }
+
+    const countUsedCameraLicenses = () => {
+      let count = 0;
+      cameraLicenses.map(cameraLicense => cameraLicense.cameras_id !== null ? count++ : count)
+      return count;
+    }
+
+    const countAvailableCameraLicenses = () => {
+      let count = 0;
+      cameraLicenses.map(cameraLicense => cameraLicense.cameras_id == null ? count++ : count)
+      return count;
     }
 
     return (
@@ -42,24 +48,67 @@ const CameraLicensesForm = Form.create()(
         <Form>
           <FormItem label='Licenses:' {...formItemLayout}>
             {getFieldDecorator('licenses', {
-              initialValue: cameraLicenses
+              initialValue: countTotalCameraLicenses()
             })(
               <Input id='1' disabled={true/*!cancelSave*/} type='text' style={styles.input} onChange={updatelicenses} className='cameraLicensesFormInput' />
             )}
           </FormItem>
           <FormItem label='Used:' {...formItemLayout}>
             {getFieldDecorator('used', {
-              initialValue: getUsedLicenses(),
+              initialValue: countUsedCameraLicenses(),
             })(
               <Input disabled type='text' style={styles.input} className='cameraLicensesFormInput' />
             )}
           </FormItem>
           <FormItem label='Available:' {...formItemLayout}>
             {getFieldDecorator('available', {
-              initialValue: cameraLicenses - getUsedLicenses(),
+              initialValue: countAvailableCameraLicenses(),
             })(
               <Input disabled type='text' style={styles.input} className='cameraLicensesFormInput' />
             )}
+          </FormItem>
+          <div style={{textAlign: 'center'}}>User Camera Licenses:</div>
+          <FormItem {...formItemLayout} style={styles.licensesTableContainer}>
+            <table border="1" style={styles.licensesTable}>
+              <tbody>
+                <tr>
+                  <th>
+                    <b>License</b>
+                  </th>
+                  <th>
+                    <b>Owner</b>
+                  </th>
+                  <th>
+                    <b>Distributer</b>
+                  </th>
+                  <th>
+                    <b>Manager</b>
+                  </th>
+                  <th>
+                    <b>Camera</b>
+                  </th>
+                </tr>
+                {cameraLicenses.map(cameraLicense => (
+                  <tr key={`cameraLicense-${cameraLicense.id}`}>
+                    <td>
+                      {cameraLicense.id}
+                    </td>
+                    <td>
+                      {cameraLicense.tier_0}
+                    </td>
+                    <td>
+                      {cameraLicense.tier_1}
+                    </td>
+                    <td>
+                      {cameraLicense.tier_2}
+                    </td>
+                    <td>
+                      {cameraLicense.cameras_id}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </FormItem>
         </Form>
         <div style={styles.subscriptionAgreement}>
@@ -158,7 +207,7 @@ const styles = {
     float: 'left'
   },
   modal: {
-    textAlign: 'center',
+    textAlign: 'center'
   },
   error: {
     color: 'red',
@@ -185,6 +234,12 @@ const styles = {
     float: 'right',
     marginTop: -10,
     marginRight: 15
+  },
+  licensesTableContainer: {
+    left: '20%'
+  },
+  licensesTable: {
+    width: 300
   }
 };
 

@@ -9,6 +9,7 @@ import { Socket } from '../../../lib/phoenix/phoenix';
 import { listenForNewAlerts } from '../alerts/actions';
 import { fetchReceivedInvites } from '../invites/actions';
 import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login} from '../auth/actions';
+import {isEmpty} from '../helperFunctions';
 
 export function updateUserData(userData) {
   return{
@@ -38,10 +39,34 @@ function updateUserSuccess(bool, user) {
   }
 }
 
+function fetchUserCameraLicenses(user) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/licenses`;
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    axios.get(url, config)
+      .then((resp) => {
+        if (isEmpty(resp.data) === false) {
+          user.cameraLicenses = resp.data;
+        } else {
+          user.cameraLicenses = [];
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        user.cameraLicenses = [];
+      })
+      .finally(() => {
+        dispatch(loginSuccess(user));
+        dispatch(loginInProcess(false));
+        dispatch(fetchReceivedInvites(user));
+      })
+  }
+}
+
 export function readUser(jwt, jwtTokenRefresh, email, password) {
   return(dispatch) => {
-    let config = {headers: {Authorization: 'Bearer '+jwt}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/users`;
+    let config = {headers: {Authorization: 'Bearer '+jwt}};
     axios.get(url, config)
       .then((resp) => {
         const user = {
@@ -52,7 +77,6 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('password', password);
 
-        // figure out a way to pass this to global if we set it
         if (jwtTokenRefresh === null) {
           jwtTokenRefresh = window.setInterval(
             function(){
@@ -60,9 +84,7 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
             }, (10 * 60 * 1000), [email, password]
           );
         }
-        dispatch(loginSuccess(user));
-        dispatch(loginInProcess(false));
-        dispatch(fetchReceivedInvites(user));
+        dispatch(fetchUserCameraLicenses(user));
 
         const loginEvent = {
           email: resp.data.email,

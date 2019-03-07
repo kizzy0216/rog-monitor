@@ -11,7 +11,7 @@ import CameraOptionButtons from '../components/cameras/CameraOptionButtons';
 import { listenForNewImageThumbnails } from '../redux/cameras/actions';
 import * as cameraGroupActions from '../redux/cameraGroups/actions';
 import { trackEventAnalytics } from '../redux/auth/actions';
-import { removeCameraGroupPrivilege } from '../redux/cameraGroups/actions';
+import { removeUserCameraGroupPrivilege } from '../redux/cameraGroups/actions';
 
 class CameraList extends Component {
   constructor(props) {
@@ -55,8 +55,8 @@ class CameraList extends Component {
       message.error(nextProps.rescindInviteError);
     }
 
-    if (nextProps.removeCameraGroupPrivilegeError && nextProps.removeCameraGroupPrivilegeError !== this.props.removeCameraGroupPrivilegeError) {
-      message.error(nextProps.removeCameraGroupPrivilegeError);
+    if (nextProps.removeUserCameraGroupPrivilegeError && nextProps.removeUserCameraGroupPrivilegeError !== this.props.removeUserCameraGroupPrivilegeError) {
+      message.error(nextProps.removeUserCameraGroupPrivilegeError);
     }
   }
 
@@ -91,8 +91,8 @@ class CameraList extends Component {
                   this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
                     userCameraGroupPrivilege.user.id == this.props.user.id ?
                       <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
-                        <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeCameraGroupPrivilegeInProcess ? '' : this.props.removeCameraGroupPrivilege(this.props.user, userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
-                          <Button type="danger" icon="close" className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeCameraGroupPrivilegeInProcess} disabled={this.props.removeCameraGroupPrivilegeInProcess}></Button>
+                        <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.props.removeUserCameraGroupPrivilege(this.props.user, userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
+                          <Button type="danger" icon="close" className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
                         </Popconfirm>
                       </Tooltip>
                     :
@@ -170,8 +170,8 @@ const mapStateToProps = (state) => {
     fetchInProcess: state.cameraGroups.fetchInProcess,
     deleteCameraSuccess: state.cameras.deleteCameraSuccess,
     deleteCameraError: state.cameras.deleteCameraError,
-    removeCameraGroupPrivilegeInProcess: state.cameraGroups.removeCameraGroupPrivilegeInProcess,
-    removeCameraGroupPrivilegeError: state.cameraGroups.removeCameraGroupPrivilegeError
+    removeUserCameraGroupPrivilegeInProcess: state.cameraGroups.removeUserCameraGroupPrivilegeInProcess,
+    removeUserCameraGroupPrivilegeError: state.cameraGroups.removeUserCameraGroupPrivilegeError
   }
 };
 
@@ -181,7 +181,7 @@ const mapDispatchToProps = (dispatch) => {
     addCameraGroupCamera: (user, cameraGroup, name, rtspUrl, username, password) => dispatch(addCameraGroupCamera(user, cameraGroup, name, rtspUrl, username, password)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
     listenForNewImageThumbnails: (user) => dispatch(listenForNewImageThumbnails(user)),
-    removeCameraGroupPrivilege: (user, userCameraGroupPrivilege) => dispatch(removeCameraGroupPrivilege(user, userCameraGroupPrivilege)),
+    removeUserCameraGroupPrivilege: (user, userCameraGroupPrivilege) => dispatch(removeUserCameraGroupPrivilege(user, userCameraGroupPrivilege)),
   }
 };
 

@@ -50,15 +50,18 @@ function fetchUserCameraLicenses(user) {
         } else {
           user.cameraLicenses = [];
         }
-      })
-      .catch((error) => {
-        console.log(error);
-        user.cameraLicenses = [];
-      })
-      .finally(() => {
         dispatch(loginSuccess(user));
         dispatch(loginInProcess(false));
         dispatch(fetchReceivedInvites(user));
+      })
+      .catch((error) => {
+        console.log(error);
+        let errMessage = 'Error fetching user data. Please try again later.';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
+        dispatch(loginError(errMessage));
+        dispatch(loginInProcess(false));
       })
   }
 }
@@ -77,22 +80,14 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('password', password);
 
-        if (jwtTokenRefresh === null) {
-          jwtTokenRefresh = window.setInterval(
+        if (window.jwtTokenRefresh === null) {
+          window.jwtTokenRefresh = window.setInterval(
             function(){
               dispatch(login(email, password));
             }, (10 * 60 * 1000), [email, password]
           );
         }
         dispatch(fetchUserCameraLicenses(user));
-
-        const loginEvent = {
-          email: resp.data.email,
-          name: resp.data.firstName + ' ' + resp.data.lastName,
-          last_login: new Date().toString().split(' ').splice(1, 4).join(' ')
-        };
-
-        dispatch(trackEventAnalytics('login', loginEvent));
       })
       .catch(error => {
         console.log(error);

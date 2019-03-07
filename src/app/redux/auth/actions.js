@@ -193,19 +193,21 @@ export function checkLogin() {
             ...resp.data,
             jwt: jwt
           };
-          dispatch(loginSuccess(user));
-          dispatch(fetchReceivedInvites(user));
-          if (jwtTokenRefresh === null) {
+
+          if (window.jwtTokenRefresh === null) {
+            dispatch(loginSuccess(user));
             dispatch(login(sessionStorage.getItem('email'), sessionStorage.getItem('password')));
+          } else {
+            dispatch(loginSuccess(user));
           }
         })
         .catch(error => {
           sessionStorage.removeItem('jwt');
           sessionStorage.removeItem('email');
           sessionStorage.removeItem('password');
-          if(jwtTokenRefresh !== null){
-            window.clearInterval(jwtTokenRefresh);
-            jwtTokenRefresh = null;
+          if(window.jwtTokenRefresh !== null){
+            window.clearInterval(window.jwtTokenRefresh);
+            window.jwtTokenRefresh = null;
           };
           dispatch(loginMissing());
         });
@@ -297,7 +299,7 @@ export function resetPassword(new_password, confirmPassword, token) {
 }
 
 // set timout variable to call login function to refresh token
-var jwtTokenRefresh = null;
+window.jwtTokenRefresh = null;
 
 export function login(email, password) {
   return (dispatch) => {
@@ -314,12 +316,11 @@ export function login(email, password) {
     else if (!cleanPassword) {
       dispatch(loginInProcess(false));
       dispatch(loginError('Please enter a password'));
-    }
-    else {
+    } else {
       let url = `${process.env.REACT_APP_ROG_API_URL}/authenticate`;
       axios.post(url, {email: cleanEmail, password: cleanPassword})
         .then((resp) => {
-          dispatch(readUser(resp.data.jwt, jwtTokenRefresh, cleanEmail, cleanPassword));
+          dispatch(readUser(resp.data.jwt, window.jwtTokenRefresh, cleanEmail, cleanPassword));
         })
         .catch((error) => {
           let errMessage;
@@ -345,8 +346,8 @@ export function logout(channels) {
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('email');
     sessionStorage.removeItem('password');
-    window.clearInterval(jwtTokenRefresh);
-    jwtTokenRefresh = null;
+    window.clearInterval(window.jwtTokenRefresh);
+    window.jwtTokenRefresh = null;
     disconnectFromChannels(channels);
     dispatch(clearAssociatedData());
     dispatch(logoutSuccess());

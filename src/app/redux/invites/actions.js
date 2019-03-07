@@ -6,6 +6,7 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { fetchCameraGroups } from '../cameraGroups/actions';
+import {isEmpty} from '../helperFunctions';
 
 function fetchReceivedInProcess(bool) {
   return {
@@ -96,15 +97,12 @@ export function fetchReceivedInvites(user) {
   return (dispatch) => {
     dispatch(fetchReceivedInProcess(true));
     dispatch(fetchReceivedError(''));
-
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.get(url, config)
     .then(response => {
-      if (response.data !== ''){
-        dispatch(fetchReceivedSuccess(response.data));
-      }
+      dispatch(fetchReceivedSuccess(response.data));
     })
     .catch((error) => {
       let errMessage = 'Error fetching recieved invites';

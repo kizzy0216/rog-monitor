@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { Icon, Modal, Button, Row, Col, message } from 'antd';
 
 import { rescindInvite } from '../../redux/invites/actions';
-import { removeCameraGroupPrivilege } from '../../redux/cameraGroups/actions';
+import { removeUserCameraGroupPrivilege } from '../../redux/cameraGroups/actions';
 
-const GuardSettings = (props) => {
-  if (props.invites.length || props.userCameraGroupPrivileges.length) {
+const UserCameraGroupSettings = (props) => {
+  if (props.invites.length > 0 || props.userCameraGroupPrivileges.length > 0) {
     return (
       <Modal
-        title='Guard Settings'
+        title='User Camera Group Privileges'
         visible={props.visible}
         style={styles.modal}
         onCancel={props.onCancel}
@@ -17,11 +17,11 @@ const GuardSettings = (props) => {
       >
         {props.invites.map(invite => (
           <Row key={invite.id} style={styles.inviteContainer}>
-            <Col xs={{span: 11, offset: 1}} style={styles.guardNameContainer}>
-              <Col xs={{span: 24}} style={styles.guardName}>
-                {invite.inviteeEmail}
+            <Col xs={{span: 11, offset: 1}} style={styles.inviteNameContainer}>
+              <Col xs={{span: 24}} style={styles.inviteName}>
+                {invite.email}
               </Col>
-              <Col xs={{span: 24}} style={styles.guardAction}>
+              <Col xs={{span: 24}} style={styles.inviteAction}>
                 Invited
               </Col>
             </Col>
@@ -35,18 +35,20 @@ const GuardSettings = (props) => {
             </Col>
           </Row>
         ))}
-
-        {props.guards.map(guard => (
-          <Row key={guard.id} style={styles.inviteContainer}>
-            <Col xs={{span: 11, offset: 1}} style={styles.guardNameContainer}>
-              <Col xs={{span: 24}} style={styles.guardName}>
-                {guard.user.firstName} {guard.user.lastName}
+        {/*
+          TODO use userCameraGroupPrivileges below to get the required information on each camera group member
+        */}
+        {props.invites.map(invite => (
+          <Row key={invite.id} style={styles.inviteContainer}>
+            <Col xs={{span: 11, offset: 1}} style={styles.inviteNameContainer}>
+              <Col xs={{span: 24}} style={styles.inviteName}>
+                {invite.user.firstName} {invite.user.lastName}
               </Col>
-              <Col xs={{span: 24}} style={styles.guardAction}>
-                Role: {guard.role}
+              <Col xs={{span: 24}} style={styles.inviteAction}>
+                Role: {invite.role}
               </Col>
             </Col>
-            <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.removeCameraGroupPrivilegeInProcess ? '' : props.removeCameraGroupPrivilege(props.user, guard)}>
+            <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.removeUserCameraGroupPrivilegeInProcess ? '' : props.removeUserCameraGroupPrivilege(props.user, invite)}>
               <Col xs={{span: 24}}>
                 <Button style={styles.button}>Remove</Button>
               </Col>
@@ -62,19 +64,19 @@ const GuardSettings = (props) => {
   else {
     return (
       <Modal
-        title='Guard Settings'
+        title='User Camera Group Privileges'
         visible={props.visible}
         style={styles.modal}
         onCancel={props.onCancel}
         footer={[null, null]}
       >
-        <div>You have not invited any guards.</div>
+        <div>You have not recieved any invitations.</div>
       </Modal>
     )
   }
 }
 
-class GuardSettingsModal extends Component {
+class UserCameraGroupSettingsModal extends Component {
   constructor(props) {
     super(props);
 
@@ -88,8 +90,8 @@ class GuardSettingsModal extends Component {
       message.error(nextProps.rescindInviteError);
     }
 
-    if (nextProps.removeCameraGroupPrivilegeError && nextProps.removeCameraGroupPrivilegeError !== this.props.removeCameraGroupPrivilegeError) {
-      message.error(nextProps.removeCameraGroupPrivilegeError);
+    if (nextProps.removeUserCameraGroupPrivilegeError && nextProps.removeUserCameraGroupPrivilegeError !== this.props.removeUserCameraGroupPrivilegeError) {
+      message.error(nextProps.removeUserCameraGroupPrivilegeError);
     }
   };
 
@@ -107,16 +109,16 @@ class GuardSettingsModal extends Component {
         <div onClick={this.showModal}>
           <Icon type='team'/>
           &nbsp;
-          Guard Settings
+          User Camera Group Privileges
         </div>
-        <GuardSettings
+        <UserCameraGroupSettings
           visible={this.state.visible}
           onCancel={this.handleCancel}
           user={this.props.user}
-          guards={this.props.selectedCameraGroup.guards.filter(guard => guard.user.id !== this.props.user.id)}
-          removeCameraGroupPrivilege={this.props.removeCameraGroupPrivilege}
-          removeCameraGroupPrivilegeInProcess={this.props.removeCameraGroupPrivilegeInProcess}
-          invites={this.props.selectedCameraGroup.cameraGroupGuardInvitations}
+          userCameraGroupPrivileges={this.props.selectedCameraGroup.userCameraGroupPrivileges.filter(invite => invite.users_id !== this.props.user.id)}
+          removeUserCameraGroupPrivilege={this.props.removeUserCameraGroupPrivilege}
+          removeUserCameraGroupPrivilegeInProcess={this.props.removeUserCameraGroupPrivilegeInProcess}
+          invites={this.props.receivedInvites}
           rescindInvite={this.props.rescindInvite}
           rescindInviteInProcess={this.props.rescindInviteInProcess}
         />
@@ -144,17 +146,17 @@ const styles = {
     color: '#fff',
     fontSize: 24,
   },
-  guardNameContainer: {
+  inviteNameContainer: {
     textAlign: 'left',
     borderLeft: '5px solid blue',
     paddingLeft: 15,
     color: 'grey'
   },
-  guardName: {
+  inviteName: {
     color: 'grey',
     fontSize: 18
   },
-  guardAction: {
+  inviteAction: {
     marginTop: 15,
     marginBottom: 10
   }
@@ -163,19 +165,20 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    removeCameraGroupPrivilegeInProcess: state.cameraGroups.removeCameraGroupPrivilegeInProcess,
-    removeCameraGroupPrivilegeError: state.cameraGroups.removeCameraGroupPrivilegeError,
+    removeUserCameraGroupPrivilegeInProcess: state.cameraGroups.removeUserCameraGroupPrivilegeInProcess,
+    removeUserCameraGroupPrivilegeError: state.cameraGroups.removeUserCameraGroupPrivilegeError,
     rescindInviteInProcess: state.invites.rescindInviteInProcess,
     rescindInviteError: state.invites.rescindInviteError,
-    selectedCameraGroup: state.cameraGroups.selectedCameraGroup
+    selectedCameraGroup: state.cameraGroups.selectedCameraGroup,
+    receivedInvites: state.invites.receivedInvites
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    removeCameraGroupPrivilege: (user, guard) => dispatch(removeCameraGroupPrivilege(user, guard)),
+    removeUserCameraGroupPrivilege: (user, userCameraGroupPrivilege) => dispatch(removeUserCameraGroupPrivilege(user, userCameraGroupPrivilege)),
     rescindInvite: (user, invite) => dispatch(rescindInvite(user, invite))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(GuardSettingsModal);
+export default connect(mapStateToProps, mapDispatchToProps)(UserCameraGroupSettingsModal);

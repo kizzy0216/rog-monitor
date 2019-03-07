@@ -316,7 +316,7 @@ export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
   }
 }
 
-export function removeCameraGroupPrivilege(user, cameraGroupId, cameraGroupPrivilegeId) {
+export function removeUserCameraGroupPrivilege(user, cameraGroupId, cameraGroupPrivilegeId) {
   return (dispatch) => {
     dispatch(removeGuardError(''));
     dispatch(removeGuardInProcess(true));

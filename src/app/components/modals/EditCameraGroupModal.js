@@ -39,50 +39,6 @@ const EditCameraGroupForm = Form.create()(
               />
             )}
           </FormItem>
-          <FormItem label='Address' {...formItemLayout}>
-            {getFieldDecorator('address1', {
-              rules: [{required: true, message: 'Please enter the cameraGroup street address'}],
-              initialValue: cameraGroup.address1
-            })(
-              <Input
-                style={styles.input}
-                placeholder="Street Address"
-              />
-            )}
-          </FormItem>
-          <FormItem label='City' {...formItemLayout}>
-            {getFieldDecorator('city', {
-              rules: [{required: true, message: 'Please enter the cameraGroup city'}],
-              initialValue: cameraGroup.city
-            })(
-              <Input
-                style={styles.input}
-                placeholder="City"
-              />
-            )}
-          </FormItem>
-          <FormItem label='State' {...formItemLayout}>
-            {getFieldDecorator('state', {
-              rules: [{required: true, message: 'Please enter the cameraGroup state'}],
-              initialValue: cameraGroup.state
-            })(
-              <Input
-                style={styles.input}
-                placeholder="State"
-              />
-            )}
-          </FormItem>
-          <FormItem label='Zip code' {...formItemLayout}>
-            {getFieldDecorator('zip', {
-              rules: [{required: true, message: 'Please enter the cameraGroup zip code'}],
-              initialValue: cameraGroup.zip
-            })(
-              <Input
-                style={styles.input}
-                placeholder="Zip Code"
-              />
-            )}
-          </FormItem>
           <Popconfirm title="Are you sure you want to remove this cameraGroup? This action cannot be undone." onConfirm={removeCameraGroup} okText="Yes, remove cameraGroup" cancelText="Nevermind">
             <Button type="danger" icon="close" loading={removeCameraGroupInProcess} disabled={removeCameraGroupInProcess}>Remove CameraGroup</Button>
           </Popconfirm>

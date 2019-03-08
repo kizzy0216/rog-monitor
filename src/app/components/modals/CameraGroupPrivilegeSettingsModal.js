@@ -6,74 +6,59 @@ import { rescindInvite } from '../../redux/invites/actions';
 import { removeUserCameraGroupPrivilege } from '../../redux/cameraGroups/actions';
 
 const UserCameraGroupSettings = (props) => {
-  if (props.invites.length > 0 || props.userCameraGroupPrivileges.length > 0) {
-    return (
-      <Modal
-        title='User Camera Group Privileges'
-        visible={props.visible}
-        style={styles.modal}
-        onCancel={props.onCancel}
-        footer={[null, null]}
-      >
-        {props.invites.map(invite => (
-          <Row key={invite.id} style={styles.inviteContainer}>
-            <Col xs={{span: 11, offset: 1}} style={styles.inviteNameContainer}>
-              <Col xs={{span: 24}} style={styles.inviteName}>
-                {invite.email}
-              </Col>
-              <Col xs={{span: 24}} style={styles.inviteAction}>
-                Invited
-              </Col>
+  return (
+    <Modal
+      title='User Camera Group Privileges'
+      visible={props.visible}
+      style={styles.modal}
+      onCancel={props.onCancel}
+      footer={[null, null]}
+    >
+      {props.invites.length > 0 ?
+        props.invites.map(invite => (
+        <Row key={invite.id} style={styles.inviteContainer}>
+          <Col xs={{span: 11, offset: 1}} style={styles.inviteNameContainer}>
+            <Col xs={{span: 24}} style={styles.inviteName}>
+              {invite.email}
             </Col>
-            <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.rescindInviteInProcess ? '' : props.rescindInvite(props.user, invite)}>
-              <Col xs={{span: 24}}>
-                <Button style={styles.button}>Rescind</Button>
-              </Col>
-              <Col xs={{span: 24}}>
-                <Icon type='close' />
-              </Col>
+            <Col xs={{span: 24}} style={styles.inviteAction}>
+              Invited
             </Col>
-          </Row>
-        ))}
-        {/*
-          TODO use userCameraGroupPrivileges below to get the required information on each camera group member
-        */}
-        {props.invites.map(invite => (
-          <Row key={invite.id} style={styles.inviteContainer}>
-            <Col xs={{span: 11, offset: 1}} style={styles.inviteNameContainer}>
-              <Col xs={{span: 24}} style={styles.inviteName}>
-                {invite.user.firstName} {invite.user.lastName}
-              </Col>
-              <Col xs={{span: 24}} style={styles.inviteAction}>
-                Role: {invite.role}
-              </Col>
+          </Col>
+          <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.rescindInviteInProcess ? '' : props.rescindInvite(props.user, invite)}>
+            <Col xs={{span: 24}}>
+              <Button style={styles.button}>Rescind</Button>
             </Col>
-            <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.removeUserCameraGroupPrivilegeInProcess ? '' : props.removeUserCameraGroupPrivilege(props.user, invite)}>
-              <Col xs={{span: 24}}>
-                <Button style={styles.button}>Remove</Button>
-              </Col>
-              <Col xs={{span: 24}}>
-                <Icon type='close' />
-              </Col>
+            <Col xs={{span: 24}}>
+              <Icon type='close' />
             </Col>
-          </Row>
-        ))}
-      </Modal>
-    )
-  }
-  else {
-    return (
-      <Modal
-        title='User Camera Group Privileges'
-        visible={props.visible}
-        style={styles.modal}
-        onCancel={props.onCancel}
-        footer={[null, null]}
-      >
-        <div>You have not recieved any invitations.</div>
-      </Modal>
-    )
-  }
+          </Col>
+        </Row>
+      )) : `You have not recieved any invitations.`}
+
+      {props.userCameraGroupPrivileges.length > 0 ?
+        props.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
+        <Row key={userCameraGroupPrivilege.id} style={styles.inviteContainer}>
+          <Col xs={{span: 11, offset: 1}} style={styles.inviteNameContainer}>
+            <Col xs={{span: 24}} style={styles.inviteName}>
+              {userCameraGroupPrivilege.first_name} {userCameraGroupPrivilege.last_name}
+            </Col>
+            <Col xs={{span: 24}} style={styles.inviteAction}>
+              User Privileges: {userCameraGroupPrivilege.user_privileges_ids.includes(0) ? 'Owner' : 'Member'}
+            </Col>
+          </Col>
+          <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.removeUserCameraGroupPrivilegeInProcess ? '' : props.removeUserCameraGroupPrivilege(props.user, invite)}>
+            <Col xs={{span: 24}}>
+              <Button style={styles.button}>Remove</Button>
+            </Col>
+            <Col xs={{span: 24}}>
+              <Icon type='close' />
+            </Col>
+          </Col>
+        </Row>
+      )) : <div><br/><text>You are the only member in this camera Group.</text></div>}
+    </Modal>
+  )
 }
 
 class UserCameraGroupSettingsModal extends Component {

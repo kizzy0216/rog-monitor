@@ -218,7 +218,7 @@ export function checkLogin() {
   }
 }
 
-export function register(email, firstName, lastName, phone, password, confirmPassword, token) {
+export function register(email, firstName, lastName, password, confirmPassword, token) {
   return (dispatch) => {
     dispatch(registerError(''));
     dispatch(registerInProcess(true));
@@ -227,6 +227,8 @@ export function register(email, firstName, lastName, phone, password, confirmPas
     const data = {
       auth_token: token,
       email,
+      first_name: firstName,
+      last_name: lastName,
       password
     };
 

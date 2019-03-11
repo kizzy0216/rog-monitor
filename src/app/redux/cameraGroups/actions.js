@@ -291,9 +291,7 @@ export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     let data = {
-      cameraGroup_guard_invitation: {
-        cameraGroup_id: cameraGroupId, invitee_email: inviteeEmail, role: 'viewer'
-      }
+      email: inviteeEmail
     };
 
     axios.post(url, data, config)
@@ -303,6 +301,7 @@ export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
         dispatch(shareCameraGroupSuccess(false));
       })
       .catch((error) => {
+        console.log(error);
         let errMessage = 'Error sharing cameraGroup. Please try again later.';
         if (error.response.data['Error']) {
           errMessage = error.response.data['Error'];
@@ -347,11 +346,12 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
     dispatch(editCameraGroupError(''));
     dispatch(editCameraGroupInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     let data = {
-      cameraGroup: cameraGroupData
+      camera_group_name: cameraGroupData.name,
+      vacation_mode: 0 //for now hard code this until we build the UI for this edit option
     };
 
     axios.patch(url, data, config)
@@ -361,6 +361,7 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
         dispatch(editCameraGroupSuccess(false));
       })
       .catch((error) => {
+        console.log(error.response);
         let errMessage = 'Error editing camera group. Please try again later.';
         if (error.response.data['Error']) {
           errMessage = error.response.data['Error'];

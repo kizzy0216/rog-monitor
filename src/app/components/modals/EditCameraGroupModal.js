@@ -81,7 +81,6 @@ class EditCameraGroupModal extends Component {
       if (err) {
         return;
       }
-      console.log(values);
       this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, values);
     });
   };

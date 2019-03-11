@@ -271,16 +271,16 @@ export function resetPassword(new_password, confirmPassword, token) {
     const url = `${process.env.REACT_APP_ROG_API_URL}/reset-password/${token}`;
     const data = {new_password};
 
-    axios.post(url, data)
+    axios.patch(url, data)
       .then((resp) => {
         dispatch(resetPasswordSuccess());
 
-        const registrationEvent = {
-          reset_password_status: 'Password Reset Successful',
-          reset_password_date: new Date().toString().split(' ').splice(1, 4).join(' ')
-        };
-
-        dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent));
+        // const registrationEvent = {
+        //   reset_password_status: 'Password Reset Successful',
+        //   reset_password_date: new Date().toString().split(' ').splice(1, 4).join(' ')
+        // };
+        //
+        // dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent));
 
         /*-- Needed for Woopra Trigger event --*/
         // resetPasswordEvent.reset_password_status = 'Password Reset Completed';
@@ -325,7 +325,7 @@ export function login(email, password) {
           dispatch(readUser(resp.data.jwt, window.jwtTokenRefresh, cleanEmail, cleanPassword));
         })
         .catch((error) => {
-          let errMessage;
+          let errMessage = 'Error logging in';
           if (error.response.data['Error']) {
             errMessage = error.response.data['Error'];
           }
@@ -480,10 +480,11 @@ export function getPasswordResetRequest(token) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${token}`;
     axios.get(url)
       .then(resp => {
+        console.log(resp);
         dispatch(getPasswordResetRequestSuccess(resp.data));
       })
       .catch(error => {
-        let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
+        let errMessage = 'Error getting Valid Password Reset Request.';
         if (error.response.data['Error']) {
           errMessage = error.response.data['Error'];
         }

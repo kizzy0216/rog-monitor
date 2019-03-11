@@ -5,13 +5,13 @@ const FormItem = Form.Item;
 
 import { shareCameraGroup } from '../../redux/cameraGroups/actions';
 
-const InviteGuardForm = Form.create()(
+const ShareCameraGroupForm = Form.create()(
   (props) => {
     const {visible, onCancel, onCreate, form, selectedCameraGroup, shareCameraGroupInProcess} = props;
     const {getFieldDecorator} = form;
-    
+
     return (
-      <Modal title={`Invite Guard to View ${selectedCameraGroup.name}'s Cameras`}
+      <Modal title={`Share Camera Group to View ${selectedCameraGroup.name}'s Cameras`}
         visible={visible}
         okText='Create'
         onCancel={onCancel}
@@ -41,7 +41,7 @@ const InviteGuardForm = Form.create()(
   }
 );
 
-class InviteGuardModal extends Component {
+class ShareCameraGroupModal extends Component {
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.shareCameraGroupError && this.props.shareCameraGroupError !== nextProps.shareCameraGroupError) {
       message.error(nextProps.shareCameraGroupError);
@@ -54,7 +54,7 @@ class InviteGuardModal extends Component {
 
   handleCancel = () => {
     this.form.resetFields();
-    this.props.toggleInviteGuardModalVisibility();
+    this.props.toggleShareCameraGroupModalVisibility();
   };
 
   handleCreate = () => {
@@ -75,7 +75,7 @@ class InviteGuardModal extends Component {
   render() {
     return (
       <div>
-        <InviteGuardForm
+        <ShareCameraGroupForm
           ref={this.saveFormRef}
           visible={this.props.visible}
           onCancel={this.handleCancel}
@@ -111,4 +111,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InviteGuardModal);
+export default connect(mapStateToProps, mapDispatchToProps)(ShareCameraGroupModal);

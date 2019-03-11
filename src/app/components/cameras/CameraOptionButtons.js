@@ -29,7 +29,7 @@ class CameraOptionButtons extends Component {
   }
 
   toggleAddCameraModalVisibility = () => {
-    let licensesAvailable = this.countUsedCameraLicenses();
+    let licensesAvailable = this.countAvailableCameraLicenses();
     if (licensesAvailable >= 1) {
       this.setState({addCameraModalVisible: !this.state.addCameraModalVisible})
     } else {
@@ -37,11 +37,11 @@ class CameraOptionButtons extends Component {
     }
   }
 
-  countUsedCameraLicenses = () => {
-    let count = 0;
-    cameraLicenses.map(cameraLicense => cameraLicense.cameras_id !== null ? count++ : count)
-    return count;
-  }
+  countAvailableCameraLicenses = () => {
+      let count = 0;
+      this.props.user.cameraLicenses.map(cameraLicense => cameraLicense.cameras_id == null ? count++ : count)
+      return count;
+    }
 
   toggleShareCameraGroupModalVisibility = () => {
     this.setState({shareCameraGroupModalVisible: !this.state.shareCameraGroupModalVisible})

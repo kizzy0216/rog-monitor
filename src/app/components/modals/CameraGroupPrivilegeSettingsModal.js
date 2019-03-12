@@ -56,7 +56,7 @@ const UserCameraGroupSettings = (props) => {
             </Col>
           </Col>
         </Row>
-      )) : <div><br/><text>You are the only member in this camera Group.</text></div>}
+      )) : <div><br/><p>You are the only member in this camera Group.</p></div>}
     </Modal>
   )
 }
@@ -89,27 +89,38 @@ class UserCameraGroupSettingsModal extends Component {
   };
 
   render() {
-    console.log(this.props);
-    return (
-      <div>
-        <div onClick={this.showModal}>
-          <Icon type='team'/>
-          &nbsp;
-          User Camera Group Privileges
+    if ('userCameraGroupPrivileges' in this.props.selectedCameraGroup){
+      return (
+        <div>
+          <div onClick={this.showModal}>
+            <Icon type='team'/>
+            &nbsp;
+            User Camera Group Privileges
+          </div>
+          <UserCameraGroupSettings
+            visible={this.state.visible}
+            onCancel={this.handleCancel}
+            user={this.props.user}
+            userCameraGroupPrivileges={this.props.selectedCameraGroup.userCameraGroupPrivileges.filter(invite => invite.users_id !== this.props.user.id)}
+            removeUserCameraGroupPrivilege={this.props.removeUserCameraGroupPrivilege}
+            removeUserCameraGroupPrivilegeInProcess={this.props.removeUserCameraGroupPrivilegeInProcess}
+            invites={this.props.receivedInvites}
+            rescindInvite={this.props.rescindInvite}
+            rescindInviteInProcess={this.props.rescindInviteInProcess}
+          />
         </div>
-        <UserCameraGroupSettings
-          visible={this.state.visible}
-          onCancel={this.handleCancel}
-          user={this.props.user}
-          userCameraGroupPrivileges={this.props.selectedCameraGroup.userCameraGroupPrivileges.filter(invite => invite.users_id !== this.props.user.id)}
-          removeUserCameraGroupPrivilege={this.props.removeUserCameraGroupPrivilege}
-          removeUserCameraGroupPrivilegeInProcess={this.props.removeUserCameraGroupPrivilegeInProcess}
-          invites={this.props.receivedInvites}
-          rescindInvite={this.props.rescindInvite}
-          rescindInviteInProcess={this.props.rescindInviteInProcess}
-        />
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div>
+          <div>
+            <Icon type='team'/>
+            &nbsp;
+            User Camera Group Privileges
+          </div>
+        </div>
+      );
+    }
   }
 }
 

@@ -236,6 +236,8 @@ export function addNewCameraGroup(user, cameraGroup) {
       .then((response) => {
         dispatch(fetchCameraGroups(user));
         dispatch(addCameraGroupSuccess(true));
+        response.data.id = response.data.camera_group_id;
+        delete response.data.camera_group_id;
         dispatch(selectCameraGroup(user, response.data));
       })
       .catch((error) => {
@@ -357,11 +359,11 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
     axios.patch(url, data, config)
       .then((response) => {
         dispatch(fetchCameraGroups(user));
+        dispatch(selectCameraGroup(user, cameraGroup));
         dispatch(editCameraGroupSuccess(true));
         dispatch(editCameraGroupSuccess(false));
       })
       .catch((error) => {
-        console.log(error.response);
         let errMessage = 'Error editing camera group. Please try again later.';
         if (error.response.data['Error']) {
           errMessage = error.response.data['Error'];

@@ -31,21 +31,23 @@ class CameraList extends Component {
   }
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.cameraGroups.length > 0) {
-      if (!nextProps.selectedCameraGroup.name || !('cameras' in nextProps.selectedCameraGroup) || !('userCameraGroupPrivileges' in nextProps.selectedCameraGroup)) {
+      if (!nextProps.selectedCameraGroup.name){
         this.selectCameraGroup(nextProps.user, nextProps.cameraGroups[0]);
+      } else if (!('cameras' in nextProps.selectedCameraGroup) || !('userCameraGroupPrivileges' in nextProps.selectedCameraGroup)) {
+        this.selectCameraGroup(nextProps.user, nextProps.selectCameraGroup);
       }
     }
 
-    if (this.props.selectedCameraGroup.cameras.length > 0) {
-      const cameraGroupOwnedEvent = {
-        email: this.props.user.email,
-        name: this.props.user.firstName+ ' ' +this.props.user.lastName,
-        cameraGroup_owned: this.props.cameraGroups.length,
-        camera_owned: this.props.selectedCameraGroup.cameras.length
-      };
-
-      this.props.trackEventAnalytics('cameraGroup owned', cameraGroupOwnedEvent);
-    }
+    // if (this.props.selectedCameraGroup.cameras.length > 0) {
+    //   const cameraGroupOwnedEvent = {
+    //     email: this.props.user.email,
+    //     name: this.props.user.firstName+ ' ' +this.props.user.lastName,
+    //     cameraGroup_owned: this.props.cameraGroups.length,
+    //     camera_owned: this.props.selectedCameraGroup.cameras.length
+    //   };
+    //
+    //   this.props.trackEventAnalytics('cameraGroup owned', cameraGroupOwnedEvent);
+    // }
 
     if (nextProps.deleteCameraError && nextProps.deleteCameraError !== this.props.deleteCameraError) {
       message.error(nextProps.deleteCameraError);

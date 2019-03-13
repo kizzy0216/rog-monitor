@@ -280,6 +280,7 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     axios.post(url, data, config)
       .then((response) => {
+        console.log(response);
         dispatch(fetchSuccess(user));
         dispatch(addCameraSuccess(true));
         dispatch(addCameraSuccess(false));

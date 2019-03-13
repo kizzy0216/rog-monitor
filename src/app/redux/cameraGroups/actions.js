@@ -260,7 +260,7 @@ export function removeCameraGroup(user, cameraGroup) {
     dispatch(removeCameraGroupError(''));
     dispatch(removeCameraGroupInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/cameraGroups/${cameraGroup.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.delete(url, config)

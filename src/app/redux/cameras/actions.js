@@ -263,43 +263,42 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras`;
     let data = {
-      camera: {
-        'cameraGroup_id': cameraGroup.id,
-        'rtsp_url': lowerCaseUrl,
-        name,
-        username,
-        password
-      }
+      camera_groups_name: cameraGroup.id,
+      camera_url: lowerCaseUrl,
+      camera_name: name,
+      username,
+      password
     };
 
-    const cameraAddEvent = {
-      email: user.email,
-      name: user.firstName + ' ' + user.lastName,
-      status: '',
-      camera_added: name
-    };
+    // const cameraAddEvent = {
+    //   email: user.email,
+    //   name: user.firstName + ' ' + user.lastName,
+    //   status: '',
+    //   camera_added: name
+    // };
 
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     axios.post(url, data, config)
       .then((response) => {
-        dispatch(fetchs(user));
+        dispatch(fetchSuccess(user));
         dispatch(addCameraSuccess(true));
         dispatch(addCameraSuccess(false));
-        dispatch(addedCameraData(response));
+        dispatch(fetchCameraGroupCameras(user, cameraGroup));
 
-        cameraAddEvent.status = 'Add Camera Success';
-        dispatch(trackEventAnalytics('add camera', cameraAddEvent));
-        dispatch(checkBvcCameraConnection(user, response.data.id));
+        // cameraAddEvent.status = 'Add Camera Success';
+        // dispatch(trackEventAnalytics('add camera', cameraAddEvent));
+        dispatch(checkCameraConnection(user, response.data.id));
       })
       .catch((error) => {
+        console.log(error.response);
         let errMessage = 'Error creating camera. Please try again later.';
         if (error.response.data['Error']) {
           errMessage = error.response.data['Error'];
         }
         dispatch(addCameraError(errMessage));
 
-        cameraAddEvent.status = 'Add Camera Failed';
-        dispatch(trackEventAnalytics('add camera', cameraAddEvent));
+        // cameraAddEvent.status = 'Add Camera Failed';
+        // dispatch(trackEventAnalytics('add camera', cameraAddEvent));
       })
       .finally(() => {
         dispatch(addCameraError(''));
@@ -317,14 +316,14 @@ export function checkCameraConnection(user, cameraId) {
     let timeout = 90;
     let checkBvc = setInterval(function(){
       if (timeout <= 0){
-        dispatch(CameraConnectionFail(true, cameraId));
+        dispatch(cameraConnectionFail(true, cameraId));
         clearInterval(checkBvc);
       } else {
         timeout -= 5;
       }
       axios.get(url, config)
       .then((response) => {
-          dispatch(CameraConnection(response.data.value));
+          dispatch(cameraConnection(response.data.value));
           if (response.data.value == true) {
             clearInterval(checkBvc);
           }

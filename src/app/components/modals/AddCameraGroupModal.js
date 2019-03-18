@@ -110,7 +110,7 @@ const styles = {
     fontSize: 18,
     paddingLeft: 10
   },
-  cameraCameraGroupCaption: {
+  cameraGroupCaption: {
     margin: '0 auto',
     textAlign: 'left',
     width: '60%',

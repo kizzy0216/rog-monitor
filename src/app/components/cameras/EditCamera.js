@@ -9,9 +9,9 @@ import RtspStream from '../video/RtspStream';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
-const CameraLicensesForm = Form.create()(
+const CameraForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, cameraData, updateTimeZone, time_zone} = props;
+    const {onCancel, visible, onCreate, form, cameraData, updateTimeZone, time_zone, createSelectItems} = props;
     const {getFieldDecorator, fullRtspUrl} = form;
     const formItemLayout = {
       labelCol: {
@@ -82,8 +82,9 @@ const CameraLicensesForm = Form.create()(
                 default="UTC"
                 onChange={updateTimeZone}
                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                createSelectItems={this.handleCreateSelectItems}
               >
-                {props.createSelectItems()}
+                {createSelectItems}
               </Select>
             )}
           </FormItem>
@@ -118,7 +119,7 @@ class EditCamera extends Component {
       if (err) {
         return;
       }
-      values.cameraGroup_id = this.props.data.cameraCameraGroup.id;
+      values.cameraGroup_id = this.props.data.cameraGroup.id;
       values.rtsp_url = this.props.data.rtspUrl.trim();
       this.props.editCamera(this.props.user, this.props.data.id, values);
       this.setState({visible: false});
@@ -126,6 +127,21 @@ class EditCamera extends Component {
       this.setState({fullRtspUrl: null});
     });
   };
+
+  handleCreateSelectItems = () => {
+    if (this.state.visible == true) {
+      let timezoneNames = moment.tz.names();
+      let items = [];
+      for (var i = 0; i < timezoneNames.length; i++) {
+        if (!items.includes(timezoneNames[i])) {
+          if (timezoneNames[i] !== "US/Pacific-New") {
+            items.push(<Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Option>);
+          }
+        }
+      }
+      return items;
+    }
+  }
 
   handleUpdateTimeZone = (fieldValue) => {
     this.setState({time_zone: fieldValue});
@@ -176,7 +192,7 @@ class EditCamera extends Component {
     return (
       <div>
         <Icon type='setting' onClick={this.showModal} style={styles.editCamera}/>
-        <CameraLicensesForm
+        <CameraForm
           ref={(form) => this.form = form}
           visible={this.state.visible}
           time_zone={this.state.time_zone}

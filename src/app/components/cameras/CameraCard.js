@@ -28,14 +28,14 @@ class CameraCard extends Component {
   }
 
   deleteCamera = () => {
-    this.props.deleteCamera(this.props.user, this.props.id);
+    this.props.deleteCamera(this.props.user, this.props.camera_groups_id, this.props.id);
   };
 
   viewCameraStream = () => {
     const cameraViewEvent = {
       email: this.props.user.email,
       name: this.props.user.firstName+ ' ' +this.props.user.lastName,
-      cameraGroup_viewed: this.props.cameraCameraGroup.name,
+      cameraGroup_viewed: this.props.cameraGroup.name,
       camera_viewed: this.props.name
     };
 
@@ -45,14 +45,14 @@ class CameraCard extends Component {
   }
 
   componentWillMount = () => {
-    this.props.registerCamera(this.props.user.id, this.props.cameraCameraGroup.cameras);
+    this.props.registerCamera(this.props.user.id, this.props.cameraGroup.cameras);
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.id === nextProps.id){
       if (nextProps.id === nextProps.refreshCameraId){
-        if (this.props.image.original !== nextProps.refreshCameraImage && this.props.refreshCameraId === nextProps.refreshCameraId) {
-          this.props.image.original = nextProps.refreshCameraImage
+        if (this.props.thumbnail_url !== nextProps.thumbnail_url && this.props.refreshCameraId === nextProps.refreshCameraId) {
+          this.props.thumbnail_url = nextProps.thumbnail_url
         }
       }
     }
@@ -67,7 +67,7 @@ class CameraCard extends Component {
           </Row>
           <Row>
             <div>
-              {this.props.cameraCameraGroup.myRole === 'viewer' ?
+              {this.props.cameraGroup.myRole === 'viewer' ?
                 (<div></div>) :
                 <div>
                   <Col span={8} style={styles.alertModal}>
@@ -77,7 +77,7 @@ class CameraCard extends Component {
                   </Col>
                   <Col span={8} style={styles.cameraConnectionSwitch}>
                     <ToggleCameraConnection
-                      id={this.props.id}
+                      data={this.props}
                     />
                   </Col>
                 </div>
@@ -94,7 +94,7 @@ class CameraCard extends Component {
           <Row onClick={() => this.viewCameraStream()}>
             <CameraCardImg data={this.props} />
           </Row>
-          {this.props.cameraCameraGroup.myRole === 'viewer' ?
+          {this.props.cameraGroup.myRole === 'viewer' ?
             (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
               <Col span={20} offset={2}>
                 <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
@@ -163,7 +163,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteCamera: (user, cameraId) => dispatch(deleteCamera(user, cameraId)),
+    deleteCamera: (user, cameraGroupId, cameraId) => dispatch(deleteCamera(user, cameraGroupId, cameraId)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
     registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
   }

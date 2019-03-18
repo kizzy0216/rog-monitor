@@ -49,6 +49,10 @@ class CameraList extends Component {
     //   this.props.trackEventAnalytics('cameraGroup owned', cameraGroupOwnedEvent);
     // }
 
+    if (nextProps.createCameraError && nextProps.createCameraError !== this.props.createCameraError) {
+      message.error(nextProps.createCameraError);
+    }
+
     if (nextProps.deleteCameraError && nextProps.deleteCameraError !== this.props.deleteCameraError) {
       message.error(nextProps.deleteCameraError);
     }
@@ -115,7 +119,7 @@ class CameraList extends Component {
                   user={this.props.user}
                   selectedCameraGroup={this.props.selectedCameraGroup}
                   visible={this.state.cameraGroupButtonsVisible}
-                  cameraGroups={this.props.cameraGroups}/>
+                  cameraGroup={this.props.selectedCameraGroup}/>
               )
             }
           </Row>

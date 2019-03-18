@@ -97,7 +97,7 @@ class AddCameraModal extends Component {
     if(nextProps.addedCameraData !== '' && nextProps.addedCameraData !== this.props.addedCameraData) {
       this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data);
     }
-    if(nextProps.CameraConnectionFail && nextProps.CameraConnectionFail !== this.props.CameraConnectionFail){
+    if(nextProps.cameraConnectionFail && nextProps.cameraConnectionFail !== this.props.cameraConnectionFail){
       message.error('Camera stream could not connect.');
     }
   };
@@ -192,12 +192,13 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    addCameraError: state.cameraGroups.addCameraError,
-    addCameraSuccess: state.cameraGroups.addCameraSuccess,
-    addCameraInProcess: state.cameraGroups.addCameraInProcess,
-    addedCameraData: state.cameraGroups.addedCameraData,
-    CameraConnection: state.cameraGroups.CameraConnection,
-    CameraConnectionFail: state.cameraGroups.CameraConnectionFail
+    addCameraError: state.cameras.addCameraError,
+    addCameraSuccess: state.cameras.addCameraSuccess,
+    addCameraInProcess: state.cameras.addCameraInProcess,
+    addedCameraData: state.cameras.addedCameraData,
+    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
+    cameraConnectionId: state.cameras.cameraConnectionId,
+    cameraConnectionFail: state.cameras.cameraConnectionFail
   }
 }
 

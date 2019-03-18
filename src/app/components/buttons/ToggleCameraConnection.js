@@ -8,15 +8,15 @@ import { checkCameraEnabled } from '../../redux/cameras/actions';
 class ToggleCameraConnection extends Component {
 
   toggleCameraEnabled = (enabled) => {
-    this.props.toggleCameraEnabled(this.props.id, enabled);
+    this.props.toggleCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.id, enabled);
   }
 
   componentWillMount = () => {
-    this.props.checkCameraEnabled(this.props.id);
+    this.props.checkCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.id);
   }
 
   shouldComponentUpdate = (nextProps) => {
-    if (nextProps.id === nextProps.cameraConnectionId) {
+    if (nextProps.data.id === nextProps.cameraConnectionId) {
       return true;
     } else {
       return false;
@@ -45,8 +45,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    toggleCameraEnabled: (cameraId, cameraConnectionEnabled) => dispatch(toggleCameraEnabled(cameraId, cameraConnectionEnabled)),
-    checkCameraEnabled: (cameraId) => dispatch(checkCameraEnabled(cameraId))
+    toggleCameraEnabled: (user, cameraGroup, camera, cameraConnectionEnabled) => dispatch(toggleCameraEnabled(user, cameraGroup, camera, cameraConnectionEnabled)),
+    checkCameraEnabled: (user, cameraGroup, camera) => dispatch(checkCameraEnabled(user, cameraGroup, camera))
   }
 }
 

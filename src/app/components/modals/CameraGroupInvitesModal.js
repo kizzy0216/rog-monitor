@@ -4,11 +4,11 @@ import { Icon, Modal, Button, Badge, Row, Col, message } from 'antd';
 import moment from 'moment';
 import { acceptInvite, rejectInvite } from '../../redux/invites/actions';
 
-const GuardInvites = (props) => {
+const CameraGroupInvites = (props) => {
   if (props.invites.length){
     return (
       <Modal
-        title='Guard Invitations'
+        title='Camera Group Invitations'
         visible={props.visible}
         style={styles.modal}
         onCancel={props.onCancel}
@@ -18,11 +18,11 @@ const GuardInvites = (props) => {
           <Row key={invite.id} type='flex' justify='start' style={styles.invitesListContainer}>
             <Col xs={{span: 24}} sm={{span: 11, offset: 1}} style={styles.adminNameContainer}>
               <Col xs={{span: 24}} style={styles.adminName}>
-                {invite.inviterName}
-                <p style={styles.date}>{moment(invite.timestamp).format('MMM D')}</p>
+                {invite.users_id}
+                <p style={styles.date}>{moment(invite.inserted_at).format('MMM D')}</p>
               </Col>
               <Col xs={{span: 24}}>
-                Invited to guard: {invite.cameraGroup.name}
+                Invited to join: {invite.action}
               </Col>
             </Col>
             <Col xs={{span: 24}} sm={{span: 11}} style={styles.acceptRejectButtons}>
@@ -50,7 +50,7 @@ const GuardInvites = (props) => {
   } else {
     return (
       <Modal
-        title='Guard Invitations'
+        title='Camera Group Invitations'
         visible={props.visible}
         style={styles.modal}
         onCancel={props.onCancel}
@@ -62,7 +62,7 @@ const GuardInvites = (props) => {
   }
 };
 
-class GuardInvitesModal extends Component {
+class CameraGroupInvitesModal extends Component {
   constructor(props) {
     super(props);
 
@@ -94,9 +94,9 @@ class GuardInvitesModal extends Component {
         <div onClick={this.showModal}>
           <Icon type='mail'/>
           &nbsp;&nbsp;
-          <span>Guard Invites</span>
+          <span>Camera Group Invites</span>
         </div>
-        <GuardInvites
+        <CameraGroupInvites
           visible={this.state.visible}
           onCancel={this.handleCancel}
           user={this.props.user}
@@ -169,4 +169,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(GuardInvitesModal);
+export default connect(mapStateToProps, mapDispatchToProps)(CameraGroupInvitesModal);

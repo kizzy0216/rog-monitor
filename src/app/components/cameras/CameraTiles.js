@@ -15,7 +15,7 @@ class CameraTiles extends Component {
                 {...camera}
                 style={styles.cameraCard}
                 user={this.props.user}
-                cameraCameraGroup={this.props.cameraGroup}
+                cameraGroup={this.props.cameraGroup}
                 liveView={this.props.liveView} />
             </Col>
           ))}

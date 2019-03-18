@@ -39,7 +39,7 @@ function updateUserSuccess(bool, user) {
   }
 }
 
-function fetchUserCameraLicenses(user) {
+export function fetchUserCameraLicenses(user) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/licenses`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};

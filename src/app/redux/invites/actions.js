@@ -97,7 +97,7 @@ export function fetchReceivedInvites(user) {
   return (dispatch) => {
     dispatch(fetchReceivedInProcess(true));
     dispatch(fetchReceivedError(''));
-    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group&email=${user.email}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.get(url, config)
@@ -125,12 +125,12 @@ export function acceptInvite(user, invite) {
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${invite.camera_groups_id}/privileges`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
-    data = ''
 
-    axios.post(url, data, config)
+    axios.post(url, config)
     .then(response => {
       dispatch(acceptInviteSuccess(invite));
       dispatch(fetchCameraGroups(user));
+      dispatch(fetchCameraGroupCameras(user, invite.cameraGroup));
     })
     .catch((error) => {
       let errMessage = 'Error accepting invitation';
@@ -146,7 +146,7 @@ export function acceptInvite(user, invite) {
   }
 }
 
-export function rejectInvite(user, invite, InProcess) {
+export function rejectInvite(user, invite) {
   return (dispatch) => {
     dispatch(rejectInviteError(''));
     dispatch(rejectInviteInProcess(true));

@@ -7,7 +7,8 @@ import * as types from './actionTypes';
 
 import { Socket } from '../../../lib/phoenix/phoenix';
 
-import { fetchCameraGroups, getUserCameraGroupPrivileges } from '../cameraGroups/actions';
+import { fetchCameraGroups, selectCameraGroup, getUserCameraGroupPrivileges } from '../cameraGroups/actions';
+import { fetchUserCameraLicenses } from '../users/actions';
 import {isEmpty} from '../helperFunctions';
 
 function fetchInProcess(bool) {
@@ -244,7 +245,7 @@ export function handleNewImage(channel) {
 export function newImage(camera) {
   console.log("image: "+camera);
   return (dispatch) => {
-    dispatch(refreshCameraImage(camera.id, camera.image.original));
+    dispatch(refreshCameraImage(camera.id, camera.thumbnail_url));
     dispatch(imageUpdateInProgress(false, camera.id));
     dispatch(imageUpdateSuccess(true, camera.id));
     dispatch(imageUpdateSuccess(false, camera.id));
@@ -263,31 +264,21 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras`;
     let data = {
-      camera_groups_name: cameraGroup.id,
+      camera_groups_name: cameraGroup.name,
       camera_url: lowerCaseUrl,
       camera_name: name,
       username,
       password
     };
 
-    // const cameraAddEvent = {
-    //   email: user.email,
-    //   name: user.firstName + ' ' + user.lastName,
-    //   status: '',
-    //   camera_added: name
-    // };
-
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     axios.post(url, data, config)
       .then((response) => {
-        console.log(response);
         dispatch(fetchSuccess(user));
-        dispatch(addCameraSuccess(true));
-        dispatch(addCameraSuccess(false));
+        dispatch(fetchCameraGroups(user));
         dispatch(fetchCameraGroupCameras(user, cameraGroup));
-
-        // cameraAddEvent.status = 'Add Camera Success';
-        // dispatch(trackEventAnalytics('add camera', cameraAddEvent));
+        dispatch(fetchUserCameraLicenses(user));
+        dispatch(addCameraSuccess(true));
         dispatch(checkCameraConnection(user, response.data.id));
       })
       .catch((error) => {
@@ -297,13 +288,11 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
           errMessage = error.response.data['Error'];
         }
         dispatch(addCameraError(errMessage));
-
-        // cameraAddEvent.status = 'Add Camera Failed';
-        // dispatch(trackEventAnalytics('add camera', cameraAddEvent));
       })
       .finally(() => {
         dispatch(addCameraError(''));
         dispatch(addCameraInProcess(false));
+        dispatch(addCameraSuccess(false));
       });
   }
 }
@@ -311,14 +300,14 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
 // TODO: re-work this function to hit the recos in the API and get the status for that camera id
 export function checkCameraConnection(user, cameraId) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_BVC_SERVER}/api/camera/${cameraId}/connectedOnce`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/recos/cameras/${cameraId}`;
     const jwt = localStorage.getItem('jwt');
     let config = {headers: {Authorization:'Bearer' + ' ' + jwt}};
     let timeout = 90;
-    let checkBvc = setInterval(function(){
+    let checkConnectionStatus = setInterval(function(){
       if (timeout <= 0){
         dispatch(cameraConnectionFail(true, cameraId));
-        clearInterval(checkBvc);
+        clearInterval(checkConnectionStatus);
       } else {
         timeout -= 5;
       }
@@ -326,7 +315,7 @@ export function checkCameraConnection(user, cameraId) {
       .then((response) => {
           dispatch(cameraConnection(response.data.value));
           if (response.data.value == true) {
-            clearInterval(checkBvc);
+            clearInterval(checkConnectionStatus);
           }
       })
     }, 5000, url, config);
@@ -335,6 +324,7 @@ export function checkCameraConnection(user, cameraId) {
 
 export function editCamera(user, cameraGroupsId, cameraId, cameraData) {
   return (dispatch) => {
+    let cameraGroup = {id: cameraGroupsId};
     dispatch(editCameraError(''));
     dispatch(editCameraInProcess(true));
 
@@ -348,6 +338,7 @@ export function editCamera(user, cameraGroupsId, cameraId, cameraData) {
       .then((response) => {
         dispatch(updateCamera(response.data));
         dispatch(fetchCameraGroups(user));
+        dispatch(fetchCameraGroupCameras(user, cameraGroup));
         dispatch(editCameraSuccess(true));
         dispatch(editCameraSuccess(false));
       })
@@ -368,14 +359,16 @@ export function editCamera(user, cameraGroupsId, cameraId, cameraData) {
 
 export function deleteCamera(user, cameraGroupsId, cameraId) {
   return (dispatch) => {
+    let cameraGroup = {id: cameraGroupsId};
     dispatch(deleteCameraError(''));
     dispatch(deleteCameraInProcess(true));
-
-    let url = `${process.env.REACT_APP_ROG_API_URL}/user/${user.id}/camera-groups/${cameraGroupsId}/cameras/${cameraId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupsId}/cameras/${cameraId}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     axios.delete(url, config)
       .then((response) => {
         dispatch(fetchCameraGroups(user));
+        dispatch(fetchCameraGroupCameras(user, cameraGroup));
+        dispatch(fetchUserCameraLicenses(user));
         dispatch(deleteCameraSuccess(true));
         dispatch(deleteCameraSuccess(false));
       })
@@ -383,6 +376,11 @@ export function deleteCamera(user, cameraGroupsId, cameraId) {
         let errMessage = 'Error deleting camera';
         if (error.response.data['Error']) {
           errMessage = error.response.data['Error'];
+          if (errMessage.includes('Camera Deleted.')){
+            dispatch(fetchCameraGroups(user));
+            dispatch(fetchCameraGroupCameras(user, cameraGroup));
+            dispatch(fetchUserCameraLicenses(user));
+          }
         }
         dispatch(deleteCameraError(errMessage));
       })
@@ -393,9 +391,9 @@ export function deleteCamera(user, cameraGroupsId, cameraId) {
   }
 }
 
-export function toggleCameraEnabled(user, cameraGroupId, cameraId, flag) {
+export function toggleCameraEnabled(user, cameraGroup, cameraId, flag) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     let data = {value: flag}
     axios.patch(url, data, config)
@@ -404,20 +402,30 @@ export function toggleCameraEnabled(user, cameraGroupId, cameraId, flag) {
       })
       .catch((error)=>{
         console.log(error);
+        let errMessage = 'Error toggling camera connection';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
       })
   }
 }
 
-export function checkCameraEnabled(user, cameraId) {
+export function checkCameraEnabled(user, cameraGroup, cameraId) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     axios.get(url, config)
       .then((response) => {
         dispatch(cameraConnectionEnabled(response.data.enabled, cameraId));
       })
       .catch((error)=>{
-        console.log(error);
+        let errMessage = 'Error checking camera connection';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+          console.log(errMessage);
+        } else {
+          console.log(errMessage);
+        }
       })
   }
 }

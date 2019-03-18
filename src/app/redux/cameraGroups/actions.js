@@ -266,6 +266,7 @@ export function removeCameraGroup(user, cameraGroup) {
     axios.delete(url, config)
       .then((response) => {
         dispatch(fetchCameraGroups(user));
+        dispatch(fetchCameraGroupCameras(user, cameraGroup));
         dispatch(removeCameraGroupSuccess(true));
         dispatch(removeCameraGroupSuccess(false));
         dispatch(clearCameraGroupData());
@@ -286,6 +287,7 @@ export function removeCameraGroup(user, cameraGroup) {
 
 export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
   return (dispatch) => {
+    let cameraGroup = {id: cameraGroupId};
     dispatch(shareCameraGroupError(''));
     dispatch(shareCameraGroupInProcess(true));
 
@@ -299,11 +301,10 @@ export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
     axios.post(url, data, config)
       .then((response) => {
         dispatch(fetchCameraGroups(user));
+        dispatch(fetchCameraGroupCameras(user, cameraGroup));
         dispatch(shareCameraGroupSuccess(true));
-        dispatch(shareCameraGroupSuccess(false));
       })
       .catch((error) => {
-        console.log(error);
         let errMessage = 'Error sharing cameraGroup. Please try again later.';
         if (error.response.data['Error']) {
           errMessage = error.response.data['Error'];
@@ -313,12 +314,14 @@ export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
       .finally(() => {
         dispatch(shareCameraGroupError(''));
         dispatch(shareCameraGroupInProcess(false));
+        dispatch(shareCameraGroupSuccess(false));
       });
   }
 }
 
 export function removeUserCameraGroupPrivilege(user, cameraGroupId, cameraGroupPrivilegeId) {
   return (dispatch) => {
+    let cameraGroup = {id: cameraGroupId};
     dispatch(removeGuardError(''));
     dispatch(removeGuardInProcess(true));
 
@@ -328,6 +331,7 @@ export function removeUserCameraGroupPrivilege(user, cameraGroupId, cameraGroupP
     axios.delete(url, config)
     .then(response => {
       dispatch(fetchCameraGroups(user));
+      dispatch(fetchCameraGroupCameras(user, cameraGroup));
     })
     .catch((error) => {
       let errMessage = 'Error removing user';
@@ -352,12 +356,14 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     let data = {
-      camera_group_name: cameraGroupData.name,
+      name: cameraGroupData.name,
       vacation_mode: 0 //for now hard code this until we build the UI for this edit option
     };
 
     axios.patch(url, data, config)
       .then((response) => {
+        cameraGroup.name = cameraGroupData.name;
+        cameraGroup.vacation_mode = cameraGroupData.vacation_mode;
         dispatch(fetchCameraGroups(user));
         dispatch(selectCameraGroup(user, cameraGroup));
         dispatch(editCameraGroupSuccess(true));

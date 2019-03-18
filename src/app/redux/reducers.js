@@ -6,6 +6,7 @@ import cameraGroups from './cameraGroups/reducer';
 import cameras from './cameras/reducer';
 import invites from './invites/reducer';
 import users from './users/reducer';
+import triggers from './triggers/reducer';
 
 export default combineReducers({
   auth,
@@ -14,4 +15,5 @@ export default combineReducers({
   cameras,
   invites,
   users,
+  triggers
 });

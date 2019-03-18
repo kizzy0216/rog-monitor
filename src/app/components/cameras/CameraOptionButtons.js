@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Row, Col, Icon, Menu, Dropdown, Tooltip, message } from 'antd';
 
 import AddCameraModal from '../modals/AddCameraModal';
 import ShareCameraGroupModal from '../modals/ShareCameraGroupModal';
 import EditCameraGroupModal from '../modals/EditCameraGroupModal';
 import CameraGroupPrivilegeSettingsModal from '../modals/CameraGroupPrivilegeSettingsModal';
+import { fetchUserCameraLicenses } from '../../redux/users/actions';
 
-//here
 const SettingsMenu = (props) => (
   <Menu>
     <Menu.Item>
@@ -32,16 +33,19 @@ class CameraOptionButtons extends Component {
     let licensesAvailable = this.countAvailableCameraLicenses();
     if (licensesAvailable >= 1) {
       this.setState({addCameraModalVisible: !this.state.addCameraModalVisible})
+    } else if (this.state.addCameraModalVisible === true) {
+      this.setState({addCameraModalVisible: false})
     } else {
       message.error("You have reached your license limit. Please send an email requesting additional licenses to help@gorog.co");
     }
   }
 
   countAvailableCameraLicenses = () => {
-      let count = 0;
-      this.props.user.cameraLicenses.map(cameraLicense => cameraLicense.cameras_id == null ? count++ : count)
-      return count;
-    }
+    this.props.fetchUserCameraLicenses(this.props.user, this.props.cameraGroups)
+    let count = 0;
+    this.props.user.cameraLicenses.map(cameraLicense => cameraLicense.cameras_id == null ? count++ : count)
+    return count;
+  }
 
   toggleShareCameraGroupModalVisibility = () => {
     this.setState({shareCameraGroupModalVisible: !this.state.shareCameraGroupModalVisible})
@@ -110,4 +114,14 @@ const styles = {
   }
 }
 
-export default CameraOptionButtons;
+const mapStateToProps = (state) => {
+  return {}
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchUserCameraLicenses: (user, cameraGroup) => dispatch(fetchUserCameraLicenses(user, cameraGroup))
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CameraOptionButtons);

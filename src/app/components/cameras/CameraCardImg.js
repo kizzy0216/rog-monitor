@@ -14,17 +14,17 @@ class CameraCardImg extends Component {
   }
 
   componentWillMount() {
-    if (this.props.data.image.original) {
-      this.setState({image: this.props.data.image.original});
-    } else if (this.props.bvcCameraConnectionFail && this.props.bvcCameraConnectionFailId === this.props.data.id) {
+    if (this.props.data.thumbnail_url) {
+      this.setState({image: this.props.data.thumbnail_url});
+    } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailId === this.props.data.id) {
       this.setState({image: cameraConnectError});
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.data.image.original) {
-      this.setState({image: nextProps.data.image.original});
-    } else if (nextProps.bvcCameraConnectionFail && nextProps.bvcCameraConnectionFailId === nextProps.data.id) {
+    if (nextProps.data.thumbnail_url) {
+      this.setState({image: nextProps.data.thumbnail_url});
+    } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailId === nextProps.data.id) {
       this.setState({image: cameraConnectError});
     }
   }
@@ -63,8 +63,8 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    bvcCameraConnectionFail: state.cameraGroups.bvcCameraConnectionFail,
-    bvcCameraConnectionFailId: state.cameraGroups.bvcCameraConnectionFailId
+    cameraConnectionFail: state.cameraGroups.cameraConnectionFail,
+    cameraConnectionFailId: state.cameraGroups.cameraConnectionFailId
   }
 }
 

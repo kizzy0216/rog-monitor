@@ -31,7 +31,7 @@ const EditCameraGroupForm = Form.create()(
         <Form>
           <FormItem label='Name' {...formItemLayout}>
             {getFieldDecorator('name', {
-              'initialValue': cameraGroup.name
+              'initialValue': props.cameraGroup.name
             })(
               <Input
                 style={styles.input}

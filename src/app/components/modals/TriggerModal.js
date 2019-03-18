@@ -13,7 +13,7 @@ const FormItem = Form.Item;
 const AddTriggerForm = Form.create()(
   (props) => {
     const {
-      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, createSelectItems
+      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -143,7 +143,8 @@ const AddTriggerForm = Form.create()(
                           allowEmpty={true}
                           placeholder="End Time"
                           format={'HH:mm'} />
-                      )}</FormItem>
+                      )}
+                    </FormItem>
                   </Row>
                   <Row>
                     <Button type="danger" icon="close" onClick={resetData}>Clear Silence Window</Button>
@@ -446,21 +447,6 @@ class AddTriggerModal extends Component {
     }
   }
 
-  handleCreateSelectItems = () => {
-    if (this.state.visible == true) {
-      let timezoneNames = moment.tz.names();
-      let items = [];
-      for (var i = 0; i < timezoneNames.length; i++) {
-        if (!items.includes(timezoneNames[i])) {
-          if (timezoneNames[i] !== "US/Pacific-New") {
-            items.push(<Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Option>);
-          }
-        }
-      }
-      return items;
-    }
-  }
-
   handleChangeTimeWindow = (fieldValue) => {
     let triggerTimeWindow = this.props.data.trigger_windows[fieldValue];
     let start = triggerTimeWindow.start;
@@ -539,7 +525,7 @@ class AddTriggerModal extends Component {
           onCancel={this.handleCancel}
           error={this.state.error}
           cameraName={this.props.data.name}
-          triggerImg={this.props.data.image.original}
+          triggerImg={this.props.data.thumbnail_url}
           visibility={this.state.visibility}
           handleVisibility={this.handleVisibleChange}
           showTrigger={this.showTrigger}
@@ -569,7 +555,6 @@ class AddTriggerModal extends Component {
           updateDataStop={this.handleUpdateStop}
           checkForWindow={this.handleCheckForWindow}
           updateDataDaysOfWeek={this.handleUpdateDaysOfWeek}
-          createSelectItems={this.handleCreateSelectItems}
         />
       </div>
     );

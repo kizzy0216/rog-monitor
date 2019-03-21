@@ -227,7 +227,7 @@ class AddTriggerModal extends Component {
 
 
   triggerDetails = {
-    currentTriggerId: 0,
+    currentTriggerId: null,
     currentTriggerType: '',
     polygonPoints: [],
     direction: ''
@@ -274,7 +274,6 @@ class AddTriggerModal extends Component {
   }
 // TODO: build save function for trigger time windows inside componentWillReceiveProps() and link to trigger_triggers/action.js functions
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
       if (nextProps.fetchTriggerSuccess === true) {
         this.setState({canvasMode: true});
@@ -295,9 +294,6 @@ class AddTriggerModal extends Component {
     }
     else if (this.props.polygonData !== nextProps.polygonData && !isEmpty(nextProps.polygonData)) {
       this.setState({canvasMode: true});
-    }
-    else if (isEmpty(nextProps.polygonData)) {
-      this.fetchTriggers(false);
     }
   }
 
@@ -326,11 +322,10 @@ class AddTriggerModal extends Component {
       this.setState({triggers: false});
       this.setState({deleteButton: false});
       this.triggerDetails.currentTriggerType = '';
-    }
-    else {
+    } else {
       this.setState({deleteButton: false});
       this.setState({visibility});
-      this.setState({canvasMode: true});
+      this.setState({canvasMode: false});
       this.setState({triggers: true});
     }
   };

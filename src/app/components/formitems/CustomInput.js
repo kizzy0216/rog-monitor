@@ -38,7 +38,7 @@ class CustomInput extends Component {
   };
 
   render() {
-    if(this.props.alert === true){
+    if(this.props.trigger === true){
         return (
           <span>
             {this.props.fetchAlertInProcess &&
@@ -48,7 +48,7 @@ class CustomInput extends Component {
             }
             {
              !this.props.visibility && <Button key='add_alert' type='primary' size='large'>
-                Add Alert Trigger
+                Add Trigger
               </Button>
             }
             {

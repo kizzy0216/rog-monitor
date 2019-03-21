@@ -3,8 +3,9 @@ import {withRouter} from 'react-router-dom';
 import {Icon, Modal, Form, Spin, Button, Popover, message, Slider, Row, Col, TimePicker, Select} from 'antd';
 import CustomCanvas from '../../components/formitems/CustomCanvas';
 import CustomInput from "../formitems/CustomInput";
-import {createTrigger, fetchTrigger, deleteTrigger, updateTimeWindowData, clearTimeWindowData} from '../../redux/triggers/actions';
+import {createTrigger, fetchTriggers, deleteTrigger, updateTimeWindowData, clearTimeWindowData} from '../../redux/triggers/actions';
 import {connect} from 'react-redux';
+import {isEmpty} from '../../redux/helperFunctions';
 import moment from 'moment';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
 
@@ -40,29 +41,30 @@ const AddTriggerForm = Form.create()(
               <img src={triggerImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
             }
             {canvasMode &&
-            <CustomCanvas width={imageDimensions.width} height={imageDimensions.height}
+              <CustomCanvas width={imageDimensions.width} height={imageDimensions.height}
                           triggerPointDirection={triggerPointDirection}
                           getTriggers={triggers} direction={direction} triggerExtras={triggerExtras}
-                          triggerType={currentTriggerDetails.currentTriggerType}/>}
-
+                          triggerType={currentTriggerDetails.currentTriggerType}/>
+            }
             {canvasMode && (currentTriggerDetails.currentTriggerType === 'LD') &&
-            <Row>
-              <Col span={4} style={styles.LDtimeLeft}>
-                {convertToMilitaryFormat(loiteringSeconds)}
-              </Col>
-              <Col span={16}>
-                {newLoiteringTrigger === true ?
-                  <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
-                        step={1} onChange={sliderValue} value={loiteringSeconds}/>
-                  :
-                  <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
-                          step={1} onChange={sliderValue} value={loiteringSeconds} disabled />
-                  }
-              </Col>
-              <Col span={4}>
-                <p style={styles.LDtimeRight}>30:00 Min</p>
-              </Col>
-            </Row>}
+              <Row>
+                <Col span={4} style={styles.LDtimeLeft}>
+                  {convertToMilitaryFormat(loiteringSeconds)}
+                </Col>
+                <Col span={16}>
+                  {newLoiteringTrigger === true ?
+                    <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
+                          step={1} onChange={sliderValue} value={loiteringSeconds}/>
+                    :
+                    <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
+                            step={1} onChange={sliderValue} value={loiteringSeconds} disabled />
+                    }
+                </Col>
+                <Col span={4}>
+                  <p style={styles.LDtimeRight}>30:00 Min</p>
+                </Col>
+              </Row>
+            }
             {deleteButton && canvasMode &&
             <div>
               <div>
@@ -272,34 +274,36 @@ class AddTriggerModal extends Component {
   }
 // TODO: build save function for trigger time windows inside componentWillReceiveProps() and link to trigger_triggers/action.js functions
   componentWillReceiveProps(nextProps) {
-    const nThis = this;
-    if (this.props.polygonData !== undefined) {
+    console.log(nextProps);
+    if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
       if (nextProps.fetchTriggerSuccess === true) {
         this.setState({canvasMode: true});
       }
       if (nextProps.createTriggerSuccess !== this.props.createTriggerSuccess && this.triggerDetails['id'] !== undefined) {
         this.setState({canvasMode: false});
-        this.props.fetchTrigger(this.triggerDetails['id']);
+        this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['id']);
         this.triggerDetails['id'] = undefined;
         this.setState({saveCancel: false});
       }
       if (nextProps.deleteTriggerSuccess !== this.props.deleteTriggerSuccess && this.triggerDetails['id'] !== undefined) {
         this.setState({canvasMode: false});
-        this.props.fetchTrigger(this.triggerDetails['id']);
+        this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['id']);
         this.triggerDetails['id'] = undefined;
         this.setState({deleteButton: false});
         this.setState({saveCancel: false});
       }
-
     }
-    else if (this.props.polygonData !== nextProps.polygonData) {
+    else if (this.props.polygonData !== nextProps.polygonData && !isEmpty(nextProps.polygonData)) {
       this.setState({canvasMode: true});
+    }
+    else if (isEmpty(nextProps.polygonData)) {
+      this.fetchTriggers(false);
     }
   }
 
   showModal = () => {
     if (typeof window.orientation !== 'undefined') {
-      trigger('Sorry, trigger trigger creation not currently supported on mobile devices.');
+      trigger('Sorry, trigger creation not currently supported on mobile devices.');
     } else {
       this.setState({visible: true});
       this.triggerDetails['id'] = this.props.data.id;
@@ -380,16 +384,16 @@ class AddTriggerModal extends Component {
 
         switch (this.state.triggerType) {
           case 'RA':
-            this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.id);
+            this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id']);
             break;
 
           case 'LD':
-            this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.id, this.state.loiteringSeconds);
+            this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], this.state.loiteringSeconds);
             this.setState({loiteringSeconds: 0});
             break;
 
           case 'VW':
-            this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.id, undefined, this.triggerDetails.direction);
+            this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], undefined, this.triggerDetails.direction);
             break;
 
         }
@@ -408,9 +412,8 @@ class AddTriggerModal extends Component {
     if (checked === true) {
       this.setState({triggers: true});
       this.setState({deleteButton: false});
-      this.props.fetchTrigger(this.props.data.id);
-    }
-    else {
+      this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['id']);
+    } else {
       this.setState({canvasMode: false});
       this.setState({triggers: false});
       this.setState({deleteButton: false});
@@ -635,12 +638,11 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    createTrigger: (triggerCoordinates, triggerType, cameraId, duration, direction) => dispatch(createTrigger(triggerCoordinates, triggerType, cameraId, duration, direction)),
-    fetchTrigger: (cameraId) => dispatch(fetchTrigger(cameraId)),
-    deleteTrigger: (cameraId, triggerId) => dispatch(deleteTrigger(cameraId, triggerId)),
+    createTrigger: (user, cameraGroup, triggerCoordinates, triggerType, cameraId, duration, direction) => dispatch(createTrigger(user, cameraGroup, triggerCoordinates, triggerType, cameraId, duration, direction)),
+    fetchTriggers: (user, cameraGroup, cameraId) => dispatch(fetchTriggers(user, cameraGroup, cameraId)),
+    deleteTrigger: (user, cameraGroup, cameraId, triggerId) => dispatch(deleteTrigger(user, cameraGroup, cameraId, triggerId)),
     updateTimeWindowData: (timeWindowSelect, values, fieldValue, fieldName) => dispatch(updateTimeWindowData(timeWindowSelect, values, fieldValue, fieldName)),
     clearTimeWindowData: (timeWindowSelect, values) => dispatch(clearTimeWindowData(timeWindowSelect, values))
-
   }
 };
 

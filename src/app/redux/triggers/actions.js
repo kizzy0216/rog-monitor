@@ -27,21 +27,21 @@ function createTriggerSuccess(bool) {
   }
 }
 
-function fetchTriggerSuccess(polygonData) {
+function fetchTriggersSuccess(polygonData) {
   return{
     type: types.FETCH_POLYGON_TRIGGER_SUCCESS,
     polygonData
   }
 }
 
-function fetchTriggerInSuccess(bool) {
+function fetchTriggersInSuccess(bool) {
   return{
     type: types.FETCH_POLYGON_TRIGGER_IN_SUCCESS,
     bool
   }
 }
 
-function fetchTriggerInProcess(bool) {
+function fetchTriggersInProcess(bool) {
   return{
     type: types.FETCH_POLYGON_TRIGGER_IN_PROCESS,
     bool
@@ -175,24 +175,24 @@ export function createTrigger(triggerCoordinates, triggerType, cameraGroupId, ca
   }
 }
 
-export function fetchTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
+export function fetchTriggers(user, cameraGroup, cameraId) {
   return (dispatch) => {
-    dispatch(fetchTriggerInProcess(true));
-    dispatch(fetchTriggerInSuccess(false));
+    dispatch(fetchTriggersInProcess(true));
+    dispatch(fetchTriggersInSuccess(false));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}/triggers`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.get(url, config)
       .then((resp) => {
-        dispatch(fetchTriggerSuccess(resp.data));
-        dispatch(fetchTriggerInSuccess(true));
+        dispatch(fetchTriggersSuccess(resp.data));
+        dispatch(fetchTriggersInSuccess(true));
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response);
       })
       .finally(() => {
-        dispatch(fetchTriggerInProcess(false));
+        dispatch(fetchTriggersInProcess(false));
       })
   }
 }

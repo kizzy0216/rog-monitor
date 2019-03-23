@@ -14,7 +14,7 @@ const FormItem = Form.Item;
 const AddTriggerForm = Form.create()(
   (props) => {
     const {
-      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow
+      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -35,7 +35,7 @@ const AddTriggerForm = Form.create()(
              width="50%"
       >
         <Form>
-          <FormItem style={styles.triggersHideSHow}>
+          <FormItem style={styles.triggersHideShow}>
             {triggerImg === null ?
               <img src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />:
               <img src={triggerImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
@@ -67,24 +67,19 @@ const AddTriggerForm = Form.create()(
             }
             {deleteButton && canvasMode &&
             <div>
-              <div>
-                <span style={styles.currenttriggerDetails}>
-                  Trigger Type: {(currentTriggerDetails.currentTriggerType === 'RA') ? 'Restricted Area' : ((currentTriggerDetails.currentTriggerType === 'LD') ? 'Loitering Detection' : 'Virtual Wall')}
-                  </span>
-                <Button style={styles.deleteButton} onClick={deleteTrigger} loading={deleteStatus}>
-                  Delete
-                </Button>
-              </div>
+              <span style={styles.currenttriggerDetails}>
+                Trigger Type: {(currentTriggerDetails.currentTriggerType === 'RA') ? 'Restricted Area' : ((currentTriggerDetails.currentTriggerType === 'LD') ? 'Loitering Detection' : 'Virtual Wall')}
+              </span>
               {/* TODO: build the redux functionality to link to this new set of form elements */}
               <div>
                 <div style={styles.borderBox}>
                   <div className="ant-form-item-label">
-                    <label>Set Custom Trigger Silence Windows</label>
+                    <label>Trigger Silence Windows</label>
                   </div>
-                  <FormItem label="Custom Time Window" {...formItemLayout}>
+                  <FormItem label="Select Silence Window" {...formItemLayout}>
                     {getFieldDecorator('time_window_select', {})(
                       <Select
-                        placeholder="Select Time Window"
+                        placeholder="Select Silence Window"
                         style={styles.triggerTimeWindowSelect}
                         onChange={changeTimeWindow}
                       >
@@ -98,7 +93,7 @@ const AddTriggerForm = Form.create()(
                   <FormItem>
                     {/* TODO: add button to add a new time window to the time window select and on update, send the data to the API and save it. */}
                   </FormItem>
-                  <FormItem label="Select Trigger Days">
+                  <FormItem label="Select Silence Window Days">
                     {getFieldDecorator('days_of_week', {})(
                       <Select
                         mode="multiple"
@@ -118,7 +113,7 @@ const AddTriggerForm = Form.create()(
                     )}
                   </FormItem>
                   <div span={24} className="ant-form-item-label">
-                    <label>Set Time Window {time_zone ? "("+time_zone+")" : ''}</label>
+                    <label>Set Silence Window {time_zone ? "("+time_zone+")" : ''}</label>
                   </div>
                   <Row>
                     <FormItem span={12} style={{float: 'left', width: '50%'}}>
@@ -149,11 +144,19 @@ const AddTriggerForm = Form.create()(
                     </FormItem>
                   </Row>
                   <Row>
-                    <Button type="danger" icon="close" onClick={resetData}>Clear Silence Window</Button>
+                    <Col span={12}>
+                      <Button type="danger" icon="close" onClick={resetData}>Clear Silence Window</Button>
+                    </Col>
+                    <Col span={12}>
+                      <Button type="primary" icon="lock" onClick={saveData}>Save Silence Window</Button>
+                    </Col>
                   </Row>
                   <div>&nbsp;</div>
                 </div>
               </div>
+              <Button style={styles.deleteButton} onClick={deleteTrigger} loading={deleteStatus}>
+                Delete
+              </Button>
             </div>
             }
           </FormItem>
@@ -185,18 +188,182 @@ const AddTriggerForm = Form.create()(
 
             {
               saveCancel &&
-              <Button key='add_trigger' onClick={() => handleSaveCancel('save')} loading={triggerInProcess}
-                      style={styles.saveBtn} size='small'>
-                Save
-              </Button>
-            }
-            {
-              saveCancel &&
-              <Button key='cancel' onClick={() => handleSaveCancel('cancel')} style={styles.cancelBtn} size='small'>
-                Cancel
-              </Button>
+              <div>
+                <div>
+                  <div style={styles.borderBox}>
+                    <div className="ant-form-item-label">
+                      <label>Trigger Silence Windows</label>
+                    </div>
+                    <FormItem label="Select Silence Window" {...formItemLayout}>
+                      {getFieldDecorator('time_window_select', {})(
+                        <Select
+                          placeholder="Select Silence Window"
+                          style={styles.triggerTimeWindowSelect}
+                          onChange={changeTimeWindow}
+                        >
+                          {/* TODO: dynamically populate this to show the number of time windows the user saved. */}
+                          <Option value={0}>Window 1</Option>
+                          <Option value={1}>Window 2</Option>
+                          <Option value={2}>Window 3</Option>
+                        </Select>
+                      )}
+                    </FormItem>
+                    <FormItem>
+                      {/* TODO: add button to add a new time window to the time window select and on update, send the data to the API and save it. */}
+                    </FormItem>
+                    <FormItem label="Select Silence Window Days">
+                      {getFieldDecorator('days_of_week', {})(
+                        <Select
+                          mode="multiple"
+                          onChange={updateDataDaysOfWeek}
+                          onBlur={checkForWindow}
+                          placeholder="Select Days"
+                          style={styles.dayPicker}
+                        >
+                          <Option key="monday" value="monday">Monday</Option>
+                          <Option key="tuesday" value="tuesday">Tuesday</Option>
+                          <Option key="wednesday" value="wednesday">Wednesday</Option>
+                          <Option key="thursday" value="thursday">Thursday</Option>
+                          <Option key="friday" value="friday">Friday</Option>
+                          <Option key="saturday" value="saturday">Saturday</Option>
+                          <Option key="sunday" value="sunday">Sunday</Option>
+                        </Select>
+                      )}
+                    </FormItem>
+                    <div span={24} className="ant-form-item-label">
+                      <label>Set Silence Window {time_zone ? "("+time_zone+")" : ''}</label>
+                    </div>
+                    <Row>
+                      <FormItem span={12} style={{float: 'left', width: '50%'}}>
+                        {getFieldDecorator('start', {})(
+                          <TimePicker
+                            span={8}
+                            style={{margin: '0 auto'}}
+                            onChange={updateDataStart}
+                            onOpenChange={(open: false), checkForWindow}
+                            defaultOpenValue={moment('00:00', 'HH:mm')}
+                            allowEmpty={true}
+                            placeholder="Start Time"
+                            format={'HH:mm'} />
+                        )}
+                      </FormItem>
+                      <FormItem span={12} style={{float: 'right', width: '50%'}}>
+                        {getFieldDecorator('stop', {})(
+                          <TimePicker
+                            span={8}
+                            style={{margin: '0 auto'}}
+                            onChange={updateDataStop}
+                            onOpenChange={(open: false), checkForWindow}
+                            defaultOpenValue={moment('00:00', 'HH:mm')}
+                            allowEmpty={true}
+                            placeholder="End Time"
+                            format={'HH:mm'} />
+                        )}
+                      </FormItem>
+                    </Row>
+                    <Row>
+                      <Button type="danger" icon="close" onClick={resetData}>Clear Silence Window</Button>
+                    </Row>
+                    <div>&nbsp;</div>
+                  </div>
+                </div>
+                <Button key='add_trigger' onClick={() => handleSaveCancel('save')} loading={triggerInProcess}
+                        style={styles.saveBtn} size='small'>
+                  Save
+                </Button>
+                <Button key='cancel' onClick={() => handleSaveCancel('cancel')} style={styles.cancelBtn} size='small'>
+                  Cancel
+                </Button>
+              </div>
             }
           </FormItem>
+          {!saveCancel &&
+            <FormItem>
+              <div>
+                <div style={styles.borderBox}>
+                  <div className="ant-form-item-label">
+                    <label>Camera Silence Windows</label>
+                  </div>
+                  <FormItem label="Select Silence Window" {...formItemLayout}>
+                    {getFieldDecorator('time_window_select', {})(
+                      <Select
+                        placeholder="Select Silence Window"
+                        style={styles.triggerTimeWindowSelect}
+                        onChange={changeTimeWindow}
+                      >
+                        {/* TODO: dynamically populate this to show the number of time windows the user saved. */}
+                        <Option value={0}>Window 1</Option>
+                        <Option value={1}>Window 2</Option>
+                        <Option value={2}>Window 3</Option>
+                      </Select>
+                    )}
+                  </FormItem>
+                  <FormItem>
+                    {/* TODO: add button to add a new time window to the time window select and on update, send the data to the API and save it. */}
+                  </FormItem>
+                  <FormItem label="Select Silence Window Days">
+                    {getFieldDecorator('days_of_week', {})(
+                      <Select
+                        mode="multiple"
+                        onChange={updateDataDaysOfWeek}
+                        onBlur={checkForWindow}
+                        placeholder="Select Days"
+                        style={styles.dayPicker}
+                      >
+                        <Option key="monday" value="monday">Monday</Option>
+                        <Option key="tuesday" value="tuesday">Tuesday</Option>
+                        <Option key="wednesday" value="wednesday">Wednesday</Option>
+                        <Option key="thursday" value="thursday">Thursday</Option>
+                        <Option key="friday" value="friday">Friday</Option>
+                        <Option key="saturday" value="saturday">Saturday</Option>
+                        <Option key="sunday" value="sunday">Sunday</Option>
+                      </Select>
+                    )}
+                  </FormItem>
+                  <div span={24} className="ant-form-item-label">
+                    <label>Set Silence Window {time_zone ? "("+time_zone+")" : ''}</label>
+                  </div>
+                  <Row>
+                    <FormItem span={12} style={{float: 'left', width: '50%'}}>
+                      {getFieldDecorator('start', {})(
+                        <TimePicker
+                          span={8}
+                          style={{margin: '0 auto'}}
+                          onChange={updateDataStart}
+                          onOpenChange={(open: false), checkForWindow}
+                          defaultOpenValue={moment('00:00', 'HH:mm')}
+                          allowEmpty={true}
+                          placeholder="Start Time"
+                          format={'HH:mm'} />
+                      )}
+                    </FormItem>
+                    <FormItem span={12} style={{float: 'right', width: '50%'}}>
+                      {getFieldDecorator('stop', {})(
+                        <TimePicker
+                          span={8}
+                          style={{margin: '0 auto'}}
+                          onChange={updateDataStop}
+                          onOpenChange={(open: false), checkForWindow}
+                          defaultOpenValue={moment('00:00', 'HH:mm')}
+                          allowEmpty={true}
+                          placeholder="End Time"
+                          format={'HH:mm'} />
+                      )}
+                    </FormItem>
+                  </Row>
+                  <Row>
+                    <Col span={12}>
+                      <Button type="danger" icon="close" onClick={resetData}>Clear Silence Window</Button>
+                    </Col>
+                    <Col span={12}>
+                      <Button type="primary" icon="lock" onClick={saveData}>Save Silence Window</Button>
+                    </Col>
+                  </Row>
+                  <div>&nbsp;</div>
+                </div>
+              </div>
+            </FormItem>
+          }
         </Form>
       </Modal>
     );
@@ -217,7 +384,8 @@ class AddTriggerModal extends Component {
       deleteButton: false,
       loiteringSeconds: 0,
       triggerType: '',
-      newLoiteringTrigger: false
+      newLoiteringTrigger: false,
+      time_zone: this.props.data.time_zone,
     }
 
     this.onImgLoad = this.onImgLoad.bind(this);
@@ -304,7 +472,7 @@ class AddTriggerModal extends Component {
       this.setState({visible: true});
       this.triggerDetails['id'] = this.props.data.id;
       this.setState({saveCancel: false});
-      this.setState({canvasMode: !this.state.canvasMode});
+      this.setState({canvasMode: false});
       this.fetchTriggers(true);
     }
   };
@@ -360,7 +528,7 @@ class AddTriggerModal extends Component {
 
     }
   };
-
+// TODO: add UI element to let user select if trigger is shared or not.
   handleSaveCancel = (event) => {
     if (event === 'cancel') {
       this.setState({saveCancel: !this.state.saveCancel});
@@ -371,28 +539,31 @@ class AddTriggerModal extends Component {
       if (this.triggerDetails.polygonPoints.length !== 0) {
         this.triggerDetails.currentTriggerType = '';
         this.triggerDetails['id'] = this.props.data.id;
-        delete values.start;
-        delete values.stop;
-        delete values.days_of_week;
-        delete values.time_window_select;
-        values.trigger_windows = this.props.data.trigger_windows;
+        form.validateFields((err, values) => {
+          if (err) {
+            return;
+          }
+          delete values.start;
+          delete values.stop;
+          delete values.days_of_week;
+          delete values.time_window_select;
+          values.trigger_windows = this.props.data.trigger_windows;
+          switch (this.state.triggerType) {
+            case 'RA':
+              this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], this.props.data.id, null, null, values.trigger_windows, shared);
+              break;
 
-        switch (this.state.triggerType) {
-          case 'RA':
-            this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id']);
-            break;
+            case 'LD':
+              this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], this.props.data.id, this.state.loiteringSeconds, null, values.trigger_windows, shared);
+              this.setState({loiteringSeconds: 0});
+              break;
 
-          case 'LD':
-            this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], this.state.loiteringSeconds);
-            this.setState({loiteringSeconds: 0});
-            break;
-
-          case 'VW':
-            this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], undefined, this.triggerDetails.direction);
-            break;
-
-        }
-        this.fetchTriggers(true);
+            case 'VW':
+              this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], this.props.data.id, null, this.triggerDetails.direction, values.trigger_windows, shared);
+              break;
+          }
+          this.fetchTriggers(true);
+        });
       }
       else {
         message.error('please draw a trigger to save');
@@ -501,11 +672,23 @@ class AddTriggerModal extends Component {
     }
   }
 
+  handleSaveData = () => {
+    // form.validateFields((err, values) => {
+    //   delete values.start;
+    //   delete values.stop;
+    //   delete values.days_of_week;
+    //   delete values.time_window_select;
+    //   values.trigger_windows = this.props.data.trigger_windows;
+    // });
+    // this.props.createTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow);
+    // this.props.updateTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow);
+  }
+
   handleCheckForWindow = () => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     let daysOfWeek = this.form.getFieldProps('days_of_week').value;
     if (typeof timeWindowSelect == 'undefined') {
-      message.error('Please select which Trigger Time Window you want to store this in. Your changes will not be saved!');
+      message.error('Please select which Trigger Silence Window you want to store this in. Your changes will not be saved!');
       this.handleResetData();
     } else if (daysOfWeek === undefined || daysOfWeek.length == 0) {
       message.error('Please select the days you would like the trigger time to be active. Your changes will not be saved!');
@@ -553,6 +736,8 @@ class AddTriggerModal extends Component {
           updateDataStop={this.handleUpdateStop}
           checkForWindow={this.handleCheckForWindow}
           updateDataDaysOfWeek={this.handleUpdateDaysOfWeek}
+          time_zone={this.state.time_zone}
+          saveData={this.handleSaveData}
         />
       </div>
     );
@@ -590,7 +775,7 @@ const styles = {
     color: 'red',
     marginLeft: 2
   },
-  triggersHideSHow: {
+  triggersHideShow: {
     textAlign: 'right'
   },
   deleteButton: {

@@ -47,7 +47,7 @@ class CustomInput extends Component {
             </div>
             }
             {
-             !this.props.visibility && <Button key='add_alert' type='primary' size='large'>
+             !this.props.visibility && <Button key='add_trigger' type='primary' size='large'>
                 Add Trigger
               </Button>
             }

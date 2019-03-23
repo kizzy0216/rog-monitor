@@ -143,23 +143,13 @@ export function createTrigger(triggerCoordinates, triggerType, cameraGroupId, ca
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     let triggerData = {
       trigger_type: triggerType,
-      vertices: triggerCoordinates
+      target_type: null,
+      vertices: triggerCoordinates,
+      time_windows: timeWindows,
+      trigger_duration: triggerDuration,
+      direction: direction,
+      shared: shared
     };
-    // Add target_type to the data being sent in a future update.
-    if(duration !== undefined){
-      triggerData['trigger_duration'] = triggerDuration;
-    }
-    if(direction !== undefined){
-      triggerData['direction'] = direction;
-    }
-
-    if (shared !== undefined) {
-      triggerData['shared'] = shared;
-    }
-
-    if (timeWindows !== undefined) {
-      triggerData['time_windows'] = timeWindows;
-    }
 
     axios.post(url, triggerData, config)
       .then((resp) => {

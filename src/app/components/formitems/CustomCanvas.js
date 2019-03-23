@@ -28,7 +28,7 @@ class CustomCanvas extends Component {
     let fabricCanvas = nThis.canvas();
 
     if (this.props.getAlerts === true) {
-      const alertedPolygonAtrributes = {
+      const triggerPolygonAtrributes = {
         stroke: '#000',
         strokeWidth: 2,
         strokeStyle: "#FF0000",
@@ -37,7 +37,7 @@ class CustomCanvas extends Component {
       };
 
       /* ---> Genereate Polygons from point array <--- */
-      fabricCanvas = nThis.loadPolygons(nThis, fabricCanvas, alertedPolygonAtrributes);
+      fabricCanvas = nThis.loadPolygons(nThis, fabricCanvas, triggerPolygonAtrributes);
 
       fabricCanvas.on('mouse:down', function (options) {
         if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
@@ -57,7 +57,7 @@ class CustomCanvas extends Component {
           });
 
           fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+          nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
         }
       });
       document.getElementById('prev_button').addEventListener('click', function (options) {
@@ -78,7 +78,7 @@ class CustomCanvas extends Component {
           });
           fabricCanvas.setActiveObject(nThis.prevItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
           fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+          nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           fabricCanvas.renderAll();
         }
       });
@@ -101,13 +101,13 @@ class CustomCanvas extends Component {
           });
           fabricCanvas.setActiveObject(nThis.nextItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
           fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.alertExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+          nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           fabricCanvas.renderAll();
         }
       });
     } else {
       fabricCanvas.on('mouse:down', function (options) {
-        if (nThis.props.alertType === 'RA' || nThis.props.alertType === 'LD') {
+        if (nThis.props.triggerType === 'RA' || nThis.props.triggerType === 'LD') {
           if (nThis.pointArray.length > 0) {
             if (options.target && options.target.id === nThis.pointArray[0].id) {
               let points = [];
@@ -120,17 +120,17 @@ class CustomCanvas extends Component {
               });
 
 
-              const alertedPolygonAtrributes = {
-                fill: (nThis.props.alertType === 'RA') ? "#FF0000" : ((nThis.props.alertType === 'LD') ? '#0092f8' : '#00cd78')
+              const triggerPolygonAtrributes = {
+                fill: (nThis.props.triggerType === 'RA') ? "#FF0000" : ((nThis.props.triggerType === 'LD') ? '#0092f8' : '#00cd78')
               };
 
-              nThis.generatePolygon(fabricCanvas, points, nThis.lineArray, alertedPolygonAtrributes);
+              nThis.generatePolygon(fabricCanvas, points, nThis.lineArray, triggerPolygonAtrributes);
 
               let canvasPointArray = [];
               for (let i = 0; i < nThis.pointArray.length; i++) {
                 canvasPointArray.push([nThis.pointArray[i].left / fabricCanvas.width, nThis.pointArray[i].top / fabricCanvas.height]);
               }
-              nThis.props.alertPointDirection(canvasPointArray, undefined);
+              nThis.props.triggerPointDirection(canvasPointArray, undefined);
             }
           }
         }
@@ -140,7 +140,7 @@ class CustomCanvas extends Component {
         }
 
 
-        if (nThis.props.alertType === 'VW') {
+        if (nThis.props.triggerType === 'VW') {
           if (nThis.pointArray.length === 2) {
             let points = [];
 
@@ -157,7 +157,7 @@ class CustomCanvas extends Component {
               nThis.canvasPointArray.push([nThis.pointArray[i].left / fabricCanvas.width, nThis.pointArray[i].top / fabricCanvas.height]);
             }
             nThis.pointArray.length = 0;
-            nThis.props.alertPointDirection(nThis.canvasPointArray, 'rightLeft');
+            nThis.props.triggerPointDirection(nThis.canvasPointArray, 'rightLeft');
           }
           if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
             let virtualWallDetails = {
@@ -191,14 +191,14 @@ class CustomCanvas extends Component {
                 fabricCanvas.add(directionCircle);
                 break;
             }
-            nThis.props.alertPointDirection(nThis.canvasPointArray, virtualWallDetails.id);
+            nThis.props.triggerPointDirection(nThis.canvasPointArray, virtualWallDetails.id);
 
           }
         }
       });
 
       fabricCanvas.on('touch:gesture', function (options) {
-        if (nThis.props.alertType === 'RA' || nThis.props.alertType === 'LD') {
+        if (nThis.props.triggerType === 'RA' || nThis.props.triggerType === 'LD') {
           if (nThis.pointArray.length > 0) {
             if (options.target && options.target.id === nThis.pointArray[0].id) {
               let points = [];
@@ -211,17 +211,17 @@ class CustomCanvas extends Component {
               });
 
 
-              const alertedPolygonAtrributes = {
-                fill: (nThis.props.alertType === 'RA') ? "#FF0000" : ((nThis.props.alertType === 'LD') ? '#0092f8' : '#00cd78')
+              const triggerPolygonAtrributes = {
+                fill: (nThis.props.triggerType === 'RA') ? "#FF0000" : ((nThis.props.triggerType === 'LD') ? '#0092f8' : '#00cd78')
               };
 
-              nThis.generatePolygon(fabricCanvas, points, nThis.lineArray, alertedPolygonAtrributes);
+              nThis.generatePolygon(fabricCanvas, points, nThis.lineArray, triggerPolygonAtrributes);
 
               let canvasPointArray = [];
               for (let i = 0; i < nThis.pointArray.length; i++) {
                 canvasPointArray.push([nThis.pointArray[i].left / fabricCanvas.width, nThis.pointArray[i].top / fabricCanvas.height]);
               }
-              nThis.props.alertPointDirection(canvasPointArray, undefined);
+              nThis.props.triggerPointDirection(canvasPointArray, undefined);
             }
           }
         }
@@ -231,7 +231,7 @@ class CustomCanvas extends Component {
         }
 
 
-        if (nThis.props.alertType === 'VW') {
+        if (nThis.props.triggerType === 'VW') {
           if (nThis.pointArray.length === 2) {
             let points = [];
 
@@ -248,7 +248,7 @@ class CustomCanvas extends Component {
               nThis.canvasPointArray.push([nThis.pointArray[i].left / fabricCanvas.width, nThis.pointArray[i].top / fabricCanvas.height]);
             }
             nThis.pointArray.length = 0;
-            nThis.props.alertPointDirection(nThis.canvasPointArray, 'rightLeft');
+            nThis.props.triggerPointDirection(nThis.canvasPointArray, 'rightLeft');
           }
           if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
             let virtualWallDetails = {
@@ -282,7 +282,7 @@ class CustomCanvas extends Component {
                 fabricCanvas.add(directionCircle);
                 break;
             }
-            nThis.props.alertPointDirection(nThis.canvasPointArray, virtualWallDetails.id);
+            nThis.props.triggerPointDirection(nThis.canvasPointArray, virtualWallDetails.id);
 
           }
         }
@@ -329,7 +329,7 @@ class CustomCanvas extends Component {
             points: points
           });
 
-          fabricCanvas.renderAll();
+          // fabricCanvas.renderAll();
         }
         fabricCanvas.renderAll();
       });
@@ -342,9 +342,9 @@ class CustomCanvas extends Component {
     });
   }
 
-  loadPolygons = (nThis, fabricCanvas, alertedPolygonAtrributes) => {
+  loadPolygons = (nThis, fabricCanvas, triggerPolygonAtrributes) => {
     if (this.props.polygonData !== null && this.props.polygonData !== undefined) {
-      this.props.polygonData.alerts.forEach((entry) => {
+      this.props.polygonData.triggers.forEach((entry) => {
         let points = [];
         entry.points.forEach(function (value) {
           points.push({
@@ -354,14 +354,14 @@ class CustomCanvas extends Component {
           fabricCanvas.remove(value);
         });
 
-        alertedPolygonAtrributes['fill'] = (entry.type === 'RA') ? "#FF0000" : ((entry.type === 'LD') ? '#0092f8' : '#00cd78');
-        alertedPolygonAtrributes['id'] = (entry.id !== undefined) ? entry.id : '';
-        alertedPolygonAtrributes['type'] = entry.type;
-        alertedPolygonAtrributes['duration'] = entry.duration;
+        triggerPolygonAtrributes['fill'] = (entry.type === 'RA') ? "#FF0000" : ((entry.type === 'LD') ? '#0092f8' : '#00cd78');
+        triggerPolygonAtrributes['id'] = (entry.id !== undefined) ? entry.id : '';
+        triggerPolygonAtrributes['type'] = entry.type;
+        triggerPolygonAtrributes['duration'] = entry.duration;
         if (entry.type === 'VW') {
           this.generateVirtualWall(fabricCanvas, points, entry.direction, entry.id);
         } else {
-          let polygon = this.generatePolygon(fabricCanvas, points, this.lineArray, alertedPolygonAtrributes);
+          let polygon = this.generatePolygon(fabricCanvas, points, this.lineArray, triggerPolygonAtrributes);
         }
       })
     }
@@ -414,7 +414,7 @@ class CustomCanvas extends Component {
 
     let points = [(options.e.offsetX / canvas.getZoom()), (options.e.offsetY / canvas.getZoom()), (options.e.offsetX / canvas.getZoom()), (options.e.offsetY / canvas.getZoom())];
 
-    let line = CustomCanvas.lineObject(points, (this.props.alertType === 'VW') ? '#FF0000' : '#FFFFFF');
+    let line = CustomCanvas.lineObject(points, (this.props.triggerType === 'VW') ? '#FF0000' : '#FFFFFF');
 
     if (this.activeShape) {
       let pos = canvas.getPointer(options.e);
@@ -435,8 +435,7 @@ class CustomCanvas extends Component {
       canvas.add(polygon);
       this.activeShape = polygon;
       canvas.renderAll();
-    }
-    else {
+    } else {
       let polyPoint = [{
         x: (options.e.offsetX / canvas.getZoom()),
         y: (options.e.offsetY / canvas.getZoom())
@@ -624,7 +623,7 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    polygonData: state.alerts.polygonData
+    polygonData: state.triggers.polygonData
   }
 };
 

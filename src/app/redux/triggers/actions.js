@@ -4,6 +4,7 @@ require('promise.prototype.finally').shim();
 import initialState from './initialState';
 
 import { updateUserData } from '../users/actions';
+import { isEmpty } from '../helperFunctions';
 import * as types from './actionTypes';
 
 function createTriggerInProcess(bool) {
@@ -30,7 +31,7 @@ function createTriggerSuccess(bool) {
 function fetchTriggersSuccess(polygonData) {
   return{
     type: types.FETCH_POLYGON_TRIGGER_SUCCESS,
-    polygonData
+    polygonData: polygonData
   }
 }
 
@@ -114,7 +115,14 @@ function deleteTriggerTimeWindowSuccess(bool) {
 function updateTriggerTimeWindowData(values) {
   return {
     type: types.UPDATE_TRIGGER_TIME_WINDOWS_DATA,
-    trigger_time_windows: values
+    triggerTimeWindows: values
+  }
+}
+
+export function addNewTriggerTimeWindow(values) {
+  return (dispatch) => {
+    values.push({'start': null}, {stop: null}, {'daysOfWeek': []});
+    dispatch(updateTriggerTimeWindowData(values));
   }
 }
 
@@ -175,6 +183,12 @@ export function fetchTriggers(user, cameraGroup, cameraId) {
 
     axios.get(url, config)
       .then((resp) => {
+        if (isEmpty(resp.data)){
+          resp.data = [];
+          dispatch(updateTriggerTimeWindowData(resp.data));
+        } else {
+          dispatch(updateTriggerTimeWindowData(resp.data.time_windows));
+        }
         dispatch(fetchTriggersSuccess(resp.data));
         dispatch(fetchTriggersInSuccess(true));
       })
@@ -208,11 +222,11 @@ export function deleteTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
   }
 }
 
-export function createTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow) {
+export function createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, timeWindow) {
   return (dispatch) => {
     dispatch(createTriggerTimeWindowInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${triggersId}/trigger_time_windows`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     let data = {
       days_of_week: timeWindow.daysOfWeek,
@@ -234,11 +248,11 @@ export function createTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
   }
 }
 
-export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow) {
+export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggerId, timeWindow) {
   return (dispatch) => {
     dispatch(updateTriggerTimeWindowInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows/${timeWindow.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${triggersId}/trigger_time_windows/${timeWindow.id}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     let data = {
       days_of_week: timeWindow.daysOfWeek,

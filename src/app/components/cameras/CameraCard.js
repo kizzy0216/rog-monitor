@@ -150,7 +150,7 @@ const styles = {
 }
 const mapStateToProps = (state) => {
   return {
-    polygonData: state.alerts.polygonData,
+    polygonData: state.triggers.polygonData,
     refreshCameraImage: state.cameras.refreshCameraImage,
     refreshCameraId: state.cameras.refreshCameraId,
     imageUpdateInProgress: state.cameras.imageUpdateInProgress,

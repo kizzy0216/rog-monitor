@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom';
 import {Icon, Modal, Form, Spin, Button, Popover, message, Slider, Row, Col, TimePicker, Select} from 'antd';
 import CustomCanvas from '../../components/formitems/CustomCanvas';
 import CustomInput from "../formitems/CustomInput";
-import {createTrigger, fetchTriggers, deleteTrigger, updateTimeWindowData, clearTimeWindowData} from '../../redux/triggers/actions';
+import {createTrigger, fetchTriggers, deleteTrigger, updateTimeWindowData, clearTimeWindowData, addNewTriggerTimeWindow} from '../../redux/triggers/actions';
 import {connect} from 'react-redux';
 import {isEmpty} from '../../redux/helperFunctions';
 import moment from 'moment';
@@ -14,7 +14,7 @@ const FormItem = Form.Item;
 const AddTriggerForm = Form.create()(
   (props) => {
     const {
-      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData
+      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, polygonData
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -27,7 +27,7 @@ const AddTriggerForm = Form.create()(
     };
 
     return (
-      <Modal title={`Edit ${cameraName}`}
+      <Modal title={`${cameraName} Trigger Settings`}
              visible={visible}
              style={styles.modal}
              onCancel={onCancel}
@@ -83,15 +83,12 @@ const AddTriggerForm = Form.create()(
                         style={styles.triggerTimeWindowSelect}
                         onChange={changeTimeWindow}
                       >
-                        {/* TODO: dynamically populate this to show the number of time windows the user saved. */}
-                        <Option value={0}>Window 1</Option>
-                        <Option value={1}>Window 2</Option>
-                        <Option value={2}>Window 3</Option>
+                        <Option key={0} value={0}>New Time Window</Option>
                       </Select>
                     )}
                   </FormItem>
                   <FormItem>
-                    {/* TODO: add button to add a new time window to the time window select and on update, send the data to the API and save it. */}
+                    {/* TODO: add button to add a new time window in the UI and to the data struct */}
                   </FormItem>
                   <FormItem label="Select Silence Window Days">
                     {getFieldDecorator('days_of_week', {})(
@@ -201,15 +198,15 @@ const AddTriggerForm = Form.create()(
                           style={styles.triggerTimeWindowSelect}
                           onChange={changeTimeWindow}
                         >
-                          {/* TODO: dynamically populate this to show the number of time windows the user saved. */}
-                          <Option value={0}>Window 1</Option>
-                          <Option value={1}>Window 2</Option>
-                          <Option value={2}>Window 3</Option>
+                          <Option key={0} value={0}>New Time Window</Option>
+                          {polygonData.map((polygon, key) => {
+                            return <Option key={key} value={polygon.id}>Time Window {key}</Option>;
+                          })}
                         </Select>
                       )}
                     </FormItem>
                     <FormItem>
-                      {/* TODO: add button to add a new time window to the time window select and on update, send the data to the API and save it. */}
+                      {/* TODO: add button to add a new time window in the UI and to the data struct */}
                     </FormItem>
                     <FormItem label="Select Silence Window Days">
                       {getFieldDecorator('days_of_week', {})(
@@ -277,7 +274,7 @@ const AddTriggerForm = Form.create()(
               </div>
             }
           </FormItem>
-          {!saveCancel &&
+          {/*{!saveCancel &&
             <FormItem>
               <div>
                 <div style={styles.borderBox}>
@@ -291,7 +288,7 @@ const AddTriggerForm = Form.create()(
                         style={styles.triggerTimeWindowSelect}
                         onChange={changeTimeWindow}
                       >
-                        {/* TODO: dynamically populate this to show the number of time windows the user saved. */}
+                        // TODO: dynamically populate this to show the number of time windows the user saved.
                         <Option value={0}>Window 1</Option>
                         <Option value={1}>Window 2</Option>
                         <Option value={2}>Window 3</Option>
@@ -299,7 +296,7 @@ const AddTriggerForm = Form.create()(
                     )}
                   </FormItem>
                   <FormItem>
-                    {/* TODO: add button to add a new time window to the time window select and on update, send the data to the API and save it. */}
+                    // TODO: add button to add a new time window to the time window select and on update, send the data to the API and save it.
                   </FormItem>
                   <FormItem label="Select Silence Window Days">
                     {getFieldDecorator('days_of_week', {})(
@@ -363,7 +360,7 @@ const AddTriggerForm = Form.create()(
                 </div>
               </div>
             </FormItem>
-          }
+          }*/}
         </Form>
       </Modal>
     );
@@ -539,7 +536,7 @@ class AddTriggerModal extends Component {
       if (this.triggerDetails.polygonPoints.length !== 0) {
         this.triggerDetails.currentTriggerType = '';
         this.triggerDetails['id'] = this.props.data.id;
-        form.validateFields((err, values) => {
+        this.form.validateFields((err, values) => {
           if (err) {
             return;
           }
@@ -547,7 +544,7 @@ class AddTriggerModal extends Component {
           delete values.stop;
           delete values.days_of_week;
           delete values.time_window_select;
-          values.trigger_windows = this.props.data.trigger_windows;
+          values.trigger_windows = this.props.triggerTimeWindows;
           switch (this.state.triggerType) {
             case 'RA':
               this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], this.props.data.id, null, null, values.trigger_windows, shared);
@@ -564,14 +561,14 @@ class AddTriggerModal extends Component {
           }
           this.fetchTriggers(true);
         });
-      }
-      else {
+        this.triggerDetails.polygonPoints.length = 0;
+        this.setState({canvasMode: false});
+        this.setState({newLoiteringTrigger: false});
+      } else {
         message.error('please draw a trigger to save');
       }
     }
-    this.triggerDetails.polygonPoints.length = 0;
-    this.setState({canvasMode: false});
-    this.setState({newLoiteringTrigger: false});
+
   };
 
   fetchTriggers = (checked) => {
@@ -585,6 +582,10 @@ class AddTriggerModal extends Component {
       this.setState({deleteButton: false});
     }
   };
+
+  // addNewTriggerTimeWindow = () => {
+  //   // TODO: write logic here to add a new Select Option to the trigger time windows select
+  // }
 
   deleteTrigger = () => {
     if (this.triggerDetails.currentTriggerId !== 0 && this.triggerDetails.currentTriggerType !== '') {
@@ -617,35 +618,42 @@ class AddTriggerModal extends Component {
   }
 
   handleChangeTimeWindow = (fieldValue) => {
-    let triggerTimeWindow = this.props.data.trigger_windows[fieldValue];
-    let start = triggerTimeWindow.start;
-    let stop = triggerTimeWindow.stop;
-    if (start !== null) {
-      start = moment(triggerTimeWindow.start, "HH:mm");
-    }
-    if (stop !== null) {
-      stop = moment(triggerTimeWindow.stop, "HH:mm");
-    }
+    let triggerTimeWindow = this.props.triggerTimeWindows[fieldValue];
+    if (typeof triggerTimeWindow !== 'undefined'){
+      let start = triggerTimeWindow.start;
+      let stop = triggerTimeWindow.stop;
+      if (start !== null) {
+        start = moment(triggerTimeWindow.start, "HH:mm");
+      }
+      if (stop !== null) {
+        stop = moment(triggerTimeWindow.stop, "HH:mm");
+      }
 
-    this.form.setFieldsValue({days_of_week: triggerTimeWindow.daysOfWeek});
-    this.form.setFieldsValue({start: start});
-    this.form.setFieldsValue({stop: stop});
+      this.form.setFieldsValue({days_of_week: triggerTimeWindow.daysOfWeek});
+      this.form.setFieldsValue({start: start});
+      this.form.setFieldsValue({stop: stop});
+    } else {
+      this.form.setFieldsValue({days_of_week: []});
+      this.form.setFieldsValue({start: null});
+      this.form.setFieldsValue({stop: null});
+      this.props.addNewTriggerTimeWindow(this.props.triggerTimeWindows);
+    }
   }
 
   handleUpdateStart = (fieldValue) => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      this.props.updateTimeWindowData(timeWindowSelect, this.props.data.trigger_windows, moment(fieldValue).format('HH:mm').toString(), 'start');
+      this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm').toString(), 'start');
     }
   }
 
   handleUpdateStop = (fieldValue) => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      let startTime = this.props.data.trigger_windows[timeWindowSelect].start;
+      let startTime = this.props.triggerTimeWindows[timeWindowSelect].start;
       if (startTime !== null) {
         if (moment(startTime, 'HH:mm').isBefore(fieldValue, 'minute')) {
-          this.props.updateTimeWindowData(timeWindowSelect, this.props.data.trigger_windows, moment(fieldValue).format('HH:mm').toString(), 'stop');
+          this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm').toString(), 'stop');
         } else {
           message.error('Please select a time that is after the start time.');
         }
@@ -658,7 +666,7 @@ class AddTriggerModal extends Component {
   handleUpdateDaysOfWeek = (fieldValue) => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      this.props.updateTimeWindowData(timeWindowSelect, this.props.data.trigger_windows, fieldValue, 'daysOfWeek');
+      this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, fieldValue, 'daysOfWeek');
     }
   }
 
@@ -668,20 +676,24 @@ class AddTriggerModal extends Component {
     this.form.setFieldsValue({stop: null});
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      this.props.clearTimeWindowData(timeWindowSelect, this.props.data.trigger_windows);
+      this.props.clearTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows);
     }
   }
 
   handleSaveData = () => {
+    // TODO: figure out how to create/update timewindows for all triggers
+    // TODO: determine if we are creating a new silence window or updating an existing silence window
     // form.validateFields((err, values) => {
-    //   delete values.start;
-    //   delete values.stop;
-    //   delete values.days_of_week;
-    //   delete values.time_window_select;
-    //   values.trigger_windows = this.props.data.trigger_windows;
+    //   if (err) {
+    //     return;
+    //   }
+    //   values.trigger_windows.start = values.start;
+    //   values.trigger_windows.stop = values.stop;
+    //   values.trigger_windows.days_of_week = values.days_of_week;
+    //   values.trigger_windows.time_window_select = values.time_window_select;
     // });
-    // this.props.createTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow);
-    // this.props.updateTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow);
+    // this.props.createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, values.trigger_windows);
+    // this.props.updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, values.trigger_windows);
   }
 
   handleCheckForWindow = () => {
@@ -738,6 +750,7 @@ class AddTriggerModal extends Component {
           updateDataDaysOfWeek={this.handleUpdateDaysOfWeek}
           time_zone={this.state.time_zone}
           saveData={this.handleSaveData}
+          polygonData={this.props.polygonData}
         />
       </div>
     );
@@ -813,7 +826,8 @@ const mapStateToProps = (state) => {
     deleteTriggerSuccess: state.triggers.deleteTriggerSuccess,
     deleteTriggerInProcess: state.triggers.deleteTriggerInProcess,
     fetchTriggerInProcess: state.triggers.fetchTriggerInProcess,
-    fetchTriggerSuccess: state.triggers.fetchTriggerSuccess
+    fetchTriggerSuccess: state.triggers.fetchTriggerSuccess,
+    triggerTimeWindows: state.triggers.triggerTimeWindows
   }
 };
 const mapDispatchToProps = (dispatch) => {
@@ -822,7 +836,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchTriggers: (user, cameraGroup, cameraId) => dispatch(fetchTriggers(user, cameraGroup, cameraId)),
     deleteTrigger: (user, cameraGroup, cameraId, triggerId) => dispatch(deleteTrigger(user, cameraGroup, cameraId, triggerId)),
     updateTimeWindowData: (timeWindowSelect, values, fieldValue, fieldName) => dispatch(updateTimeWindowData(timeWindowSelect, values, fieldValue, fieldName)),
-    clearTimeWindowData: (timeWindowSelect, values) => dispatch(clearTimeWindowData(timeWindowSelect, values))
+    clearTimeWindowData: (timeWindowSelect, values) => dispatch(clearTimeWindowData(timeWindowSelect, values)),
+    addNewTriggerTimeWindow: (values) => dispatch(addNewTriggerTimeWindow(values))
   }
 };
 

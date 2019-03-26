@@ -160,6 +160,11 @@ const triggers = (state = initialState, action) => {
         ...state,
         fetchPolygonTriggerInProcess: action.bool
       }
+    case types.UPDATE_TRIGGER_TIME_WINDOWS_DATA:
+      return {
+        ...state,
+        triggerTimeWindows: action.triggerTimeWindows
+      }
     default:
       return state;
   }

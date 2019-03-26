@@ -7,5 +7,7 @@ export default {
   createTriggerInProcess: false,
   deleteTriggerInProcess: false,
   fetchTriggerInProcess: false,
-  fetchTriggerSuccess: false
+  fetchTriggerSuccess: false,
+  polygonData: [],
+  triggerTimeWindows: []
 }

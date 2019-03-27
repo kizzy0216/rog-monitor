@@ -14,7 +14,7 @@ const FormItem = Form.Item;
 const AddTriggerForm = Form.create()(
   (props) => {
     const {
-      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, polygonData
+      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, polygonData, cameraGroupOwner
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -66,12 +66,16 @@ const AddTriggerForm = Form.create()(
               </Row>
             }
             {deleteButton && canvasMode &&
-            <div>
-              <span style={styles.currenttriggerDetails}>
-                Trigger Type: {(currentTriggerDetails.currentTriggerType === 'RA') ? 'Restricted Area' : ((currentTriggerDetails.currentTriggerType === 'LD') ? 'Loitering Detection' : 'Virtual Wall')}
-              </span>
-              {/* TODO: build the redux functionality to link to this new set of form elements */}
               <div>
+                <div>
+                  <span style={styles.currenttriggerDetails}>
+                    Trigger Type: {(currentTriggerDetails.currentTriggerType === 'RA') ? 'Restricted Area' : ((currentTriggerDetails.currentTriggerType === 'LD') ? 'Loitering Detection' : 'Virtual Wall')}
+                  </span>
+                  <Button style={styles.deleteButton} onClick={deleteTrigger} loading={deleteStatus}>
+                    Delete
+                  </Button>
+                </div>
+                <div>&nbsp;</div>
                 <div style={styles.borderBox}>
                   <div className="ant-form-item-label">
                     <label>Trigger Silence Windows</label>
@@ -87,9 +91,20 @@ const AddTriggerForm = Form.create()(
                       </Select>
                     )}
                   </FormItem>
-                  <FormItem>
-                    {/* TODO: add button to add a new time window in the UI and to the data struct */}
-                  </FormItem>
+                  {cameraGroupOwner &&
+                    <FormItem label="Make Private or Shared" {...formItemLayout}>
+                      {getFieldDecorator('shared', {})(
+                        <Select
+                          placeholder="Shared or Private"
+                          initialValue={false}
+                          style={styles.triggerTimeWindowSelect}
+                        >
+                          <Option key={0}>Private</Option>
+                          <Option key={1}>Shared</Option>
+                        </Select>
+                      )}
+                    </FormItem>
+                  }
                   <FormItem label="Select Silence Window Days">
                     {getFieldDecorator('days_of_week', {})(
                       <Select
@@ -151,10 +166,6 @@ const AddTriggerForm = Form.create()(
                   <div>&nbsp;</div>
                 </div>
               </div>
-              <Button style={styles.deleteButton} onClick={deleteTrigger} loading={deleteStatus}>
-                Delete
-              </Button>
-            </div>
             }
           </FormItem>
           <FormItem>
@@ -174,17 +185,15 @@ const AddTriggerForm = Form.create()(
                      visible={visibility}
                      onVisibleChange={handleVisibility}
             >
-              {
-                !saveCancel && <a>
+              {!saveCancel &&
+                <a>
                   <CustomInput trigger={true} visibility={visibility} fetchTriggerInProcess={fetchTriggerInProcess}/>
                 </a>
               }
             </Popover>
           </FormItem>
           <FormItem>
-
-            {
-              saveCancel &&
+            {saveCancel &&
               <div>
                 <div>
                   <div style={styles.borderBox}>
@@ -205,9 +214,20 @@ const AddTriggerForm = Form.create()(
                         </Select>
                       )}
                     </FormItem>
-                    <FormItem>
-                      {/* TODO: add button to add a new time window in the UI and to the data struct */}
-                    </FormItem>
+                    {cameraGroupOwner &&
+                      <FormItem label="Make Private or Shared" {...formItemLayout}>
+                        {getFieldDecorator('shared', {})(
+                          <Select
+                            placeholder="Shared or Private"
+                            initialValue={false}
+                            style={styles.triggerTimeWindowSelect}
+                          >
+                            <Option key={0}>Private</Option>
+                            <Option key={1}>Shared</Option>
+                          </Select>
+                        )}
+                      </FormItem>
+                    }
                     <FormItem label="Select Silence Window Days">
                       {getFieldDecorator('days_of_week', {})(
                         <Select
@@ -274,93 +294,6 @@ const AddTriggerForm = Form.create()(
               </div>
             }
           </FormItem>
-          {/*{!saveCancel &&
-            <FormItem>
-              <div>
-                <div style={styles.borderBox}>
-                  <div className="ant-form-item-label">
-                    <label>Camera Silence Windows</label>
-                  </div>
-                  <FormItem label="Select Silence Window" {...formItemLayout}>
-                    {getFieldDecorator('time_window_select', {})(
-                      <Select
-                        placeholder="Select Silence Window"
-                        style={styles.triggerTimeWindowSelect}
-                        onChange={changeTimeWindow}
-                      >
-                        // TODO: dynamically populate this to show the number of time windows the user saved.
-                        <Option value={0}>Window 1</Option>
-                        <Option value={1}>Window 2</Option>
-                        <Option value={2}>Window 3</Option>
-                      </Select>
-                    )}
-                  </FormItem>
-                  <FormItem>
-                    // TODO: add button to add a new time window to the time window select and on update, send the data to the API and save it.
-                  </FormItem>
-                  <FormItem label="Select Silence Window Days">
-                    {getFieldDecorator('days_of_week', {})(
-                      <Select
-                        mode="multiple"
-                        onChange={updateDataDaysOfWeek}
-                        onBlur={checkForWindow}
-                        placeholder="Select Days"
-                        style={styles.dayPicker}
-                      >
-                        <Option key="monday" value="monday">Monday</Option>
-                        <Option key="tuesday" value="tuesday">Tuesday</Option>
-                        <Option key="wednesday" value="wednesday">Wednesday</Option>
-                        <Option key="thursday" value="thursday">Thursday</Option>
-                        <Option key="friday" value="friday">Friday</Option>
-                        <Option key="saturday" value="saturday">Saturday</Option>
-                        <Option key="sunday" value="sunday">Sunday</Option>
-                      </Select>
-                    )}
-                  </FormItem>
-                  <div span={24} className="ant-form-item-label">
-                    <label>Set Silence Window {time_zone ? "("+time_zone+")" : ''}</label>
-                  </div>
-                  <Row>
-                    <FormItem span={12} style={{float: 'left', width: '50%'}}>
-                      {getFieldDecorator('start', {})(
-                        <TimePicker
-                          span={8}
-                          style={{margin: '0 auto'}}
-                          onChange={updateDataStart}
-                          onOpenChange={(open: false), checkForWindow}
-                          defaultOpenValue={moment('00:00', 'HH:mm')}
-                          allowEmpty={true}
-                          placeholder="Start Time"
-                          format={'HH:mm'} />
-                      )}
-                    </FormItem>
-                    <FormItem span={12} style={{float: 'right', width: '50%'}}>
-                      {getFieldDecorator('stop', {})(
-                        <TimePicker
-                          span={8}
-                          style={{margin: '0 auto'}}
-                          onChange={updateDataStop}
-                          onOpenChange={(open: false), checkForWindow}
-                          defaultOpenValue={moment('00:00', 'HH:mm')}
-                          allowEmpty={true}
-                          placeholder="End Time"
-                          format={'HH:mm'} />
-                      )}
-                    </FormItem>
-                  </Row>
-                  <Row>
-                    <Col span={12}>
-                      <Button type="danger" icon="close" onClick={resetData}>Clear Silence Window</Button>
-                    </Col>
-                    <Col span={12}>
-                      <Button type="primary" icon="lock" onClick={saveData}>Save Silence Window</Button>
-                    </Col>
-                  </Row>
-                  <div>&nbsp;</div>
-                </div>
-              </div>
-            </FormItem>
-          }*/}
         </Form>
       </Modal>
     );
@@ -383,6 +316,7 @@ class AddTriggerModal extends Component {
       triggerType: '',
       newLoiteringTrigger: false,
       time_zone: this.props.data.time_zone,
+      cameraGroupOwner: false
     }
 
     this.onImgLoad = this.onImgLoad.bind(this);
@@ -437,10 +371,10 @@ class AddTriggerModal extends Component {
       }
     });
   }
-// TODO: build save function for trigger time windows inside componentWillReceiveProps() and link to trigger_triggers/action.js functions
+
   componentWillReceiveProps(nextProps) {
     if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
-      if (nextProps.fetchTriggerSuccess === true) {
+      if (nextProps.fetchTriggerSuccess === true && !isEmpty(nextProps.polygonData)) {
         this.setState({canvasMode: true});
       }
       if (nextProps.createTriggerSuccess !== this.props.createTriggerSuccess && this.triggerDetails['id'] !== undefined) {
@@ -457,8 +391,15 @@ class AddTriggerModal extends Component {
         this.setState({saveCancel: false});
       }
     }
-    else if (this.props.polygonData !== nextProps.polygonData && !isEmpty(nextProps.polygonData)) {
+    else if (this.props.polygonData !== nextProps.polygonData && !isEmpty(nextProps.polygonData) && !isEmpty(this.props.polygonData)) {
       this.setState({canvasMode: true});
+    }
+    for (var i = 0; i < this.props.data.cameraGroup.userCameraGroupPrivileges.length; i++) {
+      if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].users_id === nextProps.data.user.id) {
+        if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].user_privileges_ids.includes(0)) {
+          this.setState({cameraGroupOwner: true});
+        }
+      }
     }
   }
 
@@ -525,10 +466,11 @@ class AddTriggerModal extends Component {
 
     }
   };
-// TODO: add UI element to let user select if trigger is shared or not.
+
   handleSaveCancel = (event) => {
     if (event === 'cancel') {
       this.setState({saveCancel: !this.state.saveCancel});
+      this.setState({canvasMode: false});
       this.fetchTriggers(true);
       this.triggerDetails.currentTriggerType = '';
     }
@@ -545,18 +487,25 @@ class AddTriggerModal extends Component {
           delete values.days_of_week;
           delete values.time_window_select;
           values.trigger_windows = this.props.triggerTimeWindows;
+          if (this.state.cameraGroupOwner == false || typeof values.shared == 'undefined') {
+            values.shared = false;
+          } else if (values.shared == 0) {
+            values.shared = false;
+          } else if (values.shared == 1) {
+            values.shared = true;
+          }
           switch (this.state.triggerType) {
             case 'RA':
-              this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], this.props.data.id, null, null, values.trigger_windows, shared);
+              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['id'], null, null, values.trigger_windows, values.shared);
               break;
 
             case 'LD':
-              this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], this.props.data.id, this.state.loiteringSeconds, null, values.trigger_windows, shared);
+              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['id'], this.state.loiteringSeconds, null, values.trigger_windows, values.shared);
               this.setState({loiteringSeconds: 0});
               break;
 
             case 'VW':
-              this.props.createTrigger(this.triggerDetails.polygonPoints[0], this.state.triggerType, this.triggerDetails['id'], this.props.data.id, null, this.triggerDetails.direction, values.trigger_windows, shared);
+              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['id'], null, this.triggerDetails.direction, values.trigger_windows, values.shared);
               break;
           }
           this.fetchTriggers(true);
@@ -588,6 +537,7 @@ class AddTriggerModal extends Component {
   // }
 
   deleteTrigger = () => {
+    // TODO: refactor this to work with new data structure
     if (this.triggerDetails.currentTriggerId !== 0 && this.triggerDetails.currentTriggerType !== '') {
       this.triggerDetails['id'] = this.props.data.id;
       this.props.deleteTrigger(this.props.data.id, this.triggerDetails.currentTriggerId);
@@ -751,6 +701,7 @@ class AddTriggerModal extends Component {
           time_zone={this.state.time_zone}
           saveData={this.handleSaveData}
           polygonData={this.props.polygonData}
+          cameraGroupOwner={this.state.cameraGroupOwner}
         />
       </div>
     );
@@ -789,7 +740,7 @@ const styles = {
     marginLeft: 2
   },
   triggersHideShow: {
-    textAlign: 'right'
+    textAlign: 'center'
   },
   deleteButton: {
     float: 'right',
@@ -832,7 +783,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    createTrigger: (user, cameraGroup, triggerCoordinates, triggerType, cameraId, duration, direction) => dispatch(createTrigger(user, cameraGroup, triggerCoordinates, triggerType, cameraId, duration, direction)),
+    createTrigger: (user, triggerCoordinates, triggerType, cameraGroupId, cameraId, triggerDuration, direction, timeWindows, shared) => dispatch(createTrigger(user, triggerCoordinates, triggerType, cameraGroupId, cameraId, triggerDuration, direction, timeWindows, shared)),
     fetchTriggers: (user, cameraGroup, cameraId) => dispatch(fetchTriggers(user, cameraGroup, cameraId)),
     deleteTrigger: (user, cameraGroup, cameraId, triggerId) => dispatch(deleteTrigger(user, cameraGroup, cameraId, triggerId)),
     updateTimeWindowData: (timeWindowSelect, values, fieldValue, fieldName) => dispatch(updateTimeWindowData(timeWindowSelect, values, fieldValue, fieldName)),

@@ -142,12 +142,12 @@ export function clearTimeWindowData(timeWindowSelect, values) {
   }
 }
 
-export function createTrigger(triggerCoordinates, triggerType, cameraGroupId, cameraId, triggerDuration, direction, timeWindows, shared) {
+export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup, cameraId, triggerDuration, direction, timeWindows, shared) {
   return (dispatch) => {
     dispatch(createTriggerInProcess(true));
     dispatch(createTriggerError(false));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}/triggers`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     let triggerData = {
       trigger_type: triggerType,
@@ -162,6 +162,7 @@ export function createTrigger(triggerCoordinates, triggerType, cameraGroupId, ca
     axios.post(url, triggerData, config)
       .then((resp) => {
         dispatch(createTriggerSuccess(true));
+        dispatch(fetchTriggers(user, cameraGroup, cameraId));
       })
       .catch((error) => {
         dispatch(createTriggerError(true));
@@ -183,12 +184,6 @@ export function fetchTriggers(user, cameraGroup, cameraId) {
 
     axios.get(url, config)
       .then((resp) => {
-        if (isEmpty(resp.data)){
-          resp.data = [];
-          dispatch(updateTriggerTimeWindowData(resp.data));
-        } else {
-          dispatch(updateTriggerTimeWindowData(resp.data.time_windows));
-        }
         dispatch(fetchTriggersSuccess(resp.data));
         dispatch(fetchTriggersInSuccess(true));
       })
@@ -196,6 +191,7 @@ export function fetchTriggers(user, cameraGroup, cameraId) {
         console.log(error.response);
       })
       .finally(() => {
+        dispatch(fetchTriggersInSuccess(false));
         dispatch(fetchTriggersInProcess(false));
       })
   }

@@ -27,7 +27,7 @@ class CustomCanvas extends Component {
     const nThis = this;
     let fabricCanvas = nThis.canvas();
 
-    if (this.props.getAlerts === true) {
+    if (this.props.getTriggers === true) {
       const triggerPolygonAtrributes = {
         stroke: '#000',
         strokeWidth: 2,
@@ -48,11 +48,10 @@ class CustomCanvas extends Component {
             if (entry.type === 'LD') {
               entry.setColor('#0092f8');
             }
-            if (entry.type === 'VW') {
-              entry.set({fill: '#FF0000', stroke: '#FF0000'});
-            }
             if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
               entry.set({fill: '#36d850', stroke: '#36d850'});
+            } else if (entry.type === 'VW') {
+              entry.set({fill: '#FF0000', stroke: '#FF0000'});
             }
           });
 
@@ -62,6 +61,7 @@ class CustomCanvas extends Component {
       });
       document.getElementById('prev_button').addEventListener('click', function (options) {
         if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
+          fabricCanvas.setActiveObject(nThis.prevItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
           fabricCanvas.getObjects().forEach((entry) => {
             if (entry.type === 'RA') {
               entry.setColor('#FF0000');
@@ -69,14 +69,12 @@ class CustomCanvas extends Component {
             if (entry.type === 'LD') {
               entry.setColor('#0092f8');
             }
-            if (entry.type === 'VW') {
-              entry.set({fill: '#FF0000', stroke: '#FF0000'});
-            }
             if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
               entry.set({fill: '#36d850', stroke: '#36d850'});
+            } else if (entry.type === 'VW') {
+              entry.set({fill: '#FF0000', stroke: '#FF0000'});
             }
           });
-          fabricCanvas.setActiveObject(nThis.prevItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
           fabricCanvas.getActiveObject().setColor('#36d850');
           nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           fabricCanvas.renderAll();
@@ -85,6 +83,7 @@ class CustomCanvas extends Component {
 
       document.getElementById('next_button').addEventListener('click', function (options) {
         if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
+          fabricCanvas.setActiveObject(nThis.nextItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
           fabricCanvas.getObjects().forEach((entry) => {
             if (entry.type === 'RA') {
               entry.setColor('#FF0000');
@@ -92,14 +91,12 @@ class CustomCanvas extends Component {
             if (entry.type === 'LD') {
               entry.setColor('#0092f8');
             }
-            if (entry.type === 'VW') {
-              entry.set({fill: '#FF0000', stroke: '#FF0000'});
-            }
             if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
               entry.set({fill: '#36d850', stroke: '#36d850'});
+            } else if (entry.type === 'VW') {
+              entry.set({fill: '#FF0000', stroke: '#FF0000'});
             }
           });
-          fabricCanvas.setActiveObject(nThis.nextItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
           fabricCanvas.getActiveObject().setColor('#36d850');
           nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           fabricCanvas.renderAll();
@@ -344,9 +341,9 @@ class CustomCanvas extends Component {
 
   loadPolygons = (nThis, fabricCanvas, triggerPolygonAtrributes) => {
     if (this.props.polygonData !== null && this.props.polygonData !== undefined) {
-      this.props.polygonData.triggers.forEach((entry) => {
+      this.props.polygonData.forEach((entry) => {
         let points = [];
-        entry.points.forEach(function (value) {
+        entry.base_trigger.vertices.forEach(function (value) {
           points.push({
             x: value[0] * nThis.state.width,
             y: value[1] * nThis.state.height
@@ -354,12 +351,12 @@ class CustomCanvas extends Component {
           fabricCanvas.remove(value);
         });
 
-        triggerPolygonAtrributes['fill'] = (entry.type === 'RA') ? "#FF0000" : ((entry.type === 'LD') ? '#0092f8' : '#00cd78');
-        triggerPolygonAtrributes['id'] = (entry.id !== undefined) ? entry.id : '';
-        triggerPolygonAtrributes['type'] = entry.type;
-        triggerPolygonAtrributes['duration'] = entry.duration;
-        if (entry.type === 'VW') {
-          this.generateVirtualWall(fabricCanvas, points, entry.direction, entry.id);
+        triggerPolygonAtrributes['fill'] = (entry.base_trigger.trigger_type === 'RA') ? "#FF0000" : ((entry.base_trigger.trigger_type === 'LD') ? '#0092f8' : '#00cd78');
+        triggerPolygonAtrributes['id'] = (entry.id !== undefined) ? entry.base_trigger.id : '';
+        triggerPolygonAtrributes['type'] = entry.base_trigger.trigger_type;
+        triggerPolygonAtrributes['duration'] = entry.base_trigger.trigger_duration;
+        if (entry.base_trigger.trigger_type === 'VW') {
+          this.generateVirtualWall(fabricCanvas, points, entry.base_trigger.direction, entry.base_trigger.id);
         } else {
           let polygon = this.generatePolygon(fabricCanvas, points, this.lineArray, triggerPolygonAtrributes);
         }
@@ -465,7 +462,7 @@ class CustomCanvas extends Component {
     let startAngle = 0;
     let endAngle = 2 * Math.PI;
 
-    if (this.props.getAlerts === true) {
+    if (this.props.getTriggers === true) {
       const line = CustomCanvas.lineObject([points[0].x, points[0].y, points[1].x, points[1].y], '#FF0000');
       line.set({id: identity});
       line['type'] = 'VW';

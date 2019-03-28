@@ -127,8 +127,8 @@ export default class RtspStream extends Component {
         webRtcPeer.generateOffer(onOffer);
         webRtcPeer.peerConnection.addEventListener('iceconnectionstatechange', function (event) {
           if (webRtcPeer && webRtcPeer.peerConnection) {
-            console.log('oniceconnectionstatechange -> ' + webRtcPeer.peerConnection.iceConnectionState);
-            console.log('icegatheringstate -> ' + webRtcPeer.peerConnection.iceGatheringState);
+            // console.log('oniceconnectionstatechange -> ' + webRtcPeer.peerConnection.iceConnectionState);
+            // console.log('icegatheringstate -> ' + webRtcPeer.peerConnection.iceGatheringState);
           }
         });
       });
@@ -138,7 +138,8 @@ export default class RtspStream extends Component {
 
   render() {
     return (
-      <video id='videoOutput' width='100%' autoPlay onClick={(e) => console.log(e.target.webkitRequestFullscreen())}/>
+      <video id='videoOutput' width='100%' autoPlay />
+      // onClick={(e) => console.log(e.target.webkitRequestFullscreen())}
     )
   }
 }

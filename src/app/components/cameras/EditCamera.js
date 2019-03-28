@@ -11,7 +11,7 @@ const Option = Select.Option;
 const FormItem = Form.Item;
 const CameraForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, cameraData, updateTimeZone, time_zone, createSelectItems} = props;
+    const {onCancel, visible, onCreate, form, cameraData, updateTimeZone, createSelectItems} = props;
     const {getFieldDecorator, fullRtspUrl} = form;
     const formItemLayout = {
       labelCol: {
@@ -39,11 +39,6 @@ const CameraForm = Form.create()(
               )
             }
           </FormItem>
-          <FormItem>
-            <Button key='submit' type='primary' size='large' onClick={props.testLiveView}>
-              <Icon type='reload'></Icon>Test Live View
-            </Button>
-          </FormItem>
           <FormItem label='Camera Name' {...formItemLayout}>
             {getFieldDecorator('name', {
               'initialValue': cameraData.name
@@ -53,7 +48,7 @@ const CameraForm = Form.create()(
           </FormItem>
           <FormItem label='URL' {...formItemLayout}>
             {getFieldDecorator('rtsp_url', {
-              'initialValue': cameraData.rtspUrl
+              'initialValue': cameraData.camera_url
             })(
               <Input style={styles.input} type='text' disabled />
             )}
@@ -82,9 +77,8 @@ const CameraForm = Form.create()(
                 default="UTC"
                 onChange={updateTimeZone}
                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                createSelectItems={this.handleCreateSelectItems}
               >
-                {createSelectItems}
+                {props.createSelectItems()}
               </Select>
             )}
           </FormItem>
@@ -199,10 +193,11 @@ class EditCamera extends Component {
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           updateTimeZone={this.handleUpdateTimeZone}
+          createSelectItems={this.handleCreateSelectItems}
           error={this.state.error}
           cameraData={this.props.data}
           testLiveView={this.testLiveView}
-          fullRtspUrl={this.state.fullRtspUrl}
+          fullRtspUrl={this.props.data.reco_camera_url}
         />
       </div>
     );

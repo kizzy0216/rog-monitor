@@ -538,9 +538,10 @@ class AddTriggerModal extends Component {
 
   deleteTrigger = () => {
     // TODO: refactor this to work with new data structure
+    console.log(this.triggerDetails);
     if (this.triggerDetails.currentTriggerId !== 0 && this.triggerDetails.currentTriggerType !== '') {
       this.triggerDetails['id'] = this.props.data.id;
-      this.props.deleteTrigger(this.props.data.id, this.triggerDetails.currentTriggerId);
+      this.props.deleteTrigger(this.props.data.user, this.props.data.camera_groups_id, this.triggerDetails['id'], this.triggerDetails.currentTriggerId);
       this.triggerDetails.currentTriggerId = 0;
       this.triggerDetails.currentTriggerType = '';
     }
@@ -785,7 +786,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     createTrigger: (user, triggerCoordinates, triggerType, cameraGroupId, cameraId, triggerDuration, direction, timeWindows, shared) => dispatch(createTrigger(user, triggerCoordinates, triggerType, cameraGroupId, cameraId, triggerDuration, direction, timeWindows, shared)),
     fetchTriggers: (user, cameraGroup, cameraId) => dispatch(fetchTriggers(user, cameraGroup, cameraId)),
-    deleteTrigger: (user, cameraGroup, cameraId, triggerId) => dispatch(deleteTrigger(user, cameraGroup, cameraId, triggerId)),
+    deleteTrigger: (user, cameraGroupId, cameraId, baseTriggersId) => dispatch(deleteTrigger(user, cameraGroupId, cameraId, baseTriggersId)),
     updateTimeWindowData: (timeWindowSelect, values, fieldValue, fieldName) => dispatch(updateTimeWindowData(timeWindowSelect, values, fieldValue, fieldName)),
     clearTimeWindowData: (timeWindowSelect, values) => dispatch(clearTimeWindowData(timeWindowSelect, values)),
     addNewTriggerTimeWindow: (values) => dispatch(addNewTriggerTimeWindow(values))

@@ -41,7 +41,7 @@ class CameraCard extends Component {
 
     this.props.trackEventAnalytics('camera viewed', cameraViewEvent);
 
-    this.props.history.push(`/cameras/${this.props.id}/stream`);
+    this.props.history.push(`/camera-groups/${this.props.camera_groups_id}/cameras/${this.props.id}/stream`);
   }
 
   componentWillMount = () => {

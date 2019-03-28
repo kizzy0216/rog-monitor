@@ -67,7 +67,7 @@ class AppRouter extends Component {
             <Switch>
               <Route exact path='/cameras' component={CameraList} />
               <Route exact path='/cameras/:id' component={CameraDetails} />
-              <Route exact path='/cameras/:id/stream' component={CameraStream} />
+              <Route exact path='/camera-groups/:cameraGroupId/cameras/:id/stream' component={CameraStream} />
               <Route exact path='/cameras/new/:cameraGroupId' component={CameraCreate} />
 
               <Route exact path='/alerts' component={Alerts} />

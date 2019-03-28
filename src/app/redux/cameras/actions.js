@@ -188,7 +188,7 @@ export function fetchCameraUrl(user, cameraGroupsId, cameraId) {
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     axios.get(url, config)
       .then((response) => {
-        dispatch(fetchSuccess(response.data.camera_url));
+        dispatch(fetchSuccess(response.data.reco_camera_url));
       })
       .catch((error) => {
         console.log('Error fetching camera: ', error);

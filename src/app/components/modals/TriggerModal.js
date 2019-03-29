@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom';
 import {Icon, Modal, Form, Spin, Button, Popover, message, Slider, Row, Col, TimePicker, Select} from 'antd';
 import CustomCanvas from '../../components/formitems/CustomCanvas';
 import CustomInput from "../formitems/CustomInput";
-import {createTrigger, fetchTriggers, deleteTrigger, updateTimeWindowData, clearTimeWindowData, addNewTriggerTimeWindow} from '../../redux/triggers/actions';
+import {createTrigger, fetchTriggers, deleteTrigger, updateTimeWindowData, clearTimeWindowData, addNewTriggerTimeWindow, getTriggerSpecificTimeWindows} from '../../redux/triggers/actions';
 import {connect} from 'react-redux';
 import {isEmpty} from '../../redux/helperFunctions';
 import moment from 'moment';
@@ -14,7 +14,7 @@ const FormItem = Form.Item;
 const AddTriggerForm = Form.create()(
   (props) => {
     const {
-      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, polygonData, cameraGroupOwner
+      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, showShareOption, addNewTimeWindow, getTriggerSpecificTimeWindows
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -81,17 +81,22 @@ const AddTriggerForm = Form.create()(
                     <label>Trigger Silence Windows</label>
                   </div>
                   <FormItem label="Select Silence Window" {...formItemLayout}>
-                    {getFieldDecorator('time_window_select', {})(
-                      <Select
-                        placeholder="Select Silence Window"
-                        style={styles.triggerTimeWindowSelect}
-                        onChange={changeTimeWindow}
-                      >
-                        <Option key={0} value={0}>New Time Window</Option>
-                      </Select>
-                    )}
+                    <div>
+                      {getFieldDecorator('time_window_select', {})(
+                        <Select
+                          placeholder="Select Silence Window"
+                          style={styles.triggerTimeWindowSelect}
+                          onChange={changeTimeWindow}
+                        >
+                        {timeWindows.map((timeWindow, key) => {
+                          return <Option key={key} value={key}>Time Window: {key + 1}</Option>;
+                        })}
+                        </Select>
+                      )}
+                      <Button type="primary" icon="plus" onClick={addNewTimeWindow}></Button>
+                    </div>
                   </FormItem>
-                  {cameraGroupOwner &&
+                  {cameraGroupOwner && showShareOption &&
                     <FormItem label="Make Private or Shared" {...formItemLayout}>
                       {getFieldDecorator('shared', {})(
                         <Select
@@ -125,7 +130,7 @@ const AddTriggerForm = Form.create()(
                     )}
                   </FormItem>
                   <div span={24} className="ant-form-item-label">
-                    <label>Set Silence Window {time_zone ? "("+time_zone+")" : ''}</label>
+                    <label>Set Silence Window Time {time_zone ? "("+time_zone+")" : ''}</label>
                   </div>
                   <Row>
                     <FormItem span={12} style={{float: 'left', width: '50%'}}>
@@ -201,18 +206,20 @@ const AddTriggerForm = Form.create()(
                       <label>Trigger Silence Windows</label>
                     </div>
                     <FormItem label="Select Silence Window" {...formItemLayout}>
+                    <div>
                       {getFieldDecorator('time_window_select', {})(
                         <Select
                           placeholder="Select Silence Window"
                           style={styles.triggerTimeWindowSelect}
                           onChange={changeTimeWindow}
                         >
-                          <Option key={0} value={0}>New Time Window</Option>
-                          {polygonData.map((polygon, key) => {
-                            return <Option key={key} value={polygon.id}>Time Window {key}</Option>;
-                          })}
+                        {timeWindows.map((polygon, key) => {
+                          return <Option key={key} value={key}>Time Window: {key + 1}</Option>;
+                        })}
                         </Select>
                       )}
+                      <Button type="primary" icon="plus" onClick={addNewTimeWindow}></Button>
+                    </div>
                     </FormItem>
                     {cameraGroupOwner &&
                       <FormItem label="Make Private or Shared" {...formItemLayout}>
@@ -248,7 +255,7 @@ const AddTriggerForm = Form.create()(
                       )}
                     </FormItem>
                     <div span={24} className="ant-form-item-label">
-                      <label>Set Silence Window {time_zone ? "("+time_zone+")" : ''}</label>
+                      <label>Set Silence Window Time {time_zone ? "("+time_zone+")" : ''}</label>
                     </div>
                     <Row>
                       <FormItem span={12} style={{float: 'left', width: '50%'}}>
@@ -316,7 +323,8 @@ class AddTriggerModal extends Component {
       triggerType: '',
       newLoiteringTrigger: false,
       time_zone: this.props.data.time_zone,
-      cameraGroupOwner: false
+      cameraGroupOwner: false,
+      showShareOption: false
     }
 
     this.onImgLoad = this.onImgLoad.bind(this);
@@ -486,7 +494,12 @@ class AddTriggerModal extends Component {
           delete values.stop;
           delete values.days_of_week;
           delete values.time_window_select;
-          values.trigger_windows = this.props.triggerTimeWindows;
+          values.trigger_windows = [];
+          this.props.triggerTimeWindows.forEach(function(trigger_window) {
+            if (trigger_window.hasOwnProperty('start') && trigger_window.hasOwnProperty('stop') && trigger_window.hasOwnProperty('daysOfWeek')) {
+              values.trigger_windows.push(trigger_window);
+            }
+          });
           if (this.state.cameraGroupOwner == false || typeof values.shared == 'undefined') {
             values.shared = false;
           } else if (values.shared == 0) {
@@ -532,13 +545,7 @@ class AddTriggerModal extends Component {
     }
   };
 
-  // addNewTriggerTimeWindow = () => {
-  //   // TODO: write logic here to add a new Select Option to the trigger time windows select
-  // }
-
   deleteTrigger = () => {
-    // TODO: refactor this to work with new data structure
-    console.log(this.triggerDetails);
     if (this.triggerDetails.currentTriggerId !== 0 && this.triggerDetails.currentTriggerType !== '') {
       this.triggerDetails['id'] = this.props.data.id;
       this.props.deleteTrigger(this.props.data.user, this.props.data.camera_groups_id, this.triggerDetails['id'], this.triggerDetails.currentTriggerId);
@@ -571,24 +578,30 @@ class AddTriggerModal extends Component {
   handleChangeTimeWindow = (fieldValue) => {
     let triggerTimeWindow = this.props.triggerTimeWindows[fieldValue];
     if (typeof triggerTimeWindow !== 'undefined'){
-      let start = triggerTimeWindow.start;
-      let stop = triggerTimeWindow.stop;
+      let start = triggerTimeWindow.start_at;
+      let stop = triggerTimeWindow.end_at;
       if (start !== null) {
-        start = moment(triggerTimeWindow.start, "HH:mm");
+        start = moment(start, "HH:mm");
       }
       if (stop !== null) {
-        stop = moment(triggerTimeWindow.stop, "HH:mm");
+        stop = moment(stop, "HH:mm");
       }
-
-      this.form.setFieldsValue({days_of_week: triggerTimeWindow.daysOfWeek});
+      if (isEmpty(triggerTimeWindow['start_at']) && isEmpty(triggerTimeWindow['end_at']) && isEmpty(triggerTimeWindow['days_of_week'])) {
+        this.setState({showShareOption: true});
+      } else {
+        this.setState({showShareOption: false});
+      }
+      this.form.setFieldsValue({days_of_week: triggerTimeWindow.days_of_week});
       this.form.setFieldsValue({start: start});
       this.form.setFieldsValue({stop: stop});
-    } else {
-      this.form.setFieldsValue({days_of_week: []});
-      this.form.setFieldsValue({start: null});
-      this.form.setFieldsValue({stop: null});
-      this.props.addNewTriggerTimeWindow(this.props.triggerTimeWindows);
     }
+  }
+
+  handleAddNewTimeWindow = () => {
+    this.form.setFieldsValue({days_of_week: []});
+    this.form.setFieldsValue({start: null});
+    this.form.setFieldsValue({stop: null});
+    this.props.addNewTriggerTimeWindow(this.props.triggerTimeWindows);
   }
 
   handleUpdateStart = (fieldValue) => {
@@ -634,17 +647,24 @@ class AddTriggerModal extends Component {
   handleSaveData = () => {
     // TODO: figure out how to create/update timewindows for all triggers
     // TODO: determine if we are creating a new silence window or updating an existing silence window
-    // form.validateFields((err, values) => {
-    //   if (err) {
-    //     return;
-    //   }
-    //   values.trigger_windows.start = values.start;
-    //   values.trigger_windows.stop = values.stop;
-    //   values.trigger_windows.days_of_week = values.days_of_week;
-    //   values.trigger_windows.time_window_select = values.time_window_select;
-    // });
-    // this.props.createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, values.trigger_windows);
-    // this.props.updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, values.trigger_windows);
+    this.form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+      let trigger_windows = {};
+      trigger_windows.start = values.start;
+      trigger_windows.stop = values.stop;
+      trigger_windows.days_of_week = values.days_of_week;
+      // TODO: conditional to determine if new time window
+      if (true) {
+        // TODO: get triggers_id from active/selected trigger object and delete the statement below.
+        // let triggers_id = this.props.triggerTimeWindows[values.time_window_select].triggers_id;
+        console.log(this.props);
+        // this.props.updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, values.trigger_windows);
+      } else {
+        // this.props.createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, values.trigger_windows);
+      }
+    });
   }
 
   handleCheckForWindow = () => {
@@ -701,8 +721,11 @@ class AddTriggerModal extends Component {
           updateDataDaysOfWeek={this.handleUpdateDaysOfWeek}
           time_zone={this.state.time_zone}
           saveData={this.handleSaveData}
-          polygonData={this.props.polygonData}
+          timeWindows={this.props.triggerTimeWindows}
           cameraGroupOwner={this.state.cameraGroupOwner}
+          showShareOption={this.state.showShareOption}
+          addNewTimeWindow={this.handleAddNewTimeWindow}
+          getTriggerSpecificTimeWindows={this.getTriggerSpecificTimeWindows}
         />
       </div>
     );

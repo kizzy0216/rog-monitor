@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {Icon} from 'antd';
+import {setTriggerSpecificTimeWindows, clearTriggerSpecificTimeWindows} from '../../redux/triggers/actions';
 require('fabric');
 
 class CustomCanvas extends Component {
@@ -57,6 +58,7 @@ class CustomCanvas extends Component {
 
           fabricCanvas.getActiveObject().setColor('#36d850');
           nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+          nThis.setTriggerTimeWindows(nThis.props.polygonData, fabricCanvas.getActiveObject().id);
         }
       });
       document.getElementById('prev_button').addEventListener('click', function (options) {
@@ -78,6 +80,7 @@ class CustomCanvas extends Component {
           fabricCanvas.getActiveObject().setColor('#36d850');
           nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           fabricCanvas.renderAll();
+          nThis.setTriggerTimeWindows(nThis.props.polygonData, fabricCanvas.getActiveObject().id);
         }
       });
 
@@ -100,9 +103,11 @@ class CustomCanvas extends Component {
           fabricCanvas.getActiveObject().setColor('#36d850');
           nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           fabricCanvas.renderAll();
+          nThis.setTriggerTimeWindows(nThis.props.polygonData, fabricCanvas.getActiveObject().id);
         }
       });
     } else {
+      nThis.props.clearTriggerSpecificTimeWindows();
       fabricCanvas.on('mouse:down', function (options) {
         if (nThis.props.triggerType === 'RA' || nThis.props.triggerType === 'LD') {
           if (nThis.pointArray.length > 0) {
@@ -365,6 +370,14 @@ class CustomCanvas extends Component {
     return fabricCanvas;
   }
 
+  setTriggerTimeWindows = (polygonData, selectedPolygonId) => {
+    for (var i = 0; i < polygonData.length; i++) {
+      if (polygonData[i].id == selectedPolygonId) {
+        this.props.setTriggerSpecificTimeWindows(polygonData[i].time_windows);
+      }
+    }
+  }
+
   generatePolygon(canvas, points, lineArray, polygonAttributes) {
 
     lineArray.forEach(function (entry) {
@@ -625,7 +638,10 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    setTriggerSpecificTimeWindows: (triggers, triggerId) => dispatch(setTriggerSpecificTimeWindows(triggers, triggerId)),
+    clearTriggerSpecificTimeWindows: () => dispatch(clearTriggerSpecificTimeWindows())
+  }
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CustomCanvas));

@@ -121,7 +121,7 @@ function updateTriggerTimeWindowData(values) {
 
 export function addNewTriggerTimeWindow(values) {
   return (dispatch) => {
-    values.push({'start': null}, {stop: null}, {'daysOfWeek': []});
+    values.push({'start_at': null, 'end_at': null, 'days_of_week': []});
     dispatch(updateTriggerTimeWindowData(values));
   }
 }
@@ -139,6 +139,17 @@ export function clearTimeWindowData(timeWindowSelect, values) {
     values[timeWindowSelect]['start'] = null;
     values[timeWindowSelect]['stop'] = null;
     dispatch(updateTriggerTimeWindowData(values));
+  }
+}
+export function setTriggerSpecificTimeWindows(triggers) {
+  return (dispatch) => {
+    dispatch(updateTriggerTimeWindowData(triggers));
+  }
+}
+
+export function clearTriggerSpecificTimeWindows() {
+  return (dispatch) => {
+    dispatch(updateTriggerTimeWindowData([]));
   }
 }
 
@@ -184,6 +195,9 @@ export function fetchTriggers(user, cameraGroup, cameraId) {
 
     axios.get(url, config)
       .then((resp) => {
+        if (isEmpty(resp.data)) {
+          resp.data = [];
+        }
         dispatch(fetchTriggersSuccess(resp.data));
         dispatch(fetchTriggersInSuccess(true));
       })

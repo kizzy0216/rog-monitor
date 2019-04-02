@@ -8,6 +8,12 @@ export default {
   deleteTriggerInProcess: false,
   fetchTriggerInProcess: false,
   fetchTriggerSuccess: false,
+  createTriggerTimeWindowInProcess: false,
+  createTriggerTimeWindowSuccess: false,
+  updateTriggerTimeWindowSuccess: false,
+  updateTriggerTimeWindowInProcess: false,
+  deleteTriggerTimeWindowInProcess: false,
+  deleteTriggerTimeWindowSuccess: false,
   polygonData: [],
   triggerTimeWindows: []
 }

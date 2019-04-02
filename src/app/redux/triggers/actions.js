@@ -135,9 +135,9 @@ export function updateTimeWindowData(timeWindowSelect, values, fieldValue, field
 
 export function clearTimeWindowData(timeWindowSelect, values) {
   return (dispatch) => {
-    values[timeWindowSelect]['daysOfWeek'] = [];
-    values[timeWindowSelect]['start'] = null;
-    values[timeWindowSelect]['stop'] = null;
+    values[timeWindowSelect]['days_of_week'] = [];
+    values[timeWindowSelect]['start_at'] = null;
+    values[timeWindowSelect]['end_at'] = null;
     dispatch(updateTriggerTimeWindowData(values));
   }
 }
@@ -236,17 +236,19 @@ export function createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersI
   return (dispatch) => {
     dispatch(createTriggerTimeWindowInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${triggersId}/trigger_time_windows`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${triggersId}/trigger-time-windows`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     let data = {
-      days_of_week: timeWindow.daysOfWeek,
-      start_at: timeWindow.startAt,
-      end_at: timeWindow.endAt
+      days_of_week: timeWindow.days_of_week,
+      start_at: timeWindow.start_at,
+      end_at: timeWindow.end_at
     };
 
     axios.post(url, data, config)
       .then((resp) => {
         dispatch(createTriggerTimeWindowSuccess(true));
+        let cameraGroup = {id: cameraGroupId};
+        dispatch(fetchTriggers(user, cameraGroup, cameraId));
       })
       .catch((error) => {
         dispatch(createTriggerTimeWindowError(true));
@@ -258,21 +260,22 @@ export function createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersI
   }
 }
 
-export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggerId, timeWindow) {
+export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, timeWindow) {
   return (dispatch) => {
     dispatch(updateTriggerTimeWindowInProcess(true));
-
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${triggersId}/trigger_time_windows/${timeWindow.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${triggersId}/trigger-time-windows/${timeWindow.id}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     let data = {
-      days_of_week: timeWindow.daysOfWeek,
-      start_at: timeWindow.startAt,
-      end_at: timeWindow.endAt
+      days_of_week: timeWindow.days_of_week,
+      start_at: timeWindow.start_at,
+      end_at: timeWindow.end_at
     };
 
     axios.patch(url, data, config)
       .then((resp) => {
         dispatch(updateTriggerTimeWindowSuccess(true));
+        let cameraGroup = {id: cameraGroupId};
+        dispatch(fetchTriggers(user, cameraGroup, cameraId));
       })
       .catch((error) => {
         console.log(error);
@@ -288,12 +291,14 @@ export function deleteTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
   return (dispatch) => {
     dispatch(deleteTriggerTimeWindowInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger_time_windows/${timeWindow.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger-time-windows/${timeWindow.id}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
 
     axios.delete(url, config)
       .then((resp) => {
         dispatch(deleteTriggerTimeWindowSuccess(true));
+        let cameraGroup = {id: cameraGroupId};
+        dispatch(fetchTriggers(user, cameraGroup, cameraId));
       })
       .catch((error) => {
         console.log(error);

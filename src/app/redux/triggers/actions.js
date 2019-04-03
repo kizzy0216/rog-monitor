@@ -202,7 +202,7 @@ export function fetchTriggers(user, cameraGroup, cameraId) {
         dispatch(fetchTriggersInSuccess(true));
       })
       .catch((error) => {
-        console.log(error.response);
+        console.log(error);
       })
       .finally(() => {
         dispatch(fetchTriggersInSuccess(false));

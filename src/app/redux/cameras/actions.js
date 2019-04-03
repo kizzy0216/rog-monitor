@@ -322,17 +322,19 @@ export function checkCameraConnection(user, cameraId) {
   }
 }
 
-export function editCamera(user, cameraGroupsId, cameraId, cameraData) {
+export function editCamera(user, cameraId, cameraData) {
   return (dispatch) => {
-    let cameraGroup = {id: cameraGroupsId};
+    let cameraGroup = {id: cameraData.camera_group_id};
+    delete cameraData.camera_group_id;
+    if (typeof cameraData.password == 'undefined') {
+      delete cameraData.password;
+    }
     dispatch(editCameraError(''));
     dispatch(editCameraInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupsId}/cameras/${cameraId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
-    let data = {
-      camera: cameraData
-    };
+    let data = cameraData;
 
     axios.patch(url, data, config)
       .then((response) => {

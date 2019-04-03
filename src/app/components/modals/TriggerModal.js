@@ -388,6 +388,9 @@ class AddTriggerModal extends Component {
     if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
       if (nextProps.fetchTriggerSuccess === true && !isEmpty(nextProps.polygonData)) {
         this.setState({canvasMode: true});
+        if (this.triggerDetails.currentTriggerId !== null) {
+          this.setTriggerTimeWindows(nextProps.polygonData, this.triggerDetails.currentTriggerId);
+        }
       }
       if (nextProps.createTriggerSuccess !== this.props.createTriggerSuccess && this.triggerDetails['id'] !== undefined) {
         this.setState({canvasMode: false});
@@ -413,9 +416,6 @@ class AddTriggerModal extends Component {
         }
       }
     }
-    if (this.triggerDetails.currentTriggerId !== null) {
-      this.setTriggerTimeWindows(nextProps.polygonData, this.triggerDetails.currentTriggerId);
-    }
   }
 
   showModal = () => {
@@ -426,6 +426,7 @@ class AddTriggerModal extends Component {
       this.triggerDetails['id'] = this.props.data.id;
       this.setState({saveCancel: false});
       this.setState({canvasMode: false});
+      this.triggerDetails.currentTriggerId = null;
       this.fetchTriggers(true);
     }
   };
@@ -434,20 +435,26 @@ class AddTriggerModal extends Component {
     this.setState({canvasMode: false});
     this.setState({visible: false});
     this.triggerDetails.currentTriggerType = '';
+    this.triggerDetails.currentTriggerId = null;
   };
 
   handleVisibleChange = (visibility) => {
     if (visibility === true) {
+      this.triggerDetails.currentTriggerId = null;
       this.setState({visibility});
       this.setState({canvasMode: false});
       this.setState({triggers: false});
       this.setState({deleteButton: false});
       this.triggerDetails.currentTriggerType = '';
     } else {
+      this.triggerDetails.currentTriggerId = null;
       this.setState({deleteButton: false});
       this.setState({visibility});
       this.setState({canvasMode: false});
       this.setState({triggers: true});
+      this.setState({cameraGroupOwner: false});
+      this.setState({showShareOption: false});
+      this.triggerDetails.currentTriggerType = '';
     }
   };
 
@@ -484,7 +491,7 @@ class AddTriggerModal extends Component {
 
   handleSaveCancel = (event) => {
     if (event === 'cancel') {
-      this.setState({saveCancel: !this.state.saveCancel});
+      this.setState({saveCancel: false});
       this.setState({canvasMode: false});
       this.fetchTriggers(true);
       this.triggerDetails.currentTriggerType = '';
@@ -528,16 +535,18 @@ class AddTriggerModal extends Component {
               this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['id'], null, this.triggerDetails.direction, values.trigger_windows, values.shared);
               break;
           }
-          this.fetchTriggers(true);
         });
         this.triggerDetails.polygonPoints.length = 0;
+        this.setState({saveCancel: false});
         this.setState({canvasMode: false});
         this.setState({newLoiteringTrigger: false});
       } else {
         message.error('please draw a trigger to save');
       }
     }
-
+    this.triggerDetails.currentTriggerId = null;
+    this.setState({showShareOption: false});
+    this.fetchTriggers(true);
   };
 
   fetchTriggers = (checked) => {
@@ -556,7 +565,7 @@ class AddTriggerModal extends Component {
     if (this.triggerDetails.currentTriggerId !== 0 && this.triggerDetails.currentTriggerType !== '') {
       this.triggerDetails['id'] = this.props.data.id;
       this.props.deleteTrigger(this.props.data.user, this.props.data.camera_groups_id, this.triggerDetails['id'], this.triggerDetails.currentTriggerId);
-      this.triggerDetails.currentTriggerId = 0;
+      this.triggerDetails.currentTriggerId = null;
       this.triggerDetails.currentTriggerType = '';
     }
   };

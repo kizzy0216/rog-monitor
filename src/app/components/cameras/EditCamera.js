@@ -47,7 +47,7 @@ const CameraForm = Form.create()(
             )}
           </FormItem>
           <FormItem label='URL' {...formItemLayout}>
-            {getFieldDecorator('rtsp_url', {
+            {getFieldDecorator('camera_url', {
               'initialValue': cameraData.camera_url
             })(
               <Input style={styles.input} type='text' disabled />
@@ -113,8 +113,8 @@ class EditCamera extends Component {
       if (err) {
         return;
       }
-      values.cameraGroup_id = this.props.data.cameraGroup.id;
-      values.rtsp_url = this.props.data.rtspUrl.trim();
+      values.camera_group_id = this.props.data.cameraGroup.id;
+      delete values.camera_url;
       this.props.editCamera(this.props.user, this.props.data.id, values);
       this.setState({visible: false});
       this.setState({flag: true});
@@ -141,10 +141,10 @@ class EditCamera extends Component {
     this.setState({time_zone: fieldValue});
   }
 
-  getFullRtspUrl = (rtspUrl, username, password) => {
-    let index = rtspUrl.indexOf(":");
-    let protocol = rtspUrl.substr(0, index + 3).toLowerCase();
-    let urlAddress = rtspUrl.substr(index + 3);
+  getFullRtspUrl = (camera_url, username, password) => {
+    let index = camera_url.indexOf(":");
+    let protocol = camera_url.substr(0, index + 3).toLowerCase();
+    let urlAddress = camera_url.substr(index + 3);
     let lowerCaseUrl = (protocol + `${username}:${password}@` + urlAddress);
     return lowerCaseUrl;
   }
@@ -157,10 +157,10 @@ class EditCamera extends Component {
       alert('Sorry, live video requires the desktop Chrome, Firefox, or Opera web browser.');
     } else {
       const form = this.form;
-      form.validateFields(['rtsp_url', 'username', 'password'], (err, values) => {
+      form.validateFields(['camera_url', 'username', 'password'], (err, values) => {
         if (err) return;
         this.setState({fullRtspUrl: null}, () => {
-          this.setState({fullRtspUrl: this.getFullRtspUrl(values.rtsp_url, values.username, values.password)});
+          this.setState({fullRtspUrl: this.getFullRtspUrl(values.camera_url, values.username, values.password)});
         });
       })
     }

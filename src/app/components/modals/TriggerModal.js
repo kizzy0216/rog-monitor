@@ -328,7 +328,8 @@ class AddTriggerModal extends Component {
       newLoiteringTrigger: false,
       time_zone: this.props.data.time_zone,
       cameraGroupOwner: false,
-      showShareOption: false
+      showShareOption: false,
+      image: null
     }
 
     this.onImgLoad = this.onImgLoad.bind(this);
@@ -414,6 +415,11 @@ class AddTriggerModal extends Component {
         if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].user_privileges_ids.includes(0)) {
           this.setState({cameraGroupOwner: true});
         }
+      }
+    }
+    for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
+      if (nextProps.data.id == nextProps.data.cameraGroup.cameras[i].id) {
+        this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
       }
     }
   }
@@ -729,7 +735,7 @@ class AddTriggerModal extends Component {
           onCancel={this.handleCancel}
           error={this.state.error}
           cameraName={this.props.data.name}
-          triggerImg={this.props.data.thumbnail_url}
+          triggerImg={this.state.image}
           visibility={this.state.visibility}
           handleVisibility={this.handleVisibleChange}
           showTrigger={this.showTrigger}

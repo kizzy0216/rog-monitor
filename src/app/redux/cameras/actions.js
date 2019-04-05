@@ -200,55 +200,28 @@ export function fetchCameraUrl(user, cameraGroupsId, cameraId) {
   }
 }
 
-export function updatePreviewImage(user, cameraGroupsId, cameraId) {
+export function updatePreviewImage(user, cameraGroup, cameraId) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_BVC_SERVER}/users/${user.id}/camera-groups/${cameraGroupsId}/cameras/${cameraId}/image`;
+    dispatch(imageUpdateInProgress(true, cameraId));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}/image`;
 
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
-    let data = ''
+    let data = {camera_groups_name: cameraGroup.name}
 
     axios.post(url, data, config)
       .then((response) => {
-        dispatch(imageUpdateInProgress(true, cameraId));
+        dispatch(refreshCameraImage(cameraId, response.data['Success']));
+        dispatch(imageUpdateSuccess(true, cameraId));
       })
       .catch((error) => {
         refreshCameraError('Error refreshing camera image.', cameraId);
-        dispatch(imageUpdateInProgress(false, cameraId));
+        dispatch(imageUpdateSuccess(false, cameraId));
       })
-  }
-}
-// TODO: examine weather we can delete this function
-export function listenForNewImageThumbnails(user) {
-  return (dispatch) => {
-    // let channelName = `images:user`;
-    // let params = {token: user.jwt};
-    // let ws = new Socket(`${process.env.REACT_APP_ROG_WS_URL}/socket`, {params});
-    //
-    // ws.connect();
-    //
-    // let channel = ws.channel(channelName, {});
-    // channel.join()
-    //   .receive('ok', resp => {
-    //     dispatch(channelConnected(channel));
-    //     dispatch(handleNewImage(channel));
-    //   })
-    //   .receive('error', resp => console.log(`Unable to join channel ${channelName}`));
-  }
-}
-
-export function handleNewImage(channel) {
-  return (dispatch) => {
-    channel.on('new_image', camera => dispatch(newImage(camera)));
-  }
-}
-
-export function newImage(camera) {
-  console.log("image: "+camera);
-  return (dispatch) => {
-    dispatch(refreshCameraImage(camera.id, camera.thumbnail_url));
-    dispatch(imageUpdateInProgress(false, camera.id));
-    dispatch(imageUpdateSuccess(true, camera.id));
-    dispatch(imageUpdateSuccess(false, camera.id));
+      .finally(() => {
+        dispatch(fetchCameraGroupCameras(user, cameraGroup));
+        dispatch(imageUpdateInProgress(false, cameraId));
+        dispatch(imageUpdateSuccess(false, cameraId));
+      })
   }
 }
 

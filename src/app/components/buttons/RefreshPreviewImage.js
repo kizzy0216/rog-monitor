@@ -27,7 +27,7 @@ class RefreshPreviewImage extends Component {
   }
 
   updatePreviewImage = () => {
-    this.props.updatePreviewImage(this.props.data.id);
+    this.props.updatePreviewImage(this.props.data.user, this.props.data.cameraGroup, this.props.data.id);
     this.setState({disabledFlag: true});
     this.flagTimeout();
   };
@@ -66,7 +66,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    updatePreviewImage: (cameraId) => dispatch(updatePreviewImage(cameraId))
+    updatePreviewImage: (user, cameraGroupsId, cameraId) => dispatch(updatePreviewImage(user, cameraGroupsId, cameraId))
   }
 }
 

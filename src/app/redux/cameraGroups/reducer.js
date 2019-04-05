@@ -7,8 +7,7 @@ const cameraGroups = (state = initialState, action) => {
       return {
         ...state,
         cameraGroups: action.cameraGroups,
-        selectedCameraGroup: action.cameraGroups.find(cameraGroup => cameraGroup.id === state.selectedCameraGroup.id) ||
-                          state.selectedCameraGroup
+        selectedCameraGroup: action.cameraGroups.find(cameraGroup => cameraGroup.id === state.selectedCameraGroup.id) || state.selectedCameraGroup
       }
 
     case types.FETCH_CAMERA_GROUPS_IN_PROCESS:

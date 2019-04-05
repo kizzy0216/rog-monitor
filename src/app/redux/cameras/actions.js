@@ -252,7 +252,7 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
         dispatch(fetchCameraGroupCameras(user, cameraGroup));
         dispatch(fetchUserCameraLicenses(user));
         dispatch(addCameraSuccess(true));
-        dispatch(checkCameraConnection(user, response.data.id));
+        // dispatch(checkCameraConnection(user, response.data.id));
       })
       .catch((error) => {
         console.log(error.response);
@@ -270,28 +270,21 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
   }
 }
 
-// TODO: re-work this function to hit the recos in the API and get the status for that camera id
 export function checkCameraConnection(user, cameraId) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/recos/cameras/${cameraId}`;
     const jwt = localStorage.getItem('jwt');
     let config = {headers: {Authorization:'Bearer' + ' ' + jwt}};
-    let timeout = 90;
-    let checkConnectionStatus = setInterval(function(){
-      if (timeout <= 0){
-        dispatch(cameraConnectionFail(true, cameraId));
-        clearInterval(checkConnectionStatus);
+    axios.get(url, config)
+    .then((response) => {
+      console.log(response.data);
+      dispatch(cameraConnection(response.data.value));
+      if (response.data.value == true) {
+        dispatch(cameraConnectionFail(false, cameraId));
       } else {
-        timeout -= 5;
+        dispatch(cameraConnectionFail(true, cameraId));
       }
-      axios.get(url, config)
-      .then((response) => {
-          dispatch(cameraConnection(response.data.value));
-          if (response.data.value == true) {
-            clearInterval(checkConnectionStatus);
-          }
-      })
-    }, 5000, url, config);
+    })
   }
 }
 
@@ -370,10 +363,10 @@ export function toggleCameraEnabled(user, cameraGroup, cameraId, flag) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
-    let data = {value: flag}
+    let data = {enabled: flag}
     axios.patch(url, data, config)
       .then((response) => {
-        dispatch(checkCameraConnection(cameraId));
+        dispatch(checkCameraEnabled(user, cameraGroup, cameraId));
       })
       .catch((error)=>{
         console.log(error);

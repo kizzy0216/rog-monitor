@@ -48,8 +48,6 @@ class CameraCard extends Component {
     this.props.registerCamera(this.props.user.id, this.props.cameraGroup.cameras);
   }
 
-  componentWillReceiveProps(nextProps) {}
-
   render() {
     if (this.props.liveView) {
       return (

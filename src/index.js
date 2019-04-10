@@ -10,6 +10,7 @@ import App from './app/App.js';
 import App401 from './app/App401.js';
 // import registerServiceWorker from './registerServiceWorker';
 import {unregister} from './registerServiceWorker';
+import { initializeFirebase, askForPermissionToReceiveNotifications } from './push-notification';
 
 if ((window.location.protocol + '//' + window.location.host) == 'https://rog-monitor-dev.herokuapp.com') {
   var credentials = window.prompt("Enter Realm Password");
@@ -31,6 +32,8 @@ function renderApp() {
   ReactDOM.render(<ReduxApp />, document.getElementById('root'));
   // registerServiceWorker();
   unregister();
+  initializeFirebase();
+  askForPermissionToReceiveNotifications();
 }
 
 function render401() {

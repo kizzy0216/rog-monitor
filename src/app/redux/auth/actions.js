@@ -182,6 +182,12 @@ export function resetResetPasswordSuccess() {
   }
 }
 
+export function firebase(){
+  return (dispatch, getState, {getFirebase}) => {
+    
+  }
+}
+
 export function checkLogin() {
   return (dispatch) => {
     const jwt = sessionStorage.getItem('jwt');

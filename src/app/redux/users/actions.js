@@ -5,8 +5,8 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
-import { Socket } from '../../../lib/phoenix/phoenix';
-import { listenForNewAlerts } from '../alerts/actions';
+// import { Socket } from '../../../lib/phoenix/phoenix';
+// import { listenForNewAlerts } from '../alerts/actions';
 import { fetchReceivedInvites } from '../invites/actions';
 import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login} from '../auth/actions';
 import {isEmpty} from '../helperFunctions';
@@ -131,15 +131,16 @@ export function updateUser(user, values) {
   }
 }
 
+// TODO: refactor this functionality
 export function muteSound(user, mute) {
   return (dispatch) => {
-    user.mute = mute;
-    updateUserData(user);
+    // user.mute = mute;
+    // updateUserData(user);
 
-    user.channel.leave()
-      .receive('ok', resp => {
-        dispatch(listenForNewAlerts(user));
-      })
-      .receive('error', resp => console.log(`Unable to leave channel ${channelName}`));
+    // user.channel.leave()
+      // .receive('ok', resp => {
+        // dispatch(listenForNewAlerts(user));
+      // })
+      // .receive('error', resp => console.log(`Unable to leave channel ${channelName}`));
   }
 }

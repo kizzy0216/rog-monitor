@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Icon } from 'antd';
 
 import { logout } from '../../redux/auth/actions';
-
+// TODO: change this logout component to pass in the user object.
 class LogoutItem extends Component {
   render() {
     return (

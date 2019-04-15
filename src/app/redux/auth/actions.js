@@ -7,7 +7,7 @@ import { clearCameraData } from '../cameras/actions';
 import { clearInvitesData } from '../invites/actions';
 import { clearAlertData } from '../alerts/actions';
 import { fetchReceivedInvites } from '../invites/actions';
-import {readUser} from '../users/actions';
+import {readUser, deleteUserDeviceToken} from '../users/actions';
 
 import * as types from './actionTypes';
 
@@ -182,12 +182,6 @@ export function resetResetPasswordSuccess() {
   }
 }
 
-export function firebase(){
-  return (dispatch, getState, {getFirebase}) => {
-    
-  }
-}
-
 export function checkLogin() {
   return (dispatch) => {
     const jwt = sessionStorage.getItem('jwt');
@@ -250,10 +244,6 @@ export function register(email, firstName, lastName, password, confirmPassword, 
         };
 
         dispatch(trackEventAnalytics('registration', registrationEvent));
-
-        /*-- Needed for Woopra Trigger event --*/
-        // registrationEvent.registration_status = 'Registration Completed';
-        // setInterval(dispatch(trackEventAnalytics('registration', registrationEvent)), 1000);
       })
       .catch((error) => {
         let errMessage = 'Error registering. Please try again later';
@@ -280,17 +270,6 @@ export function resetPassword(new_password, confirmPassword, token) {
     axios.patch(url, data)
       .then((resp) => {
         dispatch(resetPasswordSuccess());
-
-        // const registrationEvent = {
-        //   reset_password_status: 'Password Reset Successful',
-        //   reset_password_date: new Date().toString().split(' ').splice(1, 4).join(' ')
-        // };
-        //
-        // dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent));
-
-        /*-- Needed for Woopra Trigger event --*/
-        // resetPasswordEvent.reset_password_status = 'Password Reset Completed';
-        // setInterval(dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent)), 1000);
       })
       .catch((error) => {
         let errMessage = 'Error resetting your password. Please try again later';
@@ -344,19 +323,20 @@ export function login(email, password) {
 }
 // TODO: remove this function and replace with FCM logic
 function disconnectFromChannels(channels) {
-  for (const channel of channels) {
-    channel.leave();
-  }
+  // for (const channel of channels) {
+  //   channel.leave();
+  // }
 }
 
 export function logout(channels) {
   return (dispatch) => {
+    // TODO: delete FCM token
+    // dispatch(deleteUserDeviceToken(user));
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('email');
     sessionStorage.removeItem('password');
     window.clearInterval(window.jwtTokenRefresh);
     window.jwtTokenRefresh = null;
-    disconnectFromChannels(channels);
     dispatch(clearAssociatedData());
     dispatch(logoutSuccess());
   }

@@ -42,15 +42,15 @@
     "promise": "8.0.1",
     "promise.prototype.finally": "^3.1.0",
     "raf": "^3.4.1",
-    "react": "^16.8.6",
-    "react-dev-utils": "^4.2.3",
-    "react-dom": "^16.8.6",
-    "react-ga": "^2.5.7",
-    "react-redux": "^5.1.1",
-    "react-redux-firebase": "^2.2.6",
-    "react-router-dom": "^4.3.1",
-    "redux": "^3.7.2",
-    "redux-thunk": "^2.3.0",
+    "react": "16.8.6",
+    "react-dev-utils": "4.2.3",
+    "react-dom": "16.8.6",
+    "react-ga": "2.5.7",
+    "react-redux": "5.1.1",
+    "react-redux-firebase": "2.2.6",
+    "react-router-dom": "4.3.1",
+    "redux": "3.7.2",
+    "redux-thunk": "2.3.0",
     "style-loader": "^0.19.1",
     "sw-precache-webpack-plugin": "^0.11.5",
     "url-loader": "^0.6.2",
@@ -105,5 +105,8 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "devDependencies": {
+    "serviceworker-webpack-plugin": "^1.0.1"
   }
 }

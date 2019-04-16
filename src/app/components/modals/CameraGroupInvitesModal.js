@@ -71,7 +71,7 @@ class CameraGroupInvitesModal extends Component {
     }
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.acceptInviteError && nextProps.acceptInviteError !== this.props.acceptInviteError) {
       message.error(acceptInviteError);
     }

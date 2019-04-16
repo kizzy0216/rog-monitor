@@ -6,7 +6,7 @@ import RtspStream from '../components/video/RtspStream';
 import * as cameraActions from '../redux/cameras/actions';
 
 class CameraStream extends Component {
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.props.actions.fetchCameraUrl(this.props.user, this.props.match.params.cameraGroupId, this.props.match.params.id);
   }
 

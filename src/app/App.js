@@ -19,7 +19,7 @@ class App extends Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     store.subscribe(this.onStoreUpdate.bind(this));
     store.dispatch(checkLogin());
     store.dispatch(initialiseAnalyticsEngine());

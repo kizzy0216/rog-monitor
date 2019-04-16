@@ -6,7 +6,7 @@ import * as cameraActions from '../redux/cameras/actions';
 import EditCamera from '../components/cameras/EditCamera'
 
 class CameraDetails extends Component {
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.props.actions.fetchCamera(this.props.user, this.props.match.params.id);
   }
 

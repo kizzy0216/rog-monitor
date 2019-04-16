@@ -57,7 +57,7 @@ class EditCameraGroupModal extends Component {
     }
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.editCameraGroupError && this.props.editCameraGroupError !== nextProps.editCameraGroupError) {
       message.error(nextProps.editCameraGroupError);
     }

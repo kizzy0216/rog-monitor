@@ -23,11 +23,11 @@ class Register extends Component {
     }
   }
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.props.getInvitation(this.props.match.params.token);
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.registerSuccess && this.props.registerSuccess !== nextProps.registerSuccess) {
       message.success('Registration complete! Please log in.');
       this.props.history.push('/login');

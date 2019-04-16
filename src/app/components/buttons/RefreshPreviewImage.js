@@ -32,7 +32,7 @@ class RefreshPreviewImage extends Component {
     this.flagTimeout();
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.data.id === nextProps.imageUpdateInProgressId) {
       if (!nextProps.imageUpdateInProgress) {
         this.setState({disabledFlag: false});

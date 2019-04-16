@@ -91,7 +91,7 @@ class UserSettings extends Component {
     });
   };
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.updateUserError && this.props.updateUserError !== nextProps.updateUserError) {
       message.error(nextProps.updateUserError);
     }

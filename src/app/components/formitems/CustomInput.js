@@ -10,7 +10,7 @@ class CustomInput extends Component {
     };
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.closeEditMode && this.props.closeEditMode !== nextProps.closeEditMode) {
       this.setState({inEditMode: false});
       this.onCancel();

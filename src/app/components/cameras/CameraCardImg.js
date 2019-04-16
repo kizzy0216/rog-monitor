@@ -13,7 +13,7 @@ class CameraCardImg extends Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url});
     } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailId === this.props.data.id) {
@@ -21,7 +21,7 @@ class CameraCardImg extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.data.imageUpdateInProgress && nextProps.data.id === nextProps.data.imageUpdateInProgressId) {
       this.setState({image: loading});
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraId == nextProps.data.id) {

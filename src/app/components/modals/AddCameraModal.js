@@ -86,7 +86,7 @@ class AddCameraModal extends Component {
     fullRtspUrl: null
   };
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.addCameraSuccess && this.props.addCameraSuccess !== nextProps.addCameraSuccess) {
       this.resetFields();
       this.props.toggleAddCameraModalVisibility();

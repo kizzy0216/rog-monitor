@@ -22,12 +22,12 @@ class CameraList extends Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.cameraGroups.length == 0){
       this.props.actions.fetchCameraGroups(this.props.user);
     }
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.cameraGroups.length > 0) {
       if (!nextProps.selectedCameraGroup.name || typeof nextProps.selectedCameraGroup === 'undefined'){
         this.selectCameraGroup(nextProps.user, nextProps.cameraGroups[0]);

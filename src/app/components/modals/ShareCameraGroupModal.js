@@ -42,7 +42,7 @@ const ShareCameraGroupForm = Form.create()(
 );
 
 class ShareCameraGroupModal extends Component {
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.shareCameraGroupError && this.props.shareCameraGroupError !== nextProps.shareCameraGroupError) {
       message.error(nextProps.shareCameraGroupError);
     }

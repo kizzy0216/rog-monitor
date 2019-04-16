@@ -11,7 +11,7 @@ class ToggleCameraConnection extends Component {
     this.props.toggleCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.id, enabled);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.checkCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.id);
   }
 

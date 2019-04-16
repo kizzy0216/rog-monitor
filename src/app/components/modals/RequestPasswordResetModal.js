@@ -41,7 +41,7 @@ const PasswordResetForm = Form.create()(
 );
 
 class RequestPasswordResetModal extends Component {
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.sendPasswordResetRequestSuccess && this.props.sendPasswordResetRequestSuccess !== nextProps.sendPasswordResetRequestSuccess) {
       message.success('Password reset request sent. Please check your email.');
       this.form.resetFields();

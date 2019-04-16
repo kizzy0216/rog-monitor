@@ -42,7 +42,7 @@ class ExpandAlertModal extends Component {
     return `${dt.format('L')} ${dt.format('LT')}`;
   }
 
-  componentWillReceiveProps(nextProps) {}
+  UNSAFE_componentWillReceiveProps(nextProps) {}
 
   showModal = () => {
     this.setState({visible: true});

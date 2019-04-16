@@ -166,7 +166,7 @@ class EditCamera extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
+  UNSAFE_componentWillReceiveProps(nextProps){
     if (this.props.data.id === nextProps.data.id) {
       if (this.state.flag == true) {
         if (nextProps.editCameraError !== '' && this.props.editCameraError !== nextProps.editCameraError) {

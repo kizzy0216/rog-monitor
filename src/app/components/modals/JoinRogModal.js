@@ -9,7 +9,7 @@ const InviteForm = Form.create()(
   (props) => {
     const {visible, onCancel, onCreate, form, sendInvitationInProcess} = props;
     const {getFieldDecorator} = form;
-    
+
     return (
       <Modal title='Request an invite'
         visible={visible}
@@ -40,8 +40,8 @@ const InviteForm = Form.create()(
   }
 );
 
-class RequestInviteModal extends Component {  
-  componentWillReceiveProps(nextProps) {
+class RequestInviteModal extends Component {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.sendInvitationSuccess && this.props.sendInvitationSuccess !== nextProps.sendInvitationSuccess) {
       message.success('Invitation sent. Please check your email.');
       this.form.resetFields();

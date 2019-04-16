@@ -6,7 +6,7 @@ import { Menu, Icon, Badge, notification } from 'antd';
 import { mergeNewAlerts }from '../../redux/alerts/actions';
 
 class NavigationMenu extends Component {
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.newAlerts.length) {
       const alert = nextProps.newAlerts[0];
 

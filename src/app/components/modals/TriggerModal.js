@@ -385,7 +385,7 @@ class AddTriggerModal extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
       if (nextProps.fetchTriggerSuccess === true && !isEmpty(nextProps.polygonData)) {
         this.setState({canvasMode: true});

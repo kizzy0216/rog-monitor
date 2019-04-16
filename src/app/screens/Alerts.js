@@ -18,7 +18,7 @@ class Alerts extends Component {
     }
   }
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.props.actions.fetchAlerts(this.props.user, this.props.rummage);
   }
 

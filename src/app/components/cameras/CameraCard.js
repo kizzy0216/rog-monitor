@@ -44,7 +44,7 @@ class CameraCard extends Component {
     this.props.history.push(`/camera-groups/${this.props.camera_groups_id}/cameras/${this.props.id}/stream`);
   }
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.props.registerCamera(this.props.user.id, this.props.cameraGroup.cameras);
   }
 
@@ -85,12 +85,12 @@ class CameraCard extends Component {
             <CameraCardImg data={this.props} />
           </Row>
           {this.props.cameraGroup.myRole === 'viewer' ?
-            (<Row type='flex' style={styles.cameraCardButtons}>
+            (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
               <Col span={20} offset={2}>
                 <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
               </Col>
             </Row>) :
-            (<Row type='flex' style={styles.cameraCardButtons}>
+            (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
               <Col span={2}>
                 <EditCamera data={this.props} />
               </Col>

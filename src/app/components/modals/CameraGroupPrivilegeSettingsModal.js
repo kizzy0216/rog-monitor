@@ -70,7 +70,7 @@ class UserCameraGroupSettingsModal extends Component {
     }
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.rescindInviteError && nextProps.rescindInviteError !== this.props.rescindInviteError) {
       message.error(nextProps.rescindInviteError);
     }

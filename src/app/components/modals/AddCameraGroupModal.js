@@ -41,7 +41,7 @@ class AddCameraGroupModal extends Component {
     visible: false
   };
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.addCameraGroupSuccess && this.props.addCameraGroupSuccess !== nextProps.addCameraGroupSuccess) {
       if (this.props.linkText === "Add CameraGroup") {
         this.resetFields();

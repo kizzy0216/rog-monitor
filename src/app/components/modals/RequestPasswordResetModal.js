@@ -26,7 +26,7 @@ const PasswordResetForm = Form.create()(
                 required: true, message: 'Please enter your email address',
               }],
             })(
-              <Input prefix={<Icon type='mail' />} placeholder='Enter email address'/>
+              <Input style={styles.emailInput} prefix={<Icon type='mail' />} placeholder='Enter email address'/>
             )}
           </FormItem>
           <FormItem>
@@ -89,10 +89,8 @@ class RequestPasswordResetModal extends Component {
 }
 
 const styles = {
-  selectedCameraGroupText: {
-    fontSize: 18,
-    fontWeight: 600,
-    marginTop: -20
+  emailInput: {
+    textAlign: 'center'
   }
 };
 

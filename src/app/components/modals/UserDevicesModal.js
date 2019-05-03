@@ -99,16 +99,20 @@ class EditableTable extends Component {
     this.columns = [{
       title: 'Name',
       dataIndex: 'name',
-      width: '50%',
+      width: 200,
       editable: true,
+      align: 'center'
     }, {
       title: 'ID',
       dataIndex: 'id',
-      width: '25%',
+      width: 100,
+      align: 'center'
     }, {
       title: 'Action',
       dataIndex: 'action',
-      width: '25%',
+      width: 100,
+      align: 'center',
+      fixed: 'right',
       render: (text, record) => (
         this.state.dataSource.length >= 1
           ? (
@@ -187,8 +191,9 @@ class EditableTable extends Component {
           bordered
           dataSource={dataSource}
           columns={columns}
-          scroll={{ y: 300 }}
+          scroll={{ x:400, y: 300 }}
           pagination={false}
+          style={{maxWidth: 417, margin: '0 auto'}}
         />
         <div style={{height: 20}}></div>
       </div>

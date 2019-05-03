@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Modal, Form, Input, Button } from 'antd';
+import { Table, Icon, Modal, Form, Input, Button } from 'antd';
 const FormItem = Form.Item;
 
 const CameraLicensesForm = Form.create()(
@@ -34,6 +34,40 @@ const CameraLicensesForm = Form.create()(
       return count;
     }
 
+    const columns = [{
+      title: 'Owner',
+      dataIndex: 'owner',
+      width: 100,
+      align: 'center'
+    }, {
+      title: 'Distributer',
+      dataIndex: 'distributer',
+      width: 100,
+      align: 'center'
+    }, {
+      title: 'Manager',
+      dataIndex: 'manager',
+      width: 100,
+      align: 'center'
+    }, {
+      title: 'Camera ID',
+      dataIndex: 'cameras_id',
+      width: 100,
+      align: 'center',
+      fixed: 'right'
+    }];
+
+    const data = [];
+    for (var i = 0; i < cameraLicenses.length; i++) {
+      data.push({
+        key: cameraLicenses[i].id,
+        owner: cameraLicenses[i].tier_0,
+        distributer: cameraLicenses[i].tier_1,
+        manager: cameraLicenses[i].tier_2,
+        cameras_id: cameraLicenses[i].cameras_id
+      });
+    }
+
     return (
       <Modal title='Camera License Settings'
              visible={visible}
@@ -45,72 +79,42 @@ const CameraLicensesForm = Form.create()(
              ]}
              className='cameraLicensesModal'
       >
-        <Form>
-          <FormItem label='Licenses:' {...formItemLayout}>
-            {getFieldDecorator('licenses', {
-              initialValue: countTotalCameraLicenses()
-            })(
-              <Input id='1' disabled={true/*!cancelSave*/} type='text' style={styles.input} onChange={updatelicenses} className='cameraLicensesFormInput' />
-            )}
-          </FormItem>
-          <FormItem label='Used:' {...formItemLayout}>
-            {getFieldDecorator('used', {
-              initialValue: countUsedCameraLicenses(),
-            })(
-              <Input disabled type='text' style={styles.input} className='cameraLicensesFormInput' />
-            )}
-          </FormItem>
-          <FormItem label='Available:' {...formItemLayout}>
-            {getFieldDecorator('available', {
-              initialValue: countAvailableCameraLicenses(),
-            })(
-              <Input disabled type='text' style={styles.input} className='cameraLicensesFormInput' />
-            )}
-          </FormItem>
-          <div style={{textAlign: 'center'}}>User Camera Licenses:</div>
-          <FormItem {...formItemLayout} style={styles.licensesTableContainer}>
-            <table border="1" style={styles.licensesTable}>
-              <tbody>
-                <tr>
-                  <th>
-                    <b>License</b>
-                  </th>
-                  <th>
-                    <b>Owner</b>
-                  </th>
-                  <th>
-                    <b>Distributer</b>
-                  </th>
-                  <th>
-                    <b>Manager</b>
-                  </th>
-                  <th>
-                    <b>Camera</b>
-                  </th>
-                </tr>
-                {cameraLicenses.map(cameraLicense => (
-                  <tr key={`cameraLicense-${cameraLicense.id}`}>
-                    <td>
-                      {cameraLicense.id}
-                    </td>
-                    <td>
-                      {cameraLicense.tier_0}
-                    </td>
-                    <td>
-                      {cameraLicense.tier_1}
-                    </td>
-                    <td>
-                      {cameraLicense.tier_2}
-                    </td>
-                    <td>
-                      {cameraLicense.cameras_id}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </FormItem>
-        </Form>
+        <Table
+          columns={[{
+            title: 'Total',
+            dataIndex: 'total',
+            width: '33%',
+            align: 'center'
+          }, {
+            title: 'Used',
+            dataIndex: 'used',
+            width: '34%',
+            align: 'center'
+          }, {
+            title: 'Available',
+            dataIndex: 'available',
+            width: '33%',
+            align: 'center'
+          }]}
+          dataSource={[{
+            key: 1,
+            total: countTotalCameraLicenses(),
+            used: countUsedCameraLicenses(),
+            available: countAvailableCameraLicenses(),
+          }]}
+          pagination={false}
+          scroll={{ y: 100 }}
+          style={{maxWidth: 417, margin: '0 auto'}}
+        />
+        <div style={{height: 10}}></div>
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={false}
+          scroll={{ x: 400, y: 300 }}
+          style={{maxWidth: 417, margin: '0 auto'}}
+        />
+        <div style={{height: 20}}></div>
         <div style={styles.subscriptionAgreement}>
           <a target='_blank' href='https://www.gorog.co/subscription-agreement'>Subscription Agreement</a>
         </div>
@@ -200,12 +204,6 @@ class CameraLicenses extends Component {
 }
 
 const styles = {
-  input: {
-    width: 50,
-    textAlign: 'center',
-    marginTop: 5,
-    float: 'left'
-  },
   modal: {
     textAlign: 'center'
   },
@@ -214,32 +212,10 @@ const styles = {
     textAlign: 'center'
 
   },
-  editLicenses: {
-    fontSize: 20,
-    paddingLeft: 10,
-    float: 'left',
-    paddingTop: 5
-  },
-  cancelSaveBtn: {
-    float: 'left',
-  },
-  saveLicensesBtn: {
-    color: '#108ee9',
-  },
-  cancelLicensesBtn: {
-    color: 'red',
-    marginLeft: 2
-  },
   subscriptionAgreement: {
     float: 'right',
     marginTop: -10,
     marginRight: 15
-  },
-  licensesTableContainer: {
-    left: '20%'
-  },
-  licensesTable: {
-    width: 300
   }
 };
 

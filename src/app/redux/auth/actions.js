@@ -7,7 +7,7 @@ import { clearCameraData } from '../cameras/actions';
 import { clearInvitesData } from '../invites/actions';
 import { clearAlertData } from '../alerts/actions';
 import { fetchReceivedInvites } from '../invites/actions';
-import {readUser} from '../users/actions';
+import { readUser, deleteUserDevice } from '../users/actions';
 
 import * as types from './actionTypes';
 
@@ -205,14 +205,15 @@ export function checkLogin() {
           sessionStorage.removeItem('jwt');
           sessionStorage.removeItem('email');
           sessionStorage.removeItem('password');
+          sessionStorage.removeItem('fcm_token_id');
+          sessionStorage.removeItem('fcm_token');
           if(window.jwtTokenRefresh !== null){
             window.clearInterval(window.jwtTokenRefresh);
             window.jwtTokenRefresh = null;
           };
           dispatch(loginMissing());
         });
-    }
-    else {
+    } else {
       dispatch(loginMissing());
     }
   }
@@ -330,9 +331,12 @@ function disconnectFromChannels(channels) {
 
 export function logout(user) {
   return (dispatch) => {
+    dispatch(deleteUserDevice(user.id, sessionStorage.getItem('fcm_token_id'), sessionStorage.getItem('fcm_token')));
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('email');
     sessionStorage.removeItem('password');
+    sessionStorage.removeItem('fcm_token_id');
+    sessionStorage.removeItem('fcm_token');
     window.clearInterval(window.jwtTokenRefresh);
     window.jwtTokenRefresh = null;
     dispatch(clearAssociatedData());

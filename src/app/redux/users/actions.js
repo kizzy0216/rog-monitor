@@ -178,14 +178,15 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
           let stored_device_token = user.devices[i].device_token;
           if (token === stored_device_token) {
             device_token_exists = true;
+            sessionStorage.setItem('fcm_token_id', user.devices[i].id)
+            sessionStorage.setItem('fcm_token', token)
+            dispatch(listenForNewAlerts(user, messaging));
+            dispatch(loginSuccess(user));
+            dispatch(loginInProcess(false));
           }
         }
         if (device_token_exists === false) {
           dispatch(storeUserDevice(user, token, messaging));
-        } else {
-          dispatch(listenForNewAlerts(user, messaging));
-          dispatch(loginSuccess(user));
-          dispatch(loginInProcess(false));
         }
       })
       .catch(error => {
@@ -199,14 +200,14 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
   }
 }
 
-// TODO: finsh this function and tie to the new user devices modal
+// TODO: see if we still need this
 export function readUserDeviceTokens(user) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     axios.get(url, config)
       .then((resp) => {
-        console.log(resp);
+        // console.log(resp);
       })
       .catch(error => {
         let errMessage = 'Error fetching user device data. Please try again later.';
@@ -229,6 +230,9 @@ export function storeUserDevice(user, token, messaging) {
     axios.post(url, data, config)
       .then((resp) => {
         user.devices.push(resp.data.user_device);
+        console.log(resp.data.user_device.id);
+        sessionStorage.setItem('fcm_token_id', resp.data.user_device.id)
+        sessionStorage.setItem('fcm_token', token)
         dispatch(listenForNewAlerts(user, messaging));
         dispatch(loginSuccess(user));
         dispatch(loginInProcess(false));

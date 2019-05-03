@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {Modal, Icon, Table, Input, Button, Popconfirm, Form,} from 'antd';
+import {Modal, Icon, Table, Input, Button, Popconfirm, Form} from 'antd';
 import { updateUserDevice, deleteUserDevice } from '../../redux/users/actions';
 
 
@@ -108,10 +108,11 @@ class EditableTable extends Component {
     }, {
       title: 'Action',
       dataIndex: 'action',
+      width: '25%',
       render: (text, record) => (
         this.state.dataSource.length >= 1
           ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
+            <Popconfirm title="Are you sure?" onConfirm={() => this.handleDelete(record.key)}>
               <a href="javascript:;">Delete</a>
             </Popconfirm>
           ) : null
@@ -134,7 +135,6 @@ class EditableTable extends Component {
   }
 
   handleDelete = (key) => {
-    // TODO: connect this to the redux
     const dataSource = [...this.state.dataSource];
     this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
     for (var i = 0; i < this.props.userDevices.length; i++) {
@@ -198,16 +198,7 @@ class EditableTable extends Component {
 
 const UserDevicesForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, cancelSave, cancelSaveButton, error, userDevices, updateUserDevice, deleteUserDevice} = props;
-    const {getFieldDecorator} = form;
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 12 },
-      },
-      wrapperCol: {
-        xs: { span: 12 },
-      },
-    };
+    const {onCancel, visible, error, userDevices, updateUserDevice, deleteUserDevice} = props;
 
     return (
       <Modal title='User Devices'
@@ -220,38 +211,6 @@ const UserDevicesForm = Form.create()(
              ]}
              className='userDevicesModal'
       >
-        {/*<Form>
-          <FormItem {...formItemLayout} style={styles.userDevicesTableContainer}>
-            <table border="1" style={styles.userDevicesTable}>
-              <tbody>
-                <tr>
-                  <th>
-                    <b>Device ID</b>
-                  </th>
-                  <th>
-                    <b>User ID</b>
-                  </th>
-                  <th>
-                    <b>Device Name</b>
-                  </th>
-                </tr>
-                {userDevices.map(userDevice => (
-                  <tr key={`userDevice-${userDevice.id}`}>
-                    <td>
-                      {userDevice.id}
-                    </td>
-                    <td>
-                      {userDevice.users_id}
-                    </td>
-                    <td>
-                      {userDevice.device_name}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </FormItem>
-        </Form>*/}
         <EditableTable
           userDevices={userDevices}
           updateUserDevice={updateUserDevice}
@@ -277,43 +236,12 @@ class UserDevices extends Component {
 
   }
 
-  updateInputValue = (e) => {
-    if (e.target.id === '1') {
-      this.setState({
-        UserDevicesText: e.target.value
-      });
-    }
-  };
-
-  cancelSaveButton = () => {
-    // this.setState({hidden: !this.state.hidden})
-  };
-
   showModal = () => {
     this.setState({visible: true});
   };
 
   handleCancel = () => {
     this.setState({visible: false});
-  };
-
-  handleCreate = (e) => {
-    const form = this.form;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
-      if (values.userDevices < values.used) {
-        this.setState({error: true});
-      } else {
-        this.setState({error: false});
-      }
-    });
-  };
-
-  saveFormRef = (form) => {
-    this.form = form;
   };
 
   render() {
@@ -325,12 +253,8 @@ class UserDevices extends Component {
           <span>User Devices</span>
         </div>
         <UserDevicesForm
-          ref={this.saveFormRef}
           visible={this.state.visible}
           onCancel={this.handleCancel}
-          onCreate={this.handleCreate}
-          cancelSaveButton={this.cancelSaveButton}
-          cancelSave={this.state.hidden}
           error={this.state.error}
           userDevices={this.props.user.devices}
           updateUserDevice={this.props.updateUserDevice}

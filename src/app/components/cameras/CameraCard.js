@@ -85,12 +85,12 @@ class CameraCard extends Component {
             <CameraCardImg data={this.props} />
           </Row>
           {this.props.cameraGroup.myRole === 'viewer' ?
-            (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
+            (<Row type='flex' style={styles.cameraCardButtons}>
               <Col span={20} offset={2}>
                 <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
               </Col>
             </Row>) :
-            (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
+            (<Row type='flex' style={styles.cameraCardButtons}>
               <Col span={2}>
                 <EditCamera data={this.props} />
               </Col>

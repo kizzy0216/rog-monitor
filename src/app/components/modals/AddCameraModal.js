@@ -140,7 +140,7 @@ class AddCameraModal extends Component {
   }
 
   testLiveView = () => {
-    let isChrome = !!window.chrome && !!window.chrome.webstore;
+    let isChrome = window.chrome || window.chrome.webstore;
     let isFirefox = typeof InstallTrigger !== 'undefined';
     let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
     if (!isChrome && !isFirefox && !isOpera) {

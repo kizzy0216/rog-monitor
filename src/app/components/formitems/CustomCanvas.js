@@ -363,7 +363,7 @@ class CustomCanvas extends Component {
         if (entry.base_trigger.trigger_type === 'VW') {
           this.generateVirtualWall(fabricCanvas, points, entry.base_trigger.direction, entry.base_trigger.id);
         } else {
-          let polygon = this.generatePolygon(fabricCanvas, points, this.lineArray, triggerPolygonAtrributes);
+          this.generatePolygon(fabricCanvas, points, this.lineArray, triggerPolygonAtrributes);
         }
       })
     }

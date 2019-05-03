@@ -53,17 +53,25 @@ class ExpandAlertModal extends Component {
   };
 
   render() {
+    let trigger_type = this.props.data.trigger_type;
+    if (this.props.data.trigger_type == 'RA') {
+      trigger_type = 'Restricted Area';
+    } else if (this.props.data.trigger_type == "VW") {
+      trigger_type = "Virtual Wall";
+    } else if (this.props.data.trigger_type == "LD") {
+      trigger_type = "Loitering";
+    }
     return (
       <div>
-        <img src={this.props.data.image.original} style={styles.alertCardImg} onClick={this.showModal} />
+        <img src={this.props.data.alert_image_url} style={styles.alertCardImg} onClick={this.showModal} />
         <ExpandAlertForm
           onCancel={this.handleCancel}
-          alertImg={this.props.data.image.original}
+          alertImg={this.props.data.alert_image_url}
           visible={this.state.visible}
-          alertType={this.props.data.type}
-          cameraName={this.props.data.camera.name}
-          cameraGroupName={this.props.data.camera.cameraGroup.name}
-          timestamp={this.props.data.timestamp}
+          alertType={trigger_type}
+          cameraName={this.props.data.cameras_name}
+          cameraGroupName={this.props.data.camera_groups_name}
+          timestamp={this.props.data.time}
           formatDatetime={this.formatDatetime}
         />
       </div>

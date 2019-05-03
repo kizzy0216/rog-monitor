@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { Icon } from 'antd';
 
 import { logout } from '../../redux/auth/actions';
-// TODO: change this logout component to pass in the user object.
+
 class LogoutItem extends Component {
   render() {
     return (
-      <span onClick={() => this.props.logout(this.props.channels)}>
+      <span onClick={() => this.props.logout(this.props.user)}>
         <Icon type='logout' />
         &nbsp;&nbsp;
         <span>Logout</span>
@@ -18,13 +18,13 @@ class LogoutItem extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    channels: state.alerts.channels
+    user: state.auth.user,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    logout: (channels) => dispatch(logout(channels))
+    logout: (user) => dispatch(logout(user))
   }
 }
 

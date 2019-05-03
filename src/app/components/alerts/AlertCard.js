@@ -29,16 +29,24 @@ class _AlertCard extends Component {
   }
 
   render() {
+    let trigger_type = this.props.trigger_type;
+    if (this.props.trigger_type == 'RA') {
+      trigger_type = 'Restricted Area';
+    } else if (this.props.trigger_type == "VW") {
+      trigger_type = "Virtual Wall";
+    } else if (this.props.trigger_type == "LD") {
+      trigger_type = "Loitering";
+    }
     return (
       <Card>
         <div style={styles.alertCardImgContainer}>
           <ExpandAlertModal data={this.props} />
         </div>
         <Row type='flex' justify='space-between'>
-          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.type}</Col>
-          <Col style={styles.cameraNameCameraGroup} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.camera.name} at {this.props.camera.cameraGroup.name}</Col>
-          <Col style={styles.alertDateTime} xs={24}>{this.formatDatetime(this.props.timestamp, this.props.camera.time_zone)}</Col>
-          <Col style={styles.alertTimeZone} xs={24}>{ this.props.camera.time_zone}</Col>
+          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{trigger_type}</Col>
+          <Col style={styles.cameraNameCameraGroup} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.cameras_name} at {this.props.camera_groups_name}</Col>
+          <Col style={styles.alertDateTime} xs={24}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)}</Col>
+          <Col style={styles.alertTimeZone} xs={24}>{ this.props.cameras_time_zone}</Col>
         </Row>
       </Card>
     )

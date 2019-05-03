@@ -7,6 +7,7 @@ import UserSettings from '../../components/modals/UserSettings';
 import AddCameraGroupModal from  '../../components/modals/AddCameraGroupModal';
 import CameraGroupInvitesModal from '../../components/modals/CameraGroupInvitesModal';
 import CameraLicensesModal from '../../components/modals/CameraLicensesModal';
+import UserDevicesModal from '../../components/modals/UserDevicesModal';
 
 const SideMenu = () => (
   <Menu>
@@ -20,9 +21,12 @@ const SideMenu = () => (
       <CameraLicensesModal />
     </Menu.Item>
     <Menu.Item key='4'>
-      <CameraGroupInvitesModal />
+      <UserDevicesModal />
     </Menu.Item>
     <Menu.Item key='5'>
+      <CameraGroupInvitesModal />
+    </Menu.Item>
+    <Menu.Item key='6'>
       <LogoutItem/>
     </Menu.Item>
   </Menu>

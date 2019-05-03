@@ -40,7 +40,7 @@ const AddTriggerForm = Form.create()(
               <img src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />:
               <img src={triggerImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
             }
-            {canvasMode &&
+            {canvasMode && imageDimensions &&
               <CustomCanvas width={imageDimensions.width} height={imageDimensions.height}
                           triggerPointDirection={triggerPointDirection}
                           getTriggers={triggers} direction={direction} triggerExtras={triggerExtras}
@@ -319,7 +319,7 @@ class AddTriggerModal extends Component {
       error: false,
       visibility: false,
       canvasMode: true,
-      imageDimensions: {},
+      imageDimensions: false,
       saveCancel: false,
       triggers: false,
       deleteButton: false,

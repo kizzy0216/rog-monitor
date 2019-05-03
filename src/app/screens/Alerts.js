@@ -22,9 +22,9 @@ class Alerts extends Component {
     this.props.actions.fetchAlerts(this.props.user, this.props.rummage);
   }
 
-  selectAlert = (alert) => {
-    this.setState({videoSource: alert.video});
-  }
+  // selectAlert = (alert) => {
+  //   this.setState({videoSource: alert.video});
+  // }
 
   clearAlerts = () => {
     this.props.actions.clearAlerts();
@@ -34,7 +34,12 @@ class Alerts extends Component {
   }
 
   handlePaginationChange = (page, pageSize) => {
+    // TODO: change this to handle the display of the next page of alerts
     this.props.actions.fetchAlertsWithPagination(this.props.user, page, pageSize);
+  }
+
+  handleOnPageSizeChange = (current, size) => {
+    this.props.actions.fetchAlertsWithPagination(this.props.user, current, size);
   }
 
   render() {
@@ -50,9 +55,11 @@ class Alerts extends Component {
             <Pagination
               showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
               hideOnSinglePage={true}
-              pageSize={20}
-              defaultCurrent={this.props.pagination.page_number}
-              total={this.props.pagination.total_entries}
+              showSizeChanger={true}
+              onShowSizeChange={this.handleOnPageSizeChange}
+              pageSize={this.props.pagination.per_page}
+              defaultCurrent={this.props.pagination.current_page}
+              total={this.props.pagination.total}
               onChange={this.handlePaginationChange}
             />
           </Row>

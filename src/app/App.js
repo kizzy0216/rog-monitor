@@ -15,7 +15,7 @@ class App extends Component {
     this.state = {
       currentUser: null,
       loading: true,
-      socketSet: false
+      // socketSet: false
     }
   }
 
@@ -29,10 +29,10 @@ class App extends Component {
     const { user } = store.getState().auth;
     if (this.state.currentUser !== user) {
       this.setState({currentUser: user});
-      if (user && this.state.socketSet == false) {
-        this.setState({socketSet: true});
-        store.dispatch(listenForNewAlerts(user));
-      }
+      // if (user && this.state.socketSet == false) {
+      //   this.setState({socketSet: true});
+      //   store.dispatch(listenForNewAlerts(user));
+      // }
     }
     this.setState({loading: false});
   }

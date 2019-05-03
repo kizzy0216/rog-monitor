@@ -5,7 +5,7 @@ import initialState from './initialState';
 
 import { Socket } from '../../../lib/phoenix/phoenix';
 import newAlertSound from '../../../assets/audio/newAlert.mp3';
-import { updateUserData } from '../users/actions';
+import { updateUserData, storeUserDevice } from '../users/actions';
 import * as types from './actionTypes';
 import {isEmpty} from '../helperFunctions';
 
@@ -108,8 +108,8 @@ function clearAllAlerts() {
 }
 
 // TODO: change this function to use FCM logic
-export function listenForNewAlerts(user) {
-  return (dispatch) => {
+// export function listenForNewAlerts(user) {
+//   return (dispatch) => {
     // let channelName = `alerts:user-${user.id}`;
     // let params = {token: user.jwt};
     // let ws = new Socket(`${process.env.REACT_APP_ROG_WS_URL}/socket`, {params});
@@ -126,6 +126,26 @@ export function listenForNewAlerts(user) {
     //
     // user.channel = channel;
     // dispatch(updateUserData(user));
+//   }
+// }
+export function listenForNewAlerts(user, messaging) {
+  return (dispatch) => {
+    messaging.onMessage(payload => {
+    console.log("Notification Received", payload);
+      //this is the function that gets triggered when you receive a
+      //push notification while you’re on the page. So you can
+      //create a corresponding UI for you to have the push
+      //notification handled.
+    });
+
+    messaging.onTokenRefresh(function(user, messaging) {
+      messaging.getToken().then(function(refreshedToken) {
+        console.log('Token refreshed: ' + refreshedToken);
+        dispatch(storeUserDevice(user, refreshedToken, messaging));
+      }).catch(function(err) {
+        console.log('Unable to retrieve refreshed token ', err);
+      });
+    });
   }
 }
 
@@ -134,14 +154,23 @@ export function fetchAlerts(user) {
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
+    let itemsPerPage = 20;
+    let currentPage = 1;
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {
-        // todo add pagination here. Do this by counting the results and building a next page, previous page, and page selector functions in javascript which will show/hide by numerical index the data.
         if (!isEmpty(response.data)) {
-          dispatch(fetchSuccess(response.data, pagination));
+          let pagination = {
+            total: response.data[0]['total_alerts'],
+            per_page: itemsPerPage,
+            current_page: currentPage,
+            last_page: Math.ceil(response.data[0]['total_alerts'] / itemsPerPage),
+            from: ((currentPage - 1) * itemsPerPage) + 1,
+            to: currentPage  * itemsPerPage
+          };
+          dispatch(fetchSuccessWithPagination(response.data, pagination));
         } else {
           dispatch(fetchError('No Alerts Found'));
         }
@@ -152,6 +181,40 @@ export function fetchAlerts(user) {
           errMessage = error.response.data['Error'];
         }
         dispatch(fetchError(errMessage));
+      })
+      .finally(() => {
+        dispatch(fetchError(''));
+        dispatch(fetchInProcess(false));
+      });
+  }
+}
+
+export function fetchAlertsWithPagination(user, page, pageSize) {
+  return (dispatch) => {
+    dispatch(fetchError(''));
+    dispatch(fetchInProcess(true));
+
+    let itemsPerPage = pageSize;
+    let currentPage = page;
+
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}}
+    axios.get(url, config)
+      .then((response) => {
+        if (!isEmpty(response.data)) {
+          let pagination = {
+            total: response.data[0]['total_alerts'],
+            per_page: itemsPerPage,
+            current_page: currentPage,
+            last_page: Math.ceil(response.data[0]['total_alerts'] / itemsPerPage),
+            from: ((currentPage - 1) * itemsPerPage) + 1,
+            to: currentPage  * itemsPerPage
+          };
+          dispatch(fetchSuccessWithPagination(response.data, pagination));
+        }
+      })
+      .catch((error) => {
+        dispatch(fetchError('Error fetching alerts'));
       })
       .finally(() => {
         dispatch(fetchError(''));

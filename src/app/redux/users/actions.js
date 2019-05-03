@@ -7,6 +7,7 @@ import * as types from './actionTypes';
 
 import { fetchReceivedInvites } from '../invites/actions';
 import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login} from '../auth/actions';
+import {listenForNewAlerts} from '../alerts/actions';
 import {isEmpty} from '../helperFunctions';
 
 export function updateUserData(userData) {
@@ -152,7 +153,6 @@ function setupFirebaseCloudMessaging(user){
        })
       .then(token => {
         // console.log("FCM Token:", token);
-        sessionStorage.setItem('FCM_device_token', token);
         dispatch(checkForStoredUserDeviceToken(user, token, messaging));
       })
       .catch(error => {
@@ -178,11 +178,10 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
           let stored_device_token = user.devices[i].device_token;
           if (token === stored_device_token) {
             device_token_exists = true;
-            sessionStorage.setItem('FCM_device_token_id', user.devices[i].id);
           }
         }
         if (device_token_exists === false) {
-          dispatch(storeUserDeviceToken(user, token, messaging));
+          dispatch(storeUserDevice(user, token, messaging));
         } else {
           dispatch(listenForNewAlerts(user, messaging));
           dispatch(loginSuccess(user));
@@ -200,36 +199,26 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
   }
 }
 
-function listenForNewAlerts(user, messaging) {
+// TODO: finsh this function and tie to the new user devices modal
+export function readUserDeviceTokens(user) {
   return (dispatch) => {
-    messaging.onMessage(payload => {
-    console.log("Notification Received", payload);
-      //this is the function that gets triggered when you receive a
-      //push notification while you’re on the page. So you can
-      //create a corresponding UI for you to have the push
-      //notification handled.
-    });
-
-    // TODO: complete this function to handle token refreshes from FCM
-
-    // messaging.onTokenRefresh(function() {
-    //   messaging.getToken().then(function(refreshedToken) {
-    //     console.log('Token refreshed.');
-    //     // Indicate that the new Instance ID token has not yet been sent to the
-    //     // app server.
-    //     setTokenSentToServer(false);
-    //     // Send Instance ID token to app server.
-    //     dispatch(storeUserDeviceToken(user, refreshedToken, messaging));
-    //     // ...
-    //   }).catch(function(err) {
-    //     console.log('Unable to retrieve refreshed token ', err);
-    //     showToken('Unable to retrieve refreshed token ', err);
-    //   });
-    // });
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices`;
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    axios.get(url, config)
+      .then((resp) => {
+        console.log(resp);
+      })
+      .catch(error => {
+        let errMessage = 'Error fetching user device data. Please try again later.';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
+        console.log(errMessage);
+      });
   }
 }
 
-export function storeUserDeviceToken(user, token, messaging) {
+export function storeUserDevice(user, token, messaging) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
@@ -240,13 +229,12 @@ export function storeUserDeviceToken(user, token, messaging) {
     axios.post(url, data, config)
       .then((resp) => {
         user.devices.push(resp.data.user_device);
-        sessionStorage.setItem('FCM_device_token_id', resp.data.user_device.id);
-        dispatch(listenForNewAlerts(messaging));
-        // TODO: check if login is in process. if it is, trigger the below line
+        dispatch(listenForNewAlerts(user, messaging));
         dispatch(loginSuccess(user));
         dispatch(loginInProcess(false));
       })
       .catch(error => {
+        console.log(error);
         let errMessage = 'Error storing user device token.';
         if (typeof error.response !== 'undefined') {
           if (error.response.data['Error']) {
@@ -259,17 +247,16 @@ export function storeUserDeviceToken(user, token, messaging) {
   }
 }
 
-export function updateUserDeviceToken(user, token) {
+export function updateUserDevice(userId, deviceId, name) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices/${user.user_devices_id}`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userId}/devices/${deviceId}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data ={
-      device_token: token,
-      device_model: null
+      device_name: name
     }
     axios.patch(url, data, config)
       .then((resp) => {
-        console.log(resp);
+        // console.log(resp);
       })
       .catch(error => {
         let errMessage = 'Error updating user device data. Please try again later.';
@@ -281,22 +268,19 @@ export function updateUserDeviceToken(user, token) {
   }
 }
 
-export function deleteUserDeviceToken(user) {
+export function deleteUserDevice(userId, deviceId, token) {
   return (dispatch, getState, {getFirebase}) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices/${sessionStorage.getItem('FCM_device_token_id')}`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userId}/devices/${deviceId}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.delete(url, config)
       .then((resp) => {
         const firebase = getFirebase();
         const messaging = firebase.messaging();
         messaging
-          .deleteToken(sessionStorage.getItem('FCM_device_token'))
+          .deleteToken(token)
             .then((resp) => {
-              // TODO: make sure this works. then move the remove session storage stuff in here.
-              console.log(resp);
+              // console.log(resp);
             });
-        sessionStorage.removeItem('FCM_device_token');
-        sessionStorage.removeItem('FCM_device_token_id');
       })
       .catch(error => {
         let errMessage = 'Error deleting user device data. Please try again later.';

@@ -7,7 +7,7 @@ import { clearCameraData } from '../cameras/actions';
 import { clearInvitesData } from '../invites/actions';
 import { clearAlertData } from '../alerts/actions';
 import { fetchReceivedInvites } from '../invites/actions';
-import {readUser, deleteUserDeviceToken} from '../users/actions';
+import {readUser} from '../users/actions';
 
 import * as types from './actionTypes';
 
@@ -328,10 +328,8 @@ function disconnectFromChannels(channels) {
   // }
 }
 
-export function logout(channels) {
+export function logout(user) {
   return (dispatch) => {
-    // TODO: delete FCM token
-    // dispatch(deleteUserDeviceToken(user));
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('email');
     sessionStorage.removeItem('password');

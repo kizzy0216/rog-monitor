@@ -19,7 +19,7 @@ class Alerts extends Component {
   }
 
   UNSAFE_componentWillMount = () => {
-    this.props.actions.fetchAlerts(this.props.user, this.props.rummage);
+    this.props.actions.markUserAlertsViewed(this.props.user);
   }
 
   // selectAlert = (alert) => {
@@ -103,7 +103,6 @@ const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
     alerts: state.alerts.alerts,
-    rummage: state.alerts.rummage,
     fetchError: state.alerts.fetchError,
     fetchInProcess: state.alerts.fetchInProcess,
     deleteInProcess: state.alerts.deleteInProcess,

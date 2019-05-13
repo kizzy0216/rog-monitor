@@ -212,7 +212,6 @@ class CustomCanvas extends Component {
                 fabricCanvas.remove(entry);
               });
 
-
               const triggerPolygonAtrributes = {
                 fill: (nThis.props.triggerType === 'RA') ? "#FF0000" : ((nThis.props.triggerType === 'LD') ? '#0092f8' : '#00cd78')
               };

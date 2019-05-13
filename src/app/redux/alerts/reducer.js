@@ -15,7 +15,7 @@ const alerts = (state = initialState, action) => {
         alerts: action.alerts,
         pagination: action.pagination
       }
-      
+
     case types.FETCH_ALERTS_IN_PROCESS:
       return {
         ...state,
@@ -78,10 +78,10 @@ const alerts = (state = initialState, action) => {
         alerts: state.alerts.filter(alert => alert.id != action.alertId)
       }
 
-    case types.CLEAR_ALL_ALERTS:
+    case types.CLEAR_ALL_NEW_ALERTS:
       return {
         ...state,
-        alerts: []
+        newAlerts: []
       }
 
     case types.CREATE_ALERT_ERROR:

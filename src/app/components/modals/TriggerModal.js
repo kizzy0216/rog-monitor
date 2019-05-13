@@ -142,7 +142,7 @@ const AddTriggerForm = Form.create()(
                           onChange={updateDataStart}
                           onOpenChange={(open: false), checkForWindow}
                           defaultOpenValue={moment('00:00', 'HH:mm')}
-                          allowEmpty={true}
+                          allowClear={true}
                           placeholder="Start Time"
                           format={'HH:mm'} />
                       )}
@@ -155,7 +155,7 @@ const AddTriggerForm = Form.create()(
                           onChange={updateDataStop}
                           onOpenChange={(open: false), checkForWindow}
                           defaultOpenValue={moment('00:00', 'HH:mm')}
-                          allowEmpty={true}
+                          allowClear={true}
                           placeholder="End Time"
                           format={'HH:mm'} />
                       )}
@@ -178,25 +178,25 @@ const AddTriggerForm = Form.create()(
             }
           </FormItem>
           <FormItem>
-            <Popover title='Select Trigger Type to Add'
-                     content=
-                       {
-                         <div style={styles.triggerType}>
-                           <a onClick={() => showTrigger('RA')}>Restricted Area</a>
-                           <br/>
-                           <a onClick={() => showTrigger('VW')}>Virtual Wall</a>
-                           <br/>
-                           <a onClick={() => showTrigger('LD')}>Loitering</a>
-                           <br/>
-                         </div>
-                       }
-                     trigger="click"
-                     visible={visibility}
-                     onVisibleChange={handleVisibility}
+            <Popover
+              title='Select Trigger Type to Add'
+              content={
+                <div style={styles.triggerType}>
+                  <a onClick={() => showTrigger('RA')}>Restricted Area</a>
+                  <br/>
+                  <a onClick={() => showTrigger('VW')}>Virtual Wall</a>
+                  <br/>
+                  <a onClick={() => showTrigger('LD')}>Loitering</a>
+                  <br/>
+                </div>
+              }
+              trigger="click"
+              visible={visibility}
+              onVisibleChange={handleVisibility}
             >
               {!saveCancel &&
                 <a>
-                  <CustomInput trigger={true} visibility={visibility} fetchTriggerInProcess={fetchTriggerInProcess}/>
+                  <CustomInput trigger={true} visibility={visibility} handleSaveCancel={handleSaveCancel} fetchTriggerInProcess={fetchTriggerInProcess}/>
                 </a>
               }
             </Popover>
@@ -270,7 +270,7 @@ const AddTriggerForm = Form.create()(
                             onChange={updateDataStart}
                             onOpenChange={(open: false), checkForWindow}
                             defaultOpenValue={moment('00:00', 'HH:mm')}
-                            allowEmpty={true}
+                            allowClear={true}
                             placeholder="Start Time"
                             format={'HH:mm'} />
                         )}
@@ -283,7 +283,7 @@ const AddTriggerForm = Form.create()(
                             onChange={updateDataStop}
                             onOpenChange={(open: false), checkForWindow}
                             defaultOpenValue={moment('00:00', 'HH:mm')}
-                            allowEmpty={true}
+                            allowClear={true}
                             placeholder="End Time"
                             format={'HH:mm'} />
                         )}
@@ -337,6 +337,46 @@ class AddTriggerModal extends Component {
     this.triggerExtras = this.triggerExtras.bind(this);
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
+      if (nextProps.fetchTriggerSuccess === true && !isEmpty(nextProps.polygonData)) {
+        this.setState({canvasMode: true});
+        if (this.triggerDetails.currentTriggerId !== null) {
+          this.setTriggerTimeWindows(nextProps.polygonData, this.triggerDetails.currentTriggerId);
+        }
+      }
+      if (nextProps.createTriggerSuccess !== this.props.createTriggerSuccess && this.triggerDetails['id'] !== undefined) {
+        this.setState({canvasMode: false});
+        this.setState({triggers: true});
+        this.setState({deleteButton: false});
+        this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['id']);
+        this.triggerDetails['id'] = undefined;
+        this.setState({saveCancel: false});
+      }
+      if (nextProps.deleteTriggerSuccess !== this.props.deleteTriggerSuccess && this.triggerDetails['id'] !== undefined) {
+        this.setState({canvasMode: false});
+        this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['id']);
+        this.triggerDetails['id'] = undefined;
+        this.setState({deleteButton: false});
+        this.setState({saveCancel: false});
+      }
+    }
+    else if (this.props.polygonData !== nextProps.polygonData && !isEmpty(nextProps.polygonData) && !isEmpty(this.props.polygonData)) {
+      this.setState({canvasMode: true});
+    }
+    for (var i = 0; i < this.props.data.cameraGroup.userCameraGroupPrivileges.length; i++) {
+      if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].users_id === nextProps.data.user.id) {
+        if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].user_privileges_ids.includes(0)) {
+          this.setState({cameraGroupOwner: true});
+        }
+      }
+    }
+    for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
+      if (nextProps.data.id == nextProps.data.cameraGroup.cameras[i].id) {
+        this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
+      }
+    }
+  }
 
   triggerDetails = {
     currentTriggerId: null,
@@ -383,45 +423,6 @@ class AddTriggerModal extends Component {
         width: img.offsetWidth
       }
     });
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
-      if (nextProps.fetchTriggerSuccess === true && !isEmpty(nextProps.polygonData)) {
-        this.setState({canvasMode: true});
-        if (this.triggerDetails.currentTriggerId !== null) {
-          this.setTriggerTimeWindows(nextProps.polygonData, this.triggerDetails.currentTriggerId);
-        }
-      }
-      if (nextProps.createTriggerSuccess !== this.props.createTriggerSuccess && this.triggerDetails['id'] !== undefined) {
-        this.setState({canvasMode: false});
-        this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['id']);
-        this.triggerDetails['id'] = undefined;
-        this.setState({saveCancel: false});
-      }
-      if (nextProps.deleteTriggerSuccess !== this.props.deleteTriggerSuccess && this.triggerDetails['id'] !== undefined) {
-        this.setState({canvasMode: false});
-        this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['id']);
-        this.triggerDetails['id'] = undefined;
-        this.setState({deleteButton: false});
-        this.setState({saveCancel: false});
-      }
-    }
-    else if (this.props.polygonData !== nextProps.polygonData && !isEmpty(nextProps.polygonData) && !isEmpty(this.props.polygonData)) {
-      this.setState({canvasMode: true});
-    }
-    for (var i = 0; i < this.props.data.cameraGroup.userCameraGroupPrivileges.length; i++) {
-      if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].users_id === nextProps.data.user.id) {
-        if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].user_privileges_ids.includes(0)) {
-          this.setState({cameraGroupOwner: true});
-        }
-      }
-    }
-    for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
-      if (nextProps.data.id == nextProps.data.cameraGroup.cameras[i].id) {
-        this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
-      }
-    }
   }
 
   showModal = () => {
@@ -499,7 +500,6 @@ class AddTriggerModal extends Component {
     if (event === 'cancel') {
       this.setState({saveCancel: false});
       this.setState({canvasMode: false});
-      this.fetchTriggers(true);
       this.triggerDetails.currentTriggerType = '';
     }
     if (event === 'save') {

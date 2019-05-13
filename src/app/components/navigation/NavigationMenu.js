@@ -3,9 +3,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Menu, Icon, Badge, notification } from 'antd';
 
-import { mergeNewAlerts }from '../../redux/alerts/actions';
+import { fetchAlerts, clearNewAlerts, markUserAlertsViewed } from '../../redux/alerts/actions';
+import { isEmpty } from '../../redux/helperFunctions';
 
 class NavigationMenu extends Component {
+  UNSAFE_componentWillMount = () => {
+    this.props.fetchAlerts(this.props.user);
+  }
   UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.newAlerts.length) {
       const alert = nextProps.newAlerts[0];
@@ -18,18 +22,18 @@ class NavigationMenu extends Component {
         marginTop: 30
       },
       });
+      nextProps.clearNewAlerts();
     }
   }
 
   goToPath = (path) => {
     if (path === '/alerts') {
-      this.props.mergeNewAlerts();
+      this.props.markUserAlertsViewed(this.props.user);
     }
 
     if (path == this.props.location.pathname) {
       window.window.scrollTo(0, 0);
-    }
-    else {
+    } else {
       this.props.history.push(path);
     }
   }
@@ -49,7 +53,7 @@ class NavigationMenu extends Component {
           </Badge>
         </Menu.Item>
         <Menu.Item key='/alerts'>
-          <Badge count={this.props.newAlerts.length}>
+          <Badge count={!isEmpty(this.props.alerts) ? this.props.alerts[0].new_alerts: 0}>
             <Icon type='bell' className='nav-icon' />
           </Badge>
         </Menu.Item>
@@ -60,13 +64,17 @@ class NavigationMenu extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    newAlerts: state.alerts.newAlerts
+    newAlerts: state.alerts.newAlerts,
+    alerts: state.alerts.alerts,
+    user: state.auth.user
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    mergeNewAlerts: () => dispatch(mergeNewAlerts())
+    clearNewAlerts: () => dispatch(clearNewAlerts()),
+    fetchAlerts: (user) => dispatch(fetchAlerts(user)),
+    markUserAlertsViewed: (user) => dispatch(markUserAlertsViewed(user))
   }
 }
 

@@ -51,6 +51,13 @@ function resetPasswordSuccess() {
   }
 }
 
+export function toggleMute(mute) {
+  return {
+    type: types.TOGGLE_MUTE,
+    mute: mute
+  }
+}
+
 export function loginInProcess(bool) {
   return {
     type: types.LOGIN_IN_PROCESS,

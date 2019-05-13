@@ -6,7 +6,7 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { fetchReceivedInvites } from '../invites/actions';
-import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login} from '../auth/actions';
+import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login, toggleMute} from '../auth/actions';
 import {listenForNewAlerts} from '../alerts/actions';
 import {isEmpty} from '../helperFunctions';
 
@@ -41,7 +41,7 @@ function updateUserSuccess(bool, user) {
 export function fetchUserCameraLicenses(user) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/licenses`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((resp) => {
         if (isEmpty(resp.data) === false) {
@@ -103,7 +103,7 @@ export function updateUser(user, values) {
     dispatch(updateUserError(''));
     dispatch(updateUserSuccess(false));
     dispatch(updateUserInProgress(true));
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}`;
     const data = {
       first_name: values.firstName,
@@ -128,17 +128,24 @@ export function updateUser(user, values) {
   }
 }
 
-// TODO: refactor this functionality
 export function muteSound(user, mute) {
   return (dispatch) => {
-    // user.mute = mute;
-    // updateUserData(user);
-
-    // user.channel.leave()
-      // .receive('ok', resp => {
-        // dispatch(listenForNewAlerts(user));
-      // })
-      // .receive('error', resp => console.log(`Unable to leave channel ${channelName}`));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data = {
+      mute: mute
+    }
+    axios.patch(url, data, config)
+      .then((response) => {
+        dispatch(toggleMute(response.data.user.mute));
+      })
+      .catch((err) => {
+        let errMessage = 'Error fetching user device data. Please try again later.';
+        if (error.response.data['Error']) {
+          errMessage = error.response.data['Error'];
+        }
+        console.log(errMessage);
+      })
   }
 }
 
@@ -169,7 +176,7 @@ function setupFirebaseCloudMessaging(user){
 function checkForStoredUserDeviceToken(user, token, messaging) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((resp) => {
         user.devices = resp.data;
@@ -200,29 +207,10 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
   }
 }
 
-// TODO: see if we still need this
-export function readUserDeviceTokens(user) {
-  return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
-    axios.get(url, config)
-      .then((resp) => {
-        // console.log(resp);
-      })
-      .catch(error => {
-        let errMessage = 'Error fetching user device data. Please try again later.';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
-        }
-        console.log(errMessage);
-      });
-  }
-}
-
 export function storeUserDevice(user, token, messaging) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data ={
       device_token: token,
       device_name: 'Web Browser Device'
@@ -230,7 +218,6 @@ export function storeUserDevice(user, token, messaging) {
     axios.post(url, data, config)
       .then((resp) => {
         user.devices.push(resp.data.user_device);
-        console.log(resp.data.user_device.id);
         sessionStorage.setItem('fcm_token_id', resp.data.user_device.id)
         sessionStorage.setItem('fcm_token', token)
         dispatch(listenForNewAlerts(user, messaging));

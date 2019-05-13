@@ -178,7 +178,7 @@ export function selectCameraGroup(user, cameraGroup) {
 export function getUserCameraGroupPrivileges(user, cameraGroup) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/privileges`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then(response => {
         if (isEmpty(response.data) === false) {
@@ -203,7 +203,7 @@ export function fetchCameraGroups(user) {
     dispatch(fetchError(''));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.get(url, config)
       .then(response => {
@@ -226,7 +226,7 @@ export function addNewCameraGroup(user, cameraGroup) {
     dispatch(addCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     let data = {
       camera_group_name: cameraGroup.name
@@ -261,7 +261,7 @@ export function removeCameraGroup(user, cameraGroup) {
     dispatch(removeCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
       .then((response) => {
@@ -292,7 +292,7 @@ export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
     dispatch(shareCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/invitations`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     let data = {
       email: inviteeEmail
@@ -326,7 +326,7 @@ export function removeUserCameraGroupPrivilege(user, cameraGroupId, cameraGroupP
     dispatch(removeGuardInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-group/${cameraGroupId}/privileges/${cameraGroupPrivilegeId}`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
     .then(response => {
@@ -353,7 +353,7 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
     dispatch(editCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     let data = {
       name: cameraGroupData.name,

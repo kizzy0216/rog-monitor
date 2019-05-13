@@ -69,15 +69,7 @@ export function clearAlertData() {
   return {
     type: types.CLEAR_ALERT_DATA,
     alerts: initialState.alerts,
-    newAlerts: initialState.newAlerts,
-    channels: initialState.channels
-  }
-}
-
-function channelConnected(channel) {
-  return {
-    type: types.CHANNEL_CONNECTED,
-    channel
+    newAlerts: initialState.newAlerts
   }
 }
 
@@ -92,50 +84,44 @@ function newAlert(alert, mute) {
   }
 }
 
-function handleNewAlert(channel, user) {
+function handleNewAlert(user, payload) {
+  if (payload.data.trigger_type == 'RA') {
+    payload.data.trigger_type = 'Restricted Area';
+  } else if (payload.data.trigger_type == 'VW') {
+    payload.data.trigger_type = 'Virtual Wall';
+  } else {
+    payload.data.trigger_type = 'Loitering Detected';
+  }
+  let alert = {
+    id: payload.data.id,
+    type: payload.data.trigger_type,
+    camera: {
+      name: payload.notification.title,
+      cameraGroup: {
+        name: payload.data.camera_groups_name
+      }
+    }
+  }
   return (dispatch) => {
     if (typeof user.mute == 'undefined') {
       user.mute = false;
     }
-    channel.on('new_alert', alert => dispatch(newAlert(alert, user.mute)));
+    dispatch(newAlert(alert, user.mute));
   }
 }
 
 function clearAllAlerts() {
   return {
-    type: types.CLEAR_ALL_ALERTS
+    type: types.CLEAR_ALL_NEW_ALERTS
   }
 }
 
-// TODO: change this function to use FCM logic
-// export function listenForNewAlerts(user) {
-//   return (dispatch) => {
-    // let channelName = `alerts:user-${user.id}`;
-    // let params = {token: user.jwt};
-    // let ws = new Socket(`${process.env.REACT_APP_ROG_WS_URL}/socket`, {params});
-    //
-    // ws.connect();
-    //
-    // let channel = ws.channel(channelName, {});
-    // channel.join()
-    //   .receive('ok', resp => {
-    //     dispatch(channelConnected(channel));
-    //     dispatch(handleNewAlert(channel, user));
-    //   })
-    //   .receive('error', resp => console.log(`Unable to join channel ${channelName}`));
-    //
-    // user.channel = channel;
-    // dispatch(updateUserData(user));
-//   }
-// }
 export function listenForNewAlerts(user, messaging) {
   return (dispatch) => {
     messaging.onMessage(payload => {
-    console.log("Notification Received", payload);
-      //this is the function that gets triggered when you receive a
-      //push notification while you’re on the page. So you can
-      //create a corresponding UI for you to have the push
-      //notification handled.
+      console.log("Notification Received", payload);
+      dispatch(handleNewAlert(user, payload));
+      dispatch(fetchAlerts(user));
     });
 
     messaging.onTokenRefresh(function(user, messaging) {
@@ -223,6 +209,18 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
   }
 }
 
+export function markUserAlertsViewed(user) {
+  return(dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts`;
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}}
+    let data = '';
+    axios.patch(url, data, config)
+      .then((response) => {
+        dispatch(fetchAlerts(user));
+      });
+  }
+}
+
 export function deleteAlert(user, alertId) {
   return (dispatch) => {
     dispatch(deleteInProcess(true));
@@ -247,7 +245,7 @@ export function deleteAlert(user, alertId) {
   }
 }
 
-export function clearAlerts() {
+export function clearNewAlerts() {
   return (dispatch) => {
     dispatch(clearAllAlerts());
   }

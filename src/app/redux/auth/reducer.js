@@ -128,6 +128,12 @@ const auth = (state = initialState, action) => {
           ...state,
           getPasswordResetRequestError: action.getPasswordResetRequestError
         }
+
+      case types.TOGGLE_MUTE:
+        const newState = {...state}
+        newState.user.mute = action.mute
+        return newState
+
     default:
       return state;
   }

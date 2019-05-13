@@ -41,24 +41,26 @@ class CustomInput extends Component {
     if(this.props.trigger === true){
         return (
           <span>
-            {this.props.fetchAlertInProcess &&
+            {this.props.fetchTriggerInProcess &&
             <div>
-              <Spin tip="Fetching Alerts..." />
+              <Spin tip="Fetching Triggers..." />
             </div>
             }
             {
-             !this.props.visibility && <Button key='add_trigger' type='primary' size='large'>
+             !this.props.visibility &&
+             <Button key='add_trigger' type='primary' size='large'>
                 Add Trigger
               </Button>
             }
             {
-             this.props.visibility && <Button key='cancel' size='large' style={styles.cancelBtn}>
+             this.props.visibility &&
+             <Button key='cancel' size='large' onClick={() => this.props.handleSaveCancel('cancel')} style={styles.cancelBtn}>
                 Cancel
               </Button>
             }
           </span>
         )
-    }else {
+    } else {
       return (
         <div style={styles.inputContainer}>
           <Input value={this.state.value} type={this.props.inputType} onChange={this.handleChange}

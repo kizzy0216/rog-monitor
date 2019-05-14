@@ -95,7 +95,7 @@ class UserCameraGroupSettingsModal extends Component {
           <div onClick={this.showModal}>
             <Icon type='team'/>
             &nbsp;
-            User Camera Group Privileges
+            Camera Group Privileges
           </div>
           <UserCameraGroupSettings
             visible={this.state.visible}

@@ -182,7 +182,7 @@ class CameraLicenses extends Component {
     return (
       <div>
         <div onClick={this.showModal}>
-          <Icon type='video-camera'/>
+          <Icon type="idcard" />
           &nbsp;&nbsp;
           <span>Licenses</span>
         </div>

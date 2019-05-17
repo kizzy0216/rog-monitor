@@ -18,18 +18,16 @@ import CameraList from '../../screens/CameraList';
 import CameraDetails from '../../screens/CameraDetails';
 import CameraCreate from '../../screens/CameraCreate';
 import CameraStream from '../../screens/CameraStream';
-import RecosAdmin from '../../screens/RecosAdmin';
-import UsersAdmin from '../../screens/UsersAdmin';
-import CameraGroupSettingsAdmin from '../../screens/CameraGroupSettingsAdmin';
-import CameraGroupPrivilegesAdmin from '../../screens/CameraGroupPrivilegesAdmin';
-import CamerasAdmin from '../../screens/CamerasAdmin';
-import TriggersAdmin from '../../screens/TriggersAdmin';
-import AlertsAdmin from '../../screens/AlertsAdmin';
-import InvitationsAdmin from '../../screens/InvitationsAdmin';
-import UserPrivilegesAdmin from '../../screens/UserPrivilegesAdmin';
-import DevicesAdmin from '../../screens/DevicesAdmin';
-import LicensesAdmin from '../../screens/LicensesAdmin';
-import SystemConfigurationAdmin from '../../screens/SystemConfigurationAdmin';
+import RecosAdmin from '../../screens/admin/RecosAdmin';
+import UsersAdmin from '../../screens/admin/UsersAdmin';
+import CameraGroupsAdmin from '../../screens/admin/CameraGroupsAdmin';
+import CamerasAdmin from '../../screens/admin/CamerasAdmin';
+import TriggersAdmin from '../../screens/admin/TriggersAdmin';
+import AlertsAdmin from '../../screens/admin/AlertsAdmin';
+import InvitationsAdmin from '../../screens/admin/InvitationsAdmin';
+import DevicesAdmin from '../../screens/admin/DevicesAdmin';
+import LicensesAdmin from '../../screens/admin/LicensesAdmin';
+import SystemConfigurationAdmin from '../../screens/admin/SystemConfigurationAdmin';
 
 import { muteSound } from '../../redux/users/actions';
 
@@ -85,13 +83,11 @@ class AppRouter extends Component {
                   <Route path='/alerts' component={Alerts} />
                   <Route path='/recos-admin' component={RecosAdmin} />
                   <Route path='/users-admin' component={UsersAdmin} />
-                  <Route path='/camera-group-settings-admin' component={CameraGroupSettingsAdmin} />
-                  <Route path='/camera-group-privileges-admin' component={CameraGroupPrivilegesAdmin} />
+                  <Route path='/camera-groups-admin' component={CameraGroupsAdmin} />
                   <Route path='/cameras-admin' component={CamerasAdmin} />
                   <Route path='/triggers-admin' component={TriggersAdmin} />
                   <Route path='/alerts-admin' component={AlertsAdmin} />
                   <Route path='/invitations-admin' component={InvitationsAdmin} />
-                  <Route path='/user-privileges-admin' component={UserPrivilegesAdmin} />
                   <Route path='/Devices-admin' component={DevicesAdmin} />
                   <Route path='/licenses-admin' component={LicensesAdmin} />
                   <Route path='/system-configuration-admin' component={SystemConfigurationAdmin} />

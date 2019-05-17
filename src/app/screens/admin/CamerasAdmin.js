@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-class DevicesAdmin extends Component {
+class CamerasAdmin extends Component {
   constructor(props) {
     super(props);
 
@@ -11,7 +11,7 @@ class DevicesAdmin extends Component {
 
   render(){
     return(
-      <div>DevicesAdmin</div>
+      <div>CamerasAdmin</div>
     )
   }
 }
@@ -19,11 +19,13 @@ class DevicesAdmin extends Component {
 const styles={};
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    user: state.auth.user
+  }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {}
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DevicesAdmin);
+export default connect(mapStateToProps, mapDispatchToProps)(CamerasAdmin);

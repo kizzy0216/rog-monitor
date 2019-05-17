@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-class TriggersAdmin extends Component {
+class InvitationsAdmin extends Component {
   constructor(props) {
     super(props);
 
@@ -11,7 +11,7 @@ class TriggersAdmin extends Component {
 
   render(){
     return(
-      <div>TriggersAdmin</div>
+      <div>InvitationsAdmin</div>
     )
   }
 }
@@ -19,11 +19,13 @@ class TriggersAdmin extends Component {
 const styles={};
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    user: state.auth.user
+  }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {}
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TriggersAdmin);
+export default connect(mapStateToProps, mapDispatchToProps)(InvitationsAdmin);

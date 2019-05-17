@@ -57,17 +57,20 @@ class NavigationMenu extends Component {
         </Menu.Item>
         {this.props.user.user_privileges_ids == 0 ?
           <Menu.SubMenu title={<Icon type="ellipsis" className='nav-icon' />}>
-            <Menu.Item key='/recos-admin'>
-              <Icon type="cloud-server" className='nav-icon' /> Recos
+            <Menu.Item key='/system-configuration-admin'>
+              <Icon type="database" className='nav-icon' /> System Configuration
+            </Menu.Item>
+            <Menu.Item key='/invitations-admin'>
+              <Icon type="mail" className='nav-icon' /> Invitations
             </Menu.Item>
             <Menu.Item key='/users-admin'>
               <Icon type="user" className='nav-icon' /> Users
             </Menu.Item>
-            <Menu.Item key='/camera-group-settings-admin'>
-              <Icon type="environment-o" className='nav-icon' /> Camera Group Settings
+            <Menu.Item key='/licenses-admin'>
+              <Icon type="idcard" className='nav-icon' /> Licenses
             </Menu.Item>
-            <Menu.Item key='/camera-group-privileges-admin'>
-              <Icon type="team" className='nav-icon' /> Camera Group Privileges
+            <Menu.Item key='/camera-groups-admin'>
+              <Icon type="team" className='nav-icon' /> Camera Groups
             </Menu.Item>
             <Menu.Item key='/cameras-admin'>
               <Icon type="video-camera" className='nav-icon' /> Cameras
@@ -75,23 +78,14 @@ class NavigationMenu extends Component {
             <Menu.Item key='/triggers-admin'>
               <Icon type="radius-setting" className='nav-icon' /> Triggers
             </Menu.Item>
-            <Menu.Item key='/alerts-admin'>
-              <Icon type="alert" className='nav-icon' /> Alerts
-            </Menu.Item>
-            <Menu.Item key='/invitations-admin'>
-              <Icon type="mail" className='nav-icon' /> Invitations
-            </Menu.Item>
-            <Menu.Item key='/user-privileges-admin'>
-              <Icon type="security-scan" className='nav-icon' /> User Privileges
+            <Menu.Item key='/recos-admin'>
+              <Icon type="cloud-server" className='nav-icon' /> Recos
             </Menu.Item>
             <Menu.Item key='/devices-admin'>
               <Icon type="mobile" className='nav-icon' /> Devices
             </Menu.Item>
-            <Menu.Item key='/licenses-admin'>
-              <Icon type="idcard" className='nav-icon' /> Licenses
-            </Menu.Item>
-            <Menu.Item key='/system-configuration-admin'>
-              <Icon type="database" className='nav-icon' /> System Configuration
+            <Menu.Item key='/alerts-admin'>
+              <Icon type="alert" className='nav-icon' /> Alerts
             </Menu.Item>
           </Menu.SubMenu>
           :

@@ -63,7 +63,7 @@ class ExpandAlertModal extends Component {
     }
     return (
       <div>
-        <img src={this.props.data.alert_image_url} style={styles.alertCardImg} onClick={this.showModal} />
+        <img src={this.props.data.alert_image_url +'?auth='+ this.props.data.user.jwt} style={styles.alertCardImg} onClick={this.showModal} />
         <ExpandAlertForm
           onCancel={this.handleCancel}
           alertImg={this.props.data.alert_image_url}

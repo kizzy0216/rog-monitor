@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-class CameraGroupSettingsAdmin extends Component {
+class RecosAdmin extends Component {
   constructor(props) {
     super(props);
 
@@ -11,7 +11,7 @@ class CameraGroupSettingsAdmin extends Component {
 
   render(){
     return(
-      <div>CameraGroupSettingsAdmin</div>
+      <div>RecosAdmin</div>
     )
   }
 }
@@ -19,11 +19,13 @@ class CameraGroupSettingsAdmin extends Component {
 const styles={};
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    user: state.auth.user
+  }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {}
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CameraGroupSettingsAdmin);
+export default connect(mapStateToProps, mapDispatchToProps)(RecosAdmin);

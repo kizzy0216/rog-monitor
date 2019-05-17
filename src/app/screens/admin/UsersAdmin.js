@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-class SystemConfigurationAdmin extends Component {
+class UsersAdmin extends Component {
+  // TODO: combine with user privileges
   constructor(props) {
     super(props);
 
@@ -11,7 +12,7 @@ class SystemConfigurationAdmin extends Component {
 
   render(){
     return(
-      <div>SystemConfigurationAdmin</div>
+      <div>UsersAdmin</div>
     )
   }
 }
@@ -19,11 +20,13 @@ class SystemConfigurationAdmin extends Component {
 const styles={};
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    user: state.auth.user
+  }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {}
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SystemConfigurationAdmin);
+export default connect(mapStateToProps, mapDispatchToProps)(UsersAdmin);

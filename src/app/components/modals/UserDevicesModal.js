@@ -194,6 +194,7 @@ class EditableTable extends Component {
           scroll={{ x:400, y: 300 }}
           pagination={false}
           style={{maxWidth: 417, margin: '0 auto'}}
+          size="small"
         />
         <div style={{height: 20}}></div>
       </div>

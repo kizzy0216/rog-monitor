@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-class LicensesAdmin extends Component {
+class AlertsAdmin extends Component {
   constructor(props) {
     super(props);
 
@@ -11,7 +11,7 @@ class LicensesAdmin extends Component {
 
   render(){
     return(
-      <div>LicensesAdmin</div>
+      <div>AlertsAdmin</div>
     )
   }
 }
@@ -19,11 +19,13 @@ class LicensesAdmin extends Component {
 const styles={};
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    user: state.auth.user
+  }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {}
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LicensesAdmin);
+export default connect(mapStateToProps, mapDispatchToProps)(AlertsAdmin);

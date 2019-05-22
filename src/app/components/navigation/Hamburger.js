@@ -5,7 +5,7 @@ import { Badge, Icon } from 'antd';
 const Hamburger = (props) => (
   <ul className='ant-menu ant-menu-horizontal ant-menu-dark ant-menu-root' style={props.style}>
     <li className='ant-menu-item-active ant-menu-item'>
-      <Badge count={props.receivedInvites.length} dot={true}>
+      <Badge count={props.cameraGroupInvites.length} dot={true}>
         <Icon
           className='nav-icon'
           type={props.collapsed ? 'menu-unfold' : 'menu-fold'}
@@ -17,7 +17,7 @@ const Hamburger = (props) => (
 
 const mapStateToProps = (state) => {
   return {
-    receivedInvites: state.invites.receivedInvites
+    cameraGroupInvites: state.invites.cameraGroupInvites
   }
 }
 

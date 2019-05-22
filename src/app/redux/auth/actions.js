@@ -6,7 +6,7 @@ import { clearCameraGroupData } from '../cameraGroups/actions';
 import { clearCameraData } from '../cameras/actions';
 import { clearInvitesData } from '../invites/actions';
 import { clearAlertData } from '../alerts/actions';
-import { fetchReceivedInvites } from '../invites/actions';
+import { fetchShareGroupInvites } from '../invites/actions';
 import { readUser, deleteUserDevice } from '../users/actions';
 
 import * as types from './actionTypes';
@@ -241,7 +241,7 @@ export function register(email, firstName, lastName, password, confirmPassword, 
     };
 
     axios.post(url, data)
-      .then((resp) => {
+      .then((response) => {
         dispatch(registerSuccess());
 
         const registrationEvent = {
@@ -255,8 +255,10 @@ export function register(email, firstName, lastName, password, confirmPassword, 
       })
       .catch((error) => {
         let errMessage = 'Error registering. Please try again later';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(registerError(errMessage));
       })
@@ -276,13 +278,15 @@ export function resetPassword(new_password, confirmPassword, token) {
     const data = {new_password};
 
     axios.patch(url, data)
-      .then((resp) => {
+      .then((response) => {
         dispatch(resetPasswordSuccess());
       })
       .catch((error) => {
         let errMessage = 'Error resetting your password. Please try again later';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(resetPasswordError(errMessage));
       })
@@ -314,26 +318,21 @@ export function login(email, password) {
     } else {
       let url = `${process.env.REACT_APP_ROG_API_URL}/authenticate`;
       axios.post(url, {email: cleanEmail, password: cleanPassword})
-        .then((resp) => {
-          dispatch(readUser(resp.data.jwt, window.jwtTokenRefresh, cleanEmail, cleanPassword));
+        .then((response) => {
+          dispatch(readUser(response.data.jwt, window.jwtTokenRefresh, cleanEmail, cleanPassword));
         })
         .catch((error) => {
           let errMessage = 'Error logging in';
-          if (error.response.data['Error']) {
-            errMessage = error.response.data['Error'];
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
-
           dispatch(loginError(errMessage));
           dispatch(loginInProcess(false));
         });
     }
   }
-}
-// TODO: remove this function and replace with FCM logic
-function disconnectFromChannels(channels) {
-  // for (const channel of channels) {
-  //   channel.leave();
-  // }
 }
 
 export function logout(user) {
@@ -389,7 +388,7 @@ export function sendInvitationEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Error sending invitation. Please try again later.';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
         dispatch(sendInvitationError(errMessage));
@@ -413,7 +412,7 @@ export function getInvitation(token) {
       })
       .catch(error => {
         let errMessage = 'Error getting invitation. Please try again later.';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
 
@@ -455,7 +454,7 @@ export function sendPasswordResetRequestEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Sorry, we can\'t find that email.';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
         dispatch(sendPasswordResetRequestError(errMessage));
@@ -475,12 +474,12 @@ export function getPasswordResetRequest(token) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${token}`;
     axios.get(url)
       .then(resp => {
-        console.log(resp);
-        dispatch(getPasswordResetRequestSuccess(resp.data));
+        console.log(response);
+        dispatch(getPasswordResetRequestSuccess(response.data));
       })
       .catch(error => {
         let errMessage = 'Error getting Valid Password Reset Request.';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
         dispatch(getPasswordResetRequestError(errMessage));

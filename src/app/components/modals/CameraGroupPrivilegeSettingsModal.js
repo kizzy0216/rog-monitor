@@ -104,7 +104,7 @@ class UserCameraGroupSettingsModal extends Component {
             userCameraGroupPrivileges={this.props.selectedCameraGroup.userCameraGroupPrivileges.filter(invite => invite.users_id !== this.props.user.id)}
             removeUserCameraGroupPrivilege={this.props.removeUserCameraGroupPrivilege}
             removeUserCameraGroupPrivilegeInProcess={this.props.removeUserCameraGroupPrivilegeInProcess}
-            invites={this.props.receivedInvites}
+            invites={this.props.cameraGroupInvites}
             rescindInvite={this.props.rescindInvite}
             rescindInviteInProcess={this.props.rescindInviteInProcess}
           />
@@ -167,7 +167,7 @@ const mapStateToProps = (state) => {
     rescindInviteInProcess: state.invites.rescindInviteInProcess,
     rescindInviteError: state.invites.rescindInviteError,
     selectedCameraGroup: state.cameraGroups.selectedCameraGroup,
-    receivedInvites: state.invites.receivedInvites
+    cameraGroupInvites: state.invites.cameraGroupInvites
   }
 }
 

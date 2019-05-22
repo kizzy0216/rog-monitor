@@ -20,8 +20,10 @@ export function readSystemConfigurations() {
     })
     .catch((error) => {
       let errMessage = 'Error fetching recieved invites';
-      if (error.response.data['Error']) {
-        errMessage = error.response.data['Error'];
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
       }
       console.log(errMessage);
     })
@@ -41,8 +43,10 @@ export function updateSystemConfiguration(systemConfigurationId, key, value) {
     axios.patch(url, data, config)
     .catch((error) => {
       let errMessage = 'Error fetching recieved invites';
-      if (error.response.data['Error']) {
-        errMessage = error.response.data['Error'];
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
       }
       console.log(errMessage);
     })

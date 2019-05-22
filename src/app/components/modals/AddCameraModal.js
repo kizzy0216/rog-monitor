@@ -5,7 +5,6 @@ import { Button, Modal, Form, Input, Icon, message } from 'antd';
 import RtspStream from '../video/RtspStream';
 
 import { addCamera } from '../../redux/cameras/actions';
-import { registerCamera } from '../../redux/alerts/actions';
 
 const FormItem = Form.Item;
 
@@ -93,9 +92,6 @@ class AddCameraModal extends Component {
     }
     if (nextProps.addCameraError !== '' && this.props.addCameraError !== nextProps.addCameraError) {
       message.error(nextProps.addCameraError);
-    }
-    if(nextProps.addedCameraData !== '' && nextProps.addedCameraData !== this.props.addedCameraData) {
-      this.props.registerCamera(this.props.user.id, nextProps.addedCameraData.data);
     }
     if(nextProps.cameraConnectionFail && nextProps.cameraConnectionFail !== this.props.cameraConnectionFail){
       message.error('Camera stream could not connect.');
@@ -204,8 +200,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addCamera: (user, cameraGroup, name, rtspUrl, username, password) => dispatch(addCamera(user, cameraGroup, name, rtspUrl, username, password)),
-    registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
+    addCamera: (user, cameraGroup, name, rtspUrl, username, password) => dispatch(addCamera(user, cameraGroup, name, rtspUrl, username, password))
   }
 }
 

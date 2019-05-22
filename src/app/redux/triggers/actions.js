@@ -171,11 +171,18 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
     };
 
     axios.post(url, triggerData, config)
-      .then((resp) => {
+      .then((response) => {
         dispatch(createTriggerSuccess(true));
         dispatch(fetchTriggers(user, cameraGroup, cameraId));
       })
       .catch((error) => {
+        let errMessage = 'Error creating trigger';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
         dispatch(createTriggerError(true));
       })
       .finally(() => {
@@ -194,15 +201,21 @@ export function fetchTriggers(user, cameraGroup, cameraId) {
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.get(url, config)
-      .then((resp) => {
-        if (isEmpty(resp.data)) {
+      .then((response) => {
+        if (isEmpty(response.data)) {
           resp.data = [];
         }
-        dispatch(fetchTriggersSuccess(resp.data));
+        dispatch(fetchTriggersSuccess(response.data));
         dispatch(fetchTriggersInSuccess(true));
       })
       .catch((error) => {
-        console.log(error);
+        let errMessage = 'Error fetching triggers';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
       })
       .finally(() => {
         dispatch(fetchTriggersInSuccess(false));
@@ -219,11 +232,17 @@ export function deleteTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
-      .then((resp) => {
+      .then((response) => {
         dispatch(deleteTriggerSuccess(true));
       })
       .catch((error) => {
-        console.log(error);
+        let errMessage = 'Error deleting trigger'
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
       })
       .finally(() => {
         dispatch(deleteTriggerInProcess(false));
@@ -245,12 +264,19 @@ export function createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersI
     };
 
     axios.post(url, data, config)
-      .then((resp) => {
+      .then((response) => {
         dispatch(createTriggerTimeWindowSuccess(true));
         let cameraGroup = {id: cameraGroupId};
         dispatch(fetchTriggers(user, cameraGroup, cameraId));
       })
       .catch((error) => {
+        let errMessage = 'Error creating trigger time window';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
         dispatch(createTriggerTimeWindowError(true));
       })
       .finally(() => {
@@ -272,13 +298,19 @@ export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggersI
     };
 
     axios.patch(url, data, config)
-      .then((resp) => {
+      .then((response) => {
         dispatch(updateTriggerTimeWindowSuccess(true));
         let cameraGroup = {id: cameraGroupId};
         dispatch(fetchTriggers(user, cameraGroup, cameraId));
       })
       .catch((error) => {
-        console.log(error);
+        let errMessage = 'Error updating trigger time window';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
       })
       .finally(() => {
         dispatch(updateTriggerTimeWindowSuccess(false));
@@ -295,13 +327,19 @@ export function deleteTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
-      .then((resp) => {
+      .then((response) => {
         dispatch(deleteTriggerTimeWindowSuccess(true));
         let cameraGroup = {id: cameraGroupId};
         dispatch(fetchTriggers(user, cameraGroup, cameraId));
       })
       .catch((error) => {
-        console.log(error);
+        let errMessage = 'Error deleting trigger time window';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
       })
       .finally(() => {
         dispatch(deleteTriggerTimeWindowInProcess(false));

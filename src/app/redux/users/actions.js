@@ -5,7 +5,7 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
-import { fetchReceivedInvites } from '../invites/actions';
+import { fetchShareGroupInvites } from '../invites/actions';
 import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login, toggleMute} from '../auth/actions';
 import {listenForNewAlerts} from '../alerts/actions';
 import {isEmpty} from '../helperFunctions';
@@ -43,20 +43,21 @@ export function fetchUserCameraLicenses(user) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/licenses`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
-      .then((resp) => {
-        if (isEmpty(resp.data) === false) {
-          user.cameraLicenses = resp.data;
+      .then((response) => {
+        if (isEmpty(response.data) === false) {
+          user.cameraLicenses = response.data;
         } else {
           user.cameraLicenses = [];
         }
         dispatch(setupFirebaseCloudMessaging(user));
-        dispatch(fetchReceivedInvites(user));
+        dispatch(fetchShareGroupInvites(user));
       })
       .catch((error) => {
-        console.log(error);
         let errMessage = 'Error fetching user data. Please try again later.';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(loginError(errMessage));
         dispatch(loginInProcess(false));
@@ -69,9 +70,9 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users`;
     let config = {headers: {Authorization: 'Bearer '+jwt}};
     axios.get(url, config)
-      .then((resp) => {
+      .then((response) => {
         const user = {
-          ...resp.data,
+          ...response.data,
           jwt: jwt
         }
         sessionStorage.setItem('jwt', jwt);
@@ -89,7 +90,7 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
       })
       .catch(error => {
         let errMessage = 'Error fetching user data. Please try again later.';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
         dispatch(loginError(errMessage));
@@ -119,7 +120,7 @@ export function updateUser(user, values) {
       })
       .catch(error => {
         let errMessage = 'Error updating user';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
         dispatch(updateUserError(errMessage));
@@ -141,7 +142,7 @@ export function muteSound(user, mute) {
       })
       .catch((err) => {
         let errMessage = 'Error fetching user device data. Please try again later.';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
         console.log(errMessage);
@@ -178,8 +179,8 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
-      .then((resp) => {
-        user.devices = resp.data;
+      .then((response) => {
+        user.devices = response.data;
         let device_token_exists = false;
         for (var i = 0; i < user.devices.length; i++) {
           let stored_device_token = user.devices[i].device_token;
@@ -198,7 +199,7 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
       })
       .catch(error => {
         let errMessage = 'Error fetching user device data. Please try again later.';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
         dispatch(loginError(errMessage));
@@ -216,9 +217,9 @@ export function storeUserDevice(user, token, messaging) {
       device_name: 'Web Browser Device'
     }
     axios.post(url, data, config)
-      .then((resp) => {
-        user.devices.push(resp.data.user_device);
-        sessionStorage.setItem('fcm_token_id', resp.data.user_device.id)
+      .then((response) => {
+        user.devices.push(response.data.user_device);
+        sessionStorage.setItem('fcm_token_id', response.data.user_device.id)
         sessionStorage.setItem('fcm_token', token)
         dispatch(listenForNewAlerts(user, messaging));
         dispatch(loginSuccess(user));
@@ -228,7 +229,7 @@ export function storeUserDevice(user, token, messaging) {
         console.log(error);
         let errMessage = 'Error storing user device token.';
         if (typeof error.response !== 'undefined') {
-          if (error.response.data['Error']) {
+          if ('Error' in error.response.data) {
             errMessage = error.response.data['Error'];
           }
         }
@@ -246,12 +247,12 @@ export function updateUserDevice(userId, deviceId, name) {
       device_name: name
     }
     axios.patch(url, data, config)
-      .then((resp) => {
-        // console.log(resp);
+      .then((response) => {
+        // console.log(response);
       })
       .catch(error => {
         let errMessage = 'Error updating user device data. Please try again later.';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
         console.log(errMessage);
@@ -264,18 +265,18 @@ export function deleteUserDevice(userId, deviceId, token) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userId}/devices/${deviceId}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.delete(url, config)
-      .then((resp) => {
+      .then((response) => {
         const firebase = getFirebase();
         const messaging = firebase.messaging();
         messaging
           .deleteToken(token)
-            .then((resp) => {
-              // console.log(resp);
+            .then((response) => {
+              // console.log(response);
             });
       })
       .catch(error => {
         let errMessage = 'Error deleting user device data. Please try again later.';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
         console.log(errMessage);

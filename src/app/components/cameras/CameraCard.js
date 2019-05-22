@@ -9,7 +9,6 @@ import EditCamera from '../cameras/EditCamera';
 import { deleteCamera } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import TriggerModal from '../modals/TriggerModal';
-import { registerCamera } from '../../redux/alerts/actions';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import CameraCardImg from './CameraCardImg';
 import ToggleCameraConnection from '../buttons/ToggleCameraConnection';
@@ -42,10 +41,6 @@ class CameraCard extends Component {
     this.props.trackEventAnalytics('camera viewed', cameraViewEvent);
 
     this.props.history.push(`/camera-groups/${this.props.camera_groups_id}/cameras/${this.props.id}/stream`);
-  }
-
-  UNSAFE_componentWillMount = () => {
-    this.props.registerCamera(this.props.user.id, this.props.cameraGroup.cameras);
   }
 
   render() {
@@ -154,8 +149,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     deleteCamera: (user, cameraGroupId, cameraId) => dispatch(deleteCamera(user, cameraGroupId, cameraId)),
-    trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
-    registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
+    trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data))
   }
 }
 

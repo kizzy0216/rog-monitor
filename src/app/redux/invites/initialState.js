@@ -1,6 +1,7 @@
 export default {
-  receivedInvites: [],
+  cameraGroupInvites: [],
   sentInvites: [],
+  invites: null,
   fetchReceivedInProcess: false,
   fetchReceivedError: '',
   fetchSentInProcess: false,
@@ -11,4 +12,6 @@ export default {
   rejectInviteError: '',
   rescindInviteInProcess: false,
   rescindInviteError: '',
+  updateInvitationError: '',
+  deleteInvitationError: ''
 }

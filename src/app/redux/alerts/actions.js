@@ -163,8 +163,10 @@ export function fetchAlerts(user) {
       })
       .catch((error) => {
         let errMessage = 'Error fecthing alerts';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(fetchError(errMessage));
       })
@@ -200,7 +202,13 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
         }
       })
       .catch((error) => {
-        dispatch(fetchError('Error fetching alerts'));
+        let errMessage = 'Error fetching alerts';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(fetchError(errMessage));
       })
       .finally(() => {
         dispatch(fetchError(''));
@@ -234,7 +242,7 @@ export function deleteAlert(user, alertId) {
       })
       .catch(error => {
         let errMessage = 'Error deleting alert';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
         dispatch(deleteError(errMessage));
@@ -249,43 +257,4 @@ export function clearNewAlerts() {
   return (dispatch) => {
     dispatch(clearAllAlerts());
   }
-}
-
-// TODO: examine if this function is still needed
-  export function registerCamera(userId, cameraDetails) {
-    return (dispatch) => {
-      // dispatch(registerCameraInProcess(true));
-
-      // const jwt = localStorage.getItem('jwt');
-      //
-      // let urlAlert = `${process.env.REACT_APP_BVC_SERVER}/api/user/${userId}/cameras`;
-      // let config = {headers: {Authorization:'Bearer' + ' ' + jwt}};
-      // let cameraData = [];
-      // for(let i = 0; i < cameraDetails.length; i++) {
-      //   cameraData.push({id: cameraDetails[i].id, name: cameraDetails[i].name, url: cameraDetails[i].rtspUrl, enabled: true});
-      // }
-      // axios.get(urlAlert, config)
-      //
-      //   .then((resp) => {
-      //     dispatch(registerCameraSuccess(true));
-      //     // Issue with BVC API. It needs all the camera ids to be sent again, else it would delete the not sent ones.
-      //     for(let i = 0; i < resp.data.cameras.length; i++ ) {
-      //       if (resp.data.cameras[i].id !== cameraData[i].id) {
-      //         axios.post(urlAlert, cameraData, config)
-      //           .then((resp) => {
-      //             // dispatch(registerCameraSuccess(true));
-      //           })
-      //           .catch((error) => {
-      //             // dispatch(registerCameraSuccess(true));
-      //           })
-      //
-      //
-      //       }
-      //     }
-      //
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   })
-    }
 }

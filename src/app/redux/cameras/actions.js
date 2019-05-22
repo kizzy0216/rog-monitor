@@ -189,8 +189,13 @@ export function fetchCameraUrl(user, cameraGroupsId, cameraId) {
         dispatch(fetchSuccess(response.data.reco_camera_url));
       })
       .catch((error) => {
-        console.log('Error fetching camera: ', error);
-        dispatch(fetchError(true));
+        let errMessage = 'Error fetching Camera Url';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(fetchError(errMessage));
       })
       .finally(() => {
         dispatch(fetchInProcess(false));
@@ -212,7 +217,13 @@ export function updatePreviewImage(user, cameraGroup, cameraId) {
         dispatch(imageUpdateSuccess(true, cameraId));
       })
       .catch((error) => {
-        refreshCameraError('Error refreshing camera image.', cameraId);
+        let errMessage = 'Error refreshing camera image';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        refreshCameraError(errMessage, cameraId);
         dispatch(imageUpdateSuccess(false, cameraId));
       })
       .finally(() => {
@@ -253,10 +264,11 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
         // dispatch(checkCameraConnection(user, response.data.id));
       })
       .catch((error) => {
-        console.log(error.response);
         let errMessage = 'Error creating camera. Please try again later.';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(addCameraError(errMessage));
       })
@@ -310,8 +322,10 @@ export function editCamera(user, cameraId, cameraData) {
       })
       .catch((error) => {
         let errMessage = 'Error editing camera. Please try again later.';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(editCameraError(errMessage));
         dispatch(editCameraInProcess(false));
@@ -340,12 +354,14 @@ export function deleteCamera(user, cameraGroupsId, cameraId) {
       })
       .catch((error) => {
         let errMessage = 'Error deleting camera';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
-          if (errMessage.includes('Camera Deleted.')){
-            dispatch(fetchCameraGroups(user));
-            dispatch(fetchCameraGroupCameras(user, cameraGroup));
-            dispatch(fetchUserCameraLicenses(user));
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+            if (errMessage.includes('Camera Deleted.')){
+              dispatch(fetchCameraGroups(user));
+              dispatch(fetchCameraGroupCameras(user, cameraGroup));
+              dispatch(fetchUserCameraLicenses(user));
+            }
           }
         }
         dispatch(deleteCameraError(errMessage));
@@ -369,7 +385,7 @@ export function toggleCameraEnabled(user, cameraGroup, cameraId, flag) {
       .catch((error)=>{
         console.log(error);
         let errMessage = 'Error toggling camera connection';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
         }
       })
@@ -386,7 +402,7 @@ export function checkCameraEnabled(user, cameraGroup, cameraId) {
       })
       .catch((error)=>{
         let errMessage = 'Error checking camera connection';
-        if (error.response.data['Error']) {
+        if ('Error' in error.response.data) {
           errMessage = error.response.data['Error'];
           console.log(errMessage);
         } else {

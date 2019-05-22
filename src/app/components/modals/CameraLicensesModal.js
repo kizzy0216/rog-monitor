@@ -105,6 +105,7 @@ const CameraLicensesForm = Form.create()(
           pagination={false}
           scroll={{ y: 100 }}
           style={{maxWidth: 417, margin: '0 auto'}}
+          size="small"
         />
         <div style={{height: 10}}></div>
         <Table
@@ -113,6 +114,7 @@ const CameraLicensesForm = Form.create()(
           pagination={false}
           scroll={{ x: 400, y: 300 }}
           style={{maxWidth: 417, margin: '0 auto'}}
+          size="small"
         />
         <div style={{height: 20}}></div>
         <div style={styles.subscriptionAgreement}>
@@ -182,7 +184,7 @@ class CameraLicenses extends Component {
     return (
       <div>
         <div onClick={this.showModal}>
-          <Icon type='video-camera'/>
+          <Icon type="idcard" />
           &nbsp;&nbsp;
           <span>Licenses</span>
         </div>

@@ -90,7 +90,7 @@ class CameraGroupInvitesModal extends Component {
 
   render() {
     return (
-      <Badge count={this.props.receivedInvites.length}>
+      <Badge count={this.props.cameraGroupInvites.length}>
         <div onClick={this.showModal}>
           <Icon type='mail'/>
           &nbsp;&nbsp;
@@ -100,7 +100,7 @@ class CameraGroupInvitesModal extends Component {
           visible={this.state.visible}
           onCancel={this.handleCancel}
           user={this.props.user}
-          invites={this.props.receivedInvites}
+          invites={this.props.cameraGroupInvites}
           acceptInvite={this.props.acceptInvite}
           rejectInvite={this.props.rejectInvite}
           acceptInviteInProcess={this.props.acceptInviteInProcess}
@@ -154,7 +154,7 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    receivedInvites: state.invites.receivedInvites,
+    cameraGroupInvites: state.invites.cameraGroupInvites,
     acceptInviteInProcess: state.invites.acceptInviteInProcess,
     acceptInviteError: state.invites.acceptInviteError,
     rejectInviteInProcess: state.invites.rejectInviteInProcess,

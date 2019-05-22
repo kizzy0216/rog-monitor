@@ -242,8 +242,10 @@ export function addNewCameraGroup(user, cameraGroup) {
       })
       .catch((error) => {
         let errMessage = 'Error creating camera. Please try again later.';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(addCameraGroupError(errMessage));
       })
@@ -273,8 +275,10 @@ export function removeCameraGroup(user, cameraGroup) {
       })
       .catch((error) => {
         let errMessage = 'Error removing cameraGroup. Please try again later.';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(removeCameraGroupError(errMessage));
       })
@@ -306,8 +310,10 @@ export function shareCameraGroup(user, cameraGroupId, inviteeEmail) {
       })
       .catch((error) => {
         let errMessage = 'Error sharing cameraGroup. Please try again later.';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(shareCameraGroupError(errMessage));
       })
@@ -335,8 +341,10 @@ export function removeUserCameraGroupPrivilege(user, cameraGroupId, cameraGroupP
     })
     .catch((error) => {
       let errMessage = 'Error removing user';
-      if (error.response.data['Error']) {
-        errMessage = error.response.data['Error'];
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
       }
       dispatch(removeGuardError(errMessage));
     })
@@ -371,8 +379,10 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
       })
       .catch((error) => {
         let errMessage = 'Error editing camera group. Please try again later.';
-        if (error.response.data['Error']) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(editCameraGroupError(errMessage));
       })

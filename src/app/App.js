@@ -39,7 +39,7 @@ class App extends Component {
 
   render() {
     if (this.state.loading) {
-      return (<div>Loading</div>)
+      return (<div style={{margin: 0, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 36}}>Loading</div>)
     }
     else if (this.state.currentUser) {
       return (<AppRouter />)

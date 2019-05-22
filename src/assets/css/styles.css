@@ -158,3 +158,9 @@ body{
   border-radius: 4px;
   padding: 4px 11px;
 }
+
+.editable-row .ant-form-explain {
+  position: absolute;
+  font-size: 12px;
+  margin-top: -4px;
+}

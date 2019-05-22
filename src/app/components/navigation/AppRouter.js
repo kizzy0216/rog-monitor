@@ -18,6 +18,16 @@ import CameraList from '../../screens/CameraList';
 import CameraDetails from '../../screens/CameraDetails';
 import CameraCreate from '../../screens/CameraCreate';
 import CameraStream from '../../screens/CameraStream';
+import RecosAdmin from '../../screens/admin/RecosAdmin';
+import UsersAdmin from '../../screens/admin/UsersAdmin';
+import CameraGroupsAdmin from '../../screens/admin/CameraGroupsAdmin';
+import CamerasAdmin from '../../screens/admin/CamerasAdmin';
+import TriggersAdmin from '../../screens/admin/TriggersAdmin';
+import AlertsAdmin from '../../screens/admin/AlertsAdmin';
+import InvitationsAdmin from '../../screens/admin/InvitationsAdmin';
+import DevicesAdmin from '../../screens/admin/DevicesAdmin';
+import LicensesAdmin from '../../screens/admin/LicensesAdmin';
+import SystemConfigurationAdmin from '../../screens/admin/SystemConfigurationAdmin';
 
 import { muteSound } from '../../redux/users/actions';
 
@@ -51,7 +61,7 @@ class AppRouter extends Component {
               style={{...styles.hamburger, ...styles.menu}}
               collapsed={this.state.collapsed}
               toggleCollapsed={this.toggleCollapsed.bind(this)} />
-            <NavigationMenu style={styles.menu}/>
+            <NavigationMenu style={styles.menu} />
             <div style={styles.headerButton}>
               <Button type="ghost" shape="circle" icon="sound" size={"large"} style={styles.muteButton} onClick={this.toggleMute}>
                 {this.state.mute == true ? <Icon type="close" style={styles.muteIcon} /> : ''}
@@ -64,16 +74,35 @@ class AppRouter extends Component {
           </Sider>
 
           <Content style={styles.content}>
-            <Switch>
-              <Route exact path='/cameras' component={CameraList} />
-              <Route exact path='/cameras/:id' component={CameraDetails} />
-              <Route exact path='/camera-groups/:cameraGroupId/cameras/:id/stream' component={CameraStream} />
-              <Route exact path='/cameras/new/:cameraGroupId' component={CameraCreate} />
-
-              <Route exact path='/alerts' component={Alerts} />
-
-              <Redirect to='/cameras' />
-            </Switch>
+              {this.props.user.user_privileges_ids == 0 ?
+                <Switch>
+                  <Route path='/cameras' component={CameraList} />
+                  <Route path='/cameras/:id' component={CameraDetails} />
+                  <Route path='/camera-groups/:cameraGroupId/cameras/:id/stream' component={CameraStream} />
+                  <Route path='/cameras/new/:cameraGroupId' component={CameraCreate} />
+                  <Route path='/alerts' component={Alerts} />
+                  <Route path='/recos-admin' component={RecosAdmin} />
+                  <Route path='/users-admin' component={UsersAdmin} />
+                  <Route path='/camera-groups-admin' component={CameraGroupsAdmin} />
+                  <Route path='/cameras-admin' component={CamerasAdmin} />
+                  <Route path='/triggers-admin' component={TriggersAdmin} />
+                  <Route path='/alerts-admin' component={AlertsAdmin} />
+                  <Route path='/invitations-admin' component={InvitationsAdmin} />
+                  <Route path='/Devices-admin' component={DevicesAdmin} />
+                  <Route path='/licenses-admin' component={LicensesAdmin} />
+                  <Route path='/system-configuration-admin' component={SystemConfigurationAdmin} />
+                  <Redirect to='/cameras' />
+                </Switch>
+                :
+                <Switch>
+                  <Route path='/cameras' component={CameraList} />
+                  <Route path='/cameras/:id' component={CameraDetails} />
+                  <Route path='/camera-groups/:cameraGroupId/cameras/:id/stream' component={CameraStream} />
+                  <Route path='/cameras/new/:cameraGroupId' component={CameraCreate} />
+                  <Route path='/alerts' component={Alerts} />
+                  <Redirect to='/cameras' />
+                </Switch>
+              }
           </Content>
         </Layout>
       </Router>

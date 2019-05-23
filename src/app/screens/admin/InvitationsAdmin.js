@@ -239,7 +239,7 @@ class EditableTable extends React.Component {
       {
         title: 'Status',
         dataIndex: 'status',
-        editable: true,
+        editable: false,
         ...this.getColumnSearchProps('status'),
         sorter: (a, b) => { return a.status.localeCompare(b.status)},
         sortDirections: ['descend', 'ascend'],

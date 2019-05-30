@@ -29,7 +29,7 @@ class SystemConfigurationAdmin extends Component {
       )
     } else {
       return(
-        <div></div>
+        <EditableFormTable data={""} actions={this.props.actions} />
       )
     }
   }

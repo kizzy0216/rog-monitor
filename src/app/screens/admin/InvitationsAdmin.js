@@ -7,7 +7,7 @@ import Highlighter from 'react-highlight-words';
 
 const InvitationsForm = Form.create()(
   (props) => {
-    const {handleSubmit, validateType, form} = props;
+    const {handleSubmit, form} = props;
     const {getFieldDecorator} = props.form;
 
     return (
@@ -115,7 +115,6 @@ class InvitationsAdmin extends Component {
         <div>
           <InvitationsForm
             ref={this.saveFormRef}
-            validateType={this.validateType}
             handleSubmit={this.handleSubmit}
           />
           <EditableFormTable
@@ -128,7 +127,6 @@ class InvitationsAdmin extends Component {
       return(
         <InvitationsForm
           ref={this.saveFormRef}
-          validateType={this.validateType}
           handleSubmit={this.handleSubmit}
         />
       )

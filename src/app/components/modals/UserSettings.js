@@ -48,7 +48,7 @@ const UserSettingsForm = Form.create()(
             {getFieldDecorator('email', {
               'initialValue': userData.email
             })(
-              <Input placeholder="Email" style={styles.input} />
+              <Input placeholder="Email" style={styles.input} disabled />
             )}
           </FormItem>
         </Form>

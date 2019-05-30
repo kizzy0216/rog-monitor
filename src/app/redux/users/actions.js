@@ -90,8 +90,10 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
       })
       .catch(error => {
         let errMessage = 'Error fetching user data. Please try again later.';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(loginError(errMessage));
         dispatch(loginInProcess(false));
@@ -108,8 +110,7 @@ export function updateUser(user, values) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}`;
     const data = {
       first_name: values.firstName,
-      last_name: values.lastName,
-      email: values.email
+      last_name: values.lastName
     };
 
     axios.patch(url, data, config)
@@ -120,8 +121,10 @@ export function updateUser(user, values) {
       })
       .catch(error => {
         let errMessage = 'Error updating user';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(updateUserError(errMessage));
         dispatch(updateUserInProgress(false));
@@ -142,8 +145,10 @@ export function muteSound(user, mute) {
       })
       .catch((err) => {
         let errMessage = 'Error fetching user device data. Please try again later.';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         console.log(errMessage);
       })
@@ -199,8 +204,10 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
       })
       .catch(error => {
         let errMessage = 'Error fetching user device data. Please try again later.';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(loginError(errMessage));
         dispatch(loginInProcess(false));
@@ -228,7 +235,7 @@ export function storeUserDevice(user, token, messaging) {
       .catch(error => {
         console.log(error);
         let errMessage = 'Error storing user device token.';
-        if (typeof error.response !== 'undefined') {
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
           if ('Error' in error.response.data) {
             errMessage = error.response.data['Error'];
           }
@@ -252,8 +259,10 @@ export function updateUserDevice(userId, deviceId, name) {
       })
       .catch(error => {
         let errMessage = 'Error updating user device data. Please try again later.';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         console.log(errMessage);
       });
@@ -276,10 +285,85 @@ export function deleteUserDevice(userId, deviceId, token) {
       })
       .catch(error => {
         let errMessage = 'Error deleting user device data. Please try again later.';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         console.log(errMessage);
+      });
+  }
+}
+
+export function readUserAdmin(values) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${values.user_id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+      .then((response) => {
+        if (response.hasOwnProperty('data')) {
+          dispatch(updateUserData(response.data));
+        }
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching user';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
+      });
+  }
+}
+
+export function updateUserAdmin(user, values) {
+  return (dispatch) => {
+    dispatch(updateUserError(''));
+    dispatch(updateUserSuccess(false));
+    dispatch(updateUserInProgress(true));
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}`;
+    const data = JSON.parse(JSON.stringify(values));
+    delete data.key;
+    delete data.id;
+
+    axios.patch(url, data, config)
+      .then((response) => {
+        dispatch(updateUserData(response));
+        dispatch(updateUserSuccess(true));
+        dispatch(updateUserInProgress(false));
+      })
+      .catch(error => {
+        let errMessage = 'Error updating user';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(updateUserError(errMessage));
+        dispatch(updateUserInProgress(false));
+      });
+  }
+}
+
+export function deleteUser(user_id) {
+  return (dispatch) => {
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user_id}`;
+
+    axios.delete(url, config)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch(error => {
+        let errMessage = 'Error updating user';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(updateUserError(errMessage));
       });
   }
 }

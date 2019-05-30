@@ -389,8 +389,10 @@ export function sendInvitationEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Error sending invitation. Please try again later.';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(sendInvitationError(errMessage));
       })
@@ -413,8 +415,10 @@ export function getInvitation(token) {
       })
       .catch(error => {
         let errMessage = 'Error getting invitation. Please try again later.';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
 
         dispatch(getInvitationError(errMessage));
@@ -455,8 +459,10 @@ export function sendPasswordResetRequestEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Sorry, we can\'t find that email.';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(sendPasswordResetRequestError(errMessage));
       })
@@ -480,8 +486,10 @@ export function getPasswordResetRequest(token) {
       })
       .catch(error => {
         let errMessage = 'Error getting Valid Password Reset Request.';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(getPasswordResetRequestError(errMessage));
       })

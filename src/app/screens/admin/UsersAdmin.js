@@ -60,17 +60,17 @@ class UsersAdmin extends Component {
 
   render(){
     const data = [];
-    if (!isEmpty(this.props.users)) {
-      for (var i = 0; i < this.props.users.length; i++) {
+    if (!isEmpty(this.props.userData)) {
+      for (var i = 0; i < this.props.userData.length; i++) {
         data[i] = {
-          key: this.props.users[i]['id'],
-          id: this.props.users[i]['id'],
-          email: this.props.users[i]['email'],
-          first_name: this.props.users[i]['first_name'],
-          last_name: this.props.users[i]['last_name'],
-          enabled: this.props.users[i]['enabled'].toString(),
-          user_privileges_ids: this.props.users[i]['user_privileges_ids'],
-          mute: this.props.users[i]['mute'].toString()
+          key: this.props.userData[i]['id'],
+          id: this.props.userData[i]['id'],
+          email: this.props.userData[i]['email'],
+          first_name: this.props.userData[i]['first_name'],
+          last_name: this.props.userData[i]['last_name'],
+          enabled: this.props.userData[i]['enabled'].toString(),
+          user_privileges_ids: this.props.userData[i]['user_privileges_ids'],
+          mute: this.props.userData[i]['mute'].toString()
         }
       }
       return(
@@ -349,7 +349,7 @@ class EditableTable extends React.Component {
   delete(key) {
     const dataSource = [...this.state.data];
     this.setState({ data: dataSource.filter(item => item.key !== key) });
-    this.props.actions.deleteUser(key);
+    this.props.actions.deleteUserAdmin(key);
   };
 
   render() {
@@ -400,7 +400,7 @@ const styles={
 
 const mapStateToProps = (state) => {
   return {
-    users: state.users.userData,
+    userData: state.users.userData,
     updateUserError: state.users.updateUserError,
     updateUserInProgress: state.users.updateUserInProgress,
     updateUserSuccess: state.users.updateUserSuccess

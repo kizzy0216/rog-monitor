@@ -159,7 +159,7 @@ function cameraConnectionEnabled(bool, cameraId) {
 export function fetchCameraGroupCameras(user, cameraGroup) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Auth: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then(response => {
         if (isEmpty(response.data) === false) {
@@ -183,7 +183,7 @@ export function fetchCameraUrl(user, cameraGroupsId, cameraId) {
     dispatch(fetchError(''));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupsId}/cameras/${cameraId}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Auth: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
         dispatch(fetchSuccess(response.data.reco_camera_url));
@@ -208,7 +208,7 @@ export function updatePreviewImage(user, cameraGroup, cameraId) {
     dispatch(imageUpdateInProgress(true, cameraId));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}/image`;
 
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Auth: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {camera_groups_name: cameraGroup.name}
 
     axios.post(url, data, config)
@@ -253,7 +253,7 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
       password
     };
 
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Auth: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.post(url, data, config)
       .then((response) => {
         dispatch(fetchSuccess(user));
@@ -284,7 +284,7 @@ export function checkCameraConnection(user, cameraId) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/recos/cameras/${cameraId}`;
     const jwt = localStorage.getItem('jwt');
-    let config = {headers: {Authorization:'Bearer' + ' ' + jwt}};
+    let config = {headers: {Auth:'Bearer' + ' ' + jwt}};
     axios.get(url, config)
     .then((response) => {
       console.log(response.data);
@@ -309,7 +309,7 @@ export function editCamera(user, cameraId, cameraData) {
     dispatch(editCameraInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Auth: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = cameraData;
 
     axios.patch(url, data, config)
@@ -343,7 +343,7 @@ export function deleteCamera(user, cameraGroupsId, cameraId) {
     dispatch(deleteCameraError(''));
     dispatch(deleteCameraInProcess(true));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupsId}/cameras/${cameraId}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Auth: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.delete(url, config)
       .then((response) => {
         dispatch(fetchCameraGroups(user));
@@ -376,7 +376,7 @@ export function deleteCamera(user, cameraGroupsId, cameraId) {
 export function toggleCameraEnabled(user, cameraGroup, cameraId, flag) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Auth: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {enabled: flag}
     axios.patch(url, data, config)
       .then((response) => {
@@ -395,7 +395,7 @@ export function toggleCameraEnabled(user, cameraGroup, cameraId, flag) {
 export function checkCameraEnabled(user, cameraGroup, cameraId) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Auth: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
         dispatch(cameraConnectionEnabled(response.data.enabled, cameraId));

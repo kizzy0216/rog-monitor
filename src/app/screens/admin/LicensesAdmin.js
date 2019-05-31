@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import * as usersActions from '../../redux/users/actions';
 
 class LicensesAdmin extends Component {
   constructor(props) {
@@ -20,12 +21,15 @@ const styles={};
 
 const mapStateToProps = (state) => {
   return {
-    user: state.auth.user
+    userData: state.users.userData,
+    updateUserError: state.users.updateUserError,
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    actions: bindActionCreators(usersActions, dispatch)
+  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LicensesAdmin);

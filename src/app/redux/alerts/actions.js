@@ -144,7 +144,7 @@ export function fetchAlerts(user) {
     let currentPage = 1;
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}}
+    let config = {headers: {Auth: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {
         if (!isEmpty(response.data)) {
@@ -186,7 +186,7 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
     let currentPage = page;
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}}
+    let config = {headers: {Auth: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {
         if (!isEmpty(response.data)) {
@@ -220,7 +220,7 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
 export function markUserAlertsViewed(user) {
   return(dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}}
+    let config = {headers: {Auth: 'Bearer '+user.jwt}}
     let data = '';
     axios.patch(url, data, config)
       .then((response) => {
@@ -235,7 +235,7 @@ export function deleteAlert(user, alertId) {
     dispatch(deleteError(''));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts/${alertId}`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let config = {headers: {Auth: 'Bearer '+user.jwt}};
     axios.delete(url, config)
       .then(response => {
         dispatch(deleteSuccess(alertId));

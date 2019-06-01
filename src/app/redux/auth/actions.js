@@ -194,7 +194,7 @@ export function checkLogin() {
     const jwt = sessionStorage.getItem('jwt');
     if (jwt) {
       let url = `${process.env.REACT_APP_ROG_API_URL}/users`;
-      axios.get(url, {headers: {Auth: 'Bearer'+' '+jwt}})
+      axios.get(url, {headers: {Authorization: 'Bearer'+' '+jwt}})
         .then(resp => {
           const user = {
             ...resp.data,

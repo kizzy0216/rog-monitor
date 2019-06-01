@@ -12,7 +12,7 @@ function readSystemConfigurationsSuccess(systemConfigurations) {
 export function readSystemConfigurations() {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/system-configurations`;
-    let config = {headers: {Auth: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.get(url, config)
     .then(response => {
@@ -33,7 +33,7 @@ export function readSystemConfigurations() {
 export function updateSystemConfiguration(systemConfigurationId, key, value) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/system-configurations`;
-    let config = {headers: {Auth: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
       system_configuration_id: systemConfigurationId,
       key:  key,

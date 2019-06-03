@@ -38,6 +38,13 @@ function updateUserSuccess(bool, user) {
   }
 }
 
+function updateUserCameraLicenseData(data) {
+  return {
+    type: types.UPDATE_USER_CAMERA_LICENSE_DATA,
+    cameraLicenseData: data
+  }
+}
+
 export function fetchUserCameraLicenses(user) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/licenses`;
@@ -370,14 +377,14 @@ export function deleteUserAdmin(user_id) {
 
 export function createUserLicense(user, numberToAdd) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/licenses`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/licenses`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
       number_to_add: numberToAdd
     };
     axios.post(url, data, config)
       .then((response) => {
-        console.log(response);
+        dispatch(readUserCameraLicensesAdmin(user));
       })
       .catch((error) => {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
@@ -393,16 +400,16 @@ export function createUserLicense(user, numberToAdd) {
 
 export function readUserCameraLicensesAdmin(user) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/licenses`;
+    dispatch(updateUserData({}));
+    dispatch(updateUserCameraLicenseData({}));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/licenses`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
         if (!isEmpty(response.data)) {
-          user = {
-            cameraLicenses: response.data
-          }
+          dispatch(updateUserData(user));
+          dispatch(updateUserCameraLicenseData(response.data));
         }
-        dispatch(updateUserData(user));
       })
       .catch((error) => {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
@@ -418,7 +425,7 @@ export function readUserCameraLicensesAdmin(user) {
 
 export function updateUserLicense(user, license) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/licenses/${license.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/licenses/${license.id}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
       tier_0: license.tier_0,
@@ -427,7 +434,7 @@ export function updateUserLicense(user, license) {
     };
     axios.patch(url, data, config)
       .then((response) => {
-        console.log(response);
+        dispatch(readUserCameraLicensesAdmin(user));
       })
       .catch((error) => {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
@@ -441,13 +448,14 @@ export function updateUserLicense(user, license) {
   }
 }
 
-export function deleteUserLicenseAdmin(user, license_id) {
+export function deleteUserLicenseAdmin(user, license) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/licenses/${license.id}`;
+    console.log(license['id']);
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/licenses/${license['id']}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.delete(url, config)
       .then((response) => {
-        console.log(response);
+        dispatch(readUserCameraLicensesAdmin(user));
       })
       .catch((error) => {
         let errMessage = 'Error fetching user licnese data. Please try again later.';

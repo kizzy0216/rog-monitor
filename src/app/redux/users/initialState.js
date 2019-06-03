@@ -3,4 +3,5 @@ export default {
   updateUserError: '',
   updateUserSuccess: false,
   userData: {},
+  cameraLicenseData: {}
 }

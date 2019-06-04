@@ -22,6 +22,15 @@ const UsersForm = Form.create()(
             <InputNumber placeholder="Enter id" />
           )}
         </Form.Item>
+        <Form.Item label="Email" hasFeedback>
+          {getFieldDecorator('email', {
+            rules: [
+              {type: 'string', message: 'Please enter a valid string'}
+            ]
+          })(
+            <Input placeholder="Enter Email" />
+          )}
+        </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">Submit</Button>
         </Form.Item>
@@ -48,10 +57,13 @@ class UsersAdmin extends Component {
     e.preventDefault();
     this.form.validateFields((err, values) => {
       if (!err) {
-        this.props.actions.readUserAdmin(values);
+        if (values.email !== undefined) {
+          this.props.actions.readUserByEmailAdmin(values);
+        } else {
+          this.props.actions.readUserByIdAdmin(values);
+        }
       }
     });
-
   };
 
   saveFormRef = (form) => {

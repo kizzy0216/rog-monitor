@@ -302,9 +302,33 @@ export function deleteUserDevice(userId, deviceId, token) {
   }
 }
 
-export function readUserAdmin(values) {
+export function readUserByIdAdmin(values) {
   return (dispatch) => {
+    dispatch(updateUserData({}));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${values.user_id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+      .then((response) => {
+        if (response.hasOwnProperty('data')) {
+          dispatch(updateUserData(response.data));
+        }
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching user';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
+      });
+  }
+}
+
+export function readUserByEmailAdmin(values) {
+  return (dispatch) => {
+    dispatch(updateUserData({}));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users?email=${values.email}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {

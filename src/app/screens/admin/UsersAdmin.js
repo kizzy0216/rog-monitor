@@ -64,6 +64,7 @@ class UsersAdmin extends Component {
         }
       }
     });
+    this.form.resetFields();
   };
 
   saveFormRef = (form) => {

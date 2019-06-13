@@ -409,7 +409,6 @@ export function createCameraGroup(user) {
 
     axios.post(url, data, config)
     .then((response) => {
-      console.log(response);
       dispatch(readAllCameraGroupsForUser(user));
     })
     .catch((error) => {
@@ -419,7 +418,6 @@ export function createCameraGroup(user) {
           errMessage = error.response.data['Error'];
         }
       }
-      console.log(errMessage);
       dispatch(editCameraGroupError(errMessage));
       dispatch(readAllCameraGroupsForUser(user));
     })
@@ -491,7 +489,6 @@ export function deleteCameraGroup(user, values) {
 
     axios.delete(url, config)
     .then((response) => {
-      console.log(response);
       dispatch(readAllCameraGroupsForUser(user));
     })
     .catch((error) => {

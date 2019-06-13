@@ -7,6 +7,7 @@ import * as types from './actionTypes';
 
 import { trackEventAnalytics } from "../auth/actions";
 import {updatePreviewImage, fetchCameraGroupCameras} from "../cameras/actions";
+import { updateUserData } from "../users/actions";
 import { locale } from 'moment';
 import {isEmpty} from '../helperFunctions';
 
@@ -28,6 +29,13 @@ function fetchSuccess(cameraGroups) {
   return {
     type: types.FETCH_CAMERA_GROUPS_SUCCESS,
     cameraGroups
+  }
+}
+
+function fetchSuccessAdmin(cameraGroupsAdmin) {
+  return {
+    type: types.FETCH_CAMERA_GROUPS_ADMIN,
+    cameraGroupsAdmin
   }
 }
 
@@ -390,5 +398,111 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
         dispatch(editCameraGroupError(''));
         dispatch(editCameraGroupInProcess(false));
       });
+  }
+}
+
+export function createCameraGroup(user) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/camera-groups`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data = {};
+
+    axios.post(url, data, config)
+    .then((response) => {
+      console.log(response);
+      dispatch(readAllCameraGroupsForUser(user));
+    })
+    .catch((error) => {
+      let errMessage = 'Error creating camera group. Please try again later.';
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
+      }
+      console.log(errMessage);
+      dispatch(editCameraGroupError(errMessage));
+      dispatch(readAllCameraGroupsForUser(user));
+    })
+  }
+}
+
+export function readAllCameraGroupsForUser(user) {
+  return (dispatch) => {
+    dispatch(fetchSuccessAdmin([]));
+    dispatch(editCameraGroupError(""));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/camera-groups`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    axios.get(url, config)
+    .then((response) => {
+      if (!isEmpty(response.data)) {
+        dispatch(fetchSuccessAdmin(response.data));
+        dispatch(updateUserData(user));
+      } else if (isEmpty(response.data)) {
+        dispatch(editCameraGroupError("No camera groups found."));
+      }
+    })
+    .catch((error) => {
+      let errMessage = 'Error fetching camera groups. Please try again later.';
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
+      }
+      dispatch(editCameraGroupError(errMessage));
+    })
+  }
+}
+
+export function updateCameraGroup(user, values) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/camera-groups/${values.id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let vacation_mode = 0;
+    if (values.vacation_mode == "true" || values.vacation_mode == true) {
+      vacation_mode = 1;
+    }
+    let data = {
+      name: values.name,
+      vacation_mode: vacation_mode
+    };
+
+    axios.patch(url, data, config)
+    .then((response) => {
+      dispatch(readAllCameraGroupsForUser(user));
+    })
+    .catch((error) => {
+      let errMessage = 'Error updating camera group. Please try again later.';
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
+      }
+      dispatch(editCameraGroupError(errMessage));
+      dispatch(readAllCameraGroupsForUser(user));
+    })
+  }
+}
+
+export function deleteCameraGroup(user, values) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/camera-groups/${values.id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    axios.delete(url, config)
+    .then((response) => {
+      console.log(response);
+      dispatch(readAllCameraGroupsForUser(user));
+    })
+    .catch((error) => {
+      let errMessage = 'Error deleting camera group. Please try again later.';
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
+      }
+      dispatch(editCameraGroupError(errMessage));
+      dispatch(readAllCameraGroupsForUser(user));
+    })
   }
 }

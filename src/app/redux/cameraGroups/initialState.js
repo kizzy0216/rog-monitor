@@ -1,5 +1,6 @@
 export default {
   cameraGroups: [],
+  cameraGroupsAdmin: [],
   selectedCameraGroup: {id: null, name: null, cameras: [], userCameraGroupPrivileges: []},
   fetchInProcess: false,
   fetchError: false,

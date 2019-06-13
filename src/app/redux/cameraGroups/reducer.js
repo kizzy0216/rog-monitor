@@ -10,6 +10,12 @@ const cameraGroups = (state = initialState, action) => {
         selectedCameraGroup: action.cameraGroups.find(cameraGroup => cameraGroup.id === state.selectedCameraGroup.id) || state.selectedCameraGroup
       }
 
+    case types.FETCH_CAMERA_GROUPS_ADMIN:
+      return {
+        ...state,
+        cameraGroupsAdmin: action.cameraGroupsAdmin
+      }
+
     case types.FETCH_CAMERA_GROUPS_IN_PROCESS:
       return {
         ...state,

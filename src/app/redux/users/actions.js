@@ -431,9 +431,9 @@ export function readUserCameraLicensesAdmin(user) {
     axios.get(url, config)
       .then((response) => {
         if (!isEmpty(response.data)) {
-          dispatch(updateUserData(user));
           dispatch(updateUserCameraLicenseData(response.data));
         }
+        dispatch(updateUserData(user));
       })
       .catch((error) => {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
@@ -474,7 +474,6 @@ export function updateUserLicense(user, license) {
 
 export function deleteUserLicenseAdmin(user, license) {
   return (dispatch) => {
-    console.log(license['id']);
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/licenses/${license['id']}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.delete(url, config)

@@ -1,4 +1,5 @@
 export default {
+  camerasAdmin: [],
   authRtspUrl: null,
   fetchInProcess: false,
   fetchError: '',

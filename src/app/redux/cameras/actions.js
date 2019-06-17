@@ -156,6 +156,13 @@ function cameraConnectionEnabled(bool, cameraId) {
   }
 }
 
+function fetchSuccessAdmin(camerasAdmin) {
+  return {
+    type: types.FETCH_SUCCESS_ADMIN,
+    camerasAdmin
+  }
+}
+
 export function fetchCameraGroupCameras(user, cameraGroup) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras`;
@@ -409,5 +416,127 @@ export function checkCameraEnabled(user, cameraGroup, cameraId) {
           console.log(errMessage);
         }
       })
+  }
+}
+
+export function createCameraAdmin(user, values) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${values.camera_groups_id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    axios.get(url, config)
+    .then((response) => {
+      if (!isEmpty(response.data)) {
+        let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${values.camera_groups_id}/cameras`;
+        let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+        values.camera_groups_name = response.data.name;
+        let data = JSON.parse(JSON.stringify(values));
+        delete data.camera_groups_id;
+
+        axios.post(url, data, config)
+        .then((response) => {
+          dispatch(readCamerasInGroupAdmin(user, values));
+        })
+        .catch((error) => {
+          let errMessage = 'Error creating camera. Please try again later.';
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
+          }
+          dispatch(editCameraError(errMessage));
+        })
+      }
+    })
+    .catch((error) => {
+      let errMessage = 'Error fetching camera groups. Please try again later.';
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
+      }
+      dispatch(editCameraError(errMessage));
+    })
+  }
+}
+
+export function readCamerasInGroupAdmin(user, values) {
+  return (dispatch) => {
+    dispatch(fetchSuccessAdmin([]));
+    dispatch(editCameraError(""));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${values.camera_groups_id}/cameras`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    axios.get(url, config)
+    .then((response) => {
+      if (!isEmpty(response.data)) {
+        dispatch(fetchSuccessAdmin(response.data));
+      } else if (isEmpty(response.data)) {
+        dispatch(editCameraError("No cameras found."));
+        dispatch(editCameraError(""));
+      }
+    })
+    .catch((error) => {
+      let errMessage = 'Error fetching cameras. Please try again later.';
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
+      }
+      dispatch(editCameraError(errMessage));
+    })
+  }
+}
+
+export function updateCameraAdmin(user, values) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${values.camera_groups_id}/cameras/${values.id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data = JSON.parse(JSON.stringify(values));
+    delete data.key;
+    delete data.id;
+    delete data.camera_groups_id;
+    delete data.reco_camera_url;
+    delete data.camera_url;
+    delete data.thumbnail_url;
+    delete data.magic_camera_box;
+    delete data.tags;
+    data.vacation_mode = values.vacation_mode == "true" ? 1 : 0;
+    data.enabled = values.enabled == "true" ? 1 : 0;
+
+    axios.patch(url, data, config)
+    .then((response) => {
+      dispatch(readCamerasInGroupAdmin(user, values));
+    })
+    .catch((error) => {
+      let errMessage = 'Error updating camera. Please try again later.';
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
+      }
+      dispatch(editCameraError(errMessage));
+    })
+  }
+}
+
+export function deleteCameraAdmin(user, values) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${values.camera_groups_id}/cameras/${values.id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    axios.delete(url, config)
+    .then((response) => {
+      dispatch(readCamerasInGroupAdmin(user, values));
+    })
+    .catch((error) => {
+      let errMessage = 'Error deleting camera. Please try again later.';
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
+      }
+      dispatch(editCameraError(errMessage));
+    })
   }
 }

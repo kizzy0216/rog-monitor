@@ -56,6 +56,13 @@ class LicensesAdmin extends Component {
     this.form = form;
   };
 
+  handleAdd = () => {
+    console.log(this.props.userData);
+    if (!isEmpty(this.props.userData)) {
+      this.props.actions.createUserLicense(this.props.userData, 1);
+    }
+  };
+
   render(){
     const data = [];
     if (!isEmpty(this.props.cameraLicenseData)) {
@@ -75,6 +82,9 @@ class LicensesAdmin extends Component {
             ref={this.saveFormRef}
             handleSubmit={this.handleSubmit}
           />
+          <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+            Add a License
+          </Button>
           <EditableTable
             data={data}
             userData={this.props.userData}
@@ -89,6 +99,9 @@ class LicensesAdmin extends Component {
             ref={this.saveFormRef}
             handleSubmit={this.handleSubmit}
           />
+          <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+            Add a License
+          </Button>
         </div>
       )
     }
@@ -253,10 +266,6 @@ class EditableTable extends React.Component {
     this.props.actions.deleteUserLicenseAdmin(this.props.userData, dataSource.filter(item => item.key == key)[0]);
   };
 
-  handleAdd = () => {
-    this.props.actions.createUserLicense(this.props.userData, 1);
-  };
-
   handleSave = row => {
     const newData = [...this.state.dataSource];
     const index = newData.findIndex(item => row.key === item.key);
@@ -294,9 +303,6 @@ class EditableTable extends React.Component {
     });
     return (
       <div>
-        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-          Add a row
-        </Button>
         <Table
           components={components}
           rowClassName={() => 'editable-row'}

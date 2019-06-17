@@ -130,6 +130,12 @@ const cameras = (state = initialState, action) => {
         alert_windows: action.alert_windows
       }
 
+    case types.FETCH_SUCCESS_ADMIN:
+      return {
+        ...state,
+        camerasAdmin: action.camerasAdmin
+      }
+
     default:
       return state;
   }

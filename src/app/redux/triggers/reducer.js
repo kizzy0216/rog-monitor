@@ -140,6 +140,16 @@ const triggers = (state = initialState, action) => {
         ...state,
         polygonData: action.polygonData
       }
+    case types.FETCH_POLYGON_TRIGGER_SUCCESS_ADMIN:
+      return {
+        ...state,
+        polygonDataAdmin: action.polygonDataAdmin
+      }
+    case types.FETCH_POLYGON_TRIGGER_ERROR_ADMIN:
+      return {
+        ...state,
+        fetchTriggerErrorAdmin: action.fetchTriggerErrorAdmin
+      }
     case types.FETCH_POLYGON_TRIGGER_IN_SUCCESS:
       return {
         ...state,

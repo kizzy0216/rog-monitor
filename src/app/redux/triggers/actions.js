@@ -35,6 +35,20 @@ function fetchTriggersSuccess(polygonData) {
   }
 }
 
+function fetchTriggersSuccessAdmin(polygonDataAdmin) {
+  return{
+    type: types.FETCH_POLYGON_TRIGGER_SUCCESS_ADMIN,
+    polygonDataAdmin: polygonDataAdmin
+  }
+}
+
+function fetchTriggerErrorAdmin(fetchTriggerErrorAdmin) {
+  return {
+    type: types.FETCH_POLYGON_TRIGGER_ERROR_ADMIN,
+    fetchTriggerErrorAdmin: fetchTriggerErrorAdmin
+  }
+}
+
 function fetchTriggersInSuccess(bool) {
   return{
     type: types.FETCH_POLYGON_TRIGGER_IN_SUCCESS,
@@ -344,6 +358,128 @@ export function deleteTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
       .finally(() => {
         dispatch(deleteTriggerTimeWindowInProcess(false));
         dispatch(deleteTriggerTimeWindowSuccess(false));
+      })
+  }
+}
+
+export function fetchTriggersAdmin(user, values) {
+  return (dispatch) => {
+    dispatch(fetchTriggersSuccessAdmin(""));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${values.camera_groups_id}/cameras/${values.cameras_id}/triggers`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    axios.get(url, config)
+      .then((response) => {
+        if (isEmpty(response.data)) {
+          response.data = [];
+          dispatch(fetchTriggerErrorAdmin("No Triggers Found."));
+        } else {
+          dispatch(fetchTriggersSuccessAdmin(response.data));
+        }
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching triggers';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(fetchTriggerErrorAdmin(errMessage));
+      })
+      .finally(() => {
+        dispatch(fetchTriggerErrorAdmin(""));
+      })
+  }
+}
+
+export function deleteTriggerAdmin(user, values, camerasId, cameraGroupId) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${camerasId}/triggers/${values.base_triggers_id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    axios.delete(url, config)
+      .then((response) => {
+        let values = {
+          id: cameraGroupId,
+          cameras_id: camerasId
+        };
+        dispatch(fetchTriggersAdmin(user, values));
+      })
+      .catch((error) => {
+        let errMessage = 'Error deleting trigger'
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(fetchTriggerErrorAdmin(errMessage));
+      })
+      .finally(() => {
+        dispatch(fetchTriggerErrorAdmin(""));
+      })
+  }
+}
+
+export function updateTriggerTimeWindowAdmin(user, values, trigger, cameraGroupId) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${trigger.cameras_id}/triggers/${trigger.id}/trigger-time-windows/${values.id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data = {
+      days_of_week: values.days_of_week,
+      start_at: values.start_at,
+      end_at: values.end_at
+    };
+
+    axios.patch(url, data, config)
+      .then((response) => {
+        // enter response here.
+      })
+      .catch((error) => {
+        console.log(error);
+        let errMessage = 'Error updating trigger time window';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(fetchTriggerErrorAdmin(errMessage));
+        let values = {
+          id: cameraGroupId,
+          cameras_id: trigger.cameras_id
+        };
+        dispatch(fetchTriggersAdmin(user, values));
+      })
+      .finally(() => {
+        dispatch(fetchTriggerErrorAdmin(""));
+      })
+  }
+}
+
+export function deleteTriggerTimeWindowAdmin(user, triggerTimeWindow, camerasId, cameraGroupId) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${camerasId}/triggers/${triggerTimeWindow.triggers_id}/trigger-time-windows/${triggerTimeWindow.id}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    axios.delete(url, config)
+      .then((response) => {
+        console.log(response);
+        let values = {
+          id: cameraGroupId,
+          cameras_id: camerasId
+        };
+        dispatch(fetchTriggersAdmin(user, values));
+      })
+      .catch((error) => {
+        let errMessage = 'Error deleting trigger time window';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(fetchTriggerErrorAdmin(errMessage));
+      })
+      .finally(() => {
+        dispatch(fetchTriggerErrorAdmin(""));
       })
   }
 }

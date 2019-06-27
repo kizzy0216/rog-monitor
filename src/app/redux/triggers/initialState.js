@@ -15,5 +15,7 @@ export default {
   deleteTriggerTimeWindowInProcess: false,
   deleteTriggerTimeWindowSuccess: false,
   polygonData: [],
-  triggerTimeWindows: []
+  triggerTimeWindows: [],
+  polygonDataAdmin: [],
+  fetchTriggerErrorAdmin: ""
 }

@@ -319,7 +319,6 @@ export function login(email, password) {
       let url = `${process.env.REACT_APP_ROG_API_URL}/authenticate`;
       axios.post(url, {email: cleanEmail, password: cleanPassword})
         .then((response) => {
-          sessionStorage.setItem('aws_s3_url', response.data.aws_s3_url);
           dispatch(readUser(response.data.jwt, window.jwtTokenRefresh, cleanEmail, cleanPassword));
         })
         .catch((error) => {

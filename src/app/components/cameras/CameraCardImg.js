@@ -25,13 +25,13 @@ class CameraCardImg extends Component {
     if (nextProps.data.imageUpdateInProgress && nextProps.data.id === nextProps.data.imageUpdateInProgressId) {
       this.setState({image: loading});
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraId == nextProps.data.id) {
-      this.setState({image: sessionStorage.getItem('aws_s3_url')+nextProps.data.refreshCameraImage});
+      this.setState({image: nextProps.data.refreshCameraImage});
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailId === nextProps.data.id) {
       this.setState({image: cameraConnectError});
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.id == nextProps.data.cameraGroup.cameras[i].id && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
-          this.setState({image: sessionStorage.getItem('aws_s3_url')+nextProps.data.cameraGroup.cameras[i].thumbnail_url});
+          this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
         }
       }
     }

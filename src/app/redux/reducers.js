@@ -8,6 +8,7 @@ import invites from './invites/reducer';
 import users from './users/reducer';
 import triggers from './triggers/reducer';
 import systemConfigurations from './systemConfiguration/reducer';
+import recos from './recos/reducer';
 
 export default combineReducers({
   auth,
@@ -17,5 +18,6 @@ export default combineReducers({
   invites,
   users,
   triggers,
-  systemConfigurations
+  systemConfigurations,
+  recos
 });

@@ -20,7 +20,7 @@ export function readAllRecos() {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/recos`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-
+    dispatch(readRecosSuccess(""));
     axios.get(url, config)
     .then(response => {
       console.log(response.data);

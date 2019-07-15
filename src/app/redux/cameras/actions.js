@@ -168,14 +168,14 @@ export function fetchCameraGroupCameras(user, cameraGroup) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
-      .then(response => {
+      .then((response) => {
         if (isEmpty(response.data) === false) {
           cameraGroup.cameras = response.data;
         } else {
           cameraGroup.cameras = [];
         }
       })
-      .catch(error => {
+      .catch((error) => {
         cameraGroup.cameras = [];
       })
       .finally(() =>{

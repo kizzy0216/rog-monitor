@@ -57,7 +57,6 @@ class LicensesAdmin extends Component {
   };
 
   handleAdd = () => {
-    console.log(this.props.userData);
     if (!isEmpty(this.props.userData)) {
       this.props.actions.createUserLicense(this.props.userData, 1);
     }

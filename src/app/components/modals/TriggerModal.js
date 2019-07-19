@@ -341,22 +341,22 @@ class AddTriggerModal extends Component {
     if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
       if (nextProps.fetchTriggerSuccess === true && !isEmpty(nextProps.polygonData)) {
         this.setState({canvasMode: true});
-        if (this.triggerDetails.currentTriggerId !== null) {
-          this.setTriggerTimeWindows(nextProps.polygonData, this.triggerDetails.currentTriggerId);
+        if (this.triggerDetails.currentTriggerUuid !== null) {
+          this.setTriggerTimeWindows(nextProps.polygonData, this.triggerDetails.currentTriggerUuid);
         }
       }
-      if (nextProps.createTriggerSuccess !== this.props.createTriggerSuccess && this.triggerDetails['id'] !== undefined) {
+      if (nextProps.createTriggerSuccess !== this.props.createTriggerSuccess && this.triggerDetails['uuid'] !== undefined) {
         this.setState({canvasMode: false});
         this.setState({triggers: true});
         this.setState({deleteButton: false});
-        this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['id']);
-        this.triggerDetails['id'] = undefined;
+        this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['uuid']);
+        this.triggerDetails['uuid'] = undefined;
         this.setState({saveCancel: false});
       }
-      if (nextProps.deleteTriggerSuccess !== this.props.deleteTriggerSuccess && this.triggerDetails['id'] !== undefined) {
+      if (nextProps.deleteTriggerSuccess !== this.props.deleteTriggerSuccess && this.triggerDetails['uuid'] !== undefined) {
         this.setState({canvasMode: false});
-        this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['id']);
-        this.triggerDetails['id'] = undefined;
+        this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['uuid']);
+        this.triggerDetails['uuid'] = undefined;
         this.setState({deleteButton: false});
         this.setState({saveCancel: false});
       }
@@ -365,21 +365,21 @@ class AddTriggerModal extends Component {
       this.setState({canvasMode: true});
     }
     for (var i = 0; i < this.props.data.cameraGroup.userCameraGroupPrivileges.length; i++) {
-      if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].users_id === nextProps.data.user.id) {
-        if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].user_privileges_ids.includes(0)) {
+      if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].users_uuid === nextProps.data.user.uuid) {
+        if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].user_privilege_ids.includes(0)) {
           this.setState({cameraGroupOwner: true});
         }
       }
     }
     for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
-      if (nextProps.data.id == nextProps.data.cameraGroup.cameras[i].id) {
+      if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid) {
         this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
       }
     }
   }
 
   triggerDetails = {
-    currentTriggerId: null,
+    currentTriggerUuid: null,
     currentTriggerType: '',
     polygonPoints: [],
     direction: ''
@@ -392,8 +392,8 @@ class AddTriggerModal extends Component {
     });
   }
 
-  triggerExtras(id, type, duration) {
-    this.triggerDetails.currentTriggerId = id;
+  triggerExtras(uuid, type, duration) {
+    this.triggerDetails.currentTriggerUuid = uuid;
     this.triggerDetails.currentTriggerType = type;
     this.setState({loiteringSeconds: duration});
     this.setState({deleteButton: true});
@@ -430,10 +430,10 @@ class AddTriggerModal extends Component {
       trigger('Sorry, trigger creation not currently supported on mobile devices.');
     } else {
       this.setState({visible: true});
-      this.triggerDetails['id'] = this.props.data.id;
+      this.triggerDetails['uuid'] = this.props.data.uuid;
       this.setState({saveCancel: false});
       this.setState({canvasMode: false});
-      this.triggerDetails.currentTriggerId = null;
+      this.triggerDetails.currentTriggerUuid = null;
       this.fetchTriggers(true);
     }
   };
@@ -442,19 +442,19 @@ class AddTriggerModal extends Component {
     this.setState({canvasMode: false});
     this.setState({visible: false});
     this.triggerDetails.currentTriggerType = '';
-    this.triggerDetails.currentTriggerId = null;
+    this.triggerDetails.currentTriggerUuid = null;
   };
 
   handleVisibleChange = (visibility) => {
     if (visibility === true) {
-      this.triggerDetails.currentTriggerId = null;
+      this.triggerDetails.currentTriggerUuid = null;
       this.setState({visibility});
       this.setState({canvasMode: false});
       this.setState({triggers: false});
       this.setState({deleteButton: false});
       this.triggerDetails.currentTriggerType = '';
     } else {
-      this.triggerDetails.currentTriggerId = null;
+      this.triggerDetails.currentTriggerUuid = null;
       this.setState({deleteButton: false});
       this.setState({visibility});
       this.setState({canvasMode: false});
@@ -505,7 +505,7 @@ class AddTriggerModal extends Component {
     if (event === 'save') {
       if (this.triggerDetails.polygonPoints.length !== 0) {
         this.triggerDetails.currentTriggerType = '';
-        this.triggerDetails['id'] = this.props.data.id;
+        this.triggerDetails['uuid'] = this.props.data.uuid;
         this.form.validateFields((err, values) => {
           if (err) {
             return;
@@ -529,16 +529,16 @@ class AddTriggerModal extends Component {
           }
           switch (this.state.triggerType) {
             case 'RA':
-              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['id'], null, null, values.trigger_windows, values.shared);
+              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], null, null, values.trigger_windows, values.shared);
               break;
 
             case 'LD':
-              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['id'], this.state.loiteringSeconds, null, values.trigger_windows, values.shared);
+              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], this.state.loiteringSeconds, null, values.trigger_windows, values.shared);
               this.setState({loiteringSeconds: 0});
               break;
 
             case 'VW':
-              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['id'], null, this.triggerDetails.direction, values.trigger_windows, values.shared);
+              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], null, this.triggerDetails.direction, values.trigger_windows, values.shared);
               break;
           }
         });
@@ -550,7 +550,7 @@ class AddTriggerModal extends Component {
         message.error('please draw a trigger to save');
       }
     }
-    this.triggerDetails.currentTriggerId = null;
+    this.triggerDetails.currentTriggerUuid = null;
     this.setState({showShareOption: false});
     this.fetchTriggers(true);
   };
@@ -559,7 +559,7 @@ class AddTriggerModal extends Component {
     if (checked === true) {
       this.setState({triggers: true});
       this.setState({deleteButton: false});
-      this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['id']);
+      this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['uuid']);
     } else {
       this.setState({canvasMode: false});
       this.setState({triggers: false});
@@ -568,10 +568,10 @@ class AddTriggerModal extends Component {
   };
 
   deleteTrigger = () => {
-    if (this.triggerDetails.currentTriggerId !== 0 && this.triggerDetails.currentTriggerType !== '') {
-      this.triggerDetails['id'] = this.props.data.id;
-      this.props.deleteTrigger(this.props.data.user, this.props.data.camera_groups_id, this.triggerDetails['id'], this.triggerDetails.currentTriggerId);
-      this.triggerDetails.currentTriggerId = null;
+    if (this.triggerDetails.currentTriggerUuid !== 0 && this.triggerDetails.currentTriggerType !== '') {
+      this.triggerDetails['uuid'] = this.props.data.uuid;
+      this.props.deleteTrigger(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails['uuid'], this.triggerDetails.currentTriggerUuid);
+      this.triggerDetails.currentTriggerUuid = null;
       this.triggerDetails.currentTriggerType = '';
     }
   };
@@ -667,9 +667,9 @@ class AddTriggerModal extends Component {
     }
   }
 
-  setTriggerTimeWindows = (polygonData, selectedPolygonId) => {
+  setTriggerTimeWindows = (polygonData, selectedPolygonUuid) => {
     for (var i = 0; i < polygonData.length; i++) {
-      if (polygonData[i].id == selectedPolygonId) {
+      if (polygonData[i].uuid == selectedPolygonUuid) {
         this.form.resetFields('time_window_select');
         this.form.resetFields('days_of_week');
         this.form.setFieldsValue({start_at: null});
@@ -690,11 +690,11 @@ class AddTriggerModal extends Component {
         trigger_windows.end_at = values.end_at.format('HH:mmZ').toString();
         trigger_windows.days_of_week = values.days_of_week;
         if (this.state.showShareOption) {
-          this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_id, this.triggerDetails.id, this.triggerDetails.currentTriggerId, trigger_windows);
+          this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows);
           this.setState({showShareOption: false});
         } else {
-          trigger_windows.id = this.props.triggerTimeWindows[values.time_window_select].id;
-          this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_id, this.triggerDetails.id, this.triggerDetails.currentTriggerId, trigger_windows);
+          trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
+          this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows);
         }
       }
     });
@@ -707,8 +707,8 @@ class AddTriggerModal extends Component {
       }
       if (typeof values.time_window_select != 'undefined') {
         let trigger_windows = {};
-        trigger_windows.id = this.props.triggerTimeWindows[values.time_window_select].id;
-        this.props.deleteTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_id, this.triggerDetails.id, this.triggerDetails.currentTriggerId, trigger_windows);
+        trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
+        this.props.deleteTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows);
       }
     });
   }
@@ -861,16 +861,16 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    createTrigger: (user, triggerCoordinates, triggerType, cameraGroupId, cameraId, triggerDuration, direction, timeWindows, shared) => dispatch(createTrigger(user, triggerCoordinates, triggerType, cameraGroupId, cameraId, triggerDuration, direction, timeWindows, shared)),
-    fetchTriggers: (user, cameraGroup, cameraId) => dispatch(fetchTriggers(user, cameraGroup, cameraId)),
-    deleteTrigger: (user, cameraGroupId, cameraId, baseTriggersId) => dispatch(deleteTrigger(user, cameraGroupId, cameraId, baseTriggersId)),
+    createTrigger: (user, triggerCoordinates, triggerType, cameraGroupUuid, cameraUuid, triggerDuration, direction, timeWindows, shared) => dispatch(createTrigger(user, triggerCoordinates, triggerType, cameraGroupUuid, cameraUuid, triggerDuration, direction, timeWindows, shared)),
+    fetchTriggers: (user, cameraGroup, cameraUuid) => dispatch(fetchTriggers(user, cameraGroup, cameraUuid)),
+    deleteTrigger: (user, cameraGroupUuid, cameraUuid, baseTriggersUuid) => dispatch(deleteTrigger(user, cameraGroupUuid, cameraUuid, baseTriggersUuid)),
     updateTimeWindowData: (timeWindowSelect, values, fieldValue, fieldName) => dispatch(updateTimeWindowData(timeWindowSelect, values, fieldValue, fieldName)),
     clearTimeWindowData: (timeWindowSelect, values) => dispatch(clearTimeWindowData(timeWindowSelect, values)),
-    setTriggerSpecificTimeWindows: (triggers, triggerId) => dispatch(setTriggerSpecificTimeWindows(triggers, triggerId)),
+    setTriggerSpecificTimeWindows: (triggers, triggerUuid) => dispatch(setTriggerSpecificTimeWindows(triggers, triggerUuid)),
     addNewTriggerTimeWindow: (values) => dispatch(addNewTriggerTimeWindow(values)),
-    createTriggerTimeWindow: (user, cameraGroupId, cameraId, triggersId, timeWindow) => dispatch(createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, timeWindow)),
-    updateTriggerTimeWindow: (user, cameraGroupId, cameraId, triggersId, timeWindow) => dispatch(updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, timeWindow)),
-    deleteTriggerTimeWindow: (user, cameraGroupId, cameraId, baseTriggersId, timeWindow) => dispatch(deleteTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow))
+    createTriggerTimeWindow: (user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow) => dispatch(createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow)),
+    updateTriggerTimeWindow: (user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow) => dispatch(updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow)),
+    deleteTriggerTimeWindow: (user, cameraGroupUuid, cameraUuid, baseTriggersUuid, timeWindow) => dispatch(deleteTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, baseTriggersUuid, timeWindow))
   }
 };
 

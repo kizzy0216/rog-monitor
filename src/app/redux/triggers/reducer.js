@@ -22,7 +22,7 @@ const triggers = (state = initialState, action) => {
       }
 
     case types.NEW_TRIGGER:
-      if (state.newTriggers.filter(trigger => trigger.id).includes(action.trigger.id)) {
+      if (state.newTriggers.filter(trigger => trigger.uuid).includes(action.trigger.uuid)) {
         return state;
       }
       else {
@@ -68,7 +68,7 @@ const triggers = (state = initialState, action) => {
     case types.DELETE_TRIGGER_SUCCESS:
       return {
         ...state,
-        triggers: state.triggers.filter(trigger => trigger.id != action.triggerId)
+        triggers: state.triggers.filter(trigger => trigger.uuid != action.triggerUuid)
       }
 
     case types.CREATE_TRIGGER_TIME_WINDOW_IN_PROCESS:

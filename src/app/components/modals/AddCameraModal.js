@@ -193,7 +193,7 @@ const mapStateToProps = (state) => {
     addCameraInProcess: state.cameras.addCameraInProcess,
     addedCameraData: state.cameras.addedCameraData,
     cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
-    cameraConnectionId: state.cameras.cameraConnectionId,
+    cameraConnectionUuid: state.cameras.cameraConnectionUuid,
     cameraConnectionFail: state.cameras.cameraConnectionFail
   }
 }

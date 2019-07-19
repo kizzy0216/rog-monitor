@@ -52,10 +52,10 @@ function deleteError(error) {
   }
 }
 
-function deleteSuccess(alertId) {
+function deleteSuccess(alertUuid) {
   return {
     type: types.DELETE_ALERT_SUCCESS,
-    alertId
+    alertUuid
   }
 }
 
@@ -93,7 +93,7 @@ function handleNewAlert(user, payload) {
     payload.data.trigger_type = 'Loitering Detected';
   }
   let alert = {
-    id: payload.data.id,
+    uuid: payload.data.uuid,
     type: payload.data.trigger_type,
     camera: {
       name: payload.notification.title,
@@ -143,7 +143,7 @@ export function fetchAlerts(user) {
     let itemsPerPage = 20;
     let currentPage = 1;
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {
@@ -185,7 +185,7 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
     let itemsPerPage = pageSize;
     let currentPage = page;
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {
@@ -219,7 +219,7 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
 
 export function markUserAlertsViewed(user) {
   return(dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     let data = '';
     axios.patch(url, data, config)
@@ -229,16 +229,16 @@ export function markUserAlertsViewed(user) {
   }
 }
 
-export function deleteAlert(user, alertId) {
+export function deleteAlert(user, alertUuid) {
   return (dispatch) => {
     dispatch(deleteInProcess(true));
     dispatch(deleteError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/alerts/${alertId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts/${alertUuid}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}};
     axios.delete(url, config)
       .then(response => {
-        dispatch(deleteSuccess(alertId));
+        dispatch(deleteSuccess(alertUuid));
       })
       .catch(error => {
         let errMessage = 'Error deleting alert';

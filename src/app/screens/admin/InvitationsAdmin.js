@@ -12,22 +12,22 @@ const InvitationsForm = Form.create()(
 
     return (
       <Form layout={'inline'} onSubmit={handleSubmit} style={styles.formstyles}>
-        <Form.Item label="User id" hasFeedback>
-          {getFieldDecorator('user_id', {
+        <Form.Item label="User uuid" hasFeedback>
+          {getFieldDecorator('user_uuid', {
             rules: [
               {type: 'integer', message: 'Please enter a valid integer'}
             ]
           })(
-            <InputNumber placeholder="Enter id" />
+            <InputNumber placeholder="Enter uuid" />
           )}
         </Form.Item>
-        <Form.Item label="Invitation id" hasFeedback>
-          {getFieldDecorator('invitation_id', {
+        <Form.Item label="Invitation uuid" hasFeedback>
+          {getFieldDecorator('invitation_uuid', {
             rules: [
               {type: 'integer', message: 'Please enter a valid integer'}
             ]
           })(
-            <InputNumber placeholder="Enter id" />
+            <InputNumber placeholder="Enter uuid" />
           )}
         </Form.Item>
         <Form.Item label="Email" hasFeedback>
@@ -102,9 +102,9 @@ class InvitationsAdmin extends Component {
     if (this.props.invites !== null) {
       for (var i = 0; i < this.props.invites.length; i++) {
         data[i] = {
-          key: this.props.invites[i]['id'],
-          id: this.props.invites[i]['id'],
-          users_id: this.props.invites[i]['users_id'],
+          key: this.props.invites[i]['uuid'],
+          uuid: this.props.invites[i]['uuid'],
+          users_uuid: this.props.invites[i]['users_uuid'],
           email: this.props.invites[i]['email'],
           type: this.props.invites[i]['type'],
           action: this.props.invites[i]['action'],
@@ -194,18 +194,18 @@ class EditableTable extends React.Component {
 
     this.columns = [
       {
-        title: 'Invitation id',
-        dataIndex: 'id',
+        title: 'Invitation Uuid',
+        dataIndex: 'uuid',
         editable: false,
-        sorter: (a, b) => a.id - b.id,
+        sorter: (a, b) => a.uuid - b.uuid,
         sortDirections: ['descend', 'ascend'],
         width: 150
       },
       {
-        title: 'User id',
-        dataIndex: 'user_id',
+        title: 'User uuid',
+        dataIndex: 'user_uuid',
         editable: false,
-        sorter: (a, b) => a.user_id - b.user_id,
+        sorter: (a, b) => a.user_uuid - b.user_uuid,
         sortDirections: ['descend', 'ascend'],
         width: 100
       },

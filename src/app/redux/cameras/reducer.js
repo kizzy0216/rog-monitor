@@ -66,7 +66,7 @@ const cameras = (state = initialState, action) => {
     case types.REFRESH_CAMERA_IMAGE:
       return {
         ...state,
-        refreshCameraId: action.refreshCameraId,
+        refreshCameraUuid: action.refreshCameraUuid,
         refreshCameraImage: action.refreshCameraImage
       }
 
@@ -74,21 +74,21 @@ const cameras = (state = initialState, action) => {
       return{
         ...state,
         imageUpdateInProgress: action.imageUpdateInProgress,
-        imageUpdateInProgressId: action.imageUpdateInProgressId
+        imageUpdateInProgressUuid: action.imageUpdateInProgressUuid
       }
 
     case types.REFRESH_CAMERA_ERROR:
       return{
         ...state,
         refreshCameraError: action.refreshCameraError,
-        refreshCameraErrorId: action.refreshCameraErrorId
+        refreshCameraErrorUuid: action.refreshCameraErrorUuid
       }
 
     case types.IMAGE_UPDATE_SUCCESS:
       return{
         ...state,
         imageUpdateSuccess: action.imageUpdateSuccess,
-        imageUpdateSuccessId: action.imageUpdateSuccessId
+        imageUpdateSuccessUuid: action.imageUpdateSuccessUuid
       }
 
     case types.EDIT_CAMERA_IN_PROCESS:
@@ -121,7 +121,7 @@ const cameras = (state = initialState, action) => {
       return {
         ...state,
         cameraConnectionEnabled: action.cameraConnectionEnabled,
-        cameraConnectionId: action.cameraConnectionId
+        cameraConnectionUuid: action.cameraConnectionUuid
       }
 
     case types.UPDATE_ALERT_TIME_WINDOWS_DATA:

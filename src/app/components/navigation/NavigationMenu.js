@@ -55,7 +55,7 @@ class NavigationMenu extends Component {
             <Icon type='alert' className='nav-icon' />
           </Badge>
         </Menu.Item>
-        {this.props.user.user_privileges_ids == 0 ?
+        {this.props.user.user_privilege_ids == 0 ?
           <Menu.SubMenu title={<Icon type="ellipsis" className='nav-icon' />}>
             <Menu.Item key='/system-configuration-admin'>
               <Icon type="database" className='nav-icon' /> System Configuration

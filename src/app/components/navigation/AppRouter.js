@@ -74,12 +74,12 @@ class AppRouter extends Component {
           </Sider>
 
           <Content style={styles.content}>
-              {this.props.user.user_privileges_ids == 0 ?
+              {this.props.user.user_privilege_ids == 0 ?
                 <Switch>
                   <Route path='/cameras' component={CameraList} />
-                  <Route path='/cameras/:id' component={CameraDetails} />
-                  <Route path='/camera-groups/:cameraGroupId/cameras/:id/stream' component={CameraStream} />
-                  <Route path='/cameras/new/:cameraGroupId' component={CameraCreate} />
+                  <Route path='/cameras/:uuid' component={CameraDetails} />
+                  <Route path='/camera-groups/:cameraGroupUuid/cameras/:uuid/stream' component={CameraStream} />
+                  <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
                   <Route path='/alerts' component={Alerts} />
                   <Route path='/recos-admin' component={RecosAdmin} />
                   <Route path='/users-admin' component={UsersAdmin} />
@@ -96,9 +96,9 @@ class AppRouter extends Component {
                 :
                 <Switch>
                   <Route path='/cameras' component={CameraList} />
-                  <Route path='/cameras/:id' component={CameraDetails} />
-                  <Route path='/camera-groups/:cameraGroupId/cameras/:id/stream' component={CameraStream} />
-                  <Route path='/cameras/new/:cameraGroupId' component={CameraCreate} />
+                  <Route path='/cameras/:uuid' component={CameraDetails} />
+                  <Route path='/camera-groups/:cameraGroupUuid/cameras/:uuid/stream' component={CameraStream} />
+                  <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
                   <Route path='/alerts' component={Alerts} />
                   <Redirect to='/cameras' />
                 </Switch>

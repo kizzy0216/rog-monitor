@@ -7,7 +7,7 @@ import * as cameraActions from '../redux/cameras/actions';
 
 class CameraStream extends Component {
   UNSAFE_componentWillMount = () => {
-    this.props.actions.fetchCameraUrl(this.props.user, this.props.match.params.cameraGroupId, this.props.match.params.id);
+    this.props.actions.fetchCameraUrl(this.props.user, this.props.match.params.cameraGroupUuid, this.props.match.params.id);
   }
 
   render() {

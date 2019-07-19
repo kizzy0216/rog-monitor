@@ -630,7 +630,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setTriggerSpecificTimeWindows: (triggers, triggerId) => dispatch(setTriggerSpecificTimeWindows(triggers, triggerId)),
     clearTriggerSpecificTimeWindows: () => dispatch(clearTriggerSpecificTimeWindows())
   }
 };

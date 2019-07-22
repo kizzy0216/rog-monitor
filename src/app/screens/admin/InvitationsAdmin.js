@@ -24,10 +24,10 @@ const InvitationsForm = Form.create()(
         <Form.Item label="Invitation uuid" hasFeedback>
           {getFieldDecorator('invitation_uuid', {
             rules: [
-              {type: 'integer', message: 'Please enter a valid integer'}
+              {type: 'string', message: 'Please enter a valid integer'}
             ]
           })(
-            <InputNumber placeholder="Enter uuid" />
+            <Input placeholder="Enter uuid" />
           )}
         </Form.Item>
         <Form.Item label="Email" hasFeedback>

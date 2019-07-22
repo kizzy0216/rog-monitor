@@ -366,7 +366,7 @@ class AddTriggerModal extends Component {
     }
     for (var i = 0; i < this.props.data.cameraGroup.userCameraGroupPrivileges.length; i++) {
       if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].users_uuid === nextProps.data.user.uuid) {
-        if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].user_privilege_ids.includes(0)) {
+        if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].user_camera_group_privilege_ids.includes(0)) {
           this.setState({cameraGroupOwner: true});
         }
       }

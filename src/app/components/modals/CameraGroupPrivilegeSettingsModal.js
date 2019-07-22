@@ -44,7 +44,7 @@ const UserCameraGroupSettings = (props) => {
               {userCameraGroupPrivilege.first_name} {userCameraGroupPrivilege.last_name}
             </Col>
             <Col xs={{span: 24}} style={styles.inviteAction}>
-              User Privileges: {userCameraGroupPrivilege.user_privilege_ids.includes(0) ? 'Owner' : 'Member'}
+              User Privileges: {userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ? 'Owner' : 'Member'}
             </Col>
           </Col>
           <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.removeUserCameraGroupPrivilegeInProcess ? '' : props.removeUserCameraGroupPrivilege(props.user, invite)}>

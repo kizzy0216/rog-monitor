@@ -82,7 +82,7 @@ class UsersAdmin extends Component {
           first_name: this.props.userData[i]['first_name'],
           last_name: this.props.userData[i]['last_name'],
           enabled: this.props.userData[i]['enabled'].toString(),
-          user_privilege_ids: this.props.userData[i]['user_privilege_ids'],
+          user_privileges_id: this.props.userData[i]['user_privileges_id'],
           mute: this.props.userData[i]['mute'].toString()
         }
       }
@@ -118,7 +118,7 @@ class EditableCell extends React.Component {
     if (this.props.dataIndex === 'enabled' || this.props.dataIndex === 'mute'){
       return <Select placeholder="true or false" allowClear={true} dropdownMatchSelectWidth={true} style={{ width: 80 }}><Select.Option value={true}>true</Select.Option><Select.Option value={false}>false</Select.Option></Select>;
     }
-    if (this.props.dataIndex === 'user_privilege_ids') {
+    if (this.props.dataIndex === 'user_privileges_id') {
       return <Select placeholder="Select Privilege" allowClear={true} dropdownMatchSelectWidth={true} style={{ width: 80 }}><Select.Option value={0}>admin</Select.Option><Select.Option value={1}>reco</Select.Option><Select.Option value={2}>user</Select.Option></Select>;
     }
     if (this.props.inputType === 'text') {
@@ -215,7 +215,7 @@ class EditableTable extends React.Component {
       },
       {
         title: 'User Privilege Id',
-        dataIndex: 'user_privilege_ids',
+        dataIndex: 'user_privileges_id',
         editable: true,
         width: 150
       },

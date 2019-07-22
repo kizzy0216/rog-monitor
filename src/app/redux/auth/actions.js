@@ -322,7 +322,6 @@ export function login(email, password) {
           dispatch(readUser(response.data.jwt, window.jwtTokenRefresh, cleanEmail, cleanPassword));
         })
         .catch((error) => {
-          console.log(error);
           let errMessage = 'Error logging in';
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if ('Error' in error.response.data) {

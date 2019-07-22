@@ -74,7 +74,7 @@ class AppRouter extends Component {
           </Sider>
 
           <Content style={styles.content}>
-              {this.props.user.user_privilege_ids == 0 ?
+              {this.props.user.user_privileges_id == 0 ?
                 <Switch>
                   <Route path='/cameras' component={CameraList} />
                   <Route path='/cameras/:uuid' component={CameraDetails} />

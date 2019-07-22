@@ -17,10 +17,10 @@ const UsersForm = Form.create()(
         <Form.Item label="Camera Group uuid" hasFeedback>
           {getFieldDecorator('camera_groups_uuid', {
             rules: [
-              {type: 'integer', message: 'Please enter a valid integer'}
+              {type: 'string', message: 'Please enter a valid integer'}
             ]
           })(
-            <InputNumber placeholder="Enter uuid" />
+            <Input placeholder="Enter uuid" />
           )}
         </Form.Item>
         <Form.Item>

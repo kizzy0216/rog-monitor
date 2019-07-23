@@ -23,7 +23,7 @@ class CameraStream extends Component {
     }
     else {
       return (
-        <span>{this.props.fetchErrro}</span>
+        <span>{this.props.fetchError}</span>
       )
     }
   }

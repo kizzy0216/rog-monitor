@@ -357,7 +357,6 @@ export function deleteCamera(user, cameraGroupsUuid, cameraUuid) {
         dispatch(fetchCameraGroupCameras(user, cameraGroup));
         dispatch(fetchUserCameraLicenses(user));
         dispatch(deleteCameraSuccess(true));
-        dispatch(deleteCameraSuccess(false));
       })
       .catch((error) => {
         let errMessage = 'Error deleting camera';
@@ -376,6 +375,7 @@ export function deleteCamera(user, cameraGroupsUuid, cameraUuid) {
       .finally(() => {
         dispatch(deleteCameraError(''));
         dispatch(deleteCameraInProcess(false));
+        dispatch(deleteCameraSuccess(false));
       });
   }
 }

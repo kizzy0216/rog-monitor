@@ -196,6 +196,7 @@ export function deleteInvitation(invitation_uuid) {
 
 export function fetchShareGroupInvites(user) {
   return (dispatch) => {
+    dispatch(fetchShareGroupInvitesSuccess(''));
     dispatch(fetchReceivedInProcess(true));
     dispatch(fetchReceivedError(''));
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group&email=${user.email}`;

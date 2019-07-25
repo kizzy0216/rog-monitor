@@ -13,22 +13,22 @@ const UsersForm = Form.create()(
 
     return (
       <Form layout={'inline'} onSubmit={handleSubmit} style={styles.formstyles}>
-        <Form.Item label="Camera Group id" hasFeedback>
+        <Form.Item label="Camera Group Uuid" hasFeedback>
           {getFieldDecorator('camera_groups_uuid', {
             rules: [
               {type: 'string', message: 'Please enter a valid integer'}
             ]
           })(
-            <Input placeholder="Enter id" />
+            <Input placeholder="Enter uuid" />
           )}
         </Form.Item>
         <Form.Item label="Camera Uuid" hasFeedback>
           {getFieldDecorator('cameras_uuid', {
             rules: [
-              {type: 'integer', message: 'Please enter a valid integer'}
+              {type: 'string', message: 'Please enter a valid uuid'}
             ]
           })(
-            <InputNumber placeholder="Enter id" />
+            <Input placeholder="Enter uuid" />
           )}
         </Form.Item>
         <Form.Item>

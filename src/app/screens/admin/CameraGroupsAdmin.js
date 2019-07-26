@@ -12,13 +12,13 @@ const UsersForm = Form.create()(
 
     return (
       <Form layout={'inline'} onSubmit={handleSubmit} style={styles.formstyles}>
-        <Form.Item label="User id" hasFeedback>
-          {getFieldDecorator('user_id', {
+        <Form.Item label="User uuid" hasFeedback>
+          {getFieldDecorator('user_uuid', {
             rules: [
-              {type: 'integer', message: 'Please enter a valid integer'}
+              {type: 'string', message: 'Please enter a valid uuid'}
             ]
           })(
-            <InputNumber placeholder="Enter id" />
+            <Input placeholder="Enter uuid" />
           )}
         </Form.Item>
         <Form.Item>
@@ -61,8 +61,8 @@ class CameraGroupsAdmin extends Component {
     if (!isEmpty(this.props.cameraGroups)) {
       for (var i = 0; i < this.props.cameraGroups.length; i++) {
         data[i] = {
-          key: this.props.cameraGroups[i]['id'],
-          id: this.props.cameraGroups[i]['id'],
+          key: this.props.cameraGroups[i]['uuid'],
+          uuid: this.props.cameraGroups[i]['uuid'],
           name: this.props.cameraGroups[i]['name'],
           vacation_mode: this.props.cameraGroups[i]['vacation_mode'].toString()
         }
@@ -120,7 +120,7 @@ class EditableCell extends React.Component {
   save = e => {
     const { record, handleSave } = this.props;
     this.form.validateFields((error, values) => {
-      if (error && error[e.currentTarget.id]) {
+      if (error && error[e.currentTarget.uuid]) {
         return;
       }
       this.toggleEdit();
@@ -183,12 +183,12 @@ class EditableTable extends React.Component {
     super(props);
     this.columns = [
       {
-        title: 'Id',
-        dataIndex: 'id',
+        title: 'Uuid',
+        dataIndex: 'uuid',
         width: 200,
         editable: false,
         defaultSortOrder: 'descend',
-        sorter:(a, b) => a.id - b.id,
+        sorter:(a, b) => a.uuid - b.uuid,
         sortDirections: ['descend', 'ascend']
       },
       {

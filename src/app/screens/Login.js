@@ -127,7 +127,7 @@ class Login extends Component {
                           valuePropName: 'checked',
                           initialValue: true,
                         })(
-                          <Checkbox style={styles.rememberUserId}>Remember my user ID</Checkbox>
+                          <Checkbox style={styles.rememberUserUuid}>Remember my user ID</Checkbox>
                         )}
                       </FormItem>
                       <FormItem>
@@ -237,7 +237,7 @@ const styles = {
     textAlign: 'center',
     color: 'red'
   },
-  rememberUserId: {
+  rememberUserUuid: {
     fontWeight: 700
   },
   forgotPassword: {

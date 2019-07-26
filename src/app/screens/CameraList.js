@@ -81,7 +81,7 @@ class CameraList extends Component {
             </Col>
             <Col xs={{span: 2}} sm={{span: 1}} style={styles.toggleCameraGroupOptionsContainer}>
                 {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?          this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
-                  userCameraGroupPrivilege.users_id == this.props.user.id && 0 in userCameraGroupPrivilege.user_privileges_ids ?
+                  userCameraGroupPrivilege.users_uuid == this.props.user.uuid && 0 in userCameraGroupPrivilege.user_camera_group_privilege_ids ?
                   <Tooltip key={userCameraGroupPrivilege.id} title='Toggle Camera Group Options' placement='bottom'>
                     <Icon style={styles.toggleCameraGroupOptions} type='ellipsis' onClick={this.toggleCameraGroupButtonsVisability} />
                   </Tooltip>
@@ -94,7 +94,7 @@ class CameraList extends Component {
                 )) : ''}
             </Col>
             {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ? this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
-              userCameraGroupPrivilege.users_id == this.props.user.id && 0 in userCameraGroupPrivilege.user_privileges_ids ?
+              userCameraGroupPrivilege.users_uuid == this.props.user.uuid && 0 in userCameraGroupPrivilege.user_camera_group_privilege_ids ?
               (<CameraOptionButtons
                 key={userCameraGroupPrivilege.id}
                 user={this.props.user}

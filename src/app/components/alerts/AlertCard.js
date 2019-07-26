@@ -24,7 +24,7 @@ class _AlertCard extends Component {
 
   deleteAlert = () => {
     if (!this.props.deleteInProcess) {
-      this.props.deleteAlert(this.props.user, this.props.id);
+      this.props.deleteAlert(this.props.user, this.props.uuid);
     }
   }
 
@@ -97,7 +97,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteAlert: (user, alertId) => dispatch(deleteAlert(user, alertId))
+    deleteAlert: (user, alertUuid) => dispatch(deleteAlert(user, alertUuid))
   }
 }
 

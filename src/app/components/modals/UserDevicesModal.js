@@ -32,7 +32,7 @@ class EditableCell extends Component {
   save = (e) => {
     const { record, handleSave } = this.props;
     this.form.validateFields((error, values) => {
-      if (error && error[e.currentTarget.id]) {
+      if (error && error[e.currentTarget.uuid]) {
         return;
       }
       this.toggleEdit();
@@ -103,8 +103,8 @@ class EditableTable extends Component {
       editable: true,
       align: 'center'
     }, {
-      title: 'ID',
-      dataIndex: 'id',
+      title: 'UUID',
+      dataIndex: 'uuid',
       width: 100,
       align: 'center'
     }, {
@@ -129,9 +129,9 @@ class EditableTable extends Component {
     };
     for (var i = 0; i < this.props.userDevices.length; i++) {
       this.state.dataSource[i] = {
-        key: this.props.userDevices[i].id,
+        key: this.props.userDevices[i].uuid,
         name: this.props.userDevices[i].device_name,
-        id: this.props.userDevices[i].id
+        uuid: this.props.userDevices[i].uuid
       }
       this.state.count++;
     }
@@ -142,8 +142,8 @@ class EditableTable extends Component {
     const dataSource = [...this.state.dataSource];
     this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
     for (var i = 0; i < this.props.userDevices.length; i++) {
-      if (key == this.props.userDevices[i].id) {
-        this.props.deleteUserDevice(this.props.userDevices[i].users_id, key, this.props.userDevices[i].device_token);
+      if (key == this.props.userDevices[i].uuid) {
+        this.props.deleteUserDevice(this.props.userDevices[i].users_uuid, key, this.props.userDevices[i].device_token);
       }
     }
   }
@@ -157,7 +157,7 @@ class EditableTable extends Component {
       ...row,
     });
     this.setState({ dataSource: newData });
-    this.props.updateUserDevice(this.props.userDevices[index].users_id, row.id, row.name);
+    this.props.updateUserDevice(this.props.userDevices[index].users_uuid, row.uuid, row.name);
   }
 
   render() {
@@ -290,8 +290,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateUserDevice: (userId, deviceId, name) => dispatch(updateUserDevice(userId, deviceId, name)),
-    deleteUserDevice: (userId, deviceId, token) => dispatch(deleteUserDevice(userId, deviceId, token))
+    updateUserDevice: (userUuid, deviceUuid, name) => dispatch(updateUserDevice(userUuid, deviceUuid, name)),
+    deleteUserDevice: (userUuid, deviceUuid, token) => dispatch(deleteUserDevice(userUuid, deviceUuid, token))
   }
 }
 

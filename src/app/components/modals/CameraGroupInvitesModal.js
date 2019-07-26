@@ -15,10 +15,10 @@ const CameraGroupInvites = (props) => {
         footer={[null, null]}
       >
         {props.invites.map(invite => (
-          <Row key={invite.id} type='flex' justify='start' style={styles.invitesListContainer}>
+          <Row key={invite.uuid} type='flex' justify='start' style={styles.invitesListContainer}>
             <Col xs={{span: 24}} sm={{span: 11, offset: 1}} style={styles.adminNameContainer}>
               <Col xs={{span: 24}} style={styles.adminName}>
-                {invite.users_id}
+                {invite.users_uuid}
                 <p style={styles.date}>{moment(invite.inserted_at).format('MMM D')}</p>
               </Col>
               <Col xs={{span: 24}}>

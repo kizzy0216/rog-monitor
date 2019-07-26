@@ -30,12 +30,12 @@ export function readSystemConfigurations() {
   }
 }
 
-export function updateSystemConfiguration(systemConfigurationId, key, value) {
+export function updateSystemConfiguration(systemConfigurationUuid, key, value) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/system-configurations`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
-      system_configuration_id: systemConfigurationId,
+      system_configuration_uuid: systemConfigurationUuid,
       key:  key,
       value: value
     }

@@ -119,9 +119,9 @@ class RecosAdmin extends Component {
         width: 200
       },
       {
-        title: 'Camera Id',
-        dataIndex: 'camera_id',
-        key: 'camera_id',
+        title: 'Camera Uuid',
+        dataIndex: 'camera_uuid',
+        key: 'camera_uuid',
         editable: false,
         width: 200
       },
@@ -190,7 +190,7 @@ class RecosAdmin extends Component {
             key: this.props.recos[i]['process_id'],
             process_name: this.props.recos[i]['process_name'],
             updated_at: this.props.recos[i]['updated_at'],
-            camera_id: this.props.recos[i]['cameras_id'],
+            camera_uuid: this.props.recos[i]['cameras_uuid'],
             camera_name: this.props.recos[i]['camera_name'],
             status: this.props.recos[i]['status'],
             yolo_jsons_per_sec: this.props.recos[i]['yolo_jsons_per_sec'],
@@ -211,7 +211,7 @@ class RecosAdmin extends Component {
           data={data}
           record={record}
           user={this.props.user}
-          cameraGroupId={this.state.camera_groups_id}
+          cameraGroupUuid={this.state.camera_groups_uuid}
           actions={this.props.actions}
         />
       )

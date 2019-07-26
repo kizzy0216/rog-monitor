@@ -47,7 +47,7 @@ function updateUserCameraLicenseData(data) {
 
 export function fetchUserCameraLicenses(user) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/licenses`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/licenses`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
@@ -114,7 +114,7 @@ export function updateUser(user, values) {
     dispatch(updateUserSuccess(false));
     dispatch(updateUserInProgress(true));
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
     const data = {
       first_name: values.firstName,
       last_name: values.lastName
@@ -141,7 +141,7 @@ export function updateUser(user, values) {
 
 export function muteSound(user, mute) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
       mute: mute
@@ -188,7 +188,7 @@ function setupFirebaseCloudMessaging(user){
 
 function checkForStoredUserDeviceToken(user, token, messaging) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/devices`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
@@ -198,7 +198,7 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
           let stored_device_token = user.devices[i].device_token;
           if (token === stored_device_token) {
             device_token_exists = true;
-            sessionStorage.setItem('fcm_token_id', user.devices[i].id)
+            sessionStorage.setItem('fcm_token_id', user.devices[i].uuid)
             sessionStorage.setItem('fcm_token', token)
             dispatch(listenForNewAlerts(user, messaging));
             dispatch(loginSuccess(user));
@@ -224,7 +224,7 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
 
 export function storeUserDevice(user, token, messaging) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/devices`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/devices`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data ={
       device_token: token,
@@ -233,7 +233,7 @@ export function storeUserDevice(user, token, messaging) {
     axios.post(url, data, config)
       .then((response) => {
         user.devices.push(response.data.user_device);
-        sessionStorage.setItem('fcm_token_id', response.data.user_device.id)
+        sessionStorage.setItem('fcm_token_id', response.data.user_device.uuid)
         sessionStorage.setItem('fcm_token', token)
         dispatch(listenForNewAlerts(user, messaging));
         dispatch(loginSuccess(user));
@@ -253,9 +253,9 @@ export function storeUserDevice(user, token, messaging) {
   }
 }
 
-export function updateUserDevice(userId, deviceId, name) {
+export function updateUserDevice(userUuid, deviceUuid, name) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userId}/devices/${deviceId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userUuid}/devices/${deviceUuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data ={
       device_name: name
@@ -276,9 +276,9 @@ export function updateUserDevice(userId, deviceId, name) {
   }
 }
 
-export function deleteUserDevice(userId, deviceId, token) {
+export function deleteUserDevice(userUuid, deviceUuid, token) {
   return (dispatch, getState, {getFirebase}) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userId}/devices/${deviceId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userUuid}/devices/${deviceUuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.delete(url, config)
       .then((response) => {
@@ -302,10 +302,10 @@ export function deleteUserDevice(userId, deviceId, token) {
   }
 }
 
-export function readUserByIdAdmin(values) {
+export function readUserByUuidAdmin(values) {
   return (dispatch) => {
     dispatch(updateUserData({}));
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${values.user_id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${values.user_uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
@@ -354,10 +354,10 @@ export function updateUserAdmin(user, values) {
     dispatch(updateUserSuccess(false));
     dispatch(updateUserInProgress(true));
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
     const data = JSON.parse(JSON.stringify(values));
     delete data.key;
-    delete data.id;
+    delete data.uuid;
 
     axios.patch(url, data, config)
       .then((response) => {
@@ -378,10 +378,10 @@ export function updateUserAdmin(user, values) {
   }
 }
 
-export function deleteUserAdmin(user_id) {
+export function deleteUserAdmin(user_uuid) {
   return (dispatch) => {
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user_id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user_uuid}`;
 
     axios.delete(url, config)
       .then((response) => {
@@ -401,7 +401,7 @@ export function deleteUserAdmin(user_id) {
 
 export function createUserLicense(user, numberToAdd) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/licenses`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
       number_to_add: numberToAdd
@@ -426,7 +426,7 @@ export function readUserCameraLicensesAdmin(user) {
   return (dispatch) => {
     dispatch(updateUserData({}));
     dispatch(updateUserCameraLicenseData({}));
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/licenses`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
@@ -449,7 +449,7 @@ export function readUserCameraLicensesAdmin(user) {
 
 export function updateUserLicense(user, license) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/licenses/${license.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses/${license.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
       tier_0: license.tier_0,
@@ -474,7 +474,7 @@ export function updateUserLicense(user, license) {
 
 export function deleteUserLicenseAdmin(user, license) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_id}/licenses/${license['id']}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses/${license['uuid']}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.delete(url, config)
       .then((response) => {

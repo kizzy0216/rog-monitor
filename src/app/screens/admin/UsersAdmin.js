@@ -13,13 +13,13 @@ const UsersForm = Form.create()(
 
     return (
       <Form layout={'inline'} onSubmit={handleSubmit} style={styles.formstyles}>
-        <Form.Item label="User id" hasFeedback>
-          {getFieldDecorator('user_id', {
+        <Form.Item label="User uuid" hasFeedback>
+          {getFieldDecorator('user_uuid', {
             rules: [
-              {type: 'integer', message: 'Please enter a valid integer'}
+              {type: 'string', message: 'Please enter a valid integer'}
             ]
           })(
-            <InputNumber placeholder="Enter id" />
+            <Input placeholder="Enter uuid" />
           )}
         </Form.Item>
         <Form.Item label="Email" hasFeedback>
@@ -60,7 +60,7 @@ class UsersAdmin extends Component {
         if (values.email !== undefined) {
           this.props.actions.readUserByEmailAdmin(values);
         } else {
-          this.props.actions.readUserByIdAdmin(values);
+          this.props.actions.readUserByUuidAdmin(values);
         }
       }
     });
@@ -76,13 +76,13 @@ class UsersAdmin extends Component {
     if (!isEmpty(this.props.userData)) {
       for (var i = 0; i < this.props.userData.length; i++) {
         data[i] = {
-          key: this.props.userData[i]['id'],
-          id: this.props.userData[i]['id'],
+          key: this.props.userData[i]['uuid'],
+          uuid: this.props.userData[i]['uuid'],
           email: this.props.userData[i]['email'],
           first_name: this.props.userData[i]['first_name'],
           last_name: this.props.userData[i]['last_name'],
           enabled: this.props.userData[i]['enabled'].toString(),
-          user_privileges_ids: this.props.userData[i]['user_privileges_ids'],
+          user_privileges_id: this.props.userData[i]['user_privileges_id'],
           mute: this.props.userData[i]['mute'].toString()
         }
       }
@@ -118,7 +118,7 @@ class EditableCell extends React.Component {
     if (this.props.dataIndex === 'enabled' || this.props.dataIndex === 'mute'){
       return <Select placeholder="true or false" allowClear={true} dropdownMatchSelectWidth={true} style={{ width: 80 }}><Select.Option value={true}>true</Select.Option><Select.Option value={false}>false</Select.Option></Select>;
     }
-    if (this.props.dataIndex === 'user_privileges_ids') {
+    if (this.props.dataIndex === 'user_privileges_id') {
       return <Select placeholder="Select Privilege" allowClear={true} dropdownMatchSelectWidth={true} style={{ width: 80 }}><Select.Option value={0}>admin</Select.Option><Select.Option value={1}>reco</Select.Option><Select.Option value={2}>user</Select.Option></Select>;
     }
     if (this.props.inputType === 'text') {
@@ -174,10 +174,10 @@ class EditableTable extends React.Component {
 
     this.columns = [
       {
-        title: 'User id',
-        dataIndex: 'id',
+        title: 'User uuid',
+        dataIndex: 'uuid',
         editable: false,
-        sorter: (a, b) => a.id - b.id,
+        sorter: (a, b) => a.uuid - b.uuid,
         sortDirections: ['descend', 'ascend'],
         width: 150
       },
@@ -214,8 +214,8 @@ class EditableTable extends React.Component {
         width: 150
       },
       {
-        title: 'User Privileges Id',
-        dataIndex: 'user_privileges_ids',
+        title: 'User Privilege Id',
+        dataIndex: 'user_privileges_id',
         editable: true,
         width: 150
       },

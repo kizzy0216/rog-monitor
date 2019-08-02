@@ -22,6 +22,7 @@ if ((window.location.protocol + '//' + window.location.host) == 'https://rog-mon
 }
 
 function renderApp() {
+  console.log("Version 2.0");
   const ReduxApp = () => (
     <Provider store={store}>
       <App />

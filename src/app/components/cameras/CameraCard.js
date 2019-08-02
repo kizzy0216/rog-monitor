@@ -27,7 +27,7 @@ class CameraCard extends Component {
   }
 
   deleteCamera = () => {
-    this.props.deleteCamera(this.props.user, this.props.camera_groups_id, this.props.id);
+    this.props.deleteCamera(this.props.user, this.props.camera_groups_uuid, this.props.uuid);
   };
 
   viewCameraStream = () => {
@@ -40,7 +40,7 @@ class CameraCard extends Component {
 
     this.props.trackEventAnalytics('camera viewed', cameraViewEvent);
 
-    this.props.history.push(`/camera-groups/${this.props.camera_groups_id}/cameras/${this.props.id}/stream`);
+    this.props.history.push(`/camera-groups/${this.props.camera_groups_uuid}/cameras/${this.props.uuid}/stream`);
   }
 
   render() {
@@ -106,7 +106,7 @@ class CameraCard extends Component {
       return (
         <Card>
           <div>
-            <Recorder cameraId={this.props.id} rtspUrl={this.props.rtspUrl} />
+            <Recorder cameraUuid={this.props.uuid} rtspUrl={this.props.rtspUrl} />
           </div>
           <p>{this.props.name}</p>
         </Card>
@@ -137,18 +137,18 @@ const mapStateToProps = (state) => {
   return {
     polygonData: state.triggers.polygonData,
     refreshCameraImage: state.cameras.refreshCameraImage,
-    refreshCameraId: state.cameras.refreshCameraId,
+    refreshCameraUuid: state.cameras.refreshCameraUuid,
     imageUpdateInProgress: state.cameras.imageUpdateInProgress,
-    imageUpdateInProgressId: state.cameras.imageUpdateInProgressId,
+    imageUpdateInProgressUuid: state.cameras.imageUpdateInProgressUuid,
     refreshCameraError: state.cameras.refreshCameraError,
-    refreshCameraErrorId: state.cameras.refreshCameraErrorId,
+    refreshCameraErrorUuid: state.cameras.refreshCameraErrorUuid,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
-    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId
+    imageUpdateSuccessUuid: state.cameras.imageUpdateSuccessUuid
   }
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteCamera: (user, cameraGroupId, cameraId) => dispatch(deleteCamera(user, cameraGroupId, cameraId)),
+    deleteCamera: (user, cameraGroupUuid, cameraUuid) => dispatch(deleteCamera(user, cameraGroupUuid, cameraUuid)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data))
   }
 }

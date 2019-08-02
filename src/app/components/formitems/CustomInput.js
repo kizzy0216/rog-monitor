@@ -78,7 +78,7 @@ class CustomInput extends Component {
             </Button>
             <Button
               type='primary'
-              id={this.props.id}
+              uuid={this.props.uuid}
               value={this.state.value}
               onClick={this.props.handleSave}
               style={styles.saveBtn}

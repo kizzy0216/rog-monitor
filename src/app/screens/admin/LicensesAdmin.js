@@ -12,13 +12,13 @@ const UsersForm = Form.create()(
 
     return (
       <Form layout={'inline'} onSubmit={handleSubmit} style={styles.formstyles}>
-        <Form.Item label="User id" hasFeedback>
-          {getFieldDecorator('user_id', {
+        <Form.Item label="User uuid" hasFeedback>
+          {getFieldDecorator('user_uuid', {
             rules: [
-              {type: 'integer', message: 'Please enter a valid integer'}
+              {type: 'string', message: 'Please enter a valid integer'}
             ]
           })(
-            <InputNumber placeholder="Enter id" />
+            <Input placeholder="Enter uuid" />
           )}
         </Form.Item>
         <Form.Item>
@@ -57,7 +57,6 @@ class LicensesAdmin extends Component {
   };
 
   handleAdd = () => {
-    console.log(this.props.userData);
     if (!isEmpty(this.props.userData)) {
       this.props.actions.createUserLicense(this.props.userData, 1);
     }
@@ -68,9 +67,9 @@ class LicensesAdmin extends Component {
     if (!isEmpty(this.props.cameraLicenseData)) {
       for (var i = 0; i < this.props.cameraLicenseData.length; i++) {
         data[i] = {
-          key: this.props.cameraLicenseData[i]['id'],
-          id: this.props.cameraLicenseData[i]['id'],
-          cameras_id: this.props.cameraLicenseData[i]['cameras_id'],
+          key: this.props.cameraLicenseData[i]['uuid'],
+          uuid: this.props.cameraLicenseData[i]['uuid'],
+          cameras_uuid: this.props.cameraLicenseData[i]['cameras_uuid'],
           tier_0: this.props.cameraLicenseData[i]['tier_0'],
           tier_1: this.props.cameraLicenseData[i]['tier_1'],
           tier_2: this.props.cameraLicenseData[i]['tier_2']
@@ -135,7 +134,7 @@ class EditableCell extends React.Component {
   save = e => {
     const { record, handleSave } = this.props;
     this.form.validateFields((error, values) => {
-      if (error && error[e.currentTarget.id]) {
+      if (error && error[e.currentTarget.uuid]) {
         return;
       }
       this.toggleEdit();
@@ -198,21 +197,21 @@ class EditableTable extends React.Component {
     super(props);
     this.columns = [
       {
-        title: 'Id',
-        dataIndex: 'id',
+        title: 'Uuid',
+        dataIndex: 'uuid',
         width: 200,
         editable: false,
         defaultSortOrder: 'descend',
-        sorter:(a, b) => a.id - b.id,
+        sorter:(a, b) => a.uuid - b.uuid,
         sortDirections: ['descend', 'ascend']
       },
       {
-        title: 'Cameras Id',
-        dataIndex: 'cameras_id',
+        title: 'Cameras Uuid',
+        dataIndex: 'cameras_uuid',
         width: 200,
         editable: true,
         defaultSortOrder: 'descend',
-        sorter:(a, b) => a.cameras_id - b.cameras_id,
+        sorter:(a, b) => a.cameras_uuid - b.cameras_uuid,
         sortDirections: ['descend', 'ascend']
       },
       {

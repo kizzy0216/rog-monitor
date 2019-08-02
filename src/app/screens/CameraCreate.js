@@ -5,7 +5,7 @@ import AddCamera from '../components/cameras/AddCamera';
 class CameraCreate extends Component {
   render() {
     return (
-      <AddCamera cameraGroupId={this.props.match.params.cameraGroupId} />
+      <AddCamera cameraGroupUuid={this.props.match.params.cameraGroupUuid} />
     )
   }
 }

@@ -8,15 +8,15 @@ import { checkCameraEnabled } from '../../redux/cameras/actions';
 class ToggleCameraConnection extends Component {
 
   toggleCameraEnabled = (enabled) => {
-    this.props.toggleCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.id, enabled);
+    this.props.toggleCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid, enabled);
   }
 
   UNSAFE_componentWillMount() {
-    this.props.checkCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.id);
+    this.props.checkCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid);
   }
 
   shouldComponentUpdate(nextProps) {
-    if (nextProps.data.id === nextProps.cameraConnectionId) {
+    if (nextProps.data.uuid === nextProps.cameraConnectionUuid) {
       return true;
     } else {
       return false;
@@ -24,7 +24,7 @@ class ToggleCameraConnection extends Component {
   }
 
   render() {
-    let enabled = this.props.cameraConnectionEnabled;
+    let enabled = this.props.data.enabled;
     return (
       <Switch
         checkedChildren={<Icon type="check" />}
@@ -39,7 +39,7 @@ class ToggleCameraConnection extends Component {
 const mapStateToProps = (state) => {
   return {
     cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
-    cameraConnectionId: state.cameras.cameraConnectionId,
+    cameraConnectionUuid: state.cameras.cameraConnectionUuid,
   }
 }
 

@@ -14,13 +14,13 @@ const UsersForm = Form.create()(
 
     return (
       <Form layout={'inline'} onSubmit={handleSubmit} style={styles.formstyles}>
-        <Form.Item label="Camera Group id" hasFeedback>
-          {getFieldDecorator('camera_groups_id', {
+        <Form.Item label="Camera Group uuid" hasFeedback>
+          {getFieldDecorator('camera_groups_uuid', {
             rules: [
-              {type: 'integer', message: 'Please enter a valid integer'}
+              {type: 'string', message: 'Please enter a valid integer'}
             ]
           })(
-            <InputNumber placeholder="Enter id" />
+            <Input placeholder="Enter uuid" />
           )}
         </Form.Item>
         <Form.Item>
@@ -126,7 +126,7 @@ class CamerasAdmin extends Component {
     e.preventDefault();
     this.form.validateFields((err, values) => {
       if (!err) {
-        this.setState({camera_groups_id: values.camera_groups_id});
+        this.setState({camera_groups_uuid: values.camera_groups_uuid});
         this.props.actions.readCamerasInGroupAdmin(this.props.user, values);
       }
     });
@@ -141,7 +141,7 @@ class CamerasAdmin extends Component {
   };
 
   showModal = () => {
-    if (typeof this.state.camera_groups_id !== "undefined") {
+    if (typeof this.state.camera_groups_uuid !== "undefined") {
       this.setState({ visible: true });
     }
   };
@@ -183,11 +183,11 @@ class CamerasAdmin extends Component {
   }
 
   handleCreate = () => {
-    if (typeof this.state.camera_groups_id !== "undefined") {
+    if (typeof this.state.camera_groups_uuid !== "undefined") {
       const form = this.formRef;
       form.validateFields((err, values) => {
         if (err) return;
-        values.camera_groups_id = this.state.camera_groups_id;
+        values.camera_groups_uuid = this.state.camera_groups_uuid;
         this.props.actions.createCameraAdmin(this.props.user, values);
         this.setState({ visible: false });
         form.resetFields();
@@ -200,9 +200,9 @@ class CamerasAdmin extends Component {
     if (!isEmpty(this.props.cameras)) {
       for (var i = 0; i < this.props.cameras.length; i++) {
         data[i] = {
-          key: this.props.cameras[i]['id'],
-          id: this.props.cameras[i]['id'],
-          camera_groups_id: this.props.cameras[i]['camera_groups_id'],
+          key: this.props.cameras[i]['uuid'],
+          uuid: this.props.cameras[i]['uuid'],
+          camera_groups_uuid: this.props.cameras[i]['camera_groups_uuid'],
           name: this.props.cameras[i]['name'],
           time_zone: this.props.cameras[i]['time_zone'],
           username: this.props.cameras[i]['username'],
@@ -302,7 +302,7 @@ class EditableCell extends React.Component {
   save = e => {
     const { record, handleSave } = this.props;
     this.form.validateFields((error, values) => {
-      if (error && error[e.currentTarget.id]) {
+      if (error && error[e.currentTarget.uuid]) {
         return;
       }
       this.toggleEdit();
@@ -365,21 +365,21 @@ class EditableTable extends React.Component {
     super(props);
     this.columns = [
       {
-        title: 'Id',
-        dataIndex: 'id',
+        title: 'Uuid',
+        dataIndex: 'uuid',
         width: 200,
         editable: false,
         defaultSortOrder: 'descend',
-        sorter:(a, b) => a.id - b.id,
+        sorter:(a, b) => a.uuid - b.uuid,
         sortDirections: ['descend', 'ascend']
       },
       {
-        title: 'Camera Group Id',
-        dataIndex: 'camera_groups_id',
+        title: 'Camera Group Uuid',
+        dataIndex: 'camera_groups_uuid',
         width: 200,
         editable: false,
         defaultSortOrder: 'descend',
-        sorter:(a, b) => a.id - b.id,
+        sorter:(a, b) => a.uuid - b.uuid,
         sortDirections: ['descend', 'ascend']
       },
       {

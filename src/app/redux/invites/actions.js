@@ -158,9 +158,9 @@ export function updateInvitation(invitation) {
   return (dispatch) => {
     var data = JSON.parse(JSON.stringify(invitation));
     delete data.key;
-    delete data.id;
+    delete data.uuid;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invitation.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invitation.uuid}`;
 
     axios.patch(url, data, config)
       .catch((error) => {
@@ -175,11 +175,11 @@ export function updateInvitation(invitation) {
   }
 }
 
-export function deleteInvitation(invitation_id) {
+export function deleteInvitation(invitation_uuid) {
   return (dispatch) => {
-    console.log(invitation_id);
+    console.log(invitation_uuid);
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invitation_id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invitation_uuid}`;
 
     axios.delete(url, config)
     .catch((error) => {
@@ -196,6 +196,7 @@ export function deleteInvitation(invitation_id) {
 
 export function fetchShareGroupInvites(user) {
   return (dispatch) => {
+    dispatch(fetchShareGroupInvitesSuccess(''));
     dispatch(fetchReceivedInProcess(true));
     dispatch(fetchReceivedError(''));
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group&email=${user.email}`;
@@ -226,7 +227,7 @@ export function acceptInvite(user, invite) {
     dispatch(acceptInviteInProcess(true));
     dispatch(acceptInviteError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${invite.camera_groups_id}/privileges`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${invite.camera_groups_uuid}/privileges`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.post(url, config)
@@ -256,7 +257,7 @@ export function rejectInvite(user, invite) {
     dispatch(rejectInviteError(''));
     dispatch(rejectInviteInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invite.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invite.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
@@ -284,7 +285,7 @@ export function rescindInvite(user, invite) {
     dispatch(rescindInviteError(''));
     dispatch(rescindInviteInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invite.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invite.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)

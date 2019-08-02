@@ -7,7 +7,7 @@ const cameraGroups = (state = initialState, action) => {
       return {
         ...state,
         cameraGroups: action.cameraGroups,
-        selectedCameraGroup: action.cameraGroups.find(cameraGroup => cameraGroup.id === state.selectedCameraGroup.id) || state.selectedCameraGroup
+        selectedCameraGroup: action.cameraGroups.find(cameraGroup => cameraGroup.uuid === state.selectedCameraGroup.uuid) || state.selectedCameraGroup
       }
 
     case types.FETCH_CAMERA_GROUPS_ADMIN:
@@ -141,7 +141,7 @@ const cameraGroups = (state = initialState, action) => {
         return {
           ...state,
           cameraConnectionFail: action.cameraConnectionFail,
-          cameraConnectionFailId: action.cameraConnectionFailId
+          cameraConnectionFailUuid: action.cameraConnectionFailUuid
         }
 
     default:

@@ -16,21 +16,21 @@ class CameraCardImg extends Component {
   UNSAFE_componentWillMount() {
     if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url});
-    } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailId === this.props.data.id) {
+    } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
       this.setState({image: cameraConnectError});
     }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.data.imageUpdateInProgress && nextProps.data.id === nextProps.data.imageUpdateInProgressId) {
+    if (nextProps.data.imageUpdateInProgress && nextProps.data.uuid === nextProps.data.imageUpdateInProgressUuid) {
       this.setState({image: loading});
-    } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraId == nextProps.data.id) {
+    } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage});
-    } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailId === nextProps.data.id) {
+    } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
-        if (nextProps.data.id == nextProps.data.cameraGroup.cameras[i].id && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
+        if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
           this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
         }
       }
@@ -72,7 +72,7 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     cameraConnectionFail: state.cameraGroups.cameraConnectionFail,
-    cameraConnectionFailId: state.cameraGroups.cameraConnectionFailId
+    cameraConnectionFailUuid: state.cameraGroups.cameraConnectionFailUuid
   }
 }
 

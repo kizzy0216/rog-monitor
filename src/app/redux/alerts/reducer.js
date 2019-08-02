@@ -29,7 +29,7 @@ const alerts = (state = initialState, action) => {
       }
 
     case types.NEW_ALERT:
-      if (state.newAlerts.filter(alert => alert.id).includes(action.alert.id)) {
+      if (state.newAlerts.filter(alert => alert.uuid).includes(action.alert.uuid)) {
         return state;
       }
       else {
@@ -75,7 +75,7 @@ const alerts = (state = initialState, action) => {
     case types.DELETE_ALERT_SUCCESS:
       return {
         ...state,
-        alerts: state.alerts.filter(alert => alert.id != action.alertId)
+        alerts: state.alerts.filter(alert => alert.uuid != action.alertUuid)
       }
 
     case types.CLEAR_ALL_NEW_ALERTS:

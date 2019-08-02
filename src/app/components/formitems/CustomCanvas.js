@@ -49,7 +49,7 @@ class CustomCanvas extends Component {
             if (entry.type === 'LD') {
               entry.setColor('#0092f8');
             }
-            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+            if (entry.type === 'VW' && fabricCanvas.getActiveObject().uuid === entry.uuid) {
               entry.set({fill: '#36d850', stroke: '#36d850'});
             } else if (entry.type === 'VW') {
               entry.set({fill: '#FF0000', stroke: '#FF0000'});
@@ -57,8 +57,8 @@ class CustomCanvas extends Component {
           });
 
           fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
-          nThis.props.setTriggerTimeWindows(nThis.props.polygonData, fabricCanvas.getActiveObject().id);
+          nThis.props.triggerExtras(fabricCanvas.getActiveObject().uuid, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+          nThis.props.setTriggerTimeWindows(nThis.props.polygonData, fabricCanvas.getActiveObject().uuid);
         }
       });
       document.getElementById('prev_button').addEventListener('click', function (options) {
@@ -71,16 +71,16 @@ class CustomCanvas extends Component {
             if (entry.type === 'LD') {
               entry.setColor('#0092f8');
             }
-            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+            if (entry.type === 'VW' && fabricCanvas.getActiveObject().uuid === entry.uuid) {
               entry.set({fill: '#36d850', stroke: '#36d850'});
             } else if (entry.type === 'VW') {
               entry.set({fill: '#FF0000', stroke: '#FF0000'});
             }
           });
           fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+          nThis.props.triggerExtras(fabricCanvas.getActiveObject().uuid, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           fabricCanvas.renderAll();
-          nThis.props.setTriggerTimeWindows(nThis.props.polygonData, fabricCanvas.getActiveObject().id);
+          nThis.props.setTriggerTimeWindows(nThis.props.polygonData, fabricCanvas.getActiveObject().uuid);
         }
       });
 
@@ -94,16 +94,16 @@ class CustomCanvas extends Component {
             if (entry.type === 'LD') {
               entry.setColor('#0092f8');
             }
-            if (entry.type === 'VW' && fabricCanvas.getActiveObject().id === entry.id) {
+            if (entry.type === 'VW' && fabricCanvas.getActiveObject().uuid === entry.uuid) {
               entry.set({fill: '#36d850', stroke: '#36d850'});
             } else if (entry.type === 'VW') {
               entry.set({fill: '#FF0000', stroke: '#FF0000'});
             }
           });
           fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.triggerExtras(fabricCanvas.getActiveObject().id, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
+          nThis.props.triggerExtras(fabricCanvas.getActiveObject().uuid, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           fabricCanvas.renderAll();
-          nThis.props.setTriggerTimeWindows(nThis.props.polygonData, fabricCanvas.getActiveObject().id);
+          nThis.props.setTriggerTimeWindows(nThis.props.polygonData, fabricCanvas.getActiveObject().uuid);
         }
       });
     } else {
@@ -111,7 +111,7 @@ class CustomCanvas extends Component {
       fabricCanvas.on('mouse:down', function (options) {
         if (nThis.props.triggerType === 'RA' || nThis.props.triggerType === 'LD') {
           if (nThis.pointArray.length > 0) {
-            if (options.target && options.target.id === nThis.pointArray[0].id) {
+            if (options.target && options.target.uuid === nThis.pointArray[0].uuid) {
               let points = [];
               nThis.pointArray.forEach(function (entry) {
                 points.push({
@@ -163,37 +163,37 @@ class CustomCanvas extends Component {
           }
           if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
             let virtualWallDetails = {
-              id: fabricCanvas.getActiveObject().id,
+              uuid: fabricCanvas.getActiveObject().uuid,
               left: fabricCanvas.getActiveObject().left,
               top: fabricCanvas.getActiveObject().top,
               rotateAngle: fabricCanvas.getActiveObject().angle
             };
 
             let directionCircle;
-            switch (fabricCanvas.getActiveObject().id) {
+            switch (fabricCanvas.getActiveObject().uuid) {
               case 'rightLeft':
-                virtualWallDetails.id = 'right';
+                virtualWallDetails.uuid = 'right';
                 fabricCanvas.remove(fabricCanvas.getActiveObject());
-                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, Math.PI, virtualWallDetails.rotateAngle);
+                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.uuid, 15, virtualWallDetails.left, virtualWallDetails.top, 0, Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
               case 'right':
-                virtualWallDetails.id = 'left';
+                virtualWallDetails.uuid = 'left';
                 fabricCanvas.remove(fabricCanvas.getActiveObject());
-                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, Math.PI, 0, virtualWallDetails.rotateAngle);
+                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.uuid, 15, virtualWallDetails.left, virtualWallDetails.top, Math.PI, 0, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
               case 'left':
-                virtualWallDetails.id = 'rightLeft';
+                virtualWallDetails.uuid = 'rightLeft';
                 fabricCanvas.remove(fabricCanvas.getActiveObject());
-                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2 * Math.PI, virtualWallDetails.rotateAngle);
+                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.uuid, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2 * Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
             }
-            nThis.props.triggerPointDirection(nThis.canvasPointArray, virtualWallDetails.id);
+            nThis.props.triggerPointDirection(nThis.canvasPointArray, virtualWallDetails.uuid);
 
           }
         }
@@ -202,7 +202,7 @@ class CustomCanvas extends Component {
       fabricCanvas.on('touch:gesture', function (options) {
         if (nThis.props.triggerType === 'RA' || nThis.props.triggerType === 'LD') {
           if (nThis.pointArray.length > 0) {
-            if (options.target && options.target.id === nThis.pointArray[0].id) {
+            if (options.target && options.target.uuid === nThis.pointArray[0].uuid) {
               let points = [];
               nThis.pointArray.forEach(function (entry) {
                 points.push({
@@ -253,37 +253,37 @@ class CustomCanvas extends Component {
           }
           if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
             let virtualWallDetails = {
-              id: fabricCanvas.getActiveObject().id,
+              id: fabricCanvas.getActiveObject().uuid,
               left: fabricCanvas.getActiveObject().left,
               top: fabricCanvas.getActiveObject().top,
               rotateAngle: fabricCanvas.getActiveObject().angle
             };
 
             let directionCircle;
-            switch (fabricCanvas.getActiveObject().id) {
+            switch (fabricCanvas.getActiveObject().uuid) {
               case 'rightLeft':
-                virtualWallDetails.id = 'right';
+                virtualWallDetails.uuid = 'right';
                 fabricCanvas.remove(fabricCanvas.getActiveObject());
-                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, Math.PI, virtualWallDetails.rotateAngle);
+                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.uuid, 15, virtualWallDetails.left, virtualWallDetails.top, 0, Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
               case 'right':
-                virtualWallDetails.id = 'left';
+                virtualWallDetails.uuid = 'left';
                 fabricCanvas.remove(fabricCanvas.getActiveObject());
-                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, Math.PI, 0, virtualWallDetails.rotateAngle);
+                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.uuid, 15, virtualWallDetails.left, virtualWallDetails.top, Math.PI, 0, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
               case 'left':
-                virtualWallDetails.id = 'rightLeft';
+                virtualWallDetails.uuid = 'rightLeft';
                 fabricCanvas.remove(fabricCanvas.getActiveObject());
-                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.id, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2 * Math.PI, virtualWallDetails.rotateAngle);
+                directionCircle = CustomCanvas.directionCircleObject(virtualWallDetails.uuid, 15, virtualWallDetails.left, virtualWallDetails.top, 0, 2 * Math.PI, virtualWallDetails.rotateAngle);
                 directionCircle.rotate(virtualWallDetails.rotateAngle);
                 fabricCanvas.add(directionCircle);
                 break;
             }
-            nThis.props.triggerPointDirection(nThis.canvasPointArray, virtualWallDetails.id);
+            nThis.props.triggerPointDirection(nThis.canvasPointArray, virtualWallDetails.uuid);
 
           }
         }
@@ -354,13 +354,12 @@ class CustomCanvas extends Component {
           });
           fabricCanvas.remove(value);
         });
-
         triggerPolygonAtrributes['fill'] = (entry.base_trigger.trigger_type === 'RA') ? "#FF0000" : ((entry.base_trigger.trigger_type === 'LD') ? '#0092f8' : '#00cd78');
-        triggerPolygonAtrributes['id'] = (entry.id !== undefined) ? entry.base_trigger.id : '';
+        triggerPolygonAtrributes['uuid'] = (entry.uuid !== undefined) ? entry.uuid : '';
         triggerPolygonAtrributes['type'] = entry.base_trigger.trigger_type;
         triggerPolygonAtrributes['duration'] = entry.base_trigger.trigger_duration;
         if (entry.base_trigger.trigger_type === 'VW') {
-          this.generateVirtualWall(fabricCanvas, points, entry.base_trigger.direction, entry.base_trigger.id);
+          this.generateVirtualWall(fabricCanvas, points, entry.base_trigger.direction, entry.uuid);
         } else {
           this.generatePolygon(fabricCanvas, points, this.lineArray, triggerPolygonAtrributes);
         }
@@ -630,7 +629,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setTriggerSpecificTimeWindows: (triggers, triggerId) => dispatch(setTriggerSpecificTimeWindows(triggers, triggerId)),
     clearTriggerSpecificTimeWindows: () => dispatch(clearTriggerSpecificTimeWindows())
   }
 };

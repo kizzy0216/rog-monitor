@@ -60,7 +60,7 @@ const invites = (state = initialState, action) => {
     case types.ACCEPT_INVITE_SUCCESS:
       return {
         ...state,
-        cameraGroupInvites: state.cameraGroupInvites.filter(invite => invite.id !== action.invite.id)
+        cameraGroupInvites: state.cameraGroupInvites.filter(invite => invite.uuid !== action.invite.uuid)
       }
 
     case types.ACCEPT_INVITE_ERROR:
@@ -78,7 +78,7 @@ const invites = (state = initialState, action) => {
     case types.REJECT_INVITE_SUCCESS:
       return {
         ...state,
-        cameraGroupInvites: state.cameraGroupInvites.filter(invite => invite.id !== action.invite.id)
+        cameraGroupInvites: state.cameraGroupInvites.filter(invite => invite.uuid !== action.invite.uuid)
       }
 
     case types.REJECT_INVITE_ERROR:

@@ -167,12 +167,12 @@ export function clearTriggerSpecificTimeWindows() {
   }
 }
 
-export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup, cameraId, triggerDuration, direction, timeWindows, shared) {
+export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup, cameraUuid, triggerDuration, direction, timeWindows, shared) {
   return (dispatch) => {
     dispatch(createTriggerInProcess(true));
     dispatch(createTriggerError(false));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}/triggers`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}/triggers`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let triggerData = {
       trigger_type: triggerType,
@@ -187,7 +187,7 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
     axios.post(url, triggerData, config)
       .then((response) => {
         dispatch(createTriggerSuccess(true));
-        dispatch(fetchTriggers(user, cameraGroup, cameraId));
+        dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
       .catch((error) => {
         let errMessage = 'Error creating trigger';
@@ -206,12 +206,12 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
   }
 }
 
-export function fetchTriggers(user, cameraGroup, cameraId) {
+export function fetchTriggers(user, cameraGroup, cameraUuid) {
   return (dispatch) => {
     dispatch(fetchTriggersInProcess(true));
     dispatch(fetchTriggersInSuccess(false));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroup.id}/cameras/${cameraId}/triggers`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}/triggers`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.get(url, config)
@@ -238,11 +238,11 @@ export function fetchTriggers(user, cameraGroup, cameraId) {
   }
 }
 
-export function deleteTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
+export function deleteTrigger(user, cameraGroupUuid, cameraUuid, baseTriggersUuid) {
   return (dispatch) => {
     dispatch(deleteTriggerInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${cameraUuid}/triggers/${baseTriggersUuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
@@ -265,11 +265,11 @@ export function deleteTrigger(user, cameraGroupId, cameraId, baseTriggersId) {
   }
 }
 
-export function createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, timeWindow) {
+export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow) {
   return (dispatch) => {
     dispatch(createTriggerTimeWindowInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${triggersId}/trigger-time-windows`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${cameraUuid}/triggers/${triggersUuid}/trigger-time-windows`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
       days_of_week: timeWindow.days_of_week,
@@ -280,8 +280,8 @@ export function createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersI
     axios.post(url, data, config)
       .then((response) => {
         dispatch(createTriggerTimeWindowSuccess(true));
-        let cameraGroup = {id: cameraGroupId};
-        dispatch(fetchTriggers(user, cameraGroup, cameraId));
+        let cameraGroup = {uuid: cameraGroupUuid};
+        dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
       .catch((error) => {
         let errMessage = 'Error creating trigger time window';
@@ -300,10 +300,10 @@ export function createTriggerTimeWindow(user, cameraGroupId, cameraId, triggersI
   }
 }
 
-export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggersId, timeWindow) {
+export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow) {
   return (dispatch) => {
     dispatch(updateTriggerTimeWindowInProcess(true));
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${triggersId}/trigger-time-windows/${timeWindow.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${cameraUuid}/triggers/${triggersUuid}/trigger-time-windows/${timeWindow.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
       days_of_week: timeWindow.days_of_week,
@@ -314,8 +314,8 @@ export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggersI
     axios.patch(url, data, config)
       .then((response) => {
         dispatch(updateTriggerTimeWindowSuccess(true));
-        let cameraGroup = {id: cameraGroupId};
-        dispatch(fetchTriggers(user, cameraGroup, cameraId));
+        let cameraGroup = {uuid: cameraGroupUuid};
+        dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
       .catch((error) => {
         let errMessage = 'Error updating trigger time window';
@@ -333,18 +333,18 @@ export function updateTriggerTimeWindow(user, cameraGroupId, cameraId, triggersI
   }
 }
 
-export function deleteTriggerTimeWindow(user, cameraGroupId, cameraId, baseTriggersId, timeWindow) {
+export function deleteTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, baseTriggersUuid, timeWindow) {
   return (dispatch) => {
     dispatch(deleteTriggerTimeWindowInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${cameraId}/triggers/${baseTriggersId}/trigger-time-windows/${timeWindow.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${cameraUuid}/triggers/${baseTriggersUuid}/trigger-time-windows/${timeWindow.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
       .then((response) => {
         dispatch(deleteTriggerTimeWindowSuccess(true));
-        let cameraGroup = {id: cameraGroupId};
-        dispatch(fetchTriggers(user, cameraGroup, cameraId));
+        let cameraGroup = {uuid: cameraGroupUuid};
+        dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
       .catch((error) => {
         let errMessage = 'Error deleting trigger time window';
@@ -365,7 +365,7 @@ export function deleteTriggerTimeWindow(user, cameraGroupId, cameraId, baseTrigg
 export function fetchTriggersAdmin(user, values) {
   return (dispatch) => {
     dispatch(fetchTriggersSuccessAdmin(""));
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${values.camera_groups_id}/cameras/${values.cameras_id}/triggers`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${values.camera_groups_uuid}/cameras/${values.cameras_uuid}/triggers`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.get(url, config)
@@ -392,16 +392,16 @@ export function fetchTriggersAdmin(user, values) {
   }
 }
 
-export function deleteTriggerAdmin(user, values, camerasId, cameraGroupId) {
+export function deleteTriggerAdmin(user, values, camerasUuid, cameraGroupUuid) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${camerasId}/triggers/${values.base_triggers_id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${camerasUuid}/triggers/${values.base_triggers_uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
       .then((response) => {
         let values = {
-          id: cameraGroupId,
-          cameras_id: camerasId
+          uuid: cameraGroupUuid,
+          cameras_uuid: camerasUuid
         };
         dispatch(fetchTriggersAdmin(user, values));
       })
@@ -420,9 +420,9 @@ export function deleteTriggerAdmin(user, values, camerasId, cameraGroupId) {
   }
 }
 
-export function updateTriggerTimeWindowAdmin(user, values, trigger, cameraGroupId) {
+export function updateTriggerTimeWindowAdmin(user, values, trigger, cameraGroupUuid) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${trigger.cameras_id}/triggers/${trigger.id}/trigger-time-windows/${values.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${trigger.cameras_uuid}/triggers/${trigger.uuid}/trigger-time-windows/${values.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
       days_of_week: values.days_of_week,
@@ -444,8 +444,8 @@ export function updateTriggerTimeWindowAdmin(user, values, trigger, cameraGroupI
         }
         dispatch(fetchTriggerErrorAdmin(errMessage));
         let values = {
-          id: cameraGroupId,
-          cameras_id: trigger.cameras_id
+          uuid: cameraGroupUuid,
+          cameras_uuid: trigger.cameras_uuid
         };
         dispatch(fetchTriggersAdmin(user, values));
       })
@@ -455,17 +455,17 @@ export function updateTriggerTimeWindowAdmin(user, values, trigger, cameraGroupI
   }
 }
 
-export function deleteTriggerTimeWindowAdmin(user, triggerTimeWindow, camerasId, cameraGroupId) {
+export function deleteTriggerTimeWindowAdmin(user, triggerTimeWindow, camerasUuid, cameraGroupUuid) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.id}/camera-groups/${cameraGroupId}/cameras/${camerasId}/triggers/${triggerTimeWindow.triggers_id}/trigger-time-windows/${triggerTimeWindow.id}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${camerasUuid}/triggers/${triggerTimeWindow.triggers_uuid}/trigger-time-windows/${triggerTimeWindow.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
       .then((response) => {
         console.log(response);
         let values = {
-          id: cameraGroupId,
-          cameras_id: camerasId
+          uuid: cameraGroupUuid,
+          cameras_uuid: camerasUuid
         };
         dispatch(fetchTriggersAdmin(user, values));
       })

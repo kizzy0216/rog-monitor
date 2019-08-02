@@ -16,7 +16,7 @@ const UserCameraGroupSettings = (props) => {
     >
       {props.invites.length > 0 ?
         props.invites.map(invite => (
-        <Row key={invite.id} style={styles.inviteContainer}>
+        <Row key={invite.uuid} style={styles.inviteContainer}>
           <Col xs={{span: 11, offset: 1}} style={styles.inviteNameContainer}>
             <Col xs={{span: 24}} style={styles.inviteName}>
               {invite.email}
@@ -38,13 +38,13 @@ const UserCameraGroupSettings = (props) => {
 
       {props.userCameraGroupPrivileges.length > 0 ?
         props.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
-        <Row key={userCameraGroupPrivilege.id} style={styles.inviteContainer}>
+        <Row key={userCameraGroupPrivilege.uuid} style={styles.inviteContainer}>
           <Col xs={{span: 11, offset: 1}} style={styles.inviteNameContainer}>
             <Col xs={{span: 24}} style={styles.inviteName}>
               {userCameraGroupPrivilege.first_name} {userCameraGroupPrivilege.last_name}
             </Col>
             <Col xs={{span: 24}} style={styles.inviteAction}>
-              User Privileges: {userCameraGroupPrivilege.user_privileges_ids.includes(0) ? 'Owner' : 'Member'}
+              User Privileges: {userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ? 'Owner' : 'Member'}
             </Col>
           </Col>
           <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.removeUserCameraGroupPrivilegeInProcess ? '' : props.removeUserCameraGroupPrivilege(props.user, invite)}>
@@ -101,7 +101,7 @@ class UserCameraGroupSettingsModal extends Component {
             visible={this.state.visible}
             onCancel={this.handleCancel}
             user={this.props.user}
-            userCameraGroupPrivileges={this.props.selectedCameraGroup.userCameraGroupPrivileges.filter(invite => invite.users_id !== this.props.user.id)}
+            userCameraGroupPrivileges={this.props.selectedCameraGroup.userCameraGroupPrivileges.filter(invite => invite.users_uuid !== this.props.user.uuid)}
             removeUserCameraGroupPrivilege={this.props.removeUserCameraGroupPrivilege}
             removeUserCameraGroupPrivilegeInProcess={this.props.removeUserCameraGroupPrivilegeInProcess}
             invites={this.props.cameraGroupInvites}

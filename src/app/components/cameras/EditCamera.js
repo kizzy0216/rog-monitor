@@ -118,9 +118,9 @@ class EditCamera extends Component {
       if (err) {
         return;
       }
-      values.camera_group_id = this.props.data.cameraGroup.id;
+      values.camera_group_uuid = this.props.data.cameraGroup.uuid;
       delete values.camera_url;
-      this.props.editCamera(this.props.user, this.props.data.id, values);
+      this.props.editCamera(this.props.user, this.props.data.uuid, values);
       this.setState({visible: false});
       this.setState({flag: true});
       this.setState({fullRtspUrl: null});
@@ -172,7 +172,7 @@ class EditCamera extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps){
-    if (this.props.data.id === nextProps.data.id) {
+    if (this.props.data.uuid === nextProps.data.uuid) {
       if (this.state.flag == true) {
         if (nextProps.editCameraError !== '' && this.props.editCameraError !== nextProps.editCameraError) {
           message.error(nextProps.editCameraError);

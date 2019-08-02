@@ -13,22 +13,22 @@ const UsersForm = Form.create()(
 
     return (
       <Form layout={'inline'} onSubmit={handleSubmit} style={styles.formstyles}>
-        <Form.Item label="Camera Group id" hasFeedback>
-          {getFieldDecorator('camera_groups_id', {
+        <Form.Item label="Camera Group Uuid" hasFeedback>
+          {getFieldDecorator('camera_groups_uuid', {
             rules: [
-              {type: 'integer', message: 'Please enter a valid integer'}
+              {type: 'string', message: 'Please enter a valid integer'}
             ]
           })(
-            <InputNumber placeholder="Enter id" />
+            <Input placeholder="Enter uuid" />
           )}
         </Form.Item>
-        <Form.Item label="Camera Id" hasFeedback>
-          {getFieldDecorator('cameras_id', {
+        <Form.Item label="Camera Uuid" hasFeedback>
+          {getFieldDecorator('cameras_uuid', {
             rules: [
-              {type: 'integer', message: 'Please enter a valid integer'}
+              {type: 'string', message: 'Please enter a valid uuid'}
             ]
           })(
-            <InputNumber placeholder="Enter id" />
+            <Input placeholder="Enter uuid" />
           )}
         </Form.Item>
         <Form.Item>
@@ -45,30 +45,30 @@ class TriggersAdmin extends Component {
 
     this.columns = [
       {
-        title: 'Trigger Id',
+        title: 'Trigger Uuid',
         dataIndex: 'id',
         key: 'id',
         editable: false,
         width: 200
       },
       {
-        title: 'Base Triggers Id',
-        dataIndex: 'base_triggers_id',
-        key: 'base_triggers_id',
+        title: 'Base Triggers Uuid',
+        dataIndex: 'base_triggers_uuid',
+        key: 'base_triggers_uuid',
         editable: false,
         width: 200
       },
       {
-        title: 'Users Id',
-        dataIndex: 'users_id',
-        key: 'users_id',
+        title: 'Users Uuid',
+        dataIndex: 'users_uuid',
+        key: 'users_uuid',
         editable: false,
         width: 200
       },
       {
-        title: 'Cameras Id',
-        dataIndex: 'cameras_id',
-        key: 'cameras_id',
+        title: 'Cameras Uuid',
+        dataIndex: 'cameras_uuid',
+        key: 'cameras_uuid',
         editable: false,
         width: 200
       },
@@ -125,11 +125,11 @@ class TriggersAdmin extends Component {
     if (!isEmpty(nextProps.triggers)) {
       for (let i = 0; i < nextProps.triggers.length; ++i) {
         data.push({
-          key: nextProps.triggers[i]['id'],
-          id: nextProps.triggers[i]['id'],
-          base_triggers_id: nextProps.triggers[i]['base_trigger']['id'],
-          users_id: nextProps.triggers[i]['users_id'],
-          cameras_id: nextProps.triggers[i]['cameras_id'],
+          key: nextProps.triggers[i]['uuid'],
+          id: nextProps.triggers[i]['uuid'],
+          base_triggers_uuid: nextProps.triggers[i]['base_trigger']['uuid'],
+          users_uuid: nextProps.triggers[i]['users_uuid'],
+          cameras_uuid: nextProps.triggers[i]['cameras_uuid'],
           trigger_type: nextProps.triggers[i]['base_trigger']['trigger_type'],
           target_type: nextProps.triggers[i]['base_trigger']['target_type'],
           trigger_duration: nextProps.triggers[i]['base_trigger']['trigger_duration'],
@@ -146,8 +146,8 @@ class TriggersAdmin extends Component {
     e.preventDefault();
     this.form.validateFields((err, values) => {
       if (!err) {
-        this.setState({camera_groups_id: values.camera_groups_id});
-        this.setState({cameras_id: values.cameras_id});
+        this.setState({camera_groups_uuid: values.camera_groups_uuid});
+        this.setState({cameras_uuid: values.cameras_uuid});
         this.props.actions.fetchTriggersAdmin(this.props.user, values);
       }
     });
@@ -155,11 +155,11 @@ class TriggersAdmin extends Component {
 
   handleDeleteTrigger = key => {
     const dataSource = [...this.state.dataSource];
-    this.props.actions.deleteTriggerAdmin(this.props.user, dataSource.filter(item => item.key == key)[0], this.state.cameras_id, this.props.cameraGroupId);
+    this.props.actions.deleteTriggerAdmin(this.props.user, dataSource.filter(item => item.key == key)[0], this.state.cameras_uuid, this.props.cameraGroupUuid);
   };
 
   handleDeleteTriggerTimeWindow = record => {
-    this.props.actions.deleteTriggerTimeWindowAdmin(this.props.user, record, this.state.cameras_id, this.props.cameraGroupId);
+    this.props.actions.deleteTriggerTimeWindowAdmin(this.props.user, record, this.state.cameras_uuid, this.props.cameraGroupUuid);
   };
 
   formRef = (form) => {
@@ -169,16 +169,16 @@ class TriggersAdmin extends Component {
   expandedRowRender = (record, index, indent, expanded) => {
     const columns = [
       {
-        title: 'Trigger Time Window Id',
+        title: 'Trigger Time Window Uuid',
         dataIndex: 'id',
         key: 'id',
         editable: false,
         width: 200
       },
       {
-        title: 'Trigger Id',
-        dataIndex: 'triggers_id',
-        key: 'triggers_id',
+        title: 'Trigger Uuid',
+        dataIndex: 'triggers_uuid',
+        key: 'triggers_uuid',
         editable: false,
         width: 200
       },
@@ -217,9 +217,9 @@ class TriggersAdmin extends Component {
     if (typeof this.props.triggers[index].time_windows !== "undefined") {
       for (let i = 0; i < this.props.triggers[index].time_windows.length; ++i) {
         data.push({
-          key: this.props.triggers[index].time_windows[i]['id'],
-          id: this.props.triggers[index].time_windows[i]['id'],
-          triggers_id: this.props.triggers[index].time_windows[i]['triggers_id'],
+          key: this.props.triggers[index].time_windows[i]['uuid'],
+          id: this.props.triggers[index].time_windows[i]['uuid'],
+          triggers_uuid: this.props.triggers[index].time_windows[i]['triggers_uuid'],
           days_of_week: this.props.triggers[index].time_windows[i]['days_of_week'],
           start_at: this.props.triggers[index].time_windows[i]['start_at'],
           end_at: this.props.triggers[index].time_windows[i]['end_at']
@@ -233,7 +233,7 @@ class TriggersAdmin extends Component {
           data={data}
           record={record}
           user={this.props.user}
-          cameraGroupId={this.state.camera_groups_id}
+          cameraGroupUuid={this.state.camera_groups_uuid}
           actions={this.props.actions}
         />
       )
@@ -290,7 +290,7 @@ class EditableTable extends React.Component {
       ...row,
     });
     this.setState({ dataSource: newData });
-    this.props.actions.updateTriggerTimeWindowAdmin(this.props.user, newData[index], this.props.record, this.props.cameraGroupId);
+    this.props.actions.updateTriggerTimeWindowAdmin(this.props.user, newData[index], this.props.record, this.props.cameraGroupUuid);
   };
 
   saveFormRef = (form) => {
@@ -361,7 +361,7 @@ class EditableCell extends React.Component {
   save = e => {
     const { record, handleSave } = this.props;
     this.form.validateFields((error, values) => {
-      if (error && error[e.currentTarget.id]) {
+      if (error && error[e.currentTarget.uuid]) {
         return;
       }
       this.toggleEdit();

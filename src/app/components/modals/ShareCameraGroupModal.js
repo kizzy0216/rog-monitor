@@ -64,7 +64,7 @@ class ShareCameraGroupModal extends Component {
         return;
       }
 
-      this.props.shareCameraGroup(this.props.user, this.props.selectedCameraGroup.id, values.email);
+      this.props.shareCameraGroup(this.props.user, this.props.selectedCameraGroup.uuid, values.email);
     });
   };
 
@@ -105,7 +105,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    shareCameraGroup: (user, cameraGroupId, email) => dispatch(shareCameraGroup(user, cameraGroupId, email))
+    shareCameraGroup: (user, cameraGroupUuid, email) => dispatch(shareCameraGroup(user, cameraGroupUuid, email))
   }
 }
 

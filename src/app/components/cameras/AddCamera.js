@@ -6,8 +6,8 @@ class AddCamera extends Component {
   render() {
     return (
       <div>
-        <span>Add camera to location {this.props.locationId}</span>
-        
+        <span>Add camera to Group {this.props.cameraGroupUuid}</span>
+
         <Button onClick={() => this.props.history.goBack()}>Cancel</Button>
         <Button>Add</Button>
       </div>

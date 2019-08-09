@@ -7,7 +7,7 @@ import logoFull from '../../assets/img/logo-full.png';
 
 import { login } from '../redux/auth/actions';
 import RegisterBtn from '../components/navigation/RegisterBtn';
-import RequestInviteModal from '../components/modals/RequestInviteModal';
+import JoinRogModal from '../components/modals/JoinRogModal';
 import RequestPasswordResetModal from '../components/modals/RequestPasswordResetModal';
 
 const FormItem = Form.Item;
@@ -79,7 +79,7 @@ class Login extends Component {
                     <Button onClick={this.toggleInviteModalVisibility} key='submit' type='primary' size='large' style={styles.inviteBtn}>
                       Request Invite
                     </Button>
-                    <RequestInviteModal visible={this.state.inviteModalVisible} toggleInviteModalVisibility={this.toggleInviteModalVisibility.bind(this)} />
+                    <JoinRogModal visible={this.state.inviteModalVisible} toggleInviteModalVisibility={this.toggleInviteModalVisibility.bind(this)} />
                   </Col>
                 </Row>
                 <Row type='flex' justify='center' align='middle'>
@@ -127,7 +127,7 @@ class Login extends Component {
                           valuePropName: 'checked',
                           initialValue: true,
                         })(
-                          <Checkbox style={styles.rememberUserId}>Remember my user ID</Checkbox>
+                          <Checkbox style={styles.rememberUserUuid}>Remember my user ID</Checkbox>
                         )}
                       </FormItem>
                       <FormItem>
@@ -237,7 +237,7 @@ const styles = {
     textAlign: 'center',
     color: 'red'
   },
-  rememberUserId: {
+  rememberUserUuid: {
     fontWeight: 700
   },
   forgotPassword: {

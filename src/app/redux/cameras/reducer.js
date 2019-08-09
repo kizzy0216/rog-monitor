@@ -27,6 +27,24 @@ const cameras = (state = initialState, action) => {
           authRtspUrl: action.authRtspUrl,
         }
 
+    case types.ADD_CAMERA_ERROR:
+      return {
+        ...state,
+        addCameraError: action.addCameraError
+      }
+
+    case types.ADD_CAMERA_IN_PROCESS:
+      return {
+        ...state,
+        addCameraInProcess: action.addCameraInProcess
+      }
+
+    case types.ADD_CAMERA_SUCCESS:
+      return {
+        ...state,
+        addCameraSuccess: action.addCameraSuccess
+      }
+
     case types.DELETE_CAMERA_ERROR:
         return {
           ...state,
@@ -48,7 +66,7 @@ const cameras = (state = initialState, action) => {
     case types.REFRESH_CAMERA_IMAGE:
       return {
         ...state,
-        refreshCameraId: action.refreshCameraId,
+        refreshCameraUuid: action.refreshCameraUuid,
         refreshCameraImage: action.refreshCameraImage
       }
 
@@ -56,21 +74,21 @@ const cameras = (state = initialState, action) => {
       return{
         ...state,
         imageUpdateInProgress: action.imageUpdateInProgress,
-        imageUpdateInProgressId: action.imageUpdateInProgressId
+        imageUpdateInProgressUuid: action.imageUpdateInProgressUuid
       }
 
     case types.REFRESH_CAMERA_ERROR:
       return{
         ...state,
         refreshCameraError: action.refreshCameraError,
-        refreshCameraErrorId: action.refreshCameraErrorId
+        refreshCameraErrorUuid: action.refreshCameraErrorUuid
       }
 
     case types.IMAGE_UPDATE_SUCCESS:
       return{
         ...state,
         imageUpdateSuccess: action.imageUpdateSuccess,
-        imageUpdateSuccessId: action.imageUpdateSuccessId
+        imageUpdateSuccessUuid: action.imageUpdateSuccessUuid
       }
 
     case types.EDIT_CAMERA_IN_PROCESS:
@@ -103,13 +121,19 @@ const cameras = (state = initialState, action) => {
       return {
         ...state,
         cameraConnectionEnabled: action.cameraConnectionEnabled,
-        cameraConnectionId: action.cameraConnectionId
+        cameraConnectionUuid: action.cameraConnectionUuid
       }
 
     case types.UPDATE_ALERT_TIME_WINDOWS_DATA:
       return {
         ...state,
         alert_windows: action.alert_windows
+      }
+
+    case types.FETCH_SUCCESS_ADMIN:
+      return {
+        ...state,
+        camerasAdmin: action.camerasAdmin
       }
 
     default:

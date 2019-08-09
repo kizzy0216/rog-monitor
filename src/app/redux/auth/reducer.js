@@ -128,16 +128,12 @@ const auth = (state = initialState, action) => {
           ...state,
           getPasswordResetRequestError: action.getPasswordResetRequestError
         }
-      case types.BVC_INTERACTION_IN_PROCESS:
-        return {
-          ...state,
-          bvcInteractionInProcess:action.bvcInteractionInProcess
-        }
-      case types.BVC_AUTH_ERROR:
-        return {
-          ...state,
-          bvcAuthError:action.bvcAuthError
-        }
+
+      case types.TOGGLE_MUTE:
+        const newState = {...state}
+        newState.user.mute = action.mute
+        return newState
+
     default:
       return state;
   }

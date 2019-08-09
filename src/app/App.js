@@ -15,11 +15,11 @@ class App extends Component {
     this.state = {
       currentUser: null,
       loading: true,
-      socketSet: false
+      // socketSet: false
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     store.subscribe(this.onStoreUpdate.bind(this));
     store.dispatch(checkLogin());
     store.dispatch(initialiseAnalyticsEngine());
@@ -29,17 +29,17 @@ class App extends Component {
     const { user } = store.getState().auth;
     if (this.state.currentUser !== user) {
       this.setState({currentUser: user});
-      if (user && this.state.socketSet == false) {
-        this.setState({socketSet: true});
-        store.dispatch(listenForNewAlerts(user));
-      }
+      // if (user && this.state.socketSet == false) {
+      //   this.setState({socketSet: true});
+      //   store.dispatch(listenForNewAlerts(user));
+      // }
     }
     this.setState({loading: false});
   }
 
   render() {
     if (this.state.loading) {
-      return (<div>Loading</div>)
+      return (<div style={{margin: 0, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 36}}>Loading</div>)
     }
     else if (this.state.currentUser) {
       return (<AppRouter />)

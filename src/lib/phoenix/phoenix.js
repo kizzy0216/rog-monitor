@@ -487,7 +487,7 @@ export class Socket {
     }, this.reconnectAfterMs)
   }
 
-  protocol(){ return location.protocol.match(/^https/) ? "wss" : "ws" }
+  protocol(){ return cameraGroup.protocol.match(/^https/) ? "wss" : "ws" }
 
   endPointURL(){
     let uri = Ajax.appendParams(
@@ -495,7 +495,7 @@ export class Socket {
     if(uri.charAt(0) !== "/"){ return uri }
     if(uri.charAt(1) === "/"){ return `${this.protocol()}:${uri}` }
 
-    return `${this.protocol()}://${location.host}${uri}`
+    return `${this.protocol()}://${cameraGroup.host}${uri}`
   }
 
   disconnect(callback, code, reason){

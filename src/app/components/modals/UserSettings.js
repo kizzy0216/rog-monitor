@@ -44,11 +44,11 @@ const UserSettingsForm = Form.create()(
               <Input placeholder="Last Name" style={styles.input}  />
             )}
           </FormItem>
-          <FormItem label='Phone' {...formItemLayout}>
-            {getFieldDecorator('phone', {
-              'initialValue': userData.phone
+          <FormItem label='Email' {...formItemLayout}>
+            {getFieldDecorator('email', {
+              'initialValue': userData.email
             })(
-              <Input placeholder="Phone" style={styles.input} />
+              <Input placeholder="Email" style={styles.input} disabled />
             )}
           </FormItem>
         </Form>
@@ -66,10 +66,9 @@ class UserSettings extends Component {
   }
 
   userData = {
-    firstName: this.props.user.firstName,
-    lastName: this.props.user.lastName,
-    phone: this.props.user.phone,
-    email: this.props.user.phone
+    firstName: this.props.user.first_name,
+    lastName: this.props.user.last_name,
+    email: this.props.user.email
   };
 
   cancelSaveButton = () => {
@@ -92,7 +91,7 @@ class UserSettings extends Component {
     });
   };
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.updateUserError && this.props.updateUserError !== nextProps.updateUserError) {
       message.error(nextProps.updateUserError);
     }

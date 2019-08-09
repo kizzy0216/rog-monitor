@@ -2,21 +2,21 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Icon, Switch } from 'antd';
-import { toggleCameraConnection } from '../../redux/cameras/actions';
-import { checkCameraConnection } from '../../redux/cameras/actions';
+import { toggleCameraEnabled } from '../../redux/cameras/actions';
+import { checkCameraEnabled } from '../../redux/cameras/actions';
 
 class ToggleCameraConnection extends Component {
 
-  toggleCameraConnection = (enabled) => {
-    this.props.toggleCameraConnection(this.props.id, enabled);
+  toggleCameraEnabled = (enabled) => {
+    this.props.toggleCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid, enabled);
   }
 
-  componentWillMount = () => {
-    this.props.checkCameraConnection(this.props.id);
+  UNSAFE_componentWillMount() {
+    this.props.checkCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid);
   }
 
-  shouldComponentUpdate = (nextProps) => {
-    if (nextProps.id === nextProps.cameraConnectionId) {
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.data.uuid === nextProps.cameraConnectionUuid) {
       return true;
     } else {
       return false;
@@ -24,12 +24,12 @@ class ToggleCameraConnection extends Component {
   }
 
   render() {
-    let enabled = this.props.cameraConnectionEnabled;
+    let enabled = this.props.data.enabled;
     return (
       <Switch
         checkedChildren={<Icon type="check" />}
         unCheckedChildren={<Icon type="cross" />}
-        onChange={() => this.toggleCameraConnection(!enabled)}
+        onChange={() => this.toggleCameraEnabled(!enabled)}
         checked={enabled}
       />
     );
@@ -39,14 +39,14 @@ class ToggleCameraConnection extends Component {
 const mapStateToProps = (state) => {
   return {
     cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
-    cameraConnectionId: state.cameras.cameraConnectionId,
+    cameraConnectionUuid: state.cameras.cameraConnectionUuid,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    toggleCameraConnection: (cameraId, cameraConnectionEnabled) => dispatch(toggleCameraConnection(cameraId, cameraConnectionEnabled)),
-    checkCameraConnection: (cameraId) => dispatch(checkCameraConnection(cameraId))
+    toggleCameraEnabled: (user, cameraGroup, camera, cameraConnectionEnabled) => dispatch(toggleCameraEnabled(user, cameraGroup, camera, cameraConnectionEnabled)),
+    checkCameraEnabled: (user, cameraGroup, camera) => dispatch(checkCameraEnabled(user, cameraGroup, camera))
   }
 }
 

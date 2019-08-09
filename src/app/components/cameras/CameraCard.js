@@ -8,8 +8,7 @@ import Recorder from '../video/Recorder';
 import EditCamera from '../cameras/EditCamera';
 import { deleteCamera } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
-import AddAlertModal from '../modals/AddAlertModal';
-import { registerCamera } from '../../redux/alerts/actions';
+import TriggerModal from '../modals/TriggerModal';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import CameraCardImg from './CameraCardImg';
 import ToggleCameraConnection from '../buttons/ToggleCameraConnection';
@@ -28,34 +27,20 @@ class CameraCard extends Component {
   }
 
   deleteCamera = () => {
-    this.props.deleteCamera(this.props.user, this.props.id);
+    this.props.deleteCamera(this.props.user, this.props.camera_groups_uuid, this.props.uuid);
   };
 
   viewCameraStream = () => {
     const cameraViewEvent = {
       email: this.props.user.email,
       name: this.props.user.firstName+ ' ' +this.props.user.lastName,
-      location_viewed: this.props.cameraLocation.name,
+      cameraGroup_viewed: this.props.cameraGroup.name,
       camera_viewed: this.props.name
     };
 
     this.props.trackEventAnalytics('camera viewed', cameraViewEvent);
 
-    this.props.history.push(`/cameras/${this.props.id}/stream`);
-  }
-
-  componentWillMount = () => {
-    this.props.registerCamera(this.props.user.id, this.props.cameraLocation.cameras);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.id === nextProps.id){
-      if (nextProps.id === nextProps.refreshCameraId){
-        if (this.props.image.original !== nextProps.refreshCameraImage && this.props.refreshCameraId === nextProps.refreshCameraId) {
-          this.props.image.original = nextProps.refreshCameraImage
-        }
-      }
-    }
+    this.props.history.push(`/camera-groups/${this.props.camera_groups_uuid}/cameras/${this.props.uuid}/stream`);
   }
 
   render() {
@@ -67,17 +52,17 @@ class CameraCard extends Component {
           </Row>
           <Row>
             <div>
-              {this.props.cameraLocation.myRole === 'viewer' ?
+              {this.props.cameraGroup.myRole === 'viewer' ?
                 (<div></div>) :
                 <div>
                   <Col span={8} style={styles.alertModal}>
-                    <AddAlertModal
+                    <TriggerModal
                       data={this.props}
                     />
                   </Col>
                   <Col span={8} style={styles.cameraConnectionSwitch}>
                     <ToggleCameraConnection
-                      id={this.props.id}
+                      data={this.props}
                     />
                   </Col>
                 </div>
@@ -94,13 +79,13 @@ class CameraCard extends Component {
           <Row onClick={() => this.viewCameraStream()}>
             <CameraCardImg data={this.props} />
           </Row>
-          {this.props.cameraLocation.myRole === 'viewer' ?
-            (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
+          {this.props.cameraGroup.myRole === 'viewer' ?
+            (<Row type='flex' style={styles.cameraCardButtons}>
               <Col span={20} offset={2}>
                 <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
               </Col>
             </Row>) :
-            (<Row type='flex' justify="flex-end" style={styles.cameraCardButtons}>
+            (<Row type='flex' style={styles.cameraCardButtons}>
               <Col span={2}>
                 <EditCamera data={this.props} />
               </Col>
@@ -121,7 +106,7 @@ class CameraCard extends Component {
       return (
         <Card>
           <div>
-            <Recorder cameraId={this.props.id} rtspUrl={this.props.rtspUrl} />
+            <Recorder cameraUuid={this.props.uuid} rtspUrl={this.props.rtspUrl} />
           </div>
           <p>{this.props.name}</p>
         </Card>
@@ -150,22 +135,21 @@ const styles = {
 }
 const mapStateToProps = (state) => {
   return {
-    polygonData: state.alerts.polygonData,
+    polygonData: state.triggers.polygonData,
     refreshCameraImage: state.cameras.refreshCameraImage,
-    refreshCameraId: state.cameras.refreshCameraId,
+    refreshCameraUuid: state.cameras.refreshCameraUuid,
     imageUpdateInProgress: state.cameras.imageUpdateInProgress,
-    imageUpdateInProgressId: state.cameras.imageUpdateInProgressId,
+    imageUpdateInProgressUuid: state.cameras.imageUpdateInProgressUuid,
     refreshCameraError: state.cameras.refreshCameraError,
-    refreshCameraErrorId: state.cameras.refreshCameraErrorId,
+    refreshCameraErrorUuid: state.cameras.refreshCameraErrorUuid,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
-    imageUpdateSuccessId: state.cameras.imageUpdateSuccessId
+    imageUpdateSuccessUuid: state.cameras.imageUpdateSuccessUuid
   }
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteCamera: (user, cameraId) => dispatch(deleteCamera(user, cameraId)),
-    trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
-    registerCamera: (userId, cameraDetails) => dispatch(registerCamera(userId, cameraDetails)),
+    deleteCamera: (user, cameraGroupUuid, cameraUuid) => dispatch(deleteCamera(user, cameraGroupUuid, cameraUuid)),
+    trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data))
   }
 }
 

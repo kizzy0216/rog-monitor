@@ -1,7 +1,6 @@
 export default {
   alerts: [],
   newAlerts: [],
-  channels: [],
   pagination: {page_number: 1},
   fetchInProcess: false,
   fetchError: false,

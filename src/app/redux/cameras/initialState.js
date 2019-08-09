@@ -1,4 +1,5 @@
 export default {
+  camerasAdmin: [],
   authRtspUrl: null,
   fetchInProcess: false,
   fetchError: '',
@@ -18,5 +19,8 @@ export default {
   editCameraError: '',
   cameraConnectionEnabled: false,
   cameraConnectionId: '',
-  time_zone: null
+  time_zone: null,
+  addCameraInProcess: false,
+  addCameraError: '',
+  addCameraSuccess: false,
 }

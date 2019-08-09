@@ -15,6 +15,7 @@ const FormItem = Form.Item;
 
 class ResetPassword extends Component {
   constructor(props) {
+    console.log("HIT!");
     super(props);
 
     this.state = {
@@ -22,11 +23,11 @@ class ResetPassword extends Component {
     }
   }
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.props.getPasswordResetRequest(this.props.match.params.token);
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.resetPasswordSuccess && this.props.resetPasswordSuccess !== nextProps.resetPasswordSuccess) {
       message.success('Password reset complete! Please log in.');
       this.props.history.push('/login');

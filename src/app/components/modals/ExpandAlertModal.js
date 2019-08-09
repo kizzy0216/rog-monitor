@@ -7,7 +7,7 @@ import {Modal, Row, Col, Form} from 'antd';
 const ExpandAlertForm = Form.create()(
   (props) => {
     const {
-      onCancel, visible, showAlert, alertImg, alertType, cameraName, locationName, timestamp, formatDatetime
+      onCancel, visible, showAlert, alertImg, alertType, cameraName, cameraGroupName, timestamp, formatDatetime
     } = props;
 
     return (
@@ -20,7 +20,7 @@ const ExpandAlertForm = Form.create()(
       >
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{alertType}</Col>
-          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{cameraName} at {locationName}</Col>
+          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{cameraName} at {cameraGroupName}</Col>
           <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp)}</Col>
         </Row>
         <Row><img src={alertImg} style={styles.expandedImg} /></Row>
@@ -42,7 +42,7 @@ class ExpandAlertModal extends Component {
     return `${dt.format('L')} ${dt.format('LT')}`;
   }
 
-  componentWillReceiveProps(nextProps) {}
+  UNSAFE_componentWillReceiveProps(nextProps) {}
 
   showModal = () => {
     this.setState({visible: true});
@@ -53,17 +53,25 @@ class ExpandAlertModal extends Component {
   };
 
   render() {
+    let trigger_type = this.props.data.trigger_type;
+    if (this.props.data.trigger_type == 'RA') {
+      trigger_type = 'Restricted Area';
+    } else if (this.props.data.trigger_type == "VW") {
+      trigger_type = "Virtual Wall";
+    } else if (this.props.data.trigger_type == "LD") {
+      trigger_type = "Loitering";
+    }
     return (
       <div>
-        <img src={this.props.data.image.original} style={styles.alertCardImg} onClick={this.showModal} />
+        <img src={this.props.data.alert_image_url +'?auth='+ this.props.data.user.jwt} style={styles.alertCardImg} onClick={this.showModal} />
         <ExpandAlertForm
           onCancel={this.handleCancel}
-          alertImg={this.props.data.image.original}
+          alertImg={this.props.data.alert_image_url}
           visible={this.state.visible}
-          alertType={this.props.data.type}
-          cameraName={this.props.data.camera.name}
-          locationName={this.props.data.camera.location.name}
-          timestamp={this.props.data.timestamp}
+          alertType={trigger_type}
+          cameraName={this.props.data.cameras_name}
+          cameraGroupName={this.props.data.camera_groups_name}
+          timestamp={this.props.data.time}
           formatDatetime={this.formatDatetime}
         />
       </div>

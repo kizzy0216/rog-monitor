@@ -25,6 +25,12 @@ const users = (state = initialState, action) => {
         userData: action.userData
       }
 
+    case types.UPDATE_USER_CAMERA_LICENSE_DATA:
+      return{
+        ...state,
+        cameraLicenseData: action.cameraLicenseData
+      }
+
     default:
       return state;
   }

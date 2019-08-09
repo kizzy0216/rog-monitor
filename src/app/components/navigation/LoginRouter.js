@@ -9,7 +9,7 @@ import { Layout } from 'antd';
 const { Header, Sider, Content } = Layout;
 
 import Register from '../../screens/Register';
-import ResetPassword from '../../screens/reset_password';
+import ResetPassword from '../../screens/ResetPassword';
 import Login from '../../screens/Login';
 
 export default class LoginRouter extends Component {
@@ -25,7 +25,7 @@ export default class LoginRouter extends Component {
             <Switch>
               <Route exact path='/login' component={Login} />
               <Route exact path='/register/:token' component={Register} />
-              <Route exact path='/password_reset_form/:token' component={ResetPassword} />
+              <Route exact path='/forgot_password/:token' component={ResetPassword} />
 
               <Redirect to='/login' />
             </Switch>

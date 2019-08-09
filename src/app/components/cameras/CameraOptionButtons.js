@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Row, Col, Icon, Menu, Dropdown, Tooltip, message } from 'antd';
 
 import AddCameraModal from '../modals/AddCameraModal';
-import InviteGuardModal from '../modals/InviteGuardModal';
-import EditLocationModal from '../modals/EditLocationModal';
-import GuardSettingsModal from '../modals/GuardSettingsModal';
+import ShareCameraGroupModal from '../modals/ShareCameraGroupModal';
+import EditCameraGroupModal from '../modals/EditCameraGroupModal';
+import CameraGroupPrivilegeSettingsModal from '../modals/CameraGroupPrivilegeSettingsModal';
+import { fetchUserCameraLicenses } from '../../redux/users/actions';
 
-//here
 const SettingsMenu = (props) => (
   <Menu>
     <Menu.Item>
-      <EditLocationModal selectedLocation={props.selectedLocation} />
+      <EditCameraGroupModal selectedCameraGroup={props.selectedCameraGroup} />
     </Menu.Item>
     <Menu.Item>
-      <GuardSettingsModal selectedLocation={props.selectedLocation} />
+      <CameraGroupPrivilegeSettingsModal selectedCameraGroup={props.selectedCameraGroup} />
     </Menu.Item>
   </Menu>
 )
@@ -24,32 +25,30 @@ class CameraOptionButtons extends Component {
 
     this.state = {
       addCameraModalVisible: false,
-      inviteGuardModalVisible: false,
+      shareCameraGroupModalVisible: false,
     }
   }
 
   toggleAddCameraModalVisibility = () => {
-    let licensesAvailable = this.props.user.cameraLicenses - this.checkLicensesUsed();
+    let licensesAvailable = this.countAvailableCameraLicenses();
     if (licensesAvailable >= 1) {
       this.setState({addCameraModalVisible: !this.state.addCameraModalVisible})
+    } else if (this.state.addCameraModalVisible === true) {
+      this.setState({addCameraModalVisible: false})
     } else {
       message.error("You have reached your license limit. Please send an email requesting additional licenses to help@gorog.co");
     }
   }
 
-  checkLicensesUsed = () => {
-    if (this.props.locations.length) {
-      return  this.props.locations.map(location => location.cameras && location.myRole === 'owner' ? location.cameras : [])
-                .reduce((a, b) => a.concat(b))
-                .length;
-    }
-    else {
-      return 0;
-    }
+  countAvailableCameraLicenses = () => {
+    this.props.fetchUserCameraLicenses(this.props.user, this.props.cameraGroups)
+    let count = 0;
+    this.props.user.cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid == null ? count++ : count)
+    return count;
   }
 
-  toggleInviteGuardModalVisibility = () => {
-    this.setState({inviteGuardModalVisible: !this.state.inviteGuardModalVisible})
+  toggleShareCameraGroupModalVisibility = () => {
+    this.setState({shareCameraGroupModalVisible: !this.state.shareCameraGroupModalVisible})
   }
 
   render() {
@@ -63,21 +62,21 @@ class CameraOptionButtons extends Component {
             </Tooltip>
             <AddCameraModal
               user={this.props.user}
-              selectedLocation={this.props.selectedLocation}
+              selectedCameraGroup={this.props.selectedCameraGroup}
               visible={this.state.addCameraModalVisible}
               toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)} />
           </Col>
           <Col xs={{span: 8}}>
-            <Tooltip title='Share Location' placement='bottom'>
-              <Icon style={styles.share} type='share-alt' onClick={this.toggleInviteGuardModalVisibility}/>
+            <Tooltip title='Share CameraGroup' placement='bottom'>
+              <Icon style={styles.share} type='share-alt' onClick={this.toggleShareCameraGroupModalVisibility}/>
             </Tooltip>
-            <InviteGuardModal
-              selectedLocation={this.props.selectedLocation}
-              visible={this.state.inviteGuardModalVisible}
-              toggleInviteGuardModalVisibility={this.toggleInviteGuardModalVisibility.bind(this)} />
+            <ShareCameraGroupModal
+              selectedCameraGroup={this.props.selectedCameraGroup}
+              visible={this.state.shareCameraGroupModalVisible}
+              toggleShareCameraGroupModalVisibility={this.toggleShareCameraGroupModalVisibility.bind(this)} />
           </Col>
           <Col xs={{span: 8}}>
-            <Dropdown selectedLocation={this.props.selectedLocation} overlay={<SettingsMenu selectedLocation={this.props.selectedLocation} />}>
+            <Dropdown selectedCameraGroup={this.props.selectedCameraGroup} overlay={<SettingsMenu selectedCameraGroup={this.props.selectedCameraGroup} />}>
               <Icon style={styles.edit} type='setting'/>
             </Dropdown>
           </Col>
@@ -115,4 +114,14 @@ const styles = {
   }
 }
 
-export default CameraOptionButtons;
+const mapStateToProps = (state) => {
+  return {}
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchUserCameraLicenses: (user, cameraGroup) => dispatch(fetchUserCameraLicenses(user, cameraGroup))
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CameraOptionButtons);

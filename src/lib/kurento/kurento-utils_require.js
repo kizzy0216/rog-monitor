@@ -1645,35 +1645,35 @@ var toIntIfInt = function (v) {
   return String(Number(v)) === v ? Number(v) : v;
 };
 
-var attachProperties = function (match, location, names, rawName) {
+var attachProperties = function (match, cameraGroup, names, rawName) {
   if (rawName && !names) {
-    location[rawName] = toIntIfInt(match[1]);
+    cameraGroup[rawName] = toIntIfInt(match[1]);
   }
   else {
     for (var i = 0; i < names.length; i += 1) {
       if (match[i+1] != null) {
-        location[names[i]] = toIntIfInt(match[i+1]);
+        cameraGroup[names[i]] = toIntIfInt(match[i+1]);
       }
     }
   }
 };
 
-var parseReg = function (obj, location, content) {
+var parseReg = function (obj, cameraGroup, content) {
   var needsBlank = obj.name && obj.names;
-  if (obj.push && !location[obj.push]) {
-    location[obj.push] = [];
+  if (obj.push && !cameraGroup[obj.push]) {
+    cameraGroup[obj.push] = [];
   }
-  else if (needsBlank && !location[obj.name]) {
-    location[obj.name] = {};
+  else if (needsBlank && !cameraGroup[obj.name]) {
+    cameraGroup[obj.name] = {};
   }
-  var keyLocation = obj.push ?
+  var keyCameraGroup = obj.push ?
     {} :  // blank object that will be pushed
-    needsBlank ? location[obj.name] : location; // otherwise, named location or root
+    needsBlank ? cameraGroup[obj.name] : cameraGroup; // otherwise, named cameraGroup or root
 
-  attachProperties(content.match(obj.reg), keyLocation, obj.names, obj.name);
+  attachProperties(content.match(obj.reg), keyCameraGroup, obj.names, obj.name);
 
   if (obj.push) {
-    location[obj.push].push(keyLocation);
+    cameraGroup[obj.push].push(keyCameraGroup);
   }
 };
 
@@ -1683,7 +1683,7 @@ var validLine = RegExp.prototype.test.bind(/^([a-z])=(.*)/);
 exports.parse = function (sdp) {
   var session = {}
     , media = []
-    , location = session; // points at where properties go under (one of the above)
+    , cameraGroup = session; // points at where properties go under (one of the above)
 
   // parse lines we understand
   sdp.split(/(\r\n|\r|\n)/).filter(validLine).forEach(function (l) {
@@ -1691,13 +1691,13 @@ exports.parse = function (sdp) {
     var content = l.slice(2);
     if (type === 'm') {
       media.push({rtp: [], fmtp: []});
-      location = media[media.length-1]; // point at latest media line
+      cameraGroup = media[media.length-1]; // point at latest media line
     }
 
     for (var j = 0; j < (grammar[type] || []).length; j += 1) {
       var obj = grammar[type][j];
       if (obj.reg.test(content)) {
-        return parseReg(obj, location, content);
+        return parseReg(obj, cameraGroup, content);
       }
     }
   });
@@ -1764,9 +1764,9 @@ var format = function (formatStr) {
   // NB: we discard excess arguments - they are typically undefined from makeLine
 };
 
-var makeLine = function (type, obj, location) {
+var makeLine = function (type, obj, cameraGroup) {
   var str = obj.format instanceof Function ?
-    (obj.format(obj.push ? location : location[obj.name])) :
+    (obj.format(obj.push ? cameraGroup : cameraGroup[obj.name])) :
     obj.format;
 
   var args = [type + '=' + str];
@@ -1774,15 +1774,15 @@ var makeLine = function (type, obj, location) {
     for (var i = 0; i < obj.names.length; i += 1) {
       var n = obj.names[i];
       if (obj.name) {
-        args.push(location[obj.name][n]);
+        args.push(cameraGroup[obj.name][n]);
       }
       else { // for mLine and push attributes
-        args.push(location[obj.names[i]]);
+        args.push(cameraGroup[obj.names[i]]);
       }
     }
   }
   else {
-    args.push(location[obj.name]);
+    args.push(cameraGroup[obj.name]);
   }
   return format.apply(null, args);
 };

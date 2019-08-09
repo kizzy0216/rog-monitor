@@ -5,8 +5,10 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
-import { Socket } from '../../../lib/phoenix/phoenix';
-import { listenForNewAlerts } from '../alerts/actions';
+import { fetchShareGroupInvites } from '../invites/actions';
+import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login, toggleMute} from '../auth/actions';
+import {listenForNewAlerts} from '../alerts/actions';
+import {isEmpty} from '../helperFunctions';
 
 export function updateUserData(userData) {
   return{
@@ -36,30 +38,102 @@ function updateUserSuccess(bool, user) {
   }
 }
 
+function updateUserCameraLicenseData(data) {
+  return {
+    type: types.UPDATE_USER_CAMERA_LICENSE_DATA,
+    cameraLicenseData: data
+  }
+}
+
+export function fetchUserCameraLicenses(user) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/licenses`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+      .then((response) => {
+        if (isEmpty(response.data) === false) {
+          user.cameraLicenses = response.data;
+        } else {
+          user.cameraLicenses = [];
+        }
+        dispatch(setupFirebaseCloudMessaging(user));
+        dispatch(fetchShareGroupInvites(user));
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching user data. Please try again later.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(loginError(errMessage));
+        dispatch(loginInProcess(false));
+      })
+  }
+}
+
+export function readUser(jwt, jwtTokenRefresh, email, password) {
+  return(dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users`;
+    let config = {headers: {Authorization: 'Bearer '+jwt}};
+    axios.get(url, config)
+      .then((response) => {
+        const user = {
+          ...response.data,
+          jwt: jwt
+        }
+        sessionStorage.setItem('jwt', jwt);
+        sessionStorage.setItem('email', email);
+        sessionStorage.setItem('password', password);
+
+        if (window.jwtTokenRefresh === null) {
+          window.jwtTokenRefresh = window.setInterval(
+            function(){
+              dispatch(login(email, password));
+            }, (10 * 60 * 1000), [email, password]
+          );
+        }
+        dispatch(fetchUserCameraLicenses(user));
+      })
+      .catch(error => {
+        let errMessage = 'Error fetching user data. Please try again later.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(loginError(errMessage));
+        dispatch(loginInProcess(false));
+      });
+  }
+}
+
 export function updateUser(user, values) {
   return (dispatch) => {
     dispatch(updateUserError(''));
     dispatch(updateUserSuccess(false));
     dispatch(updateUserInProgress(true));
-    let config = {headers: {Authorization: user.jwt}};
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
     const data = {
-      user: {
-        first_name: values.firstName,
-        last_name: values.lastName,
-        phone: values.phone
-      }
+      first_name: values.firstName,
+      last_name: values.lastName
     };
 
     axios.patch(url, data, config)
       .then((response) => {
-        console.log(response);
         dispatch(updateUserData(response));
         dispatch(updateUserSuccess(true));
         dispatch(updateUserInProgress(false));
       })
       .catch(error => {
-        dispatch(updateUserError(error));
+        let errMessage = 'Error updating user';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(updateUserError(errMessage));
         dispatch(updateUserInProgress(false));
       });
   }
@@ -67,13 +141,353 @@ export function updateUser(user, values) {
 
 export function muteSound(user, mute) {
   return (dispatch) => {
-    user.mute = mute;
-    updateUserData(user);
-
-    user.channel.leave()
-      .receive('ok', resp => {
-        dispatch(listenForNewAlerts(user));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data = {
+      mute: mute
+    }
+    axios.patch(url, data, config)
+      .then((response) => {
+        dispatch(toggleMute(response.data.user.mute));
       })
-      .receive('error', resp => console.log(`Unable to leave channel ${channelName}`));
+      .catch((err) => {
+        let errMessage = 'Error fetching user device data. Please try again later.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
+      })
+  }
+}
+
+function setupFirebaseCloudMessaging(user){
+  return (dispatch, getState, {getFirebase}) => {
+    const firebase = getFirebase();
+    const messaging = firebase.messaging();
+    messaging
+      .requestPermission()
+      .then(() => {
+        return messaging.getToken();
+       })
+      .then(token => {
+        // console.log("FCM Token:", token);
+        dispatch(checkForStoredUserDeviceToken(user, token, messaging));
+      })
+      .catch(error => {
+        if (error.code === "messaging/permission-blocked") {
+          alert("It looks like your web browser blocked our notifications. Please Unblock Notifications Manually through your browser's settings.");
+        } else {
+          dispatch(loginError(errMessage));
+          dispatch(loginInProcess(false));
+        }
+      });
+  }
+}
+
+function checkForStoredUserDeviceToken(user, token, messaging) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/devices`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+      .then((response) => {
+        user.devices = response.data;
+        let device_token_exists = false;
+        for (var i = 0; i < user.devices.length; i++) {
+          let stored_device_token = user.devices[i].device_token;
+          if (token === stored_device_token) {
+            device_token_exists = true;
+            sessionStorage.setItem('fcm_token_id', user.devices[i].uuid)
+            sessionStorage.setItem('fcm_token', token)
+            dispatch(listenForNewAlerts(user, messaging));
+            dispatch(loginSuccess(user));
+            dispatch(loginInProcess(false));
+          }
+        }
+        if (device_token_exists === false) {
+          dispatch(storeUserDevice(user, token, messaging));
+        }
+      })
+      .catch(error => {
+        let errMessage = 'Error fetching user device data. Please try again later.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(loginError(errMessage));
+        dispatch(loginInProcess(false));
+      });
+  }
+}
+
+export function storeUserDevice(user, token, messaging) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/devices`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data ={
+      device_token: token,
+      device_name: 'Web Browser Device'
+    }
+    axios.post(url, data, config)
+      .then((response) => {
+        user.devices.push(response.data.user_device);
+        sessionStorage.setItem('fcm_token_id', response.data.user_device.uuid)
+        sessionStorage.setItem('fcm_token', token)
+        dispatch(listenForNewAlerts(user, messaging));
+        dispatch(loginSuccess(user));
+        dispatch(loginInProcess(false));
+      })
+      .catch(error => {
+        console.log(error);
+        let errMessage = 'Error storing user device token.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(loginError(errMessage));
+        dispatch(loginInProcess(false));
+      });
+  }
+}
+
+export function updateUserDevice(userUuid, deviceUuid, name) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userUuid}/devices/${deviceUuid}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data ={
+      device_name: name
+    }
+    axios.patch(url, data, config)
+      .then((response) => {
+        // console.log(response);
+      })
+      .catch(error => {
+        let errMessage = 'Error updating user device data. Please try again later.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
+      });
+  }
+}
+
+export function deleteUserDevice(userUuid, deviceUuid, token) {
+  return (dispatch, getState, {getFirebase}) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userUuid}/devices/${deviceUuid}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.delete(url, config)
+      .then((response) => {
+        const firebase = getFirebase();
+        const messaging = firebase.messaging();
+        messaging
+          .deleteToken(token)
+            .then((response) => {
+              // console.log(response);
+            });
+      })
+      .catch(error => {
+        let errMessage = 'Error deleting user device data. Please try again later.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
+      });
+  }
+}
+
+export function readUserByUuidAdmin(values) {
+  return (dispatch) => {
+    dispatch(updateUserData({}));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${values.user_uuid}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+      .then((response) => {
+        if (response.hasOwnProperty('data')) {
+          dispatch(updateUserData(response.data));
+        }
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching user';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
+      });
+  }
+}
+
+export function readUserByEmailAdmin(values) {
+  return (dispatch) => {
+    dispatch(updateUserData({}));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users?email=${values.email}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+      .then((response) => {
+        if (response.hasOwnProperty('data')) {
+          dispatch(updateUserData(response.data));
+        }
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching user';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        console.log(errMessage);
+      });
+  }
+}
+
+export function updateUserAdmin(user, values) {
+  return (dispatch) => {
+    dispatch(updateUserError(''));
+    dispatch(updateUserSuccess(false));
+    dispatch(updateUserInProgress(true));
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
+    const data = JSON.parse(JSON.stringify(values));
+    delete data.key;
+    delete data.uuid;
+
+    axios.patch(url, data, config)
+      .then((response) => {
+        dispatch(updateUserData(response));
+        dispatch(updateUserSuccess(true));
+        dispatch(updateUserInProgress(false));
+      })
+      .catch(error => {
+        let errMessage = 'Error updating user';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(updateUserError(errMessage));
+        dispatch(updateUserInProgress(false));
+      });
+  }
+}
+
+export function deleteUserAdmin(user_uuid) {
+  return (dispatch) => {
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user_uuid}`;
+
+    axios.delete(url, config)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch(error => {
+        let errMessage = 'Error updating user';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(updateUserError(errMessage));
+      });
+  }
+}
+
+export function createUserLicense(user, numberToAdd) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data = {
+      number_to_add: numberToAdd
+    };
+    axios.post(url, data, config)
+      .then((response) => {
+        dispatch(readUserCameraLicensesAdmin(user));
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching user licnese data. Please try again later.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(updateUserError(errMessage));
+      })
+  }
+}
+
+export function readUserCameraLicensesAdmin(user) {
+  return (dispatch) => {
+    dispatch(updateUserData({}));
+    dispatch(updateUserCameraLicenseData({}));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+      .then((response) => {
+        if (!isEmpty(response.data)) {
+          dispatch(updateUserCameraLicenseData(response.data));
+        }
+        dispatch(updateUserData(user));
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching user licnese data. Please try again later.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(updateUserError(errMessage));
+      })
+  }
+}
+
+export function updateUserLicense(user, license) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses/${license.uuid}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data = {
+      tier_0: license.tier_0,
+      tier_1: license.tier_1,
+      tier_2: license.tier_2
+    };
+    axios.patch(url, data, config)
+      .then((response) => {
+        dispatch(readUserCameraLicensesAdmin(user));
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching user licnese data. Please try again later.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(updateUserError(errMessage));
+      })
+  }
+}
+
+export function deleteUserLicenseAdmin(user, license) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses/${license['uuid']}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.delete(url, config)
+      .then((response) => {
+        dispatch(readUserCameraLicensesAdmin(user));
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching user licnese data. Please try again later.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
+        dispatch(updateUserError(errMessage));
+      })
   }
 }

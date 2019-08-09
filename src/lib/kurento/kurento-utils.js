@@ -30,7 +30,7 @@ var parser = new UAParser(ua);
 var browser = parser.getBrowser();
 var usePlanB = false;
 if (browser.name === 'Chrome' || browser.name === 'Chromium') {
-    logger.debug(browser.name + ': using SDP PlanB');
+    // logger.debug(browser.name + ': using SDP PlanB');
     usePlanB = true;
 }
 function noop(error) {
@@ -248,7 +248,7 @@ function WebRtcPeer(mode, options, callback) {
         } else {
             candidate = new RTCIceCandidate(iceCandidate);
         }
-        logger.debug('Remote ICE candidate received', iceCandidate);
+        // logger.debug('Remote ICE candidate received', iceCandidate);
         callback = (callback || noop).bind(this);
         addIceCandidate(candidate, callback);
     };
@@ -265,17 +265,17 @@ function WebRtcPeer(mode, options, callback) {
                 offerToReceiveVideo: mode !== 'sendonly' && offerVideo
             };
         var constraints = browserDependantConstraints;
-        logger.debug('constraints: ' + JSON.stringify(constraints));
+        // logger.debug('constraints: ' + JSON.stringify(constraints));
         pc.createOffer(constraints).then(function (offer) {
-            logger.debug('Created SDP offer');
+            // logger.debug('Created SDP offer');
             offer = mangleSdpToAddSimulcast(offer);
             return pc.setLocalDescription(offer);
         }).then(function () {
             var localDescription = pc.localDescription;
-            logger.debug('Local description set', localDescription.sdp);
+            // logger.debug('Local description set', localDescription.sdp);
             if (multistream && usePlanB) {
                 localDescription = interop.toUnifiedPlan(localDescription);
-                logger.debug('offer::origPlanB->UnifiedPlan', dumpSDP(localDescription));
+                // logger.debug('offer::origPlanB->UnifiedPlan', dumpSDP(localDescription));
             }
             callback(null, localDescription.sdp, self.processAnswer.bind(self));
         }).catch(callback);
@@ -293,7 +293,7 @@ function WebRtcPeer(mode, options, callback) {
             remoteVideo.pause();
             remoteVideo.srcObject = url;
             remoteVideo.load();
-            logger.debug('Remote URL:', url);
+            // logger.debug('Remote URL:', url);
         }
     }
     this.showLocalVideo = function () {
@@ -315,10 +315,10 @@ function WebRtcPeer(mode, options, callback) {
             });
         if (multistream && usePlanB) {
             var planBAnswer = interop.toPlanB(answer);
-            logger.debug('asnwer::planB', dumpSDP(planBAnswer));
+            // logger.debug('asnwer::planB', dumpSDP(planBAnswer));
             answer = planBAnswer;
         }
-        logger.debug('SDP answer received, setting remote description');
+        // logger.debug('SDP answer received, setting remote description');
         if (pc.signalingState === 'closed') {
             return callback('PeerConnection is closed');
         }
@@ -335,10 +335,10 @@ function WebRtcPeer(mode, options, callback) {
             });
         if (multistream && usePlanB) {
             var planBOffer = interop.toPlanB(offer);
-            logger.debug('offer::planB', dumpSDP(planBOffer));
+            // logger.debug('offer::planB', dumpSDP(planBOffer));
             offer = planBOffer;
         }
-        logger.debug('SDP offer received, setting remote description');
+        // logger.debug('SDP offer received, setting remote description');
         if (pc.signalingState === 'closed') {
             return callback('PeerConnection is closed');
         }
@@ -348,22 +348,22 @@ function WebRtcPeer(mode, options, callback) {
             return pc.createAnswer();
         }).then(function (answer) {
             answer = mangleSdpToAddSimulcast(answer);
-            logger.debug('Created SDP answer');
+            // logger.debug('Created SDP answer');
             return pc.setLocalDescription(answer);
         }).then(function () {
             var localDescription = pc.localDescription;
             if (multistream && usePlanB) {
                 localDescription = interop.toUnifiedPlan(localDescription);
-                logger.debug('answer::origPlanB->UnifiedPlan', dumpSDP(localDescription));
+                // logger.debug('answer::origPlanB->UnifiedPlan', dumpSDP(localDescription));
             }
-            logger.debug('Local description set', localDescription.sdp);
+            // logger.debug('Local description set', localDescription.sdp);
             callback(null, localDescription.sdp);
         }).catch(callback);
     };
     function mangleSdpToAddSimulcast(answer) {
         if (simulcast) {
             if (browser.name === 'Chrome' || browser.name === 'Chromium') {
-                logger.debug('Adding multicast info');
+                // logger.debug('Adding multicast info');
                 answer = new RTCSessionDescription({
                     'type': answer.type,
                     'sdp': removeFIDFromOffer(answer.sdp) + getSimulcastInfo(videoStream)
@@ -488,7 +488,7 @@ WebRtcPeer.prototype.getRemoteStream = function (index) {
     }
 };
 WebRtcPeer.prototype.dispose = function () {
-    logger.debug('Disposing WebRtcPeer');
+    // logger.debug('Disposing WebRtcPeer');
     var pc = this.peerConnection;
     var dc = this.dataChannel;
     try {
@@ -1645,35 +1645,35 @@ var toIntIfInt = function (v) {
   return String(Number(v)) === v ? Number(v) : v;
 };
 
-var attachProperties = function (match, location, names, rawName) {
+var attachProperties = function (match, cameraGroup, names, rawName) {
   if (rawName && !names) {
-    location[rawName] = toIntIfInt(match[1]);
+    cameraGroup[rawName] = toIntIfInt(match[1]);
   }
   else {
     for (var i = 0; i < names.length; i += 1) {
       if (match[i+1] != null) {
-        location[names[i]] = toIntIfInt(match[i+1]);
+        cameraGroup[names[i]] = toIntIfInt(match[i+1]);
       }
     }
   }
 };
 
-var parseReg = function (obj, location, content) {
+var parseReg = function (obj, cameraGroup, content) {
   var needsBlank = obj.name && obj.names;
-  if (obj.push && !location[obj.push]) {
-    location[obj.push] = [];
+  if (obj.push && !cameraGroup[obj.push]) {
+    cameraGroup[obj.push] = [];
   }
-  else if (needsBlank && !location[obj.name]) {
-    location[obj.name] = {};
+  else if (needsBlank && !cameraGroup[obj.name]) {
+    cameraGroup[obj.name] = {};
   }
-  var keyLocation = obj.push ?
+  var keyCameraGroup = obj.push ?
     {} :  // blank object that will be pushed
-    needsBlank ? location[obj.name] : location; // otherwise, named location or root
+    needsBlank ? cameraGroup[obj.name] : cameraGroup; // otherwise, named cameraGroup or root
 
-  attachProperties(content.match(obj.reg), keyLocation, obj.names, obj.name);
+  attachProperties(content.match(obj.reg), keyCameraGroup, obj.names, obj.name);
 
   if (obj.push) {
-    location[obj.push].push(keyLocation);
+    cameraGroup[obj.push].push(keyCameraGroup);
   }
 };
 
@@ -1683,7 +1683,7 @@ var validLine = RegExp.prototype.test.bind(/^([a-z])=(.*)/);
 exports.parse = function (sdp) {
   var session = {}
     , media = []
-    , location = session; // points at where properties go under (one of the above)
+    , cameraGroup = session; // points at where properties go under (one of the above)
 
   // parse lines we understand
   sdp.split(/(\r\n|\r|\n)/).filter(validLine).forEach(function (l) {
@@ -1691,13 +1691,13 @@ exports.parse = function (sdp) {
     var content = l.slice(2);
     if (type === 'm') {
       media.push({rtp: [], fmtp: []});
-      location = media[media.length-1]; // point at latest media line
+      cameraGroup = media[media.length-1]; // point at latest media line
     }
 
     for (var j = 0; j < (grammar[type] || []).length; j += 1) {
       var obj = grammar[type][j];
       if (obj.reg.test(content)) {
-        return parseReg(obj, location, content);
+        return parseReg(obj, cameraGroup, content);
       }
     }
   });
@@ -1764,9 +1764,9 @@ var format = function (formatStr) {
   // NB: we discard excess arguments - they are typically undefined from makeLine
 };
 
-var makeLine = function (type, obj, location) {
+var makeLine = function (type, obj, cameraGroup) {
   var str = obj.format instanceof Function ?
-    (obj.format(obj.push ? location : location[obj.name])) :
+    (obj.format(obj.push ? cameraGroup : cameraGroup[obj.name])) :
     obj.format;
 
   var args = [type + '=' + str];
@@ -1774,15 +1774,15 @@ var makeLine = function (type, obj, location) {
     for (var i = 0; i < obj.names.length; i += 1) {
       var n = obj.names[i];
       if (obj.name) {
-        args.push(location[obj.name][n]);
+        args.push(cameraGroup[obj.name][n]);
       }
       else { // for mLine and push attributes
-        args.push(location[obj.names[i]]);
+        args.push(cameraGroup[obj.names[i]]);
       }
     }
   }
   else {
-    args.push(location[obj.name]);
+    args.push(cameraGroup[obj.name]);
   }
   return format.apply(null, args);
 };

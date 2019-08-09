@@ -6,16 +6,16 @@ import CameraCard from './CameraCard';
 class CameraTiles extends Component {
 
   render() {
-    if (this.props.location.cameras.length) {
+    if ('cameras' in this.props.cameraGroup && this.props.cameraGroup.cameras.length > 0) {
       return (
         <Row type='flex' justify='start' style={styles.cameraListContainer}>
-          {this.props.location.cameras.map(camera => (
-            <Col key={`camera-${camera.id}`} xs={24} sm={12} md={8} lg={6}>
+          {this.props.cameraGroup.cameras.map(camera => (
+            <Col key={`camera-${camera.uuid}`} xs={24} sm={12} md={8} lg={6}>
               <CameraCard
                 {...camera}
                 style={styles.cameraCard}
                 user={this.props.user}
-                cameraLocation={this.props.location}
+                cameraGroup={this.props.cameraGroup}
                 liveView={this.props.liveView} />
             </Col>
           ))}
@@ -25,9 +25,9 @@ class CameraTiles extends Component {
       return (
         <Row type='flex' justify='start' style={styles.cameraListContainer}>
           <p style={styles.noCamerasText}>
-            This location has no cameras.
+            This camera group has no cameras.
             <br />
-            Add a camera under this location to get started.
+            Add a camera under this camera group to get started.
           </p>
         </Row>
       );

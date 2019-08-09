@@ -847,8 +847,7 @@ function KurentoClient(ws_uri, options, callback) {
                 if (pingNum > notReconnectIfNumLessThan) {
                   enabledPings = false;
                   updateNotReconnectIfLessThan();
-                  console.log("Server did not respond to ping message " +
-                    pingNum + ".");
+                  console.log("Server did not respond to ping message " + pingNum + ".");
                   clearInterval(pingInterval);
                   pingPongStarted = false;
                 }
@@ -9869,7 +9868,7 @@ exports.UNZIP = 7;
 function Zlib(mode) {
   if (mode < exports.DEFLATE || mode > exports.UNZIP)
     throw new TypeError("Bad argument");
-    
+
   this.mode = mode;
   this.init_done = false;
   this.write_in_progress = false;
@@ -9887,18 +9886,18 @@ Zlib.prototype.init = function(windowBits, level, memLevel, strategy, dictionary
   this.memLevel = memLevel;
   this.strategy = strategy;
   // dictionary not supported.
-  
+
   if (this.mode === exports.GZIP || this.mode === exports.GUNZIP)
     this.windowBits += 16;
-    
+
   if (this.mode === exports.UNZIP)
     this.windowBits += 32;
-    
+
   if (this.mode === exports.DEFLATERAW || this.mode === exports.INFLATERAW)
     this.windowBits = -this.windowBits;
-    
+
   this.strm = new zstream();
-  
+
   switch (this.mode) {
     case exports.DEFLATE:
     case exports.GZIP:
@@ -9924,12 +9923,12 @@ Zlib.prototype.init = function(windowBits, level, memLevel, strategy, dictionary
     default:
       throw new Error("Unknown mode " + this.mode);
   }
-  
+
   if (status !== exports.Z_OK) {
     this._error(status);
     return;
   }
-  
+
   this.write_in_progress = false;
   this.init_done = true;
 };
@@ -9941,31 +9940,31 @@ Zlib.prototype.params = function() {
 Zlib.prototype._writeCheck = function() {
   if (!this.init_done)
     throw new Error("write before init");
-    
+
   if (this.mode === exports.NONE)
     throw new Error("already finalized");
-    
+
   if (this.write_in_progress)
     throw new Error("write already in progress");
-    
+
   if (this.pending_close)
     throw new Error("close is pending");
 };
 
-Zlib.prototype.write = function(flush, input, in_off, in_len, out, out_off, out_len) {    
+Zlib.prototype.write = function(flush, input, in_off, in_len, out, out_off, out_len) {
   this._writeCheck();
   this.write_in_progress = true;
-  
+
   var self = this;
   process.nextTick(function() {
     self.write_in_progress = false;
     var res = self._write(flush, input, in_off, in_len, out, out_off, out_len);
     self.callback(res[0], res[1]);
-    
+
     if (self.pending_close)
       self.close();
   });
-  
+
   return this;
 };
 
@@ -9983,7 +9982,7 @@ Zlib.prototype.writeSync = function(flush, input, in_off, in_len, out, out_off, 
 
 Zlib.prototype._write = function(flush, input, in_off, in_len, out, out_off, out_len) {
   this.write_in_progress = true;
-  
+
   if (flush !== exports.Z_NO_FLUSH &&
       flush !== exports.Z_PARTIAL_FLUSH &&
       flush !== exports.Z_SYNC_FLUSH &&
@@ -9992,18 +9991,18 @@ Zlib.prototype._write = function(flush, input, in_off, in_len, out, out_off, out
       flush !== exports.Z_BLOCK) {
     throw new Error("Invalid flush value");
   }
-  
+
   if (input == null) {
     input = new Buffer(0);
     in_len = 0;
     in_off = 0;
   }
-  
+
   if (out._set)
     out.set = out._set;
   else
     out.set = bufferSet;
-  
+
   var strm = this.strm;
   strm.avail_in = in_len;
   strm.input = input;
@@ -10011,7 +10010,7 @@ Zlib.prototype._write = function(flush, input, in_off, in_len, out, out_off, out
   strm.avail_out = out_len;
   strm.output = out;
   strm.next_out = out_off;
-  
+
   switch (this.mode) {
     case exports.DEFLATE:
     case exports.GZIP:
@@ -10027,11 +10026,11 @@ Zlib.prototype._write = function(flush, input, in_off, in_len, out, out_off, out
     default:
       throw new Error("Unknown mode " + this.mode);
   }
-  
+
   if (status !== exports.Z_STREAM_END && status !== exports.Z_OK) {
     this._error(status);
   }
-  
+
   this.write_in_progress = false;
   return [strm.avail_in, strm.avail_out];
 };
@@ -10041,15 +10040,15 @@ Zlib.prototype.close = function() {
     this.pending_close = true;
     return;
   }
-  
+
   this.pending_close = false;
-  
+
   if (this.mode === exports.DEFLATE || this.mode === exports.GZIP || this.mode === exports.DEFLATERAW) {
     zlib_deflate.deflateEnd(this.strm);
   } else {
     zlib_inflate.inflateEnd(this.strm);
   }
-  
+
   this.mode = exports.NONE;
 };
 
@@ -10064,7 +10063,7 @@ Zlib.prototype.reset = function() {
       var status = zlib_inflate.inflateReset(this.strm);
       break;
   }
-  
+
   if (status !== exports.Z_OK) {
     this._error(status);
   }
@@ -10072,7 +10071,7 @@ Zlib.prototype.reset = function() {
 
 Zlib.prototype._error = function(status) {
   this.onerror(msg[status] + ': ' + this.strm.msg, status);
-  
+
   this.write_in_progress = false;
   if (this.pending_close)
     this.close();
@@ -16598,7 +16597,7 @@ module.exports={
   "_id": "elliptic@6.4.0",
   "_inBundle": false,
   "_integrity": "sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=",
-  "_location": "/elliptic",
+  "_cameraGroup": "/elliptic",
   "_phantomChildren": {},
   "_requested": {
     "type": "range",
@@ -24463,11 +24462,11 @@ var MediaElement = require('./abstracts/MediaElement');
 
 
 /**
- * Creates a {@link module:core.HubPort HubPort} for the given {@link 
+ * Creates a {@link module:core.HubPort HubPort} for the given {@link
  * module:core/abstracts.Hub Hub}
  *
  * @classdesc
- *  This {@link module:core/abstracts.MediaElement MediaElement} specifies a 
+ *  This {@link module:core/abstracts.MediaElement MediaElement} specifies a
  *  connection with a {@link module:core/abstracts.Hub Hub}
  *
  * @extends module:core/abstracts.MediaElement
@@ -24570,9 +24569,9 @@ function noop(error, result) {
  * Create a {@link module:core.MediaPipeline MediaPipeline}
  *
  * @classdesc
- *  A pipeline is a container for a collection of {@link 
- *  module:core/abstracts.MediaElement MediaElements} and 
- *  :rom:cls:`MediaMixers<MediaMixer>`. It offers the methods needed to control 
+ *  A pipeline is a container for a collection of {@link
+ *  module:core/abstracts.MediaElement MediaElements} and
+ *  :rom:cls:`MediaMixers<MediaMixer>`. It offers the methods needed to control
  *  the creation and connection of elements inside a certain pipeline.
  *
  * @extends module:core/abstracts.MediaObject
@@ -24682,11 +24681,11 @@ MediaPipeline.prototype.getLatencyStats = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -24714,9 +24713,9 @@ MediaPipeline.prototype.setLatencyStats = function(latencyStats, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('boolean', 'latencyStats', latencyStats, {required: true});
-  //  
+  //
 
   var params = {
     latencyStats: latencyStats
@@ -24737,7 +24736,7 @@ MediaPipeline.prototype.setLatencyStats = function(latencyStats, callback){
 //
 
 /**
- * Returns a string in dot (graphviz) format that represents the gstreamer 
+ * Returns a string in dot (graphviz) format that represents the gstreamer
  * elements inside the pipeline
  *
  * @alias module:core.MediaPipeline.getGstreamerDot
@@ -24761,7 +24760,7 @@ MediaPipeline.prototype.getGstreamerDot = function(details, callback){
   switch(arguments.length){
     case 0: details = undefined;
     break;
-    case 1: 
+    case 1:
     break;
 
     default:
@@ -24773,9 +24772,9 @@ MediaPipeline.prototype.getGstreamerDot = function(details, callback){
       throw error;
   }
 
-  //  
+  //
   // checkType('GstreamerDotDetails', 'details', details);
-  //  
+  //
 
   var params = {
     details: details
@@ -24894,7 +24893,7 @@ var MediaElement = require('./abstracts/MediaElement');
  * Builder for the {@link module:core.PassThrough PassThrough}
  *
  * @classdesc
- *  This {@link module:core/abstracts.MediaElement MediaElement} that just 
+ *  This {@link module:core/abstracts.MediaElement MediaElement} that just
  *  passes media through
  *
  * @extends module:core/abstracts.MediaElement
@@ -24911,7 +24910,7 @@ inherits(PassThrough, MediaElement);
  * @alias module:core.PassThrough.constructorParams
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the element 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the element
  *  belongs
  */
 PassThrough.constructorParams = {
@@ -24994,7 +24993,7 @@ function noop(error, result) {
  *  This class extends from the SdpEndpoint, and handles RTP communications. All
  *        <ul style='list-style-type:circle'>
  *          <li>
- *            ConnectionStateChangedEvent: This event is raised when the 
+ *            ConnectionStateChangedEvent: This event is raised when the
  *            connection between two peers changes. It can have two values
  *            <ul>
  *              <li>CONNECTED</li>
@@ -25002,51 +25001,51 @@ function noop(error, result) {
  *            </ul>
  *          </li>
  *          <li>
- *            MediaStateChangedEvent: Based on RTCP packet flow, this event 
- *            provides more reliable information about the state of media flow. 
- *            Since RTCP packets are not flowing at a constant rate (minimizing 
- *            a browser with an RTCPeerConnection might affect this interval, 
- *            for instance), there is a guard period of about 5s. This traduces 
- *            in a period where there might be no media flowing, but the event 
+ *            MediaStateChangedEvent: Based on RTCP packet flow, this event
+ *            provides more reliable information about the state of media flow.
+ *            Since RTCP packets are not flowing at a constant rate (minimizing
+ *            a browser with an RTCPeerConnection might affect this interval,
+ *            for instance), there is a guard period of about 5s. This traduces
+ *            in a period where there might be no media flowing, but the event
  *            hasn't been fired yet. Nevertheless, this is the most reliable and
  *            <ul>
  *              <li>CONNECTED: There is an RTCP packet flow between peers.</li>
- *              <li>DISCONNECTED: No RTCP packets have been received, or at 
+ *              <li>DISCONNECTED: No RTCP packets have been received, or at
  *              least 5s have passed since the last packet arrived.</li>
  *            </ul>
  *          </li>
  *        </ul>
- *        Part of the bandwidth control of the video component of the media 
- *        session is done here. The values of the properties described are in 
+ *        Part of the bandwidth control of the video component of the media
+ *        session is done here. The values of the properties described are in
  *        kbps.
  *        <ul style='list-style-type:circle'>
  *          <li>
- *            Input bandwidth control mechanism: Configuration interval used to 
- *            inform remote peer the range of bitrates that can be pushed into 
+ *            Input bandwidth control mechanism: Configuration interval used to
+ *            inform remote peer the range of bitrates that can be pushed into
  *            this BaseRtpEndpoint object.
  *            <ul>
  *              <li>
  *                setMinVideoRecvBandwidth: sets min bitrate limits expected for
  *              </li>
  *            </ul>
- *            Max values are announced in the SDP, while min values are set to 
+ *            Max values are announced in the SDP, while min values are set to
  *            limit the lower value of REMB packages. It follows that min values
  *          </li>
  *          <li>
  *            Output bandwidth control mechanism: Configuration interval used to
  *            <ul>
  *              <li>
- *                setMinVideoSendBandwidth: sets the minimum bitrate for video 
+ *                setMinVideoSendBandwidth: sets the minimum bitrate for video
  *                to be sent to remote peer. 0 is considered unconstrained.
  *              </li>
  *              <li>
- *                setMaxVideoSendBandwidth: sets maximum bitrate limits for 
+ *                setMaxVideoSendBandwidth: sets maximum bitrate limits for
  *                video sent to remote peer. 0 is considered unconstrained.
  *              </li>
  *            </ul>
  *          </li>
  *        </ul>
- *        All bandwidth control parameters must be changed before the SDP 
+ *        All bandwidth control parameters must be changed before the SDP
  *        negotiation takes place, and can't be changed afterwards.
  *        </p>
  *
@@ -25087,11 +25086,11 @@ BaseRtpEndpoint.prototype.getConnectionState = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -25105,7 +25104,7 @@ BaseRtpEndpoint.prototype.getConnectionState = function(callback){
  */
 
 /**
- * Maximum bandwidth for video transmission, in kbps. The default value is 500 
+ * Maximum bandwidth for video transmission, in kbps. The default value is 500
  * kbps. 0 is considered unconstrained.
  *
  * @alias module:core/abstracts.BaseRtpEndpoint#getMaxVideoSendBandwidth
@@ -25120,11 +25119,11 @@ BaseRtpEndpoint.prototype.getMaxVideoSendBandwidth = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -25138,7 +25137,7 @@ BaseRtpEndpoint.prototype.getMaxVideoSendBandwidth = function(callback){
  */
 
 /**
- * Maximum bandwidth for video transmission, in kbps. The default value is 500 
+ * Maximum bandwidth for video transmission, in kbps. The default value is 500
  * kbps. 0 is considered unconstrained.
  *
  * @alias module:core/abstracts.BaseRtpEndpoint#setMaxVideoSendBandwidth
@@ -25153,9 +25152,9 @@ BaseRtpEndpoint.prototype.setMaxVideoSendBandwidth = function(maxVideoSendBandwi
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'maxVideoSendBandwidth', maxVideoSendBandwidth, {required: true});
-  //  
+  //
 
   var params = {
     maxVideoSendBandwidth: maxVideoSendBandwidth
@@ -25189,11 +25188,11 @@ BaseRtpEndpoint.prototype.getMediaState = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -25207,7 +25206,7 @@ BaseRtpEndpoint.prototype.getMediaState = function(callback){
  */
 
 /**
- * Minimum bandwidth announced for video reception, in kbps. The default and 
+ * Minimum bandwidth announced for video reception, in kbps. The default and
  * absolute minimum value is 30 kbps, even if a lower value is set.
  *
  * @alias module:core/abstracts.BaseRtpEndpoint#getMinVideoRecvBandwidth
@@ -25222,11 +25221,11 @@ BaseRtpEndpoint.prototype.getMinVideoRecvBandwidth = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -25240,7 +25239,7 @@ BaseRtpEndpoint.prototype.getMinVideoRecvBandwidth = function(callback){
  */
 
 /**
- * Minimum bandwidth announced for video reception, in kbps. The default and 
+ * Minimum bandwidth announced for video reception, in kbps. The default and
  * absolute minimum value is 30 kbps, even if a lower value is set.
  *
  * @alias module:core/abstracts.BaseRtpEndpoint#setMinVideoRecvBandwidth
@@ -25255,9 +25254,9 @@ BaseRtpEndpoint.prototype.setMinVideoRecvBandwidth = function(minVideoRecvBandwi
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'minVideoRecvBandwidth', minVideoRecvBandwidth, {required: true});
-  //  
+  //
 
   var params = {
     minVideoRecvBandwidth: minVideoRecvBandwidth
@@ -25273,7 +25272,7 @@ BaseRtpEndpoint.prototype.setMinVideoRecvBandwidth = function(minVideoRecvBandwi
  */
 
 /**
- * Minimum bandwidth for video transmission, in kbps. The default value is 100 
+ * Minimum bandwidth for video transmission, in kbps. The default value is 100
  * kbps. 0 is considered unconstrained.
  *
  * @alias module:core/abstracts.BaseRtpEndpoint#getMinVideoSendBandwidth
@@ -25288,11 +25287,11 @@ BaseRtpEndpoint.prototype.getMinVideoSendBandwidth = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -25306,7 +25305,7 @@ BaseRtpEndpoint.prototype.getMinVideoSendBandwidth = function(callback){
  */
 
 /**
- * Minimum bandwidth for video transmission, in kbps. The default value is 100 
+ * Minimum bandwidth for video transmission, in kbps. The default value is 100
  * kbps. 0 is considered unconstrained.
  *
  * @alias module:core/abstracts.BaseRtpEndpoint#setMinVideoSendBandwidth
@@ -25321,9 +25320,9 @@ BaseRtpEndpoint.prototype.setMinVideoSendBandwidth = function(minVideoSendBandwi
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'minVideoSendBandwidth', minVideoSendBandwidth, {required: true});
-  //  
+  //
 
   var params = {
     minVideoSendBandwidth: minVideoSendBandwidth
@@ -25353,11 +25352,11 @@ BaseRtpEndpoint.prototype.getRembParams = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -25385,9 +25384,9 @@ BaseRtpEndpoint.prototype.setRembParams = function(rembParams, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('RembParams', 'rembParams', rembParams, {required: true});
-  //  
+  //
 
   var params = {
     rembParams: rembParams
@@ -25468,13 +25467,13 @@ var MediaElement = require('./MediaElement');
 
 /**
  * @classdesc
- *  Base interface for all end points. An Endpoint is a {@link 
+ *  Base interface for all end points. An Endpoint is a {@link
  *  module:core/abstracts.MediaElement MediaElement}
- *  that allow <a 
+ *  that allow <a
  *  href="http://www.kurento.org/docs/current/glossary.html#term-kms">KMS</a> to
- *  <a href="http<a href="http://<a 
+ *  <a href="http<a href="http://<a
  *  href="http://www.kurento.org/docs/current/glossary.html#term-http">HTTP</a>org/docs/current/glossary.html#term-webrtc">WebRTC</a>.org/docs/current/glossary.html#term-rtp">RTP</a>different
- *  :term:`WebRTC`, :term:`HTTP`, <code>file:/</code> URLs... An 
+ *  :term:`WebRTC`, :term:`HTTP`, <code>file:/</code> URLs... An
  *  <code>Endpoint</code> may
  *  contain both sources and sinks for different media types, to provide
  *  bidirectional communication.
@@ -25555,8 +25554,8 @@ var MediaElement = require('./MediaElement');
 
 /**
  * @classdesc
- *  Base interface for all filters. This is a certain type of {@link 
- *  module:core/abstracts.MediaElement MediaElement}, that processes media 
+ *  Base interface for all filters. This is a certain type of {@link
+ *  module:core/abstracts.MediaElement MediaElement}, that processes media
  *  injected through its sinks, and delivers the outcome through its sources.
  *
  * @abstract
@@ -25666,7 +25665,7 @@ inherits(Hub, MediaObject);
 //
 
 /**
- * Returns a string in dot (graphviz) format that represents the gstreamer 
+ * Returns a string in dot (graphviz) format that represents the gstreamer
  * elements inside the pipeline
  *
  * @alias module:core/abstracts.Hub.getGstreamerDot
@@ -25690,7 +25689,7 @@ Hub.prototype.getGstreamerDot = function(details, callback){
   switch(arguments.length){
     case 0: details = undefined;
     break;
-    case 1: 
+    case 1:
     break;
 
     default:
@@ -25702,9 +25701,9 @@ Hub.prototype.getGstreamerDot = function(details, callback){
       throw error;
   }
 
-  //  
+  //
   // checkType('GstreamerDotDetails', 'details', details);
-  //  
+  //
 
   var params = {
     details: details
@@ -25735,11 +25734,11 @@ Hub.prototype.createHubPort = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -25849,29 +25848,29 @@ function noop(error, result) {
 
 /**
  * @classdesc
- *  <p>This is the basic building block of the media server, that can be 
- *  interconnected inside a pipeline. A {@link 
- *  module:core/abstracts.MediaElement MediaElement} is a module that 
+ *  <p>This is the basic building block of the media server, that can be
+ *  interconnected inside a pipeline. A {@link
+ *  module:core/abstracts.MediaElement MediaElement} is a module that
  *  encapsulates a specific media capability, and that is able to exchange media
  *        </p>
  *        <p>
- *        A pad can be defined as an input or output interface. Input pads are 
- *        called sinks, and it's where the media elements receive media from 
- *        other media elements. Output interfaces are called sources, and it's 
- *        the pad used by the media element to feed media to other media 
- *        elements. There can be only one sink pad per media element. On the 
- *        other hand, the number of source pads is unconstrained. This means 
- *        that a certain media element can receive media only from one element 
+ *        A pad can be defined as an input or output interface. Input pads are
+ *        called sinks, and it's where the media elements receive media from
+ *        other media elements. Output interfaces are called sources, and it's
+ *        the pad used by the media element to feed media to other media
+ *        elements. There can be only one sink pad per media element. On the
+ *        other hand, the number of source pads is unconstrained. This means
+ *        that a certain media element can receive media only from one element
  *        at a time, while it can send media to many others. Pads are created on
  *        </p>
  *        <p>
- *        When media elements are connected, it can be case that the encoding 
- *        used by the elements is not the same, and thus it needs to be 
- *        transcoded. This is something that is handled transparently by the 
- *        media elements internals. In practice, the user needs not be aware 
- *        that the transcodification is taking place. However, this process has 
- *        a toll in the form of a higher CPU load, so connecting media elements 
- *        that need media encoded in different formats is something to consider 
+ *        When media elements are connected, it can be case that the encoding
+ *        used by the elements is not the same, and thus it needs to be
+ *        transcoded. This is something that is handled transparently by the
+ *        media elements internals. In practice, the user needs not be aware
+ *        that the transcodification is taking place. However, this process has
+ *        a toll in the form of a higher CPU load, so connecting media elements
+ *        that need media encoded in different formats is something to consider
  *        as a high load operation.
  *        </p>
  *
@@ -25897,7 +25896,7 @@ inherits(MediaElement, MediaObject);
 
 /**
  * @deprecated
- * Deprecated due to a typo. Use maxOutputBitrate instead of this function. 
+ * Deprecated due to a typo. Use maxOutputBitrate instead of this function.
  * Maximum video bandwidth for transcoding. 0 = unlimited.
  *   Unit: bps(bits per second).
  *   Default value: MAXINT
@@ -25914,11 +25913,11 @@ MediaElement.prototype.getMaxOuputBitrate = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -25933,7 +25932,7 @@ MediaElement.prototype.getMaxOuputBitrate = function(callback){
 
 /**
  * @deprecated
- * Deprecated due to a typo. Use maxOutputBitrate instead of this function. 
+ * Deprecated due to a typo. Use maxOutputBitrate instead of this function.
  * Maximum video bandwidth for transcoding. 0 = unlimited.
  *   Unit: bps(bits per second).
  *   Default value: MAXINT
@@ -25950,9 +25949,9 @@ MediaElement.prototype.setMaxOuputBitrate = function(maxOuputBitrate, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'maxOuputBitrate', maxOuputBitrate, {required: true});
-  //  
+  //
 
   var params = {
     maxOuputBitrate: maxOuputBitrate
@@ -25984,11 +25983,11 @@ MediaElement.prototype.getMaxOutputBitrate = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -26018,9 +26017,9 @@ MediaElement.prototype.setMaxOutputBitrate = function(maxOutputBitrate, callback
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'maxOutputBitrate', maxOutputBitrate, {required: true});
-  //  
+  //
 
   var params = {
     maxOutputBitrate: maxOutputBitrate
@@ -26037,7 +26036,7 @@ MediaElement.prototype.setMaxOutputBitrate = function(maxOutputBitrate, callback
 
 /**
  * @deprecated
- * Deprecated due to a typo. Use minOutputBitrate instead of this function. 
+ * Deprecated due to a typo. Use minOutputBitrate instead of this function.
  * Minimum video bandwidth for transcoding.
  *   Unit: bps(bits per second).
  *   Default value: 0
@@ -26054,11 +26053,11 @@ MediaElement.prototype.getMinOuputBitrate = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -26073,7 +26072,7 @@ MediaElement.prototype.getMinOuputBitrate = function(callback){
 
 /**
  * @deprecated
- * Deprecated due to a typo. Use minOutputBitrate instead of this function. 
+ * Deprecated due to a typo. Use minOutputBitrate instead of this function.
  * Minimum video bandwidth for transcoding.
  *   Unit: bps(bits per second).
  *   Default value: 0
@@ -26090,9 +26089,9 @@ MediaElement.prototype.setMinOuputBitrate = function(minOuputBitrate, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'minOuputBitrate', minOuputBitrate, {required: true});
-  //  
+  //
 
   var params = {
     minOuputBitrate: minOuputBitrate
@@ -26124,11 +26123,11 @@ MediaElement.prototype.getMinOutputBitrate = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -26158,9 +26157,9 @@ MediaElement.prototype.setMinOutputBitrate = function(minOutputBitrate, callback
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'minOutputBitrate', minOutputBitrate, {required: true});
-  //  
+  //
 
   var params = {
     minOutputBitrate: minOutputBitrate
@@ -26181,31 +26180,31 @@ MediaElement.prototype.setMinOutputBitrate = function(minOutputBitrate, callback
 //
 
 /**
- * <p>Connects two elements, with the media flowing from left to right: the 
- * elements that invokes the connect wil be the source of media, creating one 
- * sink pad for each type of media connected. The element given as parameter to 
- * the method will be the sink, and it will create one sink pad per media type 
+ * <p>Connects two elements, with the media flowing from left to right: the
+ * elements that invokes the connect wil be the source of media, creating one
+ * sink pad for each type of media connected. The element given as parameter to
+ * the method will be the sink, and it will create one sink pad per media type
  * connected.
  *           </p>
  *           <p>
- *           If otherwise not specified, all types of media are connected by 
- *           default (AUDIO, VIDEO and DATA). It is recommended to connect the 
- *           specific types of media if not all of them will be used. For this 
- *           purpose, the connect method can be invoked more than once on the 
+ *           If otherwise not specified, all types of media are connected by
+ *           default (AUDIO, VIDEO and DATA). It is recommended to connect the
+ *           specific types of media if not all of them will be used. For this
+ *           purpose, the connect method can be invoked more than once on the
  *           same two elements, but with different media types.
  *           </p>
  *           <p>
- *           The connection is unidirectional. If a bidirectional connection is 
- *           desired, the position of the media elements must be inverted. For 
- *           instance, webrtc1.connect(webrtc2) is connecting webrtc1 as source 
- *           of webrtc2. In order to create a WebRTC one-2one conversation, the 
- *           user would need to especify the connection on the other direction 
+ *           The connection is unidirectional. If a bidirectional connection is
+ *           desired, the position of the media elements must be inverted. For
+ *           instance, webrtc1.connect(webrtc2) is connecting webrtc1 as source
+ *           of webrtc2. In order to create a WebRTC one-2one conversation, the
+ *           user would need to especify the connection on the other direction
  *           with webrtc2.connect(webrtc1).
  *           </p>
  *           <p>
- *           Even though one media element can have one sink pad per type of 
- *           media, only one media element can be connected to another at a 
- *           given time. If a media element is connected to another, the former 
+ *           Even though one media element can have one sink pad per type of
+ *           media, only one media element can be connected to another at a
+ *           given time. If a media element is connected to another, the former
  *           will become the source of the sink media element, regardles whether
  *           </p>
  *
@@ -26218,11 +26217,11 @@ MediaElement.prototype.setMinOutputBitrate = function(minOutputBitrate, callback
  *  the {@link MediaType} of the pads that will be connected
  *
  * @param {external:String} [sourceMediaDescription]
- *  A textual description of the media source. Currently not used, aimed mainly 
+ *  A textual description of the media source. Currently not used, aimed mainly
  *  for {@link module:core/abstracts.MediaElement#MediaType.DATA} sources
  *
  * @param {external:String} [sinkMediaDescription]
- *  A textual description of the media source. Currently not used, aimed mainly 
+ *  A textual description of the media source. Currently not used, aimed mainly
  *  for {@link module:core/abstracts.MediaElement#MediaType.DATA} sources
  *
  * @param {module:core/abstracts.MediaElement~connectCallback} [callback]
@@ -26286,7 +26285,7 @@ MediaElement.prototype.connect = function(sink, mediaType, sourceMediaDescriptio
     case 2: sourceMediaDescription = undefined;
     case 3: sinkMediaDescription = undefined;
     break;
-    case 4: 
+    case 4:
     break;
 
     default:
@@ -26298,15 +26297,15 @@ MediaElement.prototype.connect = function(sink, mediaType, sourceMediaDescriptio
       throw error;
   }
 
-  //  
+  //
   // checkType('MediaElement', 'sink', sink, {required: true});
-  //  
+  //
   // checkType('MediaType', 'mediaType', mediaType);
-  //  
+  //
   // checkType('String', 'sourceMediaDescription', sourceMediaDescription);
-  //  
+  //
   // checkType('String', 'sinkMediaDescription', sinkMediaDescription);
-  //  
+  //
 
   var params = {
     sink: sink,
@@ -26328,7 +26327,7 @@ MediaElement.prototype.connect = function(sink, mediaType, sourceMediaDescriptio
  */
 
 /**
- * Disconnectes two media elements. This will release the source pads of the 
+ * Disconnectes two media elements. This will release the source pads of the
  * source media element, and the sink pads of the sink media element.
  *
  * @alias module:core/abstracts.MediaElement.disconnect
@@ -26340,11 +26339,11 @@ MediaElement.prototype.connect = function(sink, mediaType, sourceMediaDescriptio
  *  the {@link MediaType} of the pads that will be connected
  *
  * @param {external:String} [sourceMediaDescription]
- *  A textual description of the media source. Currently not used, aimed mainly 
+ *  A textual description of the media source. Currently not used, aimed mainly
  *  for {@link module:core/abstracts.MediaElement#MediaType.DATA} sources
  *
  * @param {external:String} [sinkMediaDescription]
- *  A textual description of the media source. Currently not used, aimed mainly 
+ *  A textual description of the media source. Currently not used, aimed mainly
  *  for {@link module:core/abstracts.MediaElement#MediaType.DATA} sources
  *
  * @param {module:core/abstracts.MediaElement~disconnectCallback} [callback]
@@ -26365,7 +26364,7 @@ MediaElement.prototype.disconnect = function(sink, mediaType, sourceMediaDescrip
     case 2: sourceMediaDescription = undefined;
     case 3: sinkMediaDescription = undefined;
     break;
-    case 4: 
+    case 4:
     break;
 
     default:
@@ -26377,15 +26376,15 @@ MediaElement.prototype.disconnect = function(sink, mediaType, sourceMediaDescrip
       throw error;
   }
 
-  //  
+  //
   // checkType('MediaElement', 'sink', sink, {required: true});
-  //  
+  //
   // checkType('MediaType', 'mediaType', mediaType);
-  //  
+  //
   // checkType('String', 'sourceMediaDescription', sourceMediaDescription);
-  //  
+  //
   // checkType('String', 'sinkMediaDescription', sinkMediaDescription);
-  //  
+  //
 
   var params = {
     sink: sink,
@@ -26436,7 +26435,7 @@ MediaElement.prototype.getGstreamerDot = function(details, callback){
   switch(arguments.length){
     case 0: details = undefined;
     break;
-    case 1: 
+    case 1:
     break;
 
     default:
@@ -26448,9 +26447,9 @@ MediaElement.prototype.getGstreamerDot = function(details, callback){
       throw error;
   }
 
-  //  
+  //
   // checkType('GstreamerDotDetails', 'details', details);
-  //  
+  //
 
   var params = {
     details: details
@@ -26468,20 +26467,20 @@ MediaElement.prototype.getGstreamerDot = function(details, callback){
  */
 
 /**
- * Gets information about the source pads of this media element. Since source 
- * pads connect to other media element's sinks, this is formally the sink of 
- * media from the element's perspective. Media can be filtered by type, or by 
+ * Gets information about the source pads of this media element. Since source
+ * pads connect to other media element's sinks, this is formally the sink of
+ * media from the element's perspective. Media can be filtered by type, or by
  * the description given to the pad though which both elements are connected.
  *
  * @alias module:core/abstracts.MediaElement.getSinkConnections
  *
  * @param {module:core/complexTypes.MediaType} [mediaType]
- *  One of {@link module:core/abstracts.MediaElement#MediaType.AUDIO}, {@link 
- *  module:core/abstracts.MediaElement#MediaType.VIDEO} or {@link 
+ *  One of {@link module:core/abstracts.MediaElement#MediaType.AUDIO}, {@link
+ *  module:core/abstracts.MediaElement#MediaType.VIDEO} or {@link
  *  module:core/abstracts.MediaElement#MediaType.DATA}
  *
  * @param {external:String} [description]
- *  A textual description of the media source. Currently not used, aimed mainly 
+ *  A textual description of the media source. Currently not used, aimed mainly
  *  for {@link module:core/abstracts.MediaElement#MediaType.DATA} sources
  *
  * @param {module:core/abstracts.MediaElement~getSinkConnectionsCallback} [callback]
@@ -26501,7 +26500,7 @@ MediaElement.prototype.getSinkConnections = function(mediaType, description, cal
     case 0: mediaType = undefined;
     case 1: description = undefined;
     break;
-    case 2: 
+    case 2:
     break;
 
     default:
@@ -26513,11 +26512,11 @@ MediaElement.prototype.getSinkConnections = function(mediaType, description, cal
       throw error;
   }
 
-  //  
+  //
   // checkType('MediaType', 'mediaType', mediaType);
-  //  
+  //
   // checkType('String', 'description', description);
-  //  
+  //
 
   var params = {
     mediaType: mediaType,
@@ -26532,25 +26531,25 @@ MediaElement.prototype.getSinkConnections = function(mediaType, description, cal
  * @callback module:core/abstracts.MediaElement~getSinkConnectionsCallback
  * @param {external:Error} error
  * @param {module:core/complexTypes.ElementConnectionData} result
- *  A list of the connections information that are receiving media from this 
+ *  A list of the connections information that are receiving media from this
  *  element. The list will be empty if no sources are found.
  */
 
 /**
- * Gets information about the sink pads of this media element. Since sink pads 
- * are the interface through which a media element gets it's media, whatever is 
- * connected to an element's sink pad is formally a source of media. Media can 
+ * Gets information about the sink pads of this media element. Since sink pads
+ * are the interface through which a media element gets it's media, whatever is
+ * connected to an element's sink pad is formally a source of media. Media can
  * be filtered by type, or by the description given to the pad though which both
  *
  * @alias module:core/abstracts.MediaElement.getSourceConnections
  *
  * @param {module:core/complexTypes.MediaType} [mediaType]
- *  One of {@link module:core/abstracts.MediaElement#MediaType.AUDIO}, {@link 
- *  module:core/abstracts.MediaElement#MediaType.VIDEO} or {@link 
+ *  One of {@link module:core/abstracts.MediaElement#MediaType.AUDIO}, {@link
+ *  module:core/abstracts.MediaElement#MediaType.VIDEO} or {@link
  *  module:core/abstracts.MediaElement#MediaType.DATA}
  *
  * @param {external:String} [description]
- *  A textual description of the media source. Currently not used, aimed mainly 
+ *  A textual description of the media source. Currently not used, aimed mainly
  *  for {@link module:core/abstracts.MediaElement#MediaType.DATA} sources
  *
  * @param {module:core/abstracts.MediaElement~getSourceConnectionsCallback} [callback]
@@ -26570,7 +26569,7 @@ MediaElement.prototype.getSourceConnections = function(mediaType, description, c
     case 0: mediaType = undefined;
     case 1: description = undefined;
     break;
-    case 2: 
+    case 2:
     break;
 
     default:
@@ -26582,11 +26581,11 @@ MediaElement.prototype.getSourceConnections = function(mediaType, description, c
       throw error;
   }
 
-  //  
+  //
   // checkType('MediaType', 'mediaType', mediaType);
-  //  
+  //
   // checkType('String', 'description', description);
-  //  
+  //
 
   var params = {
     mediaType: mediaType,
@@ -26601,7 +26600,7 @@ MediaElement.prototype.getSourceConnections = function(mediaType, description, c
  * @callback module:core/abstracts.MediaElement~getSourceConnectionsCallback
  * @param {external:Error} error
  * @param {module:core/complexTypes.ElementConnectionData} result
- *  A list of the connections information that are sending media to this 
+ *  A list of the connections information that are sending media to this
  *  element. The list will be empty if no sources are found.
  */
 
@@ -26611,7 +26610,7 @@ MediaElement.prototype.getSourceConnections = function(mediaType, description, c
  * @alias module:core/abstracts.MediaElement.getStats
  *
  * @param {module:core/complexTypes.MediaType} [mediaType]
- *  One of {@link module:core/abstracts.MediaElement#MediaType.AUDIO} or {@link 
+ *  One of {@link module:core/abstracts.MediaElement#MediaType.AUDIO} or {@link
  *  module:core/abstracts.MediaElement#MediaType.VIDEO}
  *
  * @param {module:core/abstracts.MediaElement~getStatsCallback} [callback]
@@ -26630,7 +26629,7 @@ MediaElement.prototype.getStats = function(mediaType, callback){
   switch(arguments.length){
     case 0: mediaType = undefined;
     break;
-    case 1: 
+    case 1:
     break;
 
     default:
@@ -26642,9 +26641,9 @@ MediaElement.prototype.getStats = function(mediaType, callback){
       throw error;
   }
 
-  //  
+  //
   // checkType('MediaType', 'mediaType', mediaType);
-  //  
+  //
 
   var params = {
     mediaType: mediaType
@@ -26658,22 +26657,22 @@ MediaElement.prototype.getStats = function(mediaType, callback){
  * @callback module:core/abstracts.MediaElement~getStatsCallback
  * @param {external:Error} error
  * @param {Object.<string, module:core/complexTypes.Stats>} result
- *  Delivers a successful result in the form of a RTC stats report. A RTC stats 
- *  report represents a map between strings, identifying the inspected objects 
+ *  Delivers a successful result in the form of a RTC stats report. A RTC stats
+ *  report represents a map between strings, identifying the inspected objects
  *  (RTCStats.id), and their corresponding RTCStats objects.
  */
 
 /**
- * This method indicates whether the media element is receiving media of a 
- * certain type. The media sink pad can be identified individually, if needed. 
- * It is only supported for AUDIO and VIDEO types, raising a 
- * MEDIA_OBJECT_ILLEGAL_PARAM_ERROR otherwise. If the pad indicated does not 
+ * This method indicates whether the media element is receiving media of a
+ * certain type. The media sink pad can be identified individually, if needed.
+ * It is only supported for AUDIO and VIDEO types, raising a
+ * MEDIA_OBJECT_ILLEGAL_PARAM_ERROR otherwise. If the pad indicated does not
  * exist, if will return false.
  *
  * @alias module:core/abstracts.MediaElement.isMediaFlowingIn
  *
  * @param {module:core/complexTypes.MediaType} mediaType
- *  One of {@link module:core/abstracts.MediaElement#MediaType.AUDIO} or {@link 
+ *  One of {@link module:core/abstracts.MediaElement#MediaType.AUDIO} or {@link
  *  module:core/abstracts.MediaElement#MediaType.VIDEO}
  *
  * @param {external:String} [sinkMediaDescription]
@@ -26695,7 +26694,7 @@ MediaElement.prototype.isMediaFlowingIn = function(mediaType, sinkMediaDescripti
   switch(arguments.length){
     case 1: sinkMediaDescription = undefined;
     break;
-    case 2: 
+    case 2:
     break;
 
     default:
@@ -26707,11 +26706,11 @@ MediaElement.prototype.isMediaFlowingIn = function(mediaType, sinkMediaDescripti
       throw error;
   }
 
-  //  
+  //
   // checkType('MediaType', 'mediaType', mediaType, {required: true});
-  //  
+  //
   // checkType('String', 'sinkMediaDescription', sinkMediaDescription);
-  //  
+  //
 
   var params = {
     mediaType: mediaType,
@@ -26730,13 +26729,13 @@ MediaElement.prototype.isMediaFlowingIn = function(mediaType, sinkMediaDescripti
  */
 
 /**
- * This method indicates whether the media element is emitting media of a 
+ * This method indicates whether the media element is emitting media of a
  * certain type. The media source pad can be identified individually, if needed.
  *
  * @alias module:core/abstracts.MediaElement.isMediaFlowingOut
  *
  * @param {module:core/complexTypes.MediaType} mediaType
- *  One of {@link module:core/abstracts.MediaElement#MediaType.AUDIO} or {@link 
+ *  One of {@link module:core/abstracts.MediaElement#MediaType.AUDIO} or {@link
  *  module:core/abstracts.MediaElement#MediaType.VIDEO}
  *
  * @param {external:String} [sourceMediaDescription]
@@ -26758,7 +26757,7 @@ MediaElement.prototype.isMediaFlowingOut = function(mediaType, sourceMediaDescri
   switch(arguments.length){
     case 1: sourceMediaDescription = undefined;
     break;
-    case 2: 
+    case 2:
     break;
 
     default:
@@ -26770,11 +26769,11 @@ MediaElement.prototype.isMediaFlowingOut = function(mediaType, sourceMediaDescri
       throw error;
   }
 
-  //  
+  //
   // checkType('MediaType', 'mediaType', mediaType, {required: true});
-  //  
+  //
   // checkType('String', 'sourceMediaDescription', sourceMediaDescription);
-  //  
+  //
 
   var params = {
     mediaType: mediaType,
@@ -26809,9 +26808,9 @@ MediaElement.prototype.setAudioFormat = function(caps, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('AudioCaps', 'caps', caps, {required: true});
-  //  
+  //
 
   var params = {
     caps: caps
@@ -26828,8 +26827,8 @@ MediaElement.prototype.setAudioFormat = function(caps, callback){
 
 /**
  * @deprecated
- * Allows change the target bitrate for the media output, if the media is 
- * encoded using VP8 or H264. This method only works if it is called before the 
+ * Allows change the target bitrate for the media output, if the media is
+ * encoded using VP8 or H264. This method only works if it is called before the
  * media starts to flow.
  *
  * @alias module:core/abstracts.MediaElement.setOutputBitrate
@@ -26846,9 +26845,9 @@ MediaElement.prototype.setOutputBitrate = function(bitrate, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'bitrate', bitrate, {required: true});
-  //  
+  //
 
   var params = {
     bitrate: bitrate
@@ -26880,9 +26879,9 @@ MediaElement.prototype.setVideoFormat = function(caps, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('VideoCaps', 'caps', caps, {required: true});
-  //  
+  //
 
   var params = {
     caps: caps
@@ -26976,35 +26975,35 @@ function noop(error, result) {
 
 /**
  * @classdesc
- *  <p>Base interface used to manage capabilities common to all Kurento 
- *  elements. This includes both: {@link module:core/abstracts.MediaElement 
+ *  <p>Base interface used to manage capabilities common to all Kurento
+ *  elements. This includes both: {@link module:core/abstracts.MediaElement
  *  MediaElement} and {@link module:core.MediaPipeline MediaPipeline}</p>
  *        <h4>Properties</h4>
  *        <ul>
- *          <li><b>id</b>: unique identifier assigned to this 
- *          <code>MediaObject</code> at instantiation time. {@link 
- *          module:core.MediaPipeline MediaPipeline} IDs are generated with a 
- *          GUID followed by suffix <code>_kurento.MediaPipeline</code>. {@link 
+ *          <li><b>id</b>: unique identifier assigned to this
+ *          <code>MediaObject</code> at instantiation time. {@link
+ *          module:core.MediaPipeline MediaPipeline} IDs are generated with a
+ *          GUID followed by suffix <code>_kurento.MediaPipeline</code>. {@link
  *          module:core/abstracts.MediaElement MediaElement} IDs are also a GUID
  *            <blockquote>
  *            <dl>
  *              <dt><i>MediaPipeline ID example</i></dt>
  *              <dd><code>907cac3a-809a-4bbe-a93e-ae7e944c5cae_kurento.MediaPipeline</code></dd>
- *              <dt><i>MediaElement ID example</i></dt> 
+ *              <dt><i>MediaElement ID example</i></dt>
  *              <dd><code>907cac3a-809a-4bbe-a93e-ae7e944c5cae_kurento.MediaPipeline/403da25a-805b-4cf1-8c55-f190588e6c9b_kurento.WebRtcEndpoint</code></dd>
  *            </dl>
  *            </blockquote>
  *          </li>
- *          <li><b>name</b>: free text intended to provide a friendly name for 
- *          this <code>MediaObject</code>. Its default value is the same as the 
+ *          <li><b>name</b>: free text intended to provide a friendly name for
+ *          this <code>MediaObject</code>. Its default value is the same as the
  *          ID.</li>
- *          <li><b>tags</b>: key-value pairs intended for applications to 
+ *          <li><b>tags</b>: key-value pairs intended for applications to
  *          associate metadata to this <code>MediaObject</code> instance.</li>
  *        </ul>
  *        <p>
  *        <h4>Events</h4>
  *        <ul>
- *          <li>`ErrorEvent`: reports asynchronous error events. It is 
+ *          <li>`ErrorEvent`: reports asynchronous error events. It is
  *          recommended to always subscribe a listener to this event, as regular
  *        </ul>
  *
@@ -27136,11 +27135,11 @@ MediaObject.prototype.getChildren = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -27191,11 +27190,11 @@ MediaObject.prototype.getChilds = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -27245,11 +27244,11 @@ MediaObject.prototype.getCreationTime = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -27263,8 +27262,8 @@ MediaObject.prototype.getCreationTime = function(callback){
  */
 
 /**
- * {@link module:core.MediaPipeline MediaPipeline} to which this 
- * <code>MediaObject</code> belongs. It returns itself when invoked for a 
+ * {@link module:core.MediaPipeline MediaPipeline} to which this
+ * <code>MediaObject</code> belongs. It returns itself when invoked for a
  * pipeline object.
  *
  * @alias module:core/abstracts.MediaObject#getMediaPipeline
@@ -27279,11 +27278,11 @@ MediaObject.prototype.getMediaPipeline = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -27319,8 +27318,8 @@ MediaObject.prototype.getMediaPipeline = function(callback){
  */
 
 /**
- * this <code>MediaObject</code>'s name. This is just a comodity to simplify 
- * developers' life debugging, it is not used internally for indexing nor 
+ * this <code>MediaObject</code>'s name. This is just a comodity to simplify
+ * developers' life debugging, it is not used internally for indexing nor
  * idenfiying the objects. By default, it's the object's ID.
  *
  * @alias module:core/abstracts.MediaObject#getName
@@ -27335,11 +27334,11 @@ MediaObject.prototype.getName = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -27353,8 +27352,8 @@ MediaObject.prototype.getName = function(callback){
  */
 
 /**
- * this <code>MediaObject</code>'s name. This is just a comodity to simplify 
- * developers' life debugging, it is not used internally for indexing nor 
+ * this <code>MediaObject</code>'s name. This is just a comodity to simplify
+ * developers' life debugging, it is not used internally for indexing nor
  * idenfiying the objects. By default, it's the object's ID.
  *
  * @alias module:core/abstracts.MediaObject#setName
@@ -27369,9 +27368,9 @@ MediaObject.prototype.setName = function(name, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'name', name, {required: true});
-  //  
+  //
 
   var params = {
     name: name
@@ -27387,7 +27386,7 @@ MediaObject.prototype.setName = function(name, callback){
  */
 
 /**
- * parent of this <code>MediaObject</code>. The parent of a {@link 
+ * parent of this <code>MediaObject</code>. The parent of a {@link
  * module:core/abstracts.Hub Hub} or a {@link module:core/abstracts.MediaElement
  *
  * @alias module:core/abstracts.MediaObject#getParent
@@ -27402,11 +27401,11 @@ MediaObject.prototype.getParent = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -27456,11 +27455,11 @@ MediaObject.prototype.getSendTagsInEvents = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -27488,9 +27487,9 @@ MediaObject.prototype.setSendTagsInEvents = function(sendTagsInEvents, callback)
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('boolean', 'sendTagsInEvents', sendTagsInEvents, {required: true});
-  //  
+  //
 
   var params = {
     sendTagsInEvents: sendTagsInEvents
@@ -27511,7 +27510,7 @@ MediaObject.prototype.setSendTagsInEvents = function(sendTagsInEvents, callback)
 //
 
 /**
- * Adds a new tag to this <code>MediaObject</code>. If the tag is already 
+ * Adds a new tag to this <code>MediaObject</code>. If the tag is already
  * present, it changes the value.
  *
  * @alias module:core/abstracts.MediaObject.addTag
@@ -27531,11 +27530,11 @@ MediaObject.prototype.addTag = function(key, value, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'key', key, {required: true});
-  //  
+  //
   // checkType('String', 'value', value, {required: true});
-  //  
+  //
 
   var params = {
     key: key,
@@ -27552,7 +27551,7 @@ MediaObject.prototype.addTag = function(key, value, callback){
  */
 
 /**
- * Returns the value of given tag, or MEDIA_OBJECT_TAG_KEY_NOT_FOUND if tag is 
+ * Returns the value of given tag, or MEDIA_OBJECT_TAG_KEY_NOT_FOUND if tag is
  * not defined.
  *
  * @alias module:core/abstracts.MediaObject.getTag
@@ -27569,9 +27568,9 @@ MediaObject.prototype.getTag = function(key, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'key', key, {required: true});
-  //  
+  //
 
   var params = {
     key: key
@@ -27603,11 +27602,11 @@ MediaObject.prototype.getTags = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -27618,7 +27617,7 @@ MediaObject.prototype.getTags = function(callback){
  * @callback module:core/abstracts.MediaObject~getTagsCallback
  * @param {external:Error} error
  * @param {module:core/complexTypes.Tag} result
- *  An array containing all key-value pairs associated with this 
+ *  An array containing all key-value pairs associated with this
  *  <code>MediaObject</code>.
  */
 
@@ -27639,9 +27638,9 @@ MediaObject.prototype.removeTag = function(key, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'key', key, {required: true});
-  //  
+  //
 
   var params = {
     key: key
@@ -27744,11 +27743,11 @@ MediaObject.prototype.release = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -27910,8 +27909,8 @@ function noop(error, result) {
 
 /**
  * @classdesc
- *  This interface is implemented by Endpoints that require an SDP negotiation 
- *  for the setup of a networked media session with remote peers. The API 
+ *  This interface is implemented by Endpoints that require an SDP negotiation
+ *  for the setup of a networked media session with remote peers. The API
  *  provides the following functionality:
  *        <ul>
  *          <li>Generate SDP offers.</li>
@@ -27935,7 +27934,7 @@ inherits(SdpEndpoint, SessionEndpoint);
 //
 
 /**
- *  Maximum bandwidth for audio reception, in kbps. The default value is 500. A 
+ *  Maximum bandwidth for audio reception, in kbps. The default value is 500. A
  *  value of 0 sets this as leaves this unconstrained. <hr/><b>Note</b> This has
  *
  * @alias module:core/abstracts.SdpEndpoint#getMaxAudioRecvBandwidth
@@ -27950,11 +27949,11 @@ SdpEndpoint.prototype.getMaxAudioRecvBandwidth = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -27968,7 +27967,7 @@ SdpEndpoint.prototype.getMaxAudioRecvBandwidth = function(callback){
  */
 
 /**
- *  Maximum bandwidth for audio reception, in kbps. The default value is 500. A 
+ *  Maximum bandwidth for audio reception, in kbps. The default value is 500. A
  *  value of 0 sets this as leaves this unconstrained. <hr/><b>Note</b> This has
  *
  * @alias module:core/abstracts.SdpEndpoint#setMaxAudioRecvBandwidth
@@ -27983,9 +27982,9 @@ SdpEndpoint.prototype.setMaxAudioRecvBandwidth = function(maxAudioRecvBandwidth,
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'maxAudioRecvBandwidth', maxAudioRecvBandwidth, {required: true});
-  //  
+  //
 
   var params = {
     maxAudioRecvBandwidth: maxAudioRecvBandwidth
@@ -28001,8 +28000,8 @@ SdpEndpoint.prototype.setMaxAudioRecvBandwidth = function(maxAudioRecvBandwidth,
  */
 
 /**
- *  Maximum bandwidth for video reception, in kbps. The default value is 500. A 
- *  value of 0 sets this as unconstrained. <hr/><b>Note</b> This has to be set 
+ *  Maximum bandwidth for video reception, in kbps. The default value is 500. A
+ *  value of 0 sets this as unconstrained. <hr/><b>Note</b> This has to be set
  *  before the SDP is generated.
  *
  * @alias module:core/abstracts.SdpEndpoint#getMaxVideoRecvBandwidth
@@ -28017,11 +28016,11 @@ SdpEndpoint.prototype.getMaxVideoRecvBandwidth = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28035,8 +28034,8 @@ SdpEndpoint.prototype.getMaxVideoRecvBandwidth = function(callback){
  */
 
 /**
- *  Maximum bandwidth for video reception, in kbps. The default value is 500. A 
- *  value of 0 sets this as unconstrained. <hr/><b>Note</b> This has to be set 
+ *  Maximum bandwidth for video reception, in kbps. The default value is 500. A
+ *  value of 0 sets this as unconstrained. <hr/><b>Note</b> This has to be set
  *  before the SDP is generated.
  *
  * @alias module:core/abstracts.SdpEndpoint#setMaxVideoRecvBandwidth
@@ -28051,9 +28050,9 @@ SdpEndpoint.prototype.setMaxVideoRecvBandwidth = function(maxVideoRecvBandwidth,
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'maxVideoRecvBandwidth', maxVideoRecvBandwidth, {required: true});
-  //  
+  //
 
   var params = {
     maxVideoRecvBandwidth: maxVideoRecvBandwidth
@@ -28078,11 +28077,11 @@ SdpEndpoint.prototype.setMaxVideoRecvBandwidth = function(maxVideoRecvBandwidth,
  *           Exceptions
  *           <ul>
  *             <li>
- *               SDP_END_POINT_ALREADY_NEGOTIATED If the endpoint is already 
+ *               SDP_END_POINT_ALREADY_NEGOTIATED If the endpoint is already
  *               negotiated.
  *             </li>
  *             <li>
- *               SDP_END_POINT_GENERATE_OFFER_ERROR if the generated offer is 
+ *               SDP_END_POINT_GENERATE_OFFER_ERROR if the generated offer is
  *               empty. This is most likely due to an internal error.
  *             </li>
  *           </ul>
@@ -28099,11 +28098,11 @@ SdpEndpoint.prototype.generateOffer = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28118,7 +28117,7 @@ SdpEndpoint.prototype.generateOffer = function(callback){
  */
 
 /**
- * This method returns the local SDP. The output depends on the negotiation 
+ * This method returns the local SDP. The output depends on the negotiation
  * stage:
  *           <ul>
  *             <li>
@@ -28128,7 +28127,7 @@ SdpEndpoint.prototype.generateOffer = function(callback){
  *               Offer has been generated: return the SDP offer.
  *             </li>
  *             <li>
- *               Offer has been generated and answer processed: retruns the 
+ *               Offer has been generated and answer processed: retruns the
  *               agreed SDP.
  *             </li>
  *           </ul>
@@ -28145,11 +28144,11 @@ SdpEndpoint.prototype.getLocalSessionDescriptor = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28164,7 +28163,7 @@ SdpEndpoint.prototype.getLocalSessionDescriptor = function(callback){
  */
 
 /**
- * This method returns the remote SDP. If the negotiation process is not 
+ * This method returns the remote SDP. If the negotiation process is not
  * complete, it will return NULL.
  *
  * @alias module:core/abstracts.SdpEndpoint.getRemoteSessionDescriptor
@@ -28179,11 +28178,11 @@ SdpEndpoint.prototype.getRemoteSessionDescriptor = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28205,16 +28204,16 @@ SdpEndpoint.prototype.getRemoteSessionDescriptor = function(callback){
  *               SDP_PARSE_ERROR If the offer is empty or has errors.
  *             </li>
  *             <li>
- *               SDP_END_POINT_ALREADY_NEGOTIATED If the endpoint is already 
+ *               SDP_END_POINT_ALREADY_NEGOTIATED If the endpoint is already
  *               negotiated.
  *             </li>
  *             <li>
- *               SDP_END_POINT_PROCESS_ANSWER_ERROR if the result of processing 
- *               the answer is an empty string. This is most likely due to an 
+ *               SDP_END_POINT_PROCESS_ANSWER_ERROR if the result of processing
+ *               the answer is an empty string. This is most likely due to an
  *               internal error.
  *             </li>
  *             <li>
- *               SDP_END_POINT_NOT_OFFER_GENERATED If the method is invoked 
+ *               SDP_END_POINT_NOT_OFFER_GENERATED If the method is invoked
  *               before the generateOffer method.
  *             </li>
  *           </ul>
@@ -28233,9 +28232,9 @@ SdpEndpoint.prototype.processAnswer = function(answer, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'answer', answer, {required: true});
-  //  
+  //
 
   var params = {
     answer: answer
@@ -28260,11 +28259,11 @@ SdpEndpoint.prototype.processAnswer = function(answer, callback){
  *               SDP_PARSE_ERROR If the offer is empty or has errors.
  *             </li>
  *             <li>
- *               SDP_END_POINT_ALREADY_NEGOTIATED If the endpoint is already 
+ *               SDP_END_POINT_ALREADY_NEGOTIATED If the endpoint is already
  *               negotiated.
  *             </li>
  *             <li>
- *               SDP_END_POINT_PROCESS_OFFER_ERROR if the generated offer is 
+ *               SDP_END_POINT_PROCESS_OFFER_ERROR if the generated offer is
  *               empty. This is most likely due to an internal error.
  *             </li>
  *           </ul>
@@ -28283,9 +28282,9 @@ SdpEndpoint.prototype.processOffer = function(offer, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'offer', offer, {required: true});
-  //  
+  //
 
   var params = {
     offer: offer
@@ -28414,11 +28413,11 @@ ServerManager.prototype.getInfo = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28446,11 +28445,11 @@ ServerManager.prototype.getMetadata = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28478,11 +28477,11 @@ ServerManager.prototype.getPipelines = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28532,11 +28531,11 @@ ServerManager.prototype.getSessions = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28571,9 +28570,9 @@ ServerManager.prototype.getKmd = function(moduleName, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'moduleName', moduleName, {required: true});
-  //  
+  //
 
   var params = {
     moduleName: moduleName
@@ -28605,11 +28604,11 @@ ServerManager.prototype.getUsedMemory = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28689,7 +28688,7 @@ var Endpoint = require('./Endpoint');
 
 /**
  * @classdesc
- *  All networked Endpoints that require to manage connection sessions with 
+ *  All networked Endpoints that require to manage connection sessions with
  *  remote peers implement this interface.
  *
  * @abstract
@@ -28816,11 +28815,11 @@ UriEndpoint.prototype.getState = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28848,11 +28847,11 @@ UriEndpoint.prototype.getUri = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28885,11 +28884,11 @@ UriEndpoint.prototype.pause = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -28916,11 +28915,11 @@ UriEndpoint.prototype.stop = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -29063,11 +29062,11 @@ function AudioCaps(audioCapsDict){
   audioCapsDict = audioCapsDict || {}
 
   // Check audioCapsDict has the required fields
-  // 
+  //
   // checkType('AudioCodec', 'audioCapsDict.codec', audioCapsDict.codec, {required: true});
-  //  
+  //
   // checkType('int', 'audioCapsDict.bitrate', audioCapsDict.bitrate, {required: true});
-  //  
+  //
 
   // Init parent class
   AudioCaps.super_.call(this, audioCapsDict)
@@ -29206,7 +29205,7 @@ var ComplexType = require('./ComplexType');
  * @constructor module:core/complexTypes.CodecConfiguration
  *
  * @property {external:String} name
- *  Name of the codec defined as <encoding name>/<clock rate>[/<encoding 
+ *  Name of the codec defined as <encoding name>/<clock rate>[/<encoding
  *  parameters>]
  * @property {external:String} properties
  *  String used for tuning codec properties
@@ -29218,11 +29217,11 @@ function CodecConfiguration(codecConfigurationDict){
   codecConfigurationDict = codecConfigurationDict || {}
 
   // Check codecConfigurationDict has the required fields
-  // 
+  //
   // checkType('String', 'codecConfigurationDict.name', codecConfigurationDict.name, {required: true});
-  //  
+  //
   // checkType('String', 'codecConfigurationDict.properties', codecConfigurationDict.properties);
-  //  
+  //
 
   // Init parent class
   CodecConfiguration.super_.call(this, codecConfigurationDict)
@@ -29441,17 +29440,17 @@ function ElementConnectionData(elementConnectionDataDict){
   elementConnectionDataDict = elementConnectionDataDict || {}
 
   // Check elementConnectionDataDict has the required fields
-  // 
+  //
   // checkType('MediaElement', 'elementConnectionDataDict.source', elementConnectionDataDict.source, {required: true});
-  //  
+  //
   // checkType('MediaElement', 'elementConnectionDataDict.sink', elementConnectionDataDict.sink, {required: true});
-  //  
+  //
   // checkType('MediaType', 'elementConnectionDataDict.type', elementConnectionDataDict.type, {required: true});
-  //  
+  //
   // checkType('String', 'elementConnectionDataDict.sourceDescription', elementConnectionDataDict.sourceDescription, {required: true});
-  //  
+  //
   // checkType('String', 'elementConnectionDataDict.sinkDescription', elementConnectionDataDict.sinkDescription, {required: true});
-  //  
+  //
 
   // Init parent class
   ElementConnectionData.super_.call(this, elementConnectionDataDict)
@@ -29560,7 +29559,7 @@ var Stats = require('./Stats');
  *  @deprecated
  *  Video average measured on the sink pad in nano seconds
  * @property {module:core/complexTypes.MediaLatencyStat} inputLatency
- *  The average time that buffers take to get on the input pads of this element 
+ *  The average time that buffers take to get on the input pads of this element
  *  in nano seconds
 
  * @extends module:core.Stats
@@ -29572,13 +29571,13 @@ function ElementStats(elementStatsDict){
   elementStatsDict = elementStatsDict || {}
 
   // Check elementStatsDict has the required fields
-  // 
+  //
   // checkType('double', 'elementStatsDict.inputAudioLatency', elementStatsDict.inputAudioLatency, {required: true});
-  //  
+  //
   // checkType('double', 'elementStatsDict.inputVideoLatency', elementStatsDict.inputVideoLatency, {required: true});
-  //  
+  //
   // checkType('MediaLatencyStat', 'elementStatsDict.inputLatency', elementStatsDict.inputLatency, {isArray: true, required: true});
-  //  
+  //
 
   // Init parent class
   ElementStats.super_.call(this, elementStatsDict)
@@ -29677,7 +29676,7 @@ var ElementStats = require('./ElementStats');
  *  @deprecated
  *  End-to-end video latency measured in nano seconds
  * @property {module:core/complexTypes.MediaLatencyStat} E2ELatency
- *  The average end to end latency for each media stream measured in nano 
+ *  The average end to end latency for each media stream measured in nano
  *  seconds
 
  * @extends module:core.ElementStats
@@ -29689,13 +29688,13 @@ function EndpointStats(endpointStatsDict){
   endpointStatsDict = endpointStatsDict || {}
 
   // Check endpointStatsDict has the required fields
-  // 
+  //
   // checkType('double', 'endpointStatsDict.audioE2ELatency', endpointStatsDict.audioE2ELatency, {required: true});
-  //  
+  //
   // checkType('double', 'endpointStatsDict.videoE2ELatency', endpointStatsDict.videoE2ELatency, {required: true});
-  //  
+  //
   // checkType('MediaLatencyStat', 'endpointStatsDict.E2ELatency', endpointStatsDict.E2ELatency, {isArray: true, required: true});
-  //  
+  //
 
   // Init parent class
   EndpointStats.super_.call(this, endpointStatsDict)
@@ -29835,7 +29834,7 @@ var ComplexType = require('./ComplexType');
 
 
 /**
- * Type that represents a fraction of an integer numerator over an integer 
+ * Type that represents a fraction of an integer numerator over an integer
  * denominator
  *
  * @constructor module:core/complexTypes.Fraction
@@ -29852,11 +29851,11 @@ function Fraction(fractionDict){
   fractionDict = fractionDict || {}
 
   // Check fractionDict has the required fields
-  // 
+  //
   // checkType('int', 'fractionDict.numerator', fractionDict.numerator, {required: true});
-  //  
+  //
   // checkType('int', 'fractionDict.denominator', fractionDict.denominator, {required: true});
-  //  
+  //
 
   // Init parent class
   Fraction.super_.call(this, fractionDict)
@@ -30059,13 +30058,13 @@ function MediaLatencyStat(mediaLatencyStatDict){
   mediaLatencyStatDict = mediaLatencyStatDict || {}
 
   // Check mediaLatencyStatDict has the required fields
-  // 
+  //
   // checkType('String', 'mediaLatencyStatDict.name', mediaLatencyStatDict.name, {required: true});
-  //  
+  //
   // checkType('MediaType', 'mediaLatencyStatDict.type', mediaLatencyStatDict.type, {required: true});
-  //  
+  //
   // checkType('double', 'mediaLatencyStatDict.avg', mediaLatencyStatDict.avg, {required: true});
-  //  
+  //
 
   // Init parent class
   MediaLatencyStat.super_.call(this, mediaLatencyStatDict)
@@ -30276,15 +30275,15 @@ function ModuleInfo(moduleInfoDict){
   moduleInfoDict = moduleInfoDict || {}
 
   // Check moduleInfoDict has the required fields
-  // 
+  //
   // checkType('String', 'moduleInfoDict.version', moduleInfoDict.version, {required: true});
-  //  
+  //
   // checkType('String', 'moduleInfoDict.name', moduleInfoDict.name, {required: true});
-  //  
+  //
   // checkType('String', 'moduleInfoDict.generationTime', moduleInfoDict.generationTime, {required: true});
-  //  
+  //
   // checkType('String', 'moduleInfoDict.factories', moduleInfoDict.factories, {isArray: true, required: true});
-  //  
+  //
 
   // Init parent class
   ModuleInfo.super_.call(this, moduleInfoDict)
@@ -30397,15 +30396,15 @@ function RTCCertificateStats(rTCCertificateStatsDict){
   rTCCertificateStatsDict = rTCCertificateStatsDict || {}
 
   // Check rTCCertificateStatsDict has the required fields
-  // 
+  //
   // checkType('String', 'rTCCertificateStatsDict.fingerprint', rTCCertificateStatsDict.fingerprint, {required: true});
-  //  
+  //
   // checkType('String', 'rTCCertificateStatsDict.fingerprintAlgorithm', rTCCertificateStatsDict.fingerprintAlgorithm, {required: true});
-  //  
+  //
   // checkType('String', 'rTCCertificateStatsDict.base64Certificate', rTCCertificateStatsDict.base64Certificate, {required: true});
-  //  
+  //
   // checkType('String', 'rTCCertificateStatsDict.issuerCertificateId', rTCCertificateStatsDict.issuerCertificateId, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCCertificateStats.super_.call(this, rTCCertificateStatsDict)
@@ -30522,17 +30521,17 @@ function RTCCodec(rTCCodecDict){
   rTCCodecDict = rTCCodecDict || {}
 
   // Check rTCCodecDict has the required fields
-  // 
+  //
   // checkType('int64', 'rTCCodecDict.payloadType', rTCCodecDict.payloadType, {required: true});
-  //  
+  //
   // checkType('String', 'rTCCodecDict.codec', rTCCodecDict.codec, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCCodecDict.clockRate', rTCCodecDict.clockRate, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCCodecDict.channels', rTCCodecDict.channels, {required: true});
-  //  
+  //
   // checkType('String', 'rTCCodecDict.parameters', rTCCodecDict.parameters, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCCodec.super_.call(this, rTCCodecDict)
@@ -30696,12 +30695,12 @@ var RTCStats = require('./RTCStats');
  * @property {external:int64} messagesSent
  *  Represents the total number of API 'message' events sent.
  * @property {external:int64} bytesSent
- *  Represents the total number of payload bytes sent on this RTCDatachannel, 
+ *  Represents the total number of payload bytes sent on this RTCDatachannel,
  *  i.e., not including headers or padding.
  * @property {external:int64} messagesReceived
  *  Represents the total number of API 'message' events received.
  * @property {external:int64} bytesReceived
- *  Represents the total number of bytes received on this RTCDatachannel, i.e., 
+ *  Represents the total number of bytes received on this RTCDatachannel, i.e.,
  *  not including headers or padding.
 
  * @extends module:core.RTCStats
@@ -30713,23 +30712,23 @@ function RTCDataChannelStats(rTCDataChannelStatsDict){
   rTCDataChannelStatsDict = rTCDataChannelStatsDict || {}
 
   // Check rTCDataChannelStatsDict has the required fields
-  // 
+  //
   // checkType('String', 'rTCDataChannelStatsDict.label', rTCDataChannelStatsDict.label, {required: true});
-  //  
+  //
   // checkType('String', 'rTCDataChannelStatsDict.protocol', rTCDataChannelStatsDict.protocol, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCDataChannelStatsDict.datachannelid', rTCDataChannelStatsDict.datachannelid, {required: true});
-  //  
+  //
   // checkType('RTCDataChannelState', 'rTCDataChannelStatsDict.state', rTCDataChannelStatsDict.state, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCDataChannelStatsDict.messagesSent', rTCDataChannelStatsDict.messagesSent, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCDataChannelStatsDict.bytesSent', rTCDataChannelStatsDict.bytesSent, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCDataChannelStatsDict.messagesReceived', rTCDataChannelStatsDict.messagesReceived, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCDataChannelStatsDict.bytesReceived', rTCDataChannelStatsDict.bytesReceived, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCDataChannelStats.super_.call(this, rTCDataChannelStatsDict)
@@ -30846,20 +30845,20 @@ var RTCStats = require('./RTCStats');
  * @constructor module:core/complexTypes.RTCIceCandidateAttributes
  *
  * @property {external:String} ipAddress
- *  It is the IP address of the candidate, allowing for IPv4 addresses, IPv6 
+ *  It is the IP address of the candidate, allowing for IPv4 addresses, IPv6
  *  addresses, and fully qualified domain names (FQDNs).
  * @property {external:int64} portNumber
  *  It is the port number of the candidate.
  * @property {external:String} transport
- *  Valid values for transport is one of udp and tcp. Based on the 'transport' 
+ *  Valid values for transport is one of udp and tcp. Based on the 'transport'
  *  defined in [RFC5245] section 15.1.
  * @property {module:core/complexTypes.RTCStatsIceCandidateType} candidateType
- *  The enumeration RTCStatsIceCandidateType is based on the cand-type defined 
+ *  The enumeration RTCStatsIceCandidateType is based on the cand-type defined
  *  in [RFC5245] section 15.1.
  * @property {external:int64} priority
  *  Represents the priority of the candidate
  * @property {external:String} addressSourceUrl
- *  The URL of the TURN or STUN server indicated in the RTCIceServers that 
+ *  The URL of the TURN or STUN server indicated in the RTCIceServers that
  *  translated this IP address.
 
  * @extends module:core.RTCStats
@@ -30871,19 +30870,19 @@ function RTCIceCandidateAttributes(rTCIceCandidateAttributesDict){
   rTCIceCandidateAttributesDict = rTCIceCandidateAttributesDict || {}
 
   // Check rTCIceCandidateAttributesDict has the required fields
-  // 
+  //
   // checkType('String', 'rTCIceCandidateAttributesDict.ipAddress', rTCIceCandidateAttributesDict.ipAddress, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCIceCandidateAttributesDict.portNumber', rTCIceCandidateAttributesDict.portNumber, {required: true});
-  //  
+  //
   // checkType('String', 'rTCIceCandidateAttributesDict.transport', rTCIceCandidateAttributesDict.transport, {required: true});
-  //  
+  //
   // checkType('RTCStatsIceCandidateType', 'rTCIceCandidateAttributesDict.candidateType', rTCIceCandidateAttributesDict.candidateType, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCIceCandidateAttributesDict.priority', rTCIceCandidateAttributesDict.priority, {required: true});
-  //  
+  //
   // checkType('String', 'rTCIceCandidateAttributesDict.addressSourceUrl', rTCIceCandidateAttributesDict.addressSourceUrl, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCIceCandidateAttributes.super_.call(this, rTCIceCandidateAttributesDict)
@@ -30990,41 +30989,41 @@ var RTCStats = require('./RTCStats');
  * @constructor module:core/complexTypes.RTCIceCandidatePairStats
  *
  * @property {external:String} transportId
- *  It is a unique identifier that is associated to the object that was 
- *  inspected to produce the RTCTransportStats associated with this candidate 
+ *  It is a unique identifier that is associated to the object that was
+ *  inspected to produce the RTCTransportStats associated with this candidate
  *  pair.
  * @property {external:String} localCandidateId
- *  It is a unique identifier that is associated to the object that was 
- *  inspected to produce the RTCIceCandidateAttributes for the local candidate 
+ *  It is a unique identifier that is associated to the object that was
+ *  inspected to produce the RTCIceCandidateAttributes for the local candidate
  *  associated with this candidate pair.
  * @property {external:String} remoteCandidateId
- *  It is a unique identifier that is associated to the object that was 
- *  inspected to produce the RTCIceCandidateAttributes for the remote candidate 
+ *  It is a unique identifier that is associated to the object that was
+ *  inspected to produce the RTCIceCandidateAttributes for the remote candidate
  *  associated with this candidate pair.
  * @property {module:core/complexTypes.RTCStatsIceCandidatePairState} state
  *  Represents the state of the checklist for the local and remote candidates in
  * @property {external:int64} priority
  *  Calculated from candidate priorities as defined in [RFC5245] section 5.7.2.
  * @property {external:Boolean} nominated
- *  Related to updating the nominated flag described in Section 7.1.3.2.4 of 
+ *  Related to updating the nominated flag described in Section 7.1.3.2.4 of
  *  [RFC5245].
  * @property {external:Boolean} writable
  *  Has gotten ACK to an ICE request.
  * @property {external:Boolean} readable
  *  Has gotten a valid incoming ICE request.
  * @property {external:int64} bytesSent
- *  Represents the total number of payload bytes sent on this candidate pair, 
+ *  Represents the total number of payload bytes sent on this candidate pair,
  *  i.e., not including headers or padding.
  * @property {external:int64} bytesReceived
- *  Represents the total number of payload bytes received on this candidate 
+ *  Represents the total number of payload bytes received on this candidate
  *  pair, i.e., not including headers or padding.
  * @property {external:double} roundTripTime
  *  Represents the RTT computed by the STUN connectivity checks
  * @property {external:double} availableOutgoingBitrate
- *  Measured in Bits per second, and is implementation dependent. It may be 
+ *  Measured in Bits per second, and is implementation dependent. It may be
  *  calculated by the underlying congestion control.
  * @property {external:double} availableIncomingBitrate
- *  Measured in Bits per second, and is implementation dependent. It may be 
+ *  Measured in Bits per second, and is implementation dependent. It may be
  *  calculated by the underlying congestion control.
 
  * @extends module:core.RTCStats
@@ -31036,33 +31035,33 @@ function RTCIceCandidatePairStats(rTCIceCandidatePairStatsDict){
   rTCIceCandidatePairStatsDict = rTCIceCandidatePairStatsDict || {}
 
   // Check rTCIceCandidatePairStatsDict has the required fields
-  // 
+  //
   // checkType('String', 'rTCIceCandidatePairStatsDict.transportId', rTCIceCandidatePairStatsDict.transportId, {required: true});
-  //  
+  //
   // checkType('String', 'rTCIceCandidatePairStatsDict.localCandidateId', rTCIceCandidatePairStatsDict.localCandidateId, {required: true});
-  //  
+  //
   // checkType('String', 'rTCIceCandidatePairStatsDict.remoteCandidateId', rTCIceCandidatePairStatsDict.remoteCandidateId, {required: true});
-  //  
+  //
   // checkType('RTCStatsIceCandidatePairState', 'rTCIceCandidatePairStatsDict.state', rTCIceCandidatePairStatsDict.state, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCIceCandidatePairStatsDict.priority', rTCIceCandidatePairStatsDict.priority, {required: true});
-  //  
+  //
   // checkType('boolean', 'rTCIceCandidatePairStatsDict.nominated', rTCIceCandidatePairStatsDict.nominated, {required: true});
-  //  
+  //
   // checkType('boolean', 'rTCIceCandidatePairStatsDict.writable', rTCIceCandidatePairStatsDict.writable, {required: true});
-  //  
+  //
   // checkType('boolean', 'rTCIceCandidatePairStatsDict.readable', rTCIceCandidatePairStatsDict.readable, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCIceCandidatePairStatsDict.bytesSent', rTCIceCandidatePairStatsDict.bytesSent, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCIceCandidatePairStatsDict.bytesReceived', rTCIceCandidatePairStatsDict.bytesReceived, {required: true});
-  //  
+  //
   // checkType('double', 'rTCIceCandidatePairStatsDict.roundTripTime', rTCIceCandidatePairStatsDict.roundTripTime, {required: true});
-  //  
+  //
   // checkType('double', 'rTCIceCandidatePairStatsDict.availableOutgoingBitrate', rTCIceCandidatePairStatsDict.availableOutgoingBitrate, {required: true});
-  //  
+  //
   // checkType('double', 'rTCIceCandidatePairStatsDict.availableIncomingBitrate', rTCIceCandidatePairStatsDict.availableIncomingBitrate, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCIceCandidatePairStats.super_.call(this, rTCIceCandidatePairStatsDict)
@@ -31200,7 +31199,7 @@ var RTCRTPStreamStats = require('./RTCRTPStreamStats');
 
 
 /**
- * Statistics that represents the measurement metrics for the incoming media 
+ * Statistics that represents the measurement metrics for the incoming media
  * stream.
  *
  * @constructor module:core/complexTypes.RTCInboundRTPStreamStats
@@ -31221,13 +31220,13 @@ function RTCInboundRTPStreamStats(rTCInboundRTPStreamStatsDict){
   rTCInboundRTPStreamStatsDict = rTCInboundRTPStreamStatsDict || {}
 
   // Check rTCInboundRTPStreamStatsDict has the required fields
-  // 
+  //
   // checkType('int64', 'rTCInboundRTPStreamStatsDict.packetsReceived', rTCInboundRTPStreamStatsDict.packetsReceived, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCInboundRTPStreamStatsDict.bytesReceived', rTCInboundRTPStreamStatsDict.bytesReceived, {required: true});
-  //  
+  //
   // checkType('double', 'rTCInboundRTPStreamStatsDict.jitter', rTCInboundRTPStreamStatsDict.jitter, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCInboundRTPStreamStats.super_.call(this, rTCInboundRTPStreamStatsDict)
@@ -31333,11 +31332,11 @@ function RTCMediaStreamStats(rTCMediaStreamStatsDict){
   rTCMediaStreamStatsDict = rTCMediaStreamStatsDict || {}
 
   // Check rTCMediaStreamStatsDict has the required fields
-  // 
+  //
   // checkType('String', 'rTCMediaStreamStatsDict.streamIdentifier', rTCMediaStreamStatsDict.streamIdentifier, {required: true});
-  //  
+  //
   // checkType('String', 'rTCMediaStreamStatsDict.trackIds', rTCMediaStreamStatsDict.trackIds, {isArray: true, required: true});
-  //  
+  //
 
   // Init parent class
   RTCMediaStreamStats.super_.call(this, rTCMediaStreamStatsDict)
@@ -31431,10 +31430,10 @@ var RTCStats = require('./RTCStats');
  * @property {external:String} ssrcIds
  *  Synchronized sources.
  * @property {external:int64} frameWidth
- *  Only makes sense for video media streams and represents the width of the 
+ *  Only makes sense for video media streams and represents the width of the
  *  video frame for this SSRC.
  * @property {external:int64} frameHeight
- *  Only makes sense for video media streams and represents the height of the 
+ *  Only makes sense for video media streams and represents the height of the
  *  video frame for this SSRC.
  * @property {external:double} framesPerSecond
  *  Only valid for video. It represents the nominal FPS value.
@@ -31443,22 +31442,22 @@ var RTCStats = require('./RTCStats');
  * @property {external:int64} framesReceived
  *  Only valid for video and when remoteSource is set to true. It represents the
  * @property {external:int64} framesDecoded
- *  Only valid for video. It represents the total number of frames correctly 
- *  decoded for this SSRC. 
+ *  Only valid for video. It represents the total number of frames correctly
+ *  decoded for this SSRC.
  * @property {external:int64} framesDropped
- *  Only valid for video. The total number of frames dropped predecode or 
+ *  Only valid for video. The total number of frames dropped predecode or
  *  dropped because the frame missed its display deadline.
  * @property {external:int64} framesCorrupted
- *  Only valid for video. The total number of corrupted frames that have been 
+ *  Only valid for video. The total number of corrupted frames that have been
  *  detected.
  * @property {external:double} audioLevel
- *  Only valid for audio, and the value is between 0..1 (linear), where 1.0 
+ *  Only valid for audio, and the value is between 0..1 (linear), where 1.0
  *  represents 0 dBov.
  * @property {external:double} echoReturnLoss
- *  Only present on audio tracks sourced from a microphone where echo 
+ *  Only present on audio tracks sourced from a microphone where echo
  *  cancellation is applied. Calculated in decibels.
  * @property {external:double} echoReturnLossEnhancement
- *  Only present on audio tracks sourced from a microphone where echo 
+ *  Only present on audio tracks sourced from a microphone where echo
  *  cancellation is applied.
 
  * @extends module:core.RTCStats
@@ -31470,35 +31469,35 @@ function RTCMediaStreamTrackStats(rTCMediaStreamTrackStatsDict){
   rTCMediaStreamTrackStatsDict = rTCMediaStreamTrackStatsDict || {}
 
   // Check rTCMediaStreamTrackStatsDict has the required fields
-  // 
+  //
   // checkType('String', 'rTCMediaStreamTrackStatsDict.trackIdentifier', rTCMediaStreamTrackStatsDict.trackIdentifier, {required: true});
-  //  
+  //
   // checkType('boolean', 'rTCMediaStreamTrackStatsDict.remoteSource', rTCMediaStreamTrackStatsDict.remoteSource, {required: true});
-  //  
+  //
   // checkType('String', 'rTCMediaStreamTrackStatsDict.ssrcIds', rTCMediaStreamTrackStatsDict.ssrcIds, {isArray: true, required: true});
-  //  
+  //
   // checkType('int64', 'rTCMediaStreamTrackStatsDict.frameWidth', rTCMediaStreamTrackStatsDict.frameWidth, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCMediaStreamTrackStatsDict.frameHeight', rTCMediaStreamTrackStatsDict.frameHeight, {required: true});
-  //  
+  //
   // checkType('double', 'rTCMediaStreamTrackStatsDict.framesPerSecond', rTCMediaStreamTrackStatsDict.framesPerSecond, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCMediaStreamTrackStatsDict.framesSent', rTCMediaStreamTrackStatsDict.framesSent, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCMediaStreamTrackStatsDict.framesReceived', rTCMediaStreamTrackStatsDict.framesReceived, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCMediaStreamTrackStatsDict.framesDecoded', rTCMediaStreamTrackStatsDict.framesDecoded, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCMediaStreamTrackStatsDict.framesDropped', rTCMediaStreamTrackStatsDict.framesDropped, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCMediaStreamTrackStatsDict.framesCorrupted', rTCMediaStreamTrackStatsDict.framesCorrupted, {required: true});
-  //  
+  //
   // checkType('double', 'rTCMediaStreamTrackStatsDict.audioLevel', rTCMediaStreamTrackStatsDict.audioLevel, {required: true});
-  //  
+  //
   // checkType('double', 'rTCMediaStreamTrackStatsDict.echoReturnLoss', rTCMediaStreamTrackStatsDict.echoReturnLoss, {required: true});
-  //  
+  //
   // checkType('double', 'rTCMediaStreamTrackStatsDict.echoReturnLossEnhancement', rTCMediaStreamTrackStatsDict.echoReturnLossEnhancement, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCMediaStreamTrackStats.super_.call(this, rTCMediaStreamTrackStatsDict)
@@ -31641,7 +31640,7 @@ var RTCRTPStreamStats = require('./RTCRTPStreamStats');
 
 
 /**
- * Statistics that represents the measurement metrics for the outgoing media 
+ * Statistics that represents the measurement metrics for the outgoing media
  * stream.
  *
  * @constructor module:core/complexTypes.RTCOutboundRTPStreamStats
@@ -31653,7 +31652,7 @@ var RTCRTPStreamStats = require('./RTCRTPStreamStats');
  * @property {external:double} targetBitrate
  *  Presently configured bitrate target of this SSRC, in bits per second.
  * @property {external:double} roundTripTime
- *  Estimated round trip time (seconds) for this SSRC based on the RTCP 
+ *  Estimated round trip time (seconds) for this SSRC based on the RTCP
  *  timestamp.
 
  * @extends module:core.RTCRTPStreamStats
@@ -31665,15 +31664,15 @@ function RTCOutboundRTPStreamStats(rTCOutboundRTPStreamStatsDict){
   rTCOutboundRTPStreamStatsDict = rTCOutboundRTPStreamStatsDict || {}
 
   // Check rTCOutboundRTPStreamStatsDict has the required fields
-  // 
+  //
   // checkType('int64', 'rTCOutboundRTPStreamStatsDict.packetsSent', rTCOutboundRTPStreamStatsDict.packetsSent, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCOutboundRTPStreamStatsDict.bytesSent', rTCOutboundRTPStreamStatsDict.bytesSent, {required: true});
-  //  
+  //
   // checkType('double', 'rTCOutboundRTPStreamStatsDict.targetBitrate', rTCOutboundRTPStreamStatsDict.targetBitrate, {required: true});
-  //  
+  //
   // checkType('double', 'rTCOutboundRTPStreamStatsDict.roundTripTime', rTCOutboundRTPStreamStatsDict.roundTripTime, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCOutboundRTPStreamStats.super_.call(this, rTCOutboundRTPStreamStatsDict)
@@ -31784,11 +31783,11 @@ function RTCPeerConnectionStats(rTCPeerConnectionStatsDict){
   rTCPeerConnectionStatsDict = rTCPeerConnectionStatsDict || {}
 
   // Check rTCPeerConnectionStatsDict has the required fields
-  // 
+  //
   // checkType('int64', 'rTCPeerConnectionStatsDict.dataChannelsOpened', rTCPeerConnectionStatsDict.dataChannelsOpened, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCPeerConnectionStatsDict.dataChannelsClosed', rTCPeerConnectionStatsDict.dataChannelsClosed, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCPeerConnectionStats.super_.call(this, rTCPeerConnectionStatsDict)
@@ -31880,27 +31879,27 @@ var RTCStats = require('./RTCStats');
  * @property {external:String} associateStatsId
  *  The associateStatsId is used for looking up the corresponding (local/remote)
  * @property {external:Boolean} isRemote
- *  false indicates that the statistics are measured locally, while true 
- *  indicates that the measurements were done at the remote endpoint and 
+ *  false indicates that the statistics are measured locally, while true
+ *  indicates that the measurements were done at the remote endpoint and
  *  reported in an RTCP RR/XR.
  * @property {external:String} mediaTrackId
  *  Track identifier.
  * @property {external:String} transportId
- *  It is a unique identifier that is associated to the object that was 
+ *  It is a unique identifier that is associated to the object that was
  *  inspected to produce the RTCTransportStats associated with this RTP stream.
  * @property {external:String} codecId
  *  The codec identifier
  * @property {external:int64} firCount
- *  Count the total number of Full Intra Request (FIR) packets received by the 
+ *  Count the total number of Full Intra Request (FIR) packets received by the
  *  sender. This metric is only valid for video and is sent by receiver.
  * @property {external:int64} pliCount
- *  Count the total number of Packet Loss Indication (PLI) packets received by 
+ *  Count the total number of Packet Loss Indication (PLI) packets received by
  *  the sender and is sent by receiver.
  * @property {external:int64} nackCount
- *  Count the total number of Negative ACKnowledgement (NACK) packets received 
+ *  Count the total number of Negative ACKnowledgement (NACK) packets received
  *  by the sender and is sent by receiver.
  * @property {external:int64} sliCount
- *  Count the total number of Slice Loss Indication (SLI) packets received by 
+ *  Count the total number of Slice Loss Indication (SLI) packets received by
  *  the sender. This metric is only valid for video and is sent by receiver.
  * @property {external:int64} remb
  *  The Receiver Estimated Maximum Bitrate (REMB). This metric is only valid for
@@ -31918,33 +31917,33 @@ function RTCRTPStreamStats(rTCRTPStreamStatsDict){
   rTCRTPStreamStatsDict = rTCRTPStreamStatsDict || {}
 
   // Check rTCRTPStreamStatsDict has the required fields
-  // 
+  //
   // checkType('String', 'rTCRTPStreamStatsDict.ssrc', rTCRTPStreamStatsDict.ssrc, {required: true});
-  //  
+  //
   // checkType('String', 'rTCRTPStreamStatsDict.associateStatsId', rTCRTPStreamStatsDict.associateStatsId, {required: true});
-  //  
+  //
   // checkType('boolean', 'rTCRTPStreamStatsDict.isRemote', rTCRTPStreamStatsDict.isRemote, {required: true});
-  //  
+  //
   // checkType('String', 'rTCRTPStreamStatsDict.mediaTrackId', rTCRTPStreamStatsDict.mediaTrackId, {required: true});
-  //  
+  //
   // checkType('String', 'rTCRTPStreamStatsDict.transportId', rTCRTPStreamStatsDict.transportId, {required: true});
-  //  
+  //
   // checkType('String', 'rTCRTPStreamStatsDict.codecId', rTCRTPStreamStatsDict.codecId, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCRTPStreamStatsDict.firCount', rTCRTPStreamStatsDict.firCount, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCRTPStreamStatsDict.pliCount', rTCRTPStreamStatsDict.pliCount, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCRTPStreamStatsDict.nackCount', rTCRTPStreamStatsDict.nackCount, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCRTPStreamStatsDict.sliCount', rTCRTPStreamStatsDict.sliCount, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCRTPStreamStatsDict.remb', rTCRTPStreamStatsDict.remb, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCRTPStreamStatsDict.packetsLost', rTCRTPStreamStatsDict.packetsLost, {required: true});
-  //  
+  //
   // checkType('double', 'rTCRTPStreamStatsDict.fractionLost', rTCRTPStreamStatsDict.fractionLost, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCRTPStreamStats.super_.call(this, rTCRTPStreamStatsDict)
@@ -32096,7 +32095,7 @@ function RTCStats(rTCStatsDict){
   rTCStatsDict = rTCStatsDict || {}
 
   // Check rTCStatsDict has the required fields
-  // 
+  //
 
   // Init parent class
   RTCStats.super_.call(this, rTCStatsDict)
@@ -32163,7 +32162,7 @@ var kurentoClient = require('kurento-client');
 
 
 /**
- * Represents the state of the checklist for the local and remote candidates in 
+ * Represents the state of the checklist for the local and remote candidates in
  * a pair.
  *
  * @typedef core/complexTypes.RTCStatsIceCandidatePairState
@@ -32277,20 +32276,20 @@ var RTCStats = require('./RTCStats');
  * @constructor module:core/complexTypes.RTCTransportStats
  *
  * @property {external:int64} bytesSent
- *  Represents the total number of payload bytes sent on this PeerConnection, 
+ *  Represents the total number of payload bytes sent on this PeerConnection,
  *  i.e., not including headers or padding.
  * @property {external:int64} bytesReceived
- *  Represents the total number of bytes received on this PeerConnection, i.e., 
+ *  Represents the total number of bytes received on this PeerConnection, i.e.,
  *  not including headers or padding.
  * @property {external:String} rtcpTransportStatsId
- *  If RTP and RTCP are not multiplexed, this is the id of the transport that 
- *  gives stats for the RTCP component, and this record has only the RTP 
+ *  If RTP and RTCP are not multiplexed, this is the id of the transport that
+ *  gives stats for the RTCP component, and this record has only the RTP
  *  component stats.
  * @property {external:Boolean} activeConnection
  *  Set to true when transport is active.
  * @property {external:String} selectedCandidatePairId
- *  It is a unique identifier that is associated to the object that was 
- *  inspected to produce the RTCIceCandidatePairStats associated with this 
+ *  It is a unique identifier that is associated to the object that was
+ *  inspected to produce the RTCIceCandidatePairStats associated with this
  *  transport.
  * @property {external:String} localCertificateId
  *  For components where DTLS is negotiated, give local certificate.
@@ -32306,21 +32305,21 @@ function RTCTransportStats(rTCTransportStatsDict){
   rTCTransportStatsDict = rTCTransportStatsDict || {}
 
   // Check rTCTransportStatsDict has the required fields
-  // 
+  //
   // checkType('int64', 'rTCTransportStatsDict.bytesSent', rTCTransportStatsDict.bytesSent, {required: true});
-  //  
+  //
   // checkType('int64', 'rTCTransportStatsDict.bytesReceived', rTCTransportStatsDict.bytesReceived, {required: true});
-  //  
+  //
   // checkType('String', 'rTCTransportStatsDict.rtcpTransportStatsId', rTCTransportStatsDict.rtcpTransportStatsId, {required: true});
-  //  
+  //
   // checkType('boolean', 'rTCTransportStatsDict.activeConnection', rTCTransportStatsDict.activeConnection, {required: true});
-  //  
+  //
   // checkType('String', 'rTCTransportStatsDict.selectedCandidatePairId', rTCTransportStatsDict.selectedCandidatePairId, {required: true});
-  //  
+  //
   // checkType('String', 'rTCTransportStatsDict.localCertificateId', rTCTransportStatsDict.localCertificateId, {required: true});
-  //  
+  //
   // checkType('String', 'rTCTransportStatsDict.remoteCertificateId', rTCTransportStatsDict.remoteCertificateId, {required: true});
-  //  
+  //
 
   // Init parent class
   RTCTransportStats.super_.call(this, rTCTransportStatsDict)
@@ -32436,7 +32435,7 @@ var ComplexType = require('./ComplexType');
  *  Size of the RTP packets history to smooth fraction-lost.
  *  Units: num of packets
  * @property {external:Number} exponentialFactor
- *  Factor used to increase exponentially the next REMB when it is below the 
+ *  Factor used to increase exponentially the next REMB when it is below the
  *  threshold.
  *  REMB[i+1] = REMB[i] * (1 + exponentialFactor)
  * @property {external:Integer} linealFactorMin
@@ -32444,22 +32443,22 @@ var ComplexType = require('./ComplexType');
  *  Units: bps (bits per second).
  *  REMB[i+1] = REMB[i] + MIN (linealFactorMin, linealFactor)
  * @property {external:Number} linealFactorGrade
- *  Determine the value of the next linearFactor based on the threshold and the 
- *  current REMB. Taking into account that the frequency of updating is 500ms, 
+ *  Determine the value of the next linearFactor based on the threshold and the
+ *  current REMB. Taking into account that the frequency of updating is 500ms,
  *  the default value makes that the last REMB is reached in 60secs.
  *  linealFactor = (REMB - TH) / linealFactorGrade
  * @property {external:Number} decrementFactor
- *  Determine how much is decreased the current REMB when too losses are 
+ *  Determine how much is decreased the current REMB when too losses are
  *  detected.
  *  REMB[i+1] = REMB[i] * decrementFactor
  * @property {external:Number} thresholdFactor
  *  Determine the next threshold (TH) when too losses are detected.
  *  TH[i+1] = REMB[i] * thresholdFactor
  * @property {external:Integer} upLosses
- *  Max fraction-lost to no determine too losses. This value is the denominator 
+ *  Max fraction-lost to no determine too losses. This value is the denominator
  *  of the fraction N/256, so the default value is about 4% of losses (12/256)
  * @property {external:Integer} rembOnConnect
- *  REMB propagated upstream when video sending is started in a new connected 
+ *  REMB propagated upstream when video sending is started in a new connected
  *  endpoint.
  *    Unit: bps(bits per second)
  */
@@ -32470,23 +32469,23 @@ function RembParams(rembParamsDict){
   rembParamsDict = rembParamsDict || {}
 
   // Check rembParamsDict has the required fields
-  // 
+  //
   // checkType('int', 'rembParamsDict.packetsRecvIntervalTop', rembParamsDict.packetsRecvIntervalTop);
-  //  
+  //
   // checkType('float', 'rembParamsDict.exponentialFactor', rembParamsDict.exponentialFactor);
-  //  
+  //
   // checkType('int', 'rembParamsDict.linealFactorMin', rembParamsDict.linealFactorMin);
-  //  
+  //
   // checkType('float', 'rembParamsDict.linealFactorGrade', rembParamsDict.linealFactorGrade);
-  //  
+  //
   // checkType('float', 'rembParamsDict.decrementFactor', rembParamsDict.decrementFactor);
-  //  
+  //
   // checkType('float', 'rembParamsDict.thresholdFactor', rembParamsDict.thresholdFactor);
-  //  
+  //
   // checkType('int', 'rembParamsDict.upLosses', rembParamsDict.upLosses);
-  //  
+  //
   // checkType('int', 'rembParamsDict.rembOnConnect', rembParamsDict.rembOnConnect);
-  //  
+  //
 
   // Init parent class
   RembParams.super_.call(this, rembParamsDict)
@@ -32619,15 +32618,15 @@ function ServerInfo(serverInfoDict){
   serverInfoDict = serverInfoDict || {}
 
   // Check serverInfoDict has the required fields
-  // 
+  //
   // checkType('String', 'serverInfoDict.version', serverInfoDict.version, {required: true});
-  //  
+  //
   // checkType('ModuleInfo', 'serverInfoDict.modules', serverInfoDict.modules, {isArray: true, required: true});
-  //  
+  //
   // checkType('ServerType', 'serverInfoDict.type', serverInfoDict.type, {required: true});
-  //  
+  //
   // checkType('String', 'serverInfoDict.capabilities', serverInfoDict.capabilities, {isArray: true, required: true});
-  //  
+  //
 
   // Init parent class
   ServerInfo.super_.call(this, serverInfoDict)
@@ -32780,7 +32779,7 @@ var ComplexType = require('./ComplexType');
  * @property {module:core/complexTypes.StatsType} type
  *  The type of this object.
  * @property {external:double} timestamp
- *  The timestamp associated with this object. The time is relative to the UNIX 
+ *  The timestamp associated with this object. The time is relative to the UNIX
  *  epoch (Jan 1, 1970, UTC).
  */
 function Stats(statsDict){
@@ -32790,13 +32789,13 @@ function Stats(statsDict){
   statsDict = statsDict || {}
 
   // Check statsDict has the required fields
-  // 
+  //
   // checkType('String', 'statsDict.id', statsDict.id, {required: true});
-  //  
+  //
   // checkType('StatsType', 'statsDict.type', statsDict.type, {required: true});
-  //  
+  //
   // checkType('double', 'statsDict.timestamp', statsDict.timestamp, {required: true});
-  //  
+  //
 
   // Init parent class
   Stats.super_.call(this, statsDict)
@@ -32951,11 +32950,11 @@ function Tag(tagDict){
   tagDict = tagDict || {}
 
   // Check tagDict has the required fields
-  // 
+  //
   // checkType('String', 'tagDict.key', tagDict.key, {required: true});
-  //  
+  //
   // checkType('String', 'tagDict.value', tagDict.value, {required: true});
-  //  
+  //
 
   // Init parent class
   Tag.super_.call(this, tagDict)
@@ -33105,11 +33104,11 @@ function VideoCaps(videoCapsDict){
   videoCapsDict = videoCapsDict || {}
 
   // Check videoCapsDict has the required fields
-  // 
+  //
   // checkType('VideoCodec', 'videoCapsDict.codec', videoCapsDict.codec, {required: true});
-  //  
+  //
   // checkType('Fraction', 'videoCapsDict.framerate', videoCapsDict.framerate, {required: true});
-  //  
+  //
 
   // Init parent class
   VideoCaps.super_.call(this, videoCapsDict)
@@ -33373,10 +33372,10 @@ function noop(error, result) {
  * Create for the given pipeline
  *
  * @classdesc
- *  A {@link module:core/abstracts.Hub Hub} that mixes the {@link 
- *  module:elements.AlphaBlending#MediaType.AUDIO} stream of its connected 
- *  sources and constructs one output with {@link 
- *  module:elements.AlphaBlending#MediaType.VIDEO} streams of its connected 
+ *  A {@link module:core/abstracts.Hub Hub} that mixes the {@link
+ *  module:elements.AlphaBlending#MediaType.AUDIO} stream of its connected
+ *  sources and constructs one output with {@link
+ *  module:elements.AlphaBlending#MediaType.VIDEO} streams of its connected
  *  sources into its sink
  *
  * @extends module:core/abstracts.Hub
@@ -33413,11 +33412,11 @@ AlphaBlending.prototype.setMaster = function(source, zOrder, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('HubPort', 'source', source, {required: true});
-  //  
+  //
   // checkType('int', 'zOrder', zOrder, {required: true});
-  //  
+  //
 
   var params = {
     source: source,
@@ -33448,11 +33447,11 @@ AlphaBlending.prototype.setMaster = function(source, zOrder, callback){
  *  The order in z to draw the images. The greatest value of z is in the top.
  *
  * @param {external:Number} relativeWidth
- *  The image width relative to the master port width. Values from 0 to 1 are 
+ *  The image width relative to the master port width. Values from 0 to 1 are
  *  accepted.
  *
  * @param {external:Number} relativeHeight
- *  The image height relative to the master port height. Values from 0 to 1 are 
+ *  The image height relative to the master port height. Values from 0 to 1 are
  *  accepted.
  *
  * @param {module:core.HubPort} port
@@ -33467,19 +33466,19 @@ AlphaBlending.prototype.setPortProperties = function(relativeX, relativeY, zOrde
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('float', 'relativeX', relativeX, {required: true});
-  //  
+  //
   // checkType('float', 'relativeY', relativeY, {required: true});
-  //  
+  //
   // checkType('int', 'zOrder', zOrder, {required: true});
-  //  
+  //
   // checkType('float', 'relativeWidth', relativeWidth, {required: true});
-  //  
+  //
   // checkType('float', 'relativeHeight', relativeHeight, {required: true});
-  //  
+  //
   // checkType('HubPort', 'port', port, {required: true});
-  //  
+  //
 
   var params = {
     relativeX: relativeX,
@@ -33504,7 +33503,7 @@ AlphaBlending.prototype.setPortProperties = function(relativeX, relativeY, zOrde
  * @alias module:elements.AlphaBlending.constructorParams
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the dispatcher 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the dispatcher
  *  belongs
  */
 AlphaBlending.constructorParams = {
@@ -33575,10 +33574,10 @@ var Hub = require('kurento-client-core').abstracts.Hub;
  * Create for the given pipeline
  *
  * @classdesc
- *  A {@link module:core/abstracts.Hub Hub} that mixes the {@link 
- *  module:elements.Composite#MediaType.AUDIO} stream of its connected sources 
- *  and constructs a grid with the {@link 
- *  module:elements.Composite#MediaType.VIDEO} streams of its connected sources 
+ *  A {@link module:core/abstracts.Hub Hub} that mixes the {@link
+ *  module:elements.Composite#MediaType.AUDIO} stream of its connected sources
+ *  and constructs a grid with the {@link
+ *  module:elements.Composite#MediaType.VIDEO} streams of its connected sources
  *  into its sink
  *
  * @extends module:core/abstracts.Hub
@@ -33595,7 +33594,7 @@ inherits(Composite, Hub);
  * @alias module:elements.Composite.constructorParams
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the dispatcher 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the dispatcher
  *  belongs
  */
 Composite.constructorParams = {
@@ -33677,7 +33676,7 @@ function noop(error, result) {
  * Create a {@link module:elements.Dispatcher Dispatcher} belonging to the given
  *
  * @classdesc
- *  A {@link module:core/abstracts.Hub Hub} that allows routing between 
+ *  A {@link module:core/abstracts.Hub Hub} that allows routing between
  *  arbitrary port pairs
  *
  * @extends module:core/abstracts.Hub
@@ -33695,7 +33694,7 @@ inherits(Dispatcher, Hub);
 //
 
 /**
- * Connects each corresponding {@link MediaType} of the given source port with 
+ * Connects each corresponding {@link MediaType} of the given source port with
  * the sink port.
  *
  * @alias module:elements.Dispatcher.connect
@@ -33715,11 +33714,11 @@ Dispatcher.prototype.connect = function(source, sink, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('HubPort', 'source', source, {required: true});
-  //  
+  //
   // checkType('HubPort', 'sink', sink, {required: true});
-  //  
+  //
 
   var params = {
     source: source,
@@ -33740,7 +33739,7 @@ Dispatcher.prototype.connect = function(source, sink, callback){
  * @alias module:elements.Dispatcher.constructorParams
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the dispatcher 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the dispatcher
  *  belongs
  */
 Dispatcher.constructorParams = {
@@ -33819,7 +33818,7 @@ function noop(error, result) {
 
 
 /**
- * Create a {@link module:elements.DispatcherOneToMany DispatcherOneToMany} 
+ * Create a {@link module:elements.DispatcherOneToMany DispatcherOneToMany}
  * belonging to the given pipeline.
  *
  * @classdesc
@@ -33854,11 +33853,11 @@ DispatcherOneToMany.prototype.removeSource = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -33871,7 +33870,7 @@ DispatcherOneToMany.prototype.removeSource = function(callback){
  */
 
 /**
- * Sets the source port that will be connected to the sinks of every {@link 
+ * Sets the source port that will be connected to the sinks of every {@link
  * module:core.HubPort HubPort} of the dispatcher
  *
  * @alias module:elements.DispatcherOneToMany.setSource
@@ -33888,9 +33887,9 @@ DispatcherOneToMany.prototype.setSource = function(source, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('HubPort', 'source', source, {required: true});
-  //  
+  //
 
   var params = {
     source: source
@@ -33910,7 +33909,7 @@ DispatcherOneToMany.prototype.setSource = function(source, callback){
  * @alias module:elements.DispatcherOneToMany.constructorParams
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the dispatcher 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the dispatcher
  *  belongs
  */
 DispatcherOneToMany.constructorParams = {
@@ -33981,11 +33980,11 @@ var HttpEndpoint = require('./abstracts/HttpEndpoint');
  * Builder for the {@link module:elements.HttpPostEndpoint HttpPostEndpoint}.
  *
  * @classdesc
- *  An {@link module:elements.HttpPostEndpoint HttpPostEndpoint} contains SINK 
- *  pads for AUDIO and VIDEO, which provide access to an HTTP file upload 
+ *  An {@link module:elements.HttpPostEndpoint HttpPostEndpoint} contains SINK
+ *  pads for AUDIO and VIDEO, which provide access to an HTTP file upload
  *  function
- *     This type of endpoint provide unidirectional communications. Its 
- *     :rom:cls:`MediaSources <MediaSource>` are accessed through the <a 
+ *     This type of endpoint provide unidirectional communications. Its
+ *     :rom:cls:`MediaSources <MediaSource>` are accessed through the <a
  *     href="http://www.kurento.org/docs/current/glossary.html#term-http">HTTP</a>
  *
  * @extends module:elements/abstracts.HttpEndpoint
@@ -34007,13 +34006,13 @@ inherits(HttpPostEndpoint, HttpEndpoint);
  *  This is the time that an http endpoint will wait for a reconnection, in case
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the endpoint 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the endpoint
  *  belongs
  *
  * @property {external:Boolean} [useEncodedMedia]
- *  configures the endpoint to use encoded media instead of raw media. If the 
- *  parameter is not set then the element uses raw media. Changing this 
- *  parameter could affect in a severe way to stability because key frames lost 
+ *  configures the endpoint to use encoded media instead of raw media. If the
+ *  parameter is not set then the element uses raw media. Changing this
+ *  parameter could affect in a severe way to stability because key frames lost
  *  will not be generated. Changing the media type does not affect to the result
  */
 HttpPostEndpoint.constructorParams = {
@@ -34116,7 +34115,7 @@ inherits(Mixer, Hub);
 //
 
 /**
- * Connects each corresponding {@link MediaType} of the given source port with 
+ * Connects each corresponding {@link MediaType} of the given source port with
  * the sink port.
  *
  * @alias module:elements.Mixer.connect
@@ -34139,13 +34138,13 @@ Mixer.prototype.connect = function(media, source, sink, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('MediaType', 'media', media, {required: true});
-  //  
+  //
   // checkType('HubPort', 'source', source, {required: true});
-  //  
+  //
   // checkType('HubPort', 'sink', sink, {required: true});
-  //  
+  //
 
   var params = {
     media: media,
@@ -34185,13 +34184,13 @@ Mixer.prototype.disconnect = function(media, source, sink, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('MediaType', 'media', media, {required: true});
-  //  
+  //
   // checkType('HubPort', 'source', source, {required: true});
-  //  
+  //
   // checkType('HubPort', 'sink', sink, {required: true});
-  //  
+  //
 
   var params = {
     media: media,
@@ -34213,7 +34212,7 @@ Mixer.prototype.disconnect = function(media, source, sink, callback){
  * @alias module:elements.Mixer.constructorParams
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the Mixer 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the Mixer
  *  belongs
  */
 Mixer.constructorParams = {
@@ -34296,8 +34295,8 @@ function noop(error, result) {
  *
  * @classdesc
  *        <p>
- *        Retrieves content from seekable or non-seekable sources, and injects 
- *        them into <a 
+ *        Retrieves content from seekable or non-seekable sources, and injects
+ *        them into <a
  *        href="http://www.kurento.org/docs/current/glossary.html#term-kms">KMS</a>,
  *        <ul>
  *          <li>
@@ -34321,27 +34320,27 @@ function noop(error, result) {
  *        </ul>
  *        </p>
  *        <p>
- *        For the player to stream the contents of the file, the server must 
- *        have access to the resource. In case of local files, the user running 
- *        the process must have read permissions over the file. For network 
- *        resources, the path to the resource must be accessible: IP and port 
- *        access not blocked, correct credentials, etc.The resource location 
- *        can’t be changed after the player is created, and a new player should 
+ *        For the player to stream the contents of the file, the server must
+ *        have access to the resource. In case of local files, the user running
+ *        the process must have read permissions over the file. For network
+ *        resources, the path to the resource must be accessible: IP and port
+ *        access not blocked, correct credentials, etc.The resource cameraGroup
+ *        can’t be changed after the player is created, and a new player should
  *        be created for streaming a different resource.
  *        </p>
  *        <p>
  *        The list of valid operations is
  *        <ul>
- *          <li>*play*: starts streaming media. If invoked after pause, it will 
+ *          <li>*play*: starts streaming media. If invoked after pause, it will
  *          resume playback.</li>
- *          <li>*stop*: stops streaming media. If play is invoked afterwards, 
+ *          <li>*stop*: stops streaming media. If play is invoked afterwards,
  *          the file will be streamed from the beginning.</li>
- *          <li>*pause*: pauses media streaming. Play must be invoked in order 
+ *          <li>*pause*: pauses media streaming. Play must be invoked in order
  *          to resume playback.</li>
  *          <li>*seek*: If the source supports “jumps” in the timeline, then the
  *            <ul>
  *              <li>*setPosition*: allows to set the position in the file.</li>
- *              <li>*getPosition*: returns the current position being 
+ *              <li>*getPosition*: returns the current position being
  *              streamed.</li>
  *            </ul>
  *          </li>
@@ -34349,7 +34348,7 @@ function noop(error, result) {
  *        </p>
  *        <p>
  *        <h2>Events fired:</h2>
- *        <ul><li>EndOfStreamEvent: If the file is streamed 
+ *        <ul><li>EndOfStreamEvent: If the file is streamed
  *        completely.</li></ul>
  *        </p>
  *
@@ -34370,7 +34369,7 @@ inherits(PlayerEndpoint, UriEndpoint);
 //
 
 /**
- * Get or set the actual position of the video in ms. <hr/><b>Note</b> Setting 
+ * Get or set the actual position of the video in ms. <hr/><b>Note</b> Setting
  * the position only works for seekable videos
  *
  * @alias module:elements.PlayerEndpoint#getPosition
@@ -34385,11 +34384,11 @@ PlayerEndpoint.prototype.getPosition = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -34403,7 +34402,7 @@ PlayerEndpoint.prototype.getPosition = function(callback){
  */
 
 /**
- * Get or set the actual position of the video in ms. <hr/><b>Note</b> Setting 
+ * Get or set the actual position of the video in ms. <hr/><b>Note</b> Setting
  * the position only works for seekable videos
  *
  * @alias module:elements.PlayerEndpoint#setPosition
@@ -34418,9 +34417,9 @@ PlayerEndpoint.prototype.setPosition = function(position, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int64', 'position', position, {required: true});
-  //  
+  //
 
   var params = {
     position: position
@@ -34450,11 +34449,11 @@ PlayerEndpoint.prototype.getVideoInfo = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -34473,9 +34472,9 @@ PlayerEndpoint.prototype.getVideoInfo = function(callback){
 //
 
 /**
- * Starts reproducing the media, sending it to the :rom:cls:`MediaSource`. If 
+ * Starts reproducing the media, sending it to the :rom:cls:`MediaSource`. If
  * the endpoint
- *           has been connected to other endpoints, those will start receiving 
+ *           has been connected to other endpoints, those will start receiving
  *           media.
  *
  * @alias module:elements.PlayerEndpoint.play
@@ -34490,11 +34489,11 @@ PlayerEndpoint.prototype.play = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -34511,7 +34510,7 @@ PlayerEndpoint.prototype.play = function(callback){
  * @alias module:elements.PlayerEndpoint.constructorParams
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  The {@link module:core.MediaPipeline MediaPipeline} this PlayerEndpoint 
+ *  The {@link module:core.MediaPipeline MediaPipeline} this PlayerEndpoint
  *  belongs to.
  *
  * @property {external:Integer} [networkCache]
@@ -34520,9 +34519,9 @@ PlayerEndpoint.prototype.play = function(callback){
  * @property {external:String} uri
  *  URI pointing to the video. It has to be accessible to the KMS process.
  *                <ul>
- *                  <li>Local resources: The user running the Kurento Media 
+ *                  <li>Local resources: The user running the Kurento Media
  *                  Server must have read permission over the file.</li>
- *                  <li>Remote resources: Must be accessible from the server 
+ *                  <li>Remote resources: Must be accessible from the server
  *                  where the media server is running.</li>
  *                </ul>
  *
@@ -34616,17 +34615,17 @@ function noop(error, result) {
  *
  * @classdesc
  *  <p>
- *        Provides the functionality to store contents. The recorder can store 
- *        in local files or in a network resource. It receives a media stream 
- *        from another MediaElement (i.e. the source), and stores it in the 
- *        designated location.
+ *        Provides the functionality to store contents. The recorder can store
+ *        in local files or in a network resource. It receives a media stream
+ *        from another MediaElement (i.e. the source), and stores it in the
+ *        designated cameraGroup.
  *        </p>
  *        <p>
- *        The following information has to be provided In order to create a 
+ *        The following information has to be provided In order to create a
  *        RecorderEndpoint, and can’t be changed afterwards:
  *        <ul>
  *          <li>
- *            URI of the resource where media will be stored. Following schemas 
+ *            URI of the resource where media will be stored. Following schemas
  *            are supported:
  *            <ul>
  *              <li>
@@ -34648,16 +34647,16 @@ function noop(error, result) {
  *            </ul>
  *          </li>
  *          <li>
- *            Relative URIs (with no schema) are supported. They are completed 
- *            prepending a default URI defined by property defaultPath. This 
+ *            Relative URIs (with no schema) are supported. They are completed
+ *            prepending a default URI defined by property defaultPath. This
  *            property allows using relative paths instead of absolute paths. If
  *          </li>
  *          <li>
- *            The media profile used to store the file. This will determine the 
+ *            The media profile used to store the file. This will determine the
  *            encoding. See below for more details about media profile
  *          </li>
  *          <li>
- *            Optionally, the user can select if the endpoint will stop 
+ *            Optionally, the user can select if the endpoint will stop
  *            processing once the EndOfStream event is detected.
  *          </li>
  *        </ul>
@@ -34666,43 +34665,43 @@ function noop(error, result) {
  *        RecorderEndpoint requires access to the resource where stream is going
  *        <p>
  *        </p>
- *        The media profile is quite an important parameter, as it will 
- *        determine whether there is a transcodification or not. If the input 
- *        stream codec if not compatible with the selected media profile, the 
- *        media will be transcoded into a suitable format, before arriving at 
+ *        The media profile is quite an important parameter, as it will
+ *        determine whether there is a transcodification or not. If the input
+ *        stream codec if not compatible with the selected media profile, the
+ *        media will be transcoded into a suitable format, before arriving at
  *        the RecorderEndpoint's sink pad. This will result in a higher CPU load
  *        <ul>
  *          <li>WEBM: No transcodification will take place.</li>
- *          <li>MP4: The media server will have to transcode the media received 
+ *          <li>MP4: The media server will have to transcode the media received
  *          from VP8 to H264. This will raise the CPU load in the system.</li>
  *        </ul>
  *        <p>
  *        </p>
- *        Recording will start as soon as the user invokes the record method. 
- *        The recorder will then store, in the location indicated, the media 
- *        that the source is sending to the endpoint’s sink. If no media is 
- *        being received, or no endpoint has been connected, then the 
- *        destination will be empty. The recorder starts storing information 
+ *        Recording will start as soon as the user invokes the record method.
+ *        The recorder will then store, in the cameraGroup indicated, the media
+ *        that the source is sending to the endpoint’s sink. If no media is
+ *        being received, or no endpoint has been connected, then the
+ *        destination will be empty. The recorder starts storing information
  *        into the file as soon as it gets it.
  *        <p>
  *        </p>
- *        When another endpoint is connected to the recorder, by default both 
- *        AUDIO and VIDEO media types are expected, unless specified otherwise 
- *        when invoking the connect method. Failing to provide both types, will 
- *        result in teh recording buffering the received media: it won’t be 
+ *        When another endpoint is connected to the recorder, by default both
+ *        AUDIO and VIDEO media types are expected, unless specified otherwise
+ *        when invoking the connect method. Failing to provide both types, will
+ *        result in teh recording buffering the received media: it won’t be
  *        written to the file until the recording is stopped. This is due to the
  *        <p>
  *        </p>
- *        The source endpoint can be hot-swapped, while the recording is taking 
- *        place. The recorded file will then contain different feeds. When 
- *        switching video sources, if the new video has different size, the 
+ *        The source endpoint can be hot-swapped, while the recording is taking
+ *        place. The recorded file will then contain different feeds. When
+ *        switching video sources, if the new video has different size, the
  *        recorder will retain the size of the previous source. If the source is
  *        <p>
  *        </p>
- *        It is recommended to start recording only after media arrives, either 
- *        to the endpoint that is the source of the media connected to the 
- *        recorder, to the recorder itself, or both. Users may use the 
- *        MediaFlowIn and MediaFlowOut events, and synchronise the recording 
+ *        It is recommended to start recording only after media arrives, either
+ *        to the endpoint that is the source of the media connected to the
+ *        recorder, to the recorder itself, or both. Users may use the
+ *        MediaFlowIn and MediaFlowOut events, and synchronise the recording
  *        with the moment media comes in. In any case, nothing will be stored in
  *        <p>
  *        </p>
@@ -34742,11 +34741,11 @@ RecorderEndpoint.prototype.record = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -34773,11 +34772,11 @@ RecorderEndpoint.prototype.stopAndWait = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -34794,26 +34793,26 @@ RecorderEndpoint.prototype.stopAndWait = function(callback){
  * @alias module:elements.RecorderEndpoint.constructorParams
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the endpoint 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the endpoint
  *  belongs
  *
  * @property {module:elements/complexTypes.MediaProfileSpecType} [mediaProfile]
- *  Sets the media profile used for recording. If the profile is different than 
- *  the one being recieved at the sink pad, media will be trnascoded, resulting 
- *  in a higher CPU load. For instance, when recording a VP8 encoded video from 
+ *  Sets the media profile used for recording. If the profile is different than
+ *  the one being recieved at the sink pad, media will be trnascoded, resulting
+ *  in a higher CPU load. For instance, when recording a VP8 encoded video from
  *  a WebRTC endpoint in MP4, the load is higher that when recording in WEBM.
  *
  * @property {external:Boolean} [stopOnEndOfStream]
- *  Forces the recorder endpoint to finish processing data when an <a 
+ *  Forces the recorder endpoint to finish processing data when an <a
  *  href="http://www.kurento.org/docs/current/glossary.html#term-eos">EOS</a> is
  *
  * @property {external:String} uri
- *  URI where the recording will be stored. It has to be accessible to the KMS 
+ *  URI where the recording will be stored. It has to be accessible to the KMS
  *  process.
  *                <ul>
- *                  <li>Local server resources: The user running the Kurento 
+ *                  <li>Local server resources: The user running the Kurento
  *                  Media Server must have write permission over the file.</li>
- *                  <li>Network resources: Must be accessible from the server 
+ *                  <li>Network resources: Must be accessible from the server
  *                  where the media server is running.</li>
  *                </ul>
  */
@@ -34893,60 +34892,60 @@ var BaseRtpEndpoint = require('kurento-client-core').abstracts.BaseRtpEndpoint;
  * Builder for the {@link module:elements.RtpEndpoint RtpEndpoint}
  *
  * @classdesc
- *  Endpoint that provides bidirectional content delivery capabilities with 
- *  remote networked peers through RTP or SRTP protocol. An {@link 
- *  module:elements.RtpEndpoint RtpEndpoint} contains paired sink and source 
- *  :rom:cls:`MediaPad` for audio and video. This endpoint inherits from {@link 
+ *  Endpoint that provides bidirectional content delivery capabilities with
+ *  remote networked peers through RTP or SRTP protocol. An {@link
+ *  module:elements.RtpEndpoint RtpEndpoint} contains paired sink and source
+ *  :rom:cls:`MediaPad` for audio and video. This endpoint inherits from {@link
  *  module:core/abstracts.BaseRtpEndpoint BaseRtpEndpoint}.
  *        </p>
  *        <p>
- *        In order to establish an RTP/SRTP communication, peers engage in an 
+ *        In order to establish an RTP/SRTP communication, peers engage in an
  *        SDP negotiation process, where one of the peers (the offerer) sends an
  *        <ul style='list-style-type:circle'>
  *          <li>
- *            As offerer: The negotiation process is initiated by the media 
+ *            As offerer: The negotiation process is initiated by the media
  *            server
  *            <ul>
- *              <li>KMS generates the SDP offer through the generateOffer 
- *              method. This offer must then be sent to the remote peer (the 
+ *              <li>KMS generates the SDP offer through the generateOffer
+ *              method. This offer must then be sent to the remote peer (the
  *              offeree) through the signaling channel, for processing.</li>
- *              <li>The remote peer process the Offer, and generates an Answer 
+ *              <li>The remote peer process the Offer, and generates an Answer
  *              to this offer. The Answer is sent back to the media server.</li>
- *              <li>Upon receiving the Answer, the endpoint must invoke the 
+ *              <li>Upon receiving the Answer, the endpoint must invoke the
  *              processAnswer method.</li>
  *            </ul>
  *          </li>
  *          <li>
- *            As offeree: The negotiation process is initiated by the remote 
+ *            As offeree: The negotiation process is initiated by the remote
  *            peer
  *            <ul>
- *              <li>The remote peer, acting as offerer, generates an SDP offer 
+ *              <li>The remote peer, acting as offerer, generates an SDP offer
  *              and sends it to the WebRTC endpoint in Kurento.</li>
- *              <li>The endpoint will process the Offer invoking the 
+ *              <li>The endpoint will process the Offer invoking the
  *              processOffer method. The result of this method will be a string,
- *              <li>The SDP Answer must be sent back to the offerer, so it can 
+ *              <li>The SDP Answer must be sent back to the offerer, so it can
  *              be processed.</li>
  *            </ul>
  *          </li>
  *        </ul>
  *        </p>
  *        <p>
- *        In case of unidirectional connections (i.e. only one peer is going to 
- *        send media), the process is more simple, as only the emitter needs to 
- *        process an SDP. On top of the information about media codecs and 
- *        types, the SDP must contain the IP of the remote peer, and the port 
- *        where it will be listening. This way, the SDP can be mangled without 
+ *        In case of unidirectional connections (i.e. only one peer is going to
+ *        send media), the process is more simple, as only the emitter needs to
+ *        process an SDP. On top of the information about media codecs and
+ *        types, the SDP must contain the IP of the remote peer, and the port
+ *        where it will be listening. This way, the SDP can be mangled without
  *        needing to go through the exchange process, as the receiving peer does
  *        </p>
  *        <p>
- *        While there is no congestion control in this endpoint, the user can 
- *        set some bandwidth limits that will be used during the negotiation 
+ *        While there is no congestion control in this endpoint, the user can
+ *        set some bandwidth limits that will be used during the negotiation
  *        process.
  *        The default bandwidth range of the endpoint is 100kbps-500kbps, but it
  *        <ul style='list-style-type:circle'>
  *          <li>
- *            Input bandwidth control mechanism: Configuration interval used to 
- *            inform remote peer the range of bitrates that can be pushed into 
+ *            Input bandwidth control mechanism: Configuration interval used to
+ *            inform remote peer the range of bitrates that can be pushed into
  *            this RtpEndpoint object. These values are announced in the SDP.
  *            <ul>
  *              <li>
@@ -34961,24 +34960,24 @@ var BaseRtpEndpoint = require('kurento-client-core').abstracts.BaseRtpEndpoint;
  *            Output bandwidth control mechanism: Configuration interval used to
  *            <ul>
  *              <li>
- *                setMaxVideoSendBandwidth: sets Max bitrate limits for video 
+ *                setMaxVideoSendBandwidth: sets Max bitrate limits for video
  *                sent to remote peer.
  *              </li>
  *              <li>
- *                setMinVideoSendBandwidth: sets Min bitrate limits for audio 
+ *                setMinVideoSendBandwidth: sets Min bitrate limits for audio
  *                sent to remote peer.
  *              </li>
  *            </ul>
  *          </li>
  *        </ul>
- *        All bandwidth control parameters must be changed before the SDP 
+ *        All bandwidth control parameters must be changed before the SDP
  *        negotiation takes place, and can't be modified afterwards.
  *        TODO: What happens if the b=as tag form the SDP has a lower value than
  *        </p>
  *        <p>
- *        Having no congestion ocntrol implementation means that the bitrate 
- *        will remain constant. This is something to take into consideration 
- *        when setting upper limits for the output bandwidth, or the local 
+ *        Having no congestion ocntrol implementation means that the bitrate
+ *        will remain constant. This is something to take into consideration
+ *        when setting upper limits for the output bandwidth, or the local
  *        network connection can be overflooded.
  *        </p>
  *
@@ -35001,7 +35000,7 @@ inherits(RtpEndpoint, BaseRtpEndpoint);
  *  SDES-type param. If present, this parameter indicates that the communication
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the endpoint 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the endpoint
  *  belongs
  *
  * @property {external:Boolean} [useIpv6]
@@ -35094,109 +35093,109 @@ function noop(error, result) {
  *        Control interface for Kurento WebRTC endpoint.
  *        </p>
  *        <p>
- *        This endpoint is one side of a peer-to-peer WebRTC communication, 
- *        being the other peer a WebRTC capable browser -using the 
- *        RTCPeerConnection API-, a native WebRTC app or even another Kurento 
+ *        This endpoint is one side of a peer-to-peer WebRTC communication,
+ *        being the other peer a WebRTC capable browser -using the
+ *        RTCPeerConnection API-, a native WebRTC app or even another Kurento
  *        Media Server.
  *        </p>
  *        <p>
- *        In order to establish a WebRTC communication, peers engage in an SDP 
- *        negotiation process, where one of the peers (the offerer) sends an 
- *        offer, while the other peer (the offeree) responds with an answer. 
+ *        In order to establish a WebRTC communication, peers engage in an SDP
+ *        negotiation process, where one of the peers (the offerer) sends an
+ *        offer, while the other peer (the offeree) responds with an answer.
  *        This endpoint can function in both situations
  *        <ul>
  *          <li>
- *            As offerer: The negotiation process is initiated by the media 
+ *            As offerer: The negotiation process is initiated by the media
  *            server
  *            <ul style='list-style-type:circle'>
- *              <li>KMS generates the SDP offer through the 
- *              <code>generateOffer</code> method. This <i>offer</i> must then 
- *              be sent to the remote peer (the offeree) through the signaling 
+ *              <li>KMS generates the SDP offer through the
+ *              <code>generateOffer</code> method. This <i>offer</i> must then
+ *              be sent to the remote peer (the offeree) through the signaling
  *              channel, for processing.</li>
- *              <li>The remote peer process the <i>offer</i>, and generates an 
- *              <i>answer</i> to this <i>offer</i>. The <i>answer</i> is sent 
+ *              <li>The remote peer process the <i>offer</i>, and generates an
+ *              <i>answer</i> to this <i>offer</i>. The <i>answer</i> is sent
  *              back to the media server.</li>
- *              <li>Upon receiving the <i>answer</i>, the endpoint must invoke 
+ *              <li>Upon receiving the <i>answer</i>, the endpoint must invoke
  *              the <code>processAnswer</code> method.</li>
  *            </ul>
  *          </li>
  *          <li>
- *            As offeree: The negotiation process is initiated by the remote 
+ *            As offeree: The negotiation process is initiated by the remote
  *            peer
  *            <ul>
- *              <li>The remote peer, acting as offerer, generates an SDP 
- *              <i>offer</i> and sends it to the WebRTC endpoint in 
+ *              <li>The remote peer, acting as offerer, generates an SDP
+ *              <i>offer</i> and sends it to the WebRTC endpoint in
  *              Kurento.</li>
- *              <li>The endpoint will process the <i>offer</i> invoking the 
+ *              <li>The endpoint will process the <i>offer</i> invoking the
  *              <code>processOffer</code> method. The result of this method will
- *              <li>The SDP <i>answer</i> must be sent back to the offerer, so 
+ *              <li>The SDP <i>answer</i> must be sent back to the offerer, so
  *              it can be processed.</li>
  *            </ul>
  *          </li>
  *        </ul>
  *        </p>
  *        <p>
- *        SDPs are sent without ICE candidates, following the Trickle ICE 
- *        optimization. Once the SDP negotiation is completed, both peers 
- *        proceed with the ICE discovery process, intended to set up a 
+ *        SDPs are sent without ICE candidates, following the Trickle ICE
+ *        optimization. Once the SDP negotiation is completed, both peers
+ *        proceed with the ICE discovery process, intended to set up a
  *        bidirectional media connection. During this process, each peer
  *        <ul>
  *          <li>Discovers ICE candidates for itself, containing pairs of IPs and
- *          <li>ICE candidates are sent via the signaling channel as they are 
+ *          <li>ICE candidates are sent via the signaling channel as they are
  *          discovered, to the remote peer for probing.</li>
- *          <li>ICE connectivity checks are run as soon as the new candidate 
+ *          <li>ICE connectivity checks are run as soon as the new candidate
  *          description, from the remote peer, is available.</li>
  *        </ul>
- *        Once a suitable pair of candidates (one for each peer) is discovered, 
+ *        Once a suitable pair of candidates (one for each peer) is discovered,
  *        the media session can start. The harvesting process in Kurento, begins
  *        </p>
  *        <p>
- *        It's important to keep in mind that WebRTC connection is an 
- *        asynchronous process, when designing interactions between different 
- *        MediaElements. For example, it would be pointless to start recording 
+ *        It's important to keep in mind that WebRTC connection is an
+ *        asynchronous process, when designing interactions between different
+ *        MediaElements. For example, it would be pointless to start recording
  *        before media is flowing. In order to be notified of state changes, the
  *        <ul>
  *          <li>
- *            <code>IceComponentStateChange</code>: This event informs only 
+ *            <code>IceComponentStateChange</code>: This event informs only
  *            about changes in the ICE connection state. Possible values are:
  *            <ul style='list-style-type:circle'>
  *              <li><code>DISCONNECTED</code>: No activity scheduled</li>
  *              <li><code>GATHERING</code>: Gathering local candidates</li>
  *              <li><code>CONNECTING</code>: Establishing connectivity</li>
- *              <li><code>CONNECTED</code>: At least one working candidate 
+ *              <li><code>CONNECTED</code>: At least one working candidate
  *              pair</li>
- *              <li><code>READY</code>: ICE concluded, candidate pair selection 
+ *              <li><code>READY</code>: ICE concluded, candidate pair selection
  *              is now final</li>
- *              <li><code>FAILED</code>: Connectivity checks have been 
+ *              <li><code>FAILED</code>: Connectivity checks have been
  *              completed, but media connection was not established</li>
  *            </ul>
  *            The transitions between states are covered in RFC5245.
- *            It could be said that it's network-only, as it only takes into 
+ *            It could be said that it's network-only, as it only takes into
  *            account the state of the network connection, ignoring other higher
  *          </li>
  *          <li>
- *            <code>IceCandidateFound</code>: Raised when a new candidate is 
- *            discovered. ICE candidates must be sent to the remote peer of the 
- *            connection. Failing to do so for some or all of the candidates 
+ *            <code>IceCandidateFound</code>: Raised when a new candidate is
+ *            discovered. ICE candidates must be sent to the remote peer of the
+ *            connection. Failing to do so for some or all of the candidates
  *            might render the connection unusable.
  *          </li>
  *          <li>
- *            <code>IceGatheringDone</code>: Raised when the ICE harvesting 
- *            process is completed. This means that all candidates have already 
+ *            <code>IceGatheringDone</code>: Raised when the ICE harvesting
+ *            process is completed. This means that all candidates have already
  *            been discovered.
  *          </li>
  *          <li>
- *            <code>NewCandidatePairSelected</code>: Raised when a new ICE 
- *            candidate pair gets selected. The pair contains both local and 
- *            remote candidates being used for a component. This event can be 
- *            raised during a media session, if a new pair of candidates with 
+ *            <code>NewCandidatePairSelected</code>: Raised when a new ICE
+ *            candidate pair gets selected. The pair contains both local and
+ *            remote candidates being used for a component. This event can be
+ *            raised during a media session, if a new pair of candidates with
  *            higher priority in the link are found.
  *          </li>
  *          <li>
  *            <code>DataChannelOpen</code>: Raised when a data channel is open.
  *          </li>
  *          <li>
- *            <code>DataChannelClose</code>: Raised when a data channel is 
+ *            <code>DataChannelClose</code>: Raised when a data channel is
  *            closed.
  *          </li>
  *        </ul>
@@ -35205,27 +35204,27 @@ function noop(error, result) {
  *        Registering to any of above events requires the application to provide
  *        </p>
  *        <p>
- *        Flow control and congestion management is one of the most important 
+ *        Flow control and congestion management is one of the most important
  *        features of WebRTC. WebRTC connections start with the lowest bandwidth
  *        </p>
  *        <p>
  *        The default bandwidth range of the endpoint is 100kbps-500kbps, but it
  *        <ul>
  *          <li>
- *            Input bandwidth control mechanism: Configuration interval used to 
- *            inform remote peer the range of bitrates that can be pushed into 
+ *            Input bandwidth control mechanism: Configuration interval used to
+ *            inform remote peer the range of bitrates that can be pushed into
  *            this WebRtcEndpoint object.
  *            <ul style='list-style-type:circle'>
  *              <li>
- *                setMin/MaxVideoRecvBandwidth: sets Min/Max bitrate limits 
+ *                setMin/MaxVideoRecvBandwidth: sets Min/Max bitrate limits
  *                expected for received video stream.
  *              </li>
  *              <li>
- *                setMin/MaxAudioRecvBandwidth: sets Min/Max bitrate limits 
+ *                setMin/MaxAudioRecvBandwidth: sets Min/Max bitrate limits
  *                expected for received audio stream.
  *              </li>
  *            </ul>
- *            Max values are announced in the SDP, while min values are set to 
+ *            Max values are announced in the SDP, while min values are set to
  *            limit the lower value of REMB packages. It follows that min values
  *          </li>
  *          <li>
@@ -35237,15 +35236,15 @@ function noop(error, result) {
  *            </ul>
  *          </li>
  *        </ul>
- *        All bandwidth control parameters must be changed before the SDP 
+ *        All bandwidth control parameters must be changed before the SDP
  *        negotiation takes place, and can't be changed afterwards.
  *        </p>
  *        <p>
- *        DataChannels allow other media elements that make use of the DataPad, 
- *        to send arbitrary data. For instance, if there is a filter that 
- *        publishes event information, it'll be sent to the remote peer through 
- *        the channel. There is no API available for programmers to make use of 
- *        this feature in the WebRtcElement. DataChannels can be configured to 
+ *        DataChannels allow other media elements that make use of the DataPad,
+ *        to send arbitrary data. For instance, if there is a filter that
+ *        publishes event information, it'll be sent to the remote peer through
+ *        the channel. There is no API available for programmers to make use of
+ *        this feature in the WebRtcElement. DataChannels can be configured to
  *        provide the following:
  *        <ul>
  *          <li>
@@ -35255,37 +35254,37 @@ function noop(error, result) {
  *            In-order or out-of-order delivery of sent messages
  *          </li>
  *        </ul>
- *        Unreliable, out-of-order delivery is equivalent to raw UDP semantics. 
- *        The message may make it, or it may not, and order is not important. 
+ *        Unreliable, out-of-order delivery is equivalent to raw UDP semantics.
+ *        The message may make it, or it may not, and order is not important.
  *        However, the channel can be configured to be <i>partially reliable</i>
  *        </p>
  *        <p>
- *        The possibility to create DataChannels in a WebRtcEndpoint must be 
- *        explicitly enabled when creating the endpoint, as this feature is 
+ *        The possibility to create DataChannels in a WebRtcEndpoint must be
+ *        explicitly enabled when creating the endpoint, as this feature is
  *        disabled by default. If this is the case, they can be created invoking
  *        <ul>
  *          <li>
- *           <code>label</code>: assigns a label to the DataChannel. This can 
+ *           <code>label</code>: assigns a label to the DataChannel. This can
  *           help identify each possible channel separately.
  *          </li>
  *          <li>
- *            <code>ordered</code>: specifies if the DataChannel guarantees 
- *            order, which is the default mode. If maxPacketLifetime and 
+ *            <code>ordered</code>: specifies if the DataChannel guarantees
+ *            order, which is the default mode. If maxPacketLifetime and
  *            maxRetransmits have not been set, this enables reliable mode.
  *          </li>
  *          <li>
- *            <code>maxPacketLifeTime</code>: The time window in milliseconds, 
- *            during which transmissions and retransmissions may take place in 
- *            unreliable mode. This forces unreliable mode, even if 
+ *            <code>maxPacketLifeTime</code>: The time window in milliseconds,
+ *            during which transmissions and retransmissions may take place in
+ *            unreliable mode. This forces unreliable mode, even if
  *            <code>ordered</code> has been activated.
  *          </li>
  *          <li>
- *            <code>maxRetransmits</code>: maximum number of retransmissions 
- *            that are attempted in unreliable mode. This forces unreliable 
+ *            <code>maxRetransmits</code>: maximum number of retransmissions
+ *            that are attempted in unreliable mode. This forces unreliable
  *            mode, even if <code>ordered</code> has been activated.
  *          </li>
  *          <li>
- *            <code>Protocol</code>: Name of the subprotocol used for data 
+ *            <code>Protocol</code>: Name of the subprotocol used for data
  *            communication.
  *          </li>
  *        </ul>
@@ -35317,7 +35316,7 @@ inherits(WebRtcEndpoint, BaseRtpEndpoint);
 //
 
 /**
- * the ICE candidate pair (local and remote candidates) used by the ice library 
+ * the ICE candidate pair (local and remote candidates) used by the ice library
  * for each stream.
  *
  * @alias module:elements.WebRtcEndpoint#getICECandidatePairs
@@ -35332,11 +35331,11 @@ WebRtcEndpoint.prototype.getICECandidatePairs = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -35364,11 +35363,11 @@ WebRtcEndpoint.prototype.getIceConnectionState = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -35396,11 +35395,11 @@ WebRtcEndpoint.prototype.getStunServerAddress = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -35428,9 +35427,9 @@ WebRtcEndpoint.prototype.setStunServerAddress = function(stunServerAddress, call
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'stunServerAddress', stunServerAddress, {required: true});
-  //  
+  //
 
   var params = {
     stunServerAddress: stunServerAddress
@@ -35460,11 +35459,11 @@ WebRtcEndpoint.prototype.getStunServerPort = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -35492,9 +35491,9 @@ WebRtcEndpoint.prototype.setStunServerPort = function(stunServerPort, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'stunServerPort', stunServerPort, {required: true});
-  //  
+  //
 
   var params = {
     stunServerPort: stunServerPort
@@ -35510,7 +35509,7 @@ WebRtcEndpoint.prototype.setStunServerPort = function(stunServerPort, callback){
  */
 
 /**
- * TURN server URL with this format: 
+ * TURN server URL with this format:
  * <code>user:password@address:port(?transport=[udp|tcp|tls])</code>.</br><code>address</code>
  *
  * @alias module:elements.WebRtcEndpoint#getTurnUrl
@@ -35525,11 +35524,11 @@ WebRtcEndpoint.prototype.getTurnUrl = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -35543,7 +35542,7 @@ WebRtcEndpoint.prototype.getTurnUrl = function(callback){
  */
 
 /**
- * TURN server URL with this format: 
+ * TURN server URL with this format:
  * <code>user:password@address:port(?transport=[udp|tcp|tls])</code>.</br><code>address</code>
  *
  * @alias module:elements.WebRtcEndpoint#setTurnUrl
@@ -35558,9 +35557,9 @@ WebRtcEndpoint.prototype.setTurnUrl = function(turnUrl, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'turnUrl', turnUrl, {required: true});
-  //  
+  //
 
   var params = {
     turnUrl: turnUrl
@@ -35597,9 +35596,9 @@ WebRtcEndpoint.prototype.addIceCandidate = function(candidate, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('IceCandidate', 'candidate', candidate, {required: true});
-  //  
+  //
 
   var params = {
     candidate: candidate
@@ -35631,9 +35630,9 @@ WebRtcEndpoint.prototype.closeDataChannel = function(channelId, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('int', 'channelId', channelId, {required: true});
-  //  
+  //
 
   var params = {
     channelId: channelId
@@ -35649,19 +35648,19 @@ WebRtcEndpoint.prototype.closeDataChannel = function(channelId, callback){
  */
 
 /**
- * Create a new data channel, if data channels are supported. If they are not 
+ * Create a new data channel, if data channels are supported. If they are not
  * supported, this method throws an exception.
  *           Being supported means that the WebRtcEndpoint has been created with
- *           Otherwise, the method throws an exception, indicating that the 
+ *           Otherwise, the method throws an exception, indicating that the
  *           operation is not possible.</br>
  *           Data channels can work in either unreliable mode (analogous to User
  *           The two modes have a simple distinction:
  *           <ul>
- *             <li>Reliable mode guarantees the transmission of messages and 
- *             also the order in which they are delivered. This takes extra 
+ *             <li>Reliable mode guarantees the transmission of messages and
+ *             also the order in which they are delivered. This takes extra
  *             overhead, thus potentially making this mode slower.</li>
- *             <li>Unreliable mode does not guarantee every message will get to 
- *             the other side nor what order they get there. This removes the 
+ *             <li>Unreliable mode does not guarantee every message will get to
+ *             the other side nor what order they get there. This removes the
  *             overhead, allowing this mode to work much faster.</li>
  *           </ul>
  *
@@ -35671,20 +35670,20 @@ WebRtcEndpoint.prototype.closeDataChannel = function(channelId, callback){
  *  Channel's label
  *
  * @param {external:Boolean} [ordered]
- *  If the data channel should guarantee order or not. If true, and 
- *  maxPacketLifeTime and maxRetransmits have not been provided, reliable mode 
+ *  If the data channel should guarantee order or not. If true, and
+ *  maxPacketLifeTime and maxRetransmits have not been provided, reliable mode
  *  is activated.
  *
  * @param {external:Integer} [maxPacketLifeTime]
- *  The time window (in milliseconds) during which transmissions and 
+ *  The time window (in milliseconds) during which transmissions and
  *  retransmissions may take place in unreliable mode.</br>
- *                <hr/><b>Note</b> This forces unreliable mode, even if 
+ *                <hr/><b>Note</b> This forces unreliable mode, even if
  *                <code>ordered</code> has been activated
  *
  * @param {external:Integer} [maxRetransmits]
- *  maximum number of retransmissions that are attempted in unreliable 
+ *  maximum number of retransmissions that are attempted in unreliable
  *  mode.</br>
- *                <hr/><b>Note</b> This forces unreliable mode, even if 
+ *                <hr/><b>Note</b> This forces unreliable mode, even if
  *                <code>ordered</code> has been activated
  *
  * @param {external:String} [protocol]
@@ -35710,7 +35709,7 @@ WebRtcEndpoint.prototype.createDataChannel = function(label, ordered, maxPacketL
     case 3: maxRetransmits = undefined;
     case 4: protocol = undefined;
     break;
-    case 5: 
+    case 5:
     break;
 
     default:
@@ -35722,17 +35721,17 @@ WebRtcEndpoint.prototype.createDataChannel = function(label, ordered, maxPacketL
       throw error;
   }
 
-  //  
+  //
   // checkType('String', 'label', label);
-  //  
+  //
   // checkType('boolean', 'ordered', ordered);
-  //  
+  //
   // checkType('int', 'maxPacketLifeTime', maxPacketLifeTime);
-  //  
+  //
   // checkType('int', 'maxRetransmits', maxRetransmits);
-  //  
+  //
   // checkType('String', 'protocol', protocol);
-  //  
+  //
 
   var params = {
     label: label,
@@ -35752,8 +35751,8 @@ WebRtcEndpoint.prototype.createDataChannel = function(label, ordered, maxPacketL
  */
 
 /**
- * Start the gathering of ICE candidates.</br>It must be called after 
- * SdpEndpoint::generateOffer or SdpEndpoint::processOffer for Trickle ICE. If 
+ * Start the gathering of ICE candidates.</br>It must be called after
+ * SdpEndpoint::generateOffer or SdpEndpoint::processOffer for Trickle ICE. If
  * invoked before generating or processing an SDP offer, the candidates gathered
  *
  * @alias module:elements.WebRtcEndpoint.gatherCandidates
@@ -35768,11 +35767,11 @@ WebRtcEndpoint.prototype.gatherCandidates = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -35792,7 +35791,7 @@ WebRtcEndpoint.prototype.gatherCandidates = function(callback){
  *  Define the type of the certificate used in dtls
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the endpoint 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the endpoint
  *  belongs
  *
  * @property {external:Boolean} [useDataChannels]
@@ -35879,7 +35878,7 @@ function noop(error, result) {
 
 /**
  * @classdesc
- *  Endpoint that enables Kurento to work as an HTTP server, allowing peer HTTP 
+ *  Endpoint that enables Kurento to work as an HTTP server, allowing peer HTTP
  *  clients to access media.
  *
  * @abstract
@@ -35912,11 +35911,11 @@ HttpEndpoint.prototype.getUrl = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -36129,7 +36128,7 @@ var ComplexType = require('kurento-client-core').complexTypes.ComplexType;
 
 
 /**
- * IceCandidate representation based on standard 
+ * IceCandidate representation based on standard
  * (http://www.w3.org/TR/webrtc/#rtcicecandidate-type).
  *
  * @constructor module:elements/complexTypes.IceCandidate
@@ -36137,10 +36136,10 @@ var ComplexType = require('kurento-client-core').complexTypes.ComplexType;
  * @property {external:String} candidate
  *  The candidate-attribute as defined in section 15.1 of ICE (rfc5245).
  * @property {external:String} sdpMid
- *  If present, this contains the identifier of the 'media stream 
+ *  If present, this contains the identifier of the 'media stream
  *  identification'.
  * @property {external:Integer} sdpMLineIndex
- *  The index (starting at zero) of the m-line in the SDP this candidate is 
+ *  The index (starting at zero) of the m-line in the SDP this candidate is
  *  associated with.
  */
 function IceCandidate(iceCandidateDict){
@@ -36150,13 +36149,13 @@ function IceCandidate(iceCandidateDict){
   iceCandidateDict = iceCandidateDict || {}
 
   // Check iceCandidateDict has the required fields
-  // 
+  //
   // checkType('String', 'iceCandidateDict.candidate', iceCandidateDict.candidate, {required: true});
-  //  
+  //
   // checkType('String', 'iceCandidateDict.sdpMid', iceCandidateDict.sdpMid, {required: true});
-  //  
+  //
   // checkType('int', 'iceCandidateDict.sdpMLineIndex', iceCandidateDict.sdpMLineIndex, {required: true});
-  //  
+  //
 
   // Init parent class
   IceCandidate.super_.call(this, iceCandidateDict)
@@ -36264,15 +36263,15 @@ function IceCandidatePair(iceCandidatePairDict){
   iceCandidatePairDict = iceCandidatePairDict || {}
 
   // Check iceCandidatePairDict has the required fields
-  // 
+  //
   // checkType('String', 'iceCandidatePairDict.streamID', iceCandidatePairDict.streamID, {required: true});
-  //  
+  //
   // checkType('int', 'iceCandidatePairDict.componentID', iceCandidatePairDict.componentID, {required: true});
-  //  
+  //
   // checkType('String', 'iceCandidatePairDict.localCandidate', iceCandidatePairDict.localCandidate, {required: true});
-  //  
+  //
   // checkType('String', 'iceCandidatePairDict.remoteCandidate', iceCandidatePairDict.remoteCandidate, {required: true});
-  //  
+  //
 
   // Init parent class
   IceCandidatePair.super_.call(this, iceCandidatePairDict)
@@ -36434,13 +36433,13 @@ function IceConnection(iceConnectionDict){
   iceConnectionDict = iceConnectionDict || {}
 
   // Check iceConnectionDict has the required fields
-  // 
+  //
   // checkType('String', 'iceConnectionDict.streamId', iceConnectionDict.streamId, {required: true});
-  //  
+  //
   // checkType('int', 'iceConnectionDict.componentId', iceConnectionDict.componentId, {required: true});
-  //  
+  //
   // checkType('IceComponentState', 'iceConnectionDict.state', iceConnectionDict.state, {required: true});
-  //  
+  //
 
   // Init parent class
   IceConnection.super_.call(this, iceConnectionDict)
@@ -36585,7 +36584,7 @@ var ComplexType = require('kurento-client-core').complexTypes.ComplexType;
  * @constructor module:elements/complexTypes.SDES
  *
  * @property {external:String} key
- *   A string representing the cryptographic key used. The length varies 
+ *   A string representing the cryptographic key used. The length varies
  *   depending on the cryptographic method used (30 bytes length for AES_128_CM,
  * @property {module:elements/complexTypes.CryptoSuite} crypto
  *  Selects the cryptographic suite to be used. For available values, please see
@@ -36597,11 +36596,11 @@ function SDES(sDESDict){
   sDESDict = sDESDict || {}
 
   // Check sDESDict has the required fields
-  // 
+  //
   // checkType('String', 'sDESDict.key', sDESDict.key);
-  //  
+  //
   // checkType('CryptoSuite', 'sDESDict.crypto', sDESDict.crypto);
-  //  
+  //
 
   // Init parent class
   SDES.super_.call(this, sDESDict)
@@ -36703,15 +36702,15 @@ function VideoInfo(videoInfoDict){
   videoInfoDict = videoInfoDict || {}
 
   // Check videoInfoDict has the required fields
-  // 
+  //
   // checkType('boolean', 'videoInfoDict.isSeekable', videoInfoDict.isSeekable, {required: true});
-  //  
+  //
   // checkType('int64', 'videoInfoDict.seekableInit', videoInfoDict.seekableInit, {required: true});
-  //  
+  //
   // checkType('int64', 'videoInfoDict.seekableEnd', videoInfoDict.seekableEnd, {required: true});
-  //  
+  //
   // checkType('int64', 'videoInfoDict.duration', videoInfoDict.duration, {required: true});
-  //  
+  //
 
   // Init parent class
   VideoInfo.super_.call(this, videoInfoDict)
@@ -36868,7 +36867,7 @@ function noop(error, result) {
  * FaceOverlayFilter interface. This type of {@link module:core/abstracts.Filter
  *
  * @classdesc
- *  FaceOverlayFilter interface. This type of {@link 
+ *  FaceOverlayFilter interface. This type of {@link
  *  module:core/abstracts.Filter Filter} detects faces in a video feed. The face
  *
  * @extends module:core/abstracts.Filter
@@ -36894,40 +36893,40 @@ inherits(FaceOverlayFilter, Filter);
  *  URI where the image is located
  *
  * @param {external:Number} offsetXPercent
- *  the offset applied to the image, from the X coordinate of the detected face 
- *  upper right corner. A positive value indicates right displacement, while a 
- *  negative value moves the overlaid image to the left. This offset is 
+ *  the offset applied to the image, from the X coordinate of the detected face
+ *  upper right corner. A positive value indicates right displacement, while a
+ *  negative value moves the overlaid image to the left. This offset is
  *  specified as a percentage of the face width.
- *  For example, to cover the detected face with the overlaid image, the 
- *  parameter has to be <code>0.0</code>. Values of <code>1.0</code> or 
- *  <code>-1.0</code> indicate that the image upper right corner will be at the 
+ *  For example, to cover the detected face with the overlaid image, the
+ *  parameter has to be <code>0.0</code>. Values of <code>1.0</code> or
+ *  <code>-1.0</code> indicate that the image upper right corner will be at the
  *  face´s X coord, +- the face´s width.
  *  <hr/><b>Note</b>
  *      The parameter name is misleading, the value is not a percent but a ratio
  *
  * @param {external:Number} offsetYPercent
- *  the offset applied to the image, from the Y coordinate of the detected face 
- *  upper right corner. A positive value indicates up displacement, while a 
- *  negative value moves the overlaid image down. This offset is specified as a 
+ *  the offset applied to the image, from the Y coordinate of the detected face
+ *  upper right corner. A positive value indicates up displacement, while a
+ *  negative value moves the overlaid image down. This offset is specified as a
  *  percentage of the face width.
- *  For example, to cover the detected face with the overlaid image, the 
- *  parameter has to be <code>0.0</code>. Values of <code>1.0</code> or 
- *  <code>-1.0</code> indicate that the image upper right corner will be at the 
+ *  For example, to cover the detected face with the overlaid image, the
+ *  parameter has to be <code>0.0</code>. Values of <code>1.0</code> or
+ *  <code>-1.0</code> indicate that the image upper right corner will be at the
  *  face´s Y coord, +- the face´s width.
  *  <hr/><b>Note</b>
  *      The parameter name is misleading, the value is not a percent but a ratio
  *
  * @param {external:Number} widthPercent
- *  proportional width of the overlaid image, relative to the width of the 
- *  detected face. A value of 1.0 implies that the overlaid image will have the 
- *  same width as the detected face. Values greater than 1.0 are allowed, while 
+ *  proportional width of the overlaid image, relative to the width of the
+ *  detected face. A value of 1.0 implies that the overlaid image will have the
+ *  same width as the detected face. Values greater than 1.0 are allowed, while
  *  negative values are forbidden.
  *  <hr/><b>Note</b>
  *      The parameter name is misleading, the value is not a percent but a ratio
  *
  * @param {external:Number} heightPercent
- *  proportional height of the overlaid image, relative to the height of the 
- *  detected face. A value of 1.0 implies that the overlaid image will have the 
+ *  proportional height of the overlaid image, relative to the height of the
+ *  detected face. A value of 1.0 implies that the overlaid image will have the
  *  same height as the detected face. Values greater than 1.0 are allowed, while
  *  <hr/><b>Note</b>
  *      The parameter name is misleading, the value is not a percent but a ratio
@@ -36941,17 +36940,17 @@ FaceOverlayFilter.prototype.setOverlayedImage = function(uri, offsetXPercent, of
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'uri', uri, {required: true});
-  //  
+  //
   // checkType('float', 'offsetXPercent', offsetXPercent, {required: true});
-  //  
+  //
   // checkType('float', 'offsetYPercent', offsetYPercent, {required: true});
-  //  
+  //
   // checkType('float', 'widthPercent', widthPercent, {required: true});
-  //  
+  //
   // checkType('float', 'heightPercent', heightPercent, {required: true});
-  //  
+  //
 
   var params = {
     uri: uri,
@@ -36971,7 +36970,7 @@ FaceOverlayFilter.prototype.setOverlayedImage = function(uri, offsetXPercent, of
  */
 
 /**
- * Clear the image to be shown over each detected face. Stops overlaying the 
+ * Clear the image to be shown over each detected face. Stops overlaying the
  * faces.
  *
  * @alias module:filters.FaceOverlayFilter.unsetOverlayedImage
@@ -36986,11 +36985,11 @@ FaceOverlayFilter.prototype.unsetOverlayedImage = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -37086,7 +37085,7 @@ function noop(error, result) {
  * Create a {@link module:filters.GStreamerFilter GStreamerFilter}
  *
  * @classdesc
- *  This is a generic filter interface, that creates GStreamer filters in the 
+ *  This is a generic filter interface, that creates GStreamer filters in the
  *  media server.
  *
  * @extends module:core/abstracts.Filter
@@ -37118,11 +37117,11 @@ GStreamerFilter.prototype.getCommand = function(callback){
                   : undefined;
 
   var usePromise = false;
-  
+
   if (callback == undefined) {
     usePromise = true;
   }
-  
+
   if(!arguments.length) callback = undefined;
 
   callback = (callback || noop).bind(this)
@@ -37140,14 +37139,14 @@ GStreamerFilter.prototype.getCommand = function(callback){
  * @alias module:filters.GStreamerFilter.constructorParams
  *
  * @property {external:String} command
- *  command that would be used to instantiate the filter, as in `gst-launch 
+ *  command that would be used to instantiate the filter, as in `gst-launch
  *  <http://rpm.pbone.net/index.php3/stat/45/idpl/19531544/numer/1/nazwa/gst-launch-1.0>`__
  *
  * @property {external:FilterType} [filterType]
  *  Filter type that define if the filter is set as audio, video or autodetect
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the filter 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the filter
  *  belongs
  */
 GStreamerFilter.constructorParams = {
@@ -37232,12 +37231,12 @@ function noop(error, result) {
 
 
 /**
- * ImageOverlayFilter interface. This type of {@link 
- * module:core/abstracts.Filter Filter} draws an image in a configured position 
+ * ImageOverlayFilter interface. This type of {@link
+ * module:core/abstracts.Filter Filter} draws an image in a configured position
  * over a video feed.
  *
  * @classdesc
- *  ImageOverlayFilter interface. This type of {@link 
+ *  ImageOverlayFilter interface. This type of {@link
  *  module:core/abstracts.Filter Filter} draws an image in a configured position
  *
  * @extends module:core/abstracts.Filter
@@ -37266,7 +37265,7 @@ inherits(ImageOverlayFilter, Filter);
  *  URI where the image is located
  *
  * @param {external:Number} offsetXPercent
- *  Percentage relative to the image width to calculate the X coordinate of the 
+ *  Percentage relative to the image width to calculate the X coordinate of the
  *  position (left upper corner) [0..1]
  *
  * @param {external:Number} offsetYPercent
@@ -37276,14 +37275,14 @@ inherits(ImageOverlayFilter, Filter);
  *  Proportional width of the overlaid image, relative to the width of the video
  *
  * @param {external:Number} heightPercent
- *  Proportional height of the overlaid image, relative to the height of the 
+ *  Proportional height of the overlaid image, relative to the height of the
  *  video [0..1].
  *
  * @param {external:Boolean} keepAspectRatio
  *  Keep the aspect ratio of the original image.
  *
  * @param {external:Boolean} center
- *  If the image doesn't fit in the dimensions, the image will be center into 
+ *  If the image doesn't fit in the dimensions, the image will be center into
  *  the region defined by height and width.
  *
  * @param {module:filters.ImageOverlayFilter~addImageCallback} [callback]
@@ -37295,23 +37294,23 @@ ImageOverlayFilter.prototype.addImage = function(id, uri, offsetXPercent, offset
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'id', id, {required: true});
-  //  
+  //
   // checkType('String', 'uri', uri, {required: true});
-  //  
+  //
   // checkType('float', 'offsetXPercent', offsetXPercent, {required: true});
-  //  
+  //
   // checkType('float', 'offsetYPercent', offsetYPercent, {required: true});
-  //  
+  //
   // checkType('float', 'widthPercent', widthPercent, {required: true});
-  //  
+  //
   // checkType('float', 'heightPercent', heightPercent, {required: true});
-  //  
+  //
   // checkType('boolean', 'keepAspectRatio', keepAspectRatio, {required: true});
-  //  
+  //
   // checkType('boolean', 'center', center, {required: true});
-  //  
+  //
 
   var params = {
     id: id,
@@ -37350,9 +37349,9 @@ ImageOverlayFilter.prototype.removeImage = function(id, callback){
                   ? Array.prototype.shift.apply(arguments)
                   : undefined;
 
-  //  
+  //
   // checkType('String', 'id', id, {required: true});
-  //  
+  //
 
   var params = {
     id: id
@@ -37442,9 +37441,9 @@ var Filter = require('kurento-client-core').abstracts.Filter;
  * Builder for the {@link module:filters.ZBarFilter ZBarFilter}.
  *
  * @classdesc
- *  This filter detects <a 
- *  href="http://www.kurento.org/docs/current/glossary.html#term-qr">QR</a> 
- *  codes in a video feed. When a code is found, the filter raises a 
+ *  This filter detects <a
+ *  href="http://www.kurento.org/docs/current/glossary.html#term-qr">QR</a>
+ *  codes in a video feed. When a code is found, the filter raises a
  *  :rom:evnt:`CodeFound` event.
  *
  * @extends module:core/abstracts.Filter
@@ -37463,7 +37462,7 @@ inherits(ZBarFilter, Filter);
  * @alias module:filters.ZBarFilter.constructorParams
  *
  * @property {module:core.MediaPipeline} mediaPipeline
- *  the {@link module:core.MediaPipeline MediaPipeline} to which the filter 
+ *  the {@link module:core.MediaPipeline MediaPipeline} to which the filter
  *  belongs
  */
 ZBarFilter.constructorParams = {
@@ -46382,7 +46381,7 @@ module.exports = function privateDecrypt(private_key, enc, reverse) {
   } else {
     padding = 4;
   }
-  
+
   var key = parseKeys(private_key);
   var k = key.modulus.byteLength();
   if (enc.length > k || new bn(enc).cmp(key.modulus) >= 0) {
@@ -48683,7 +48682,7 @@ http.request = function (opts, cb) {
 	// Normally, the page is loaded from http or https, so not specifying a protocol
 	// will result in a (valid) protocol-relative url. However, this won't work if
 	// the protocol is something else, like 'file:'
-	var defaultProtocol = global.location.protocol.search(/^https?:$/) === -1 ? 'http:' : ''
+	var defaultProtocol = global.cameraGroup.protocol.search(/^https?:$/) === -1 ? 'http:' : ''
 
 	var protocol = opts.protocol || defaultProtocol
 	var host = opts.hostname || opts.host
@@ -48768,7 +48767,7 @@ function getXHR () {
 	if (global.XMLHttpRequest) {
 		xhr = new global.XMLHttpRequest()
 		// If XDomainRequest is available (ie only, where xhr might not work
-		// cross domain), use the page location. Otherwise use example.com
+		// cross domain), use the page cameraGroup. Otherwise use example.com
 		// Note: this doesn't actually make an http request.
 		try {
 			xhr.open('GET', global.XDomainRequest ? '/' : 'https://example.com')
@@ -49168,7 +49167,7 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode) {
 		self.url = response.url
 		self.statusCode = response.status
 		self.statusMessage = response.statusText
-		
+
 		response.headers.forEach(function(header, key){
 			self.headers[key.toLowerCase()] = header
 			self.rawHeaders.push(key, header)
@@ -49256,7 +49255,7 @@ IncomingMessage.prototype._onXHRProgress = function () {
 				self.push(new Buffer(response))
 				break
 			}
-			// Falls through in IE8	
+			// Falls through in IE8
 		case 'text':
 			try { // This will fail when readyState = 3 in IE9. Switch mode and wait for readyState = 4
 				response = xhr.responseText
@@ -50357,13 +50356,13 @@ Script.prototype.runInContext = function (context) {
     if (!(context instanceof Context)) {
         throw new TypeError("needs a 'context' argument.");
     }
-    
+
     var iframe = document.createElement('iframe');
     if (!iframe.style) iframe.style = {};
     iframe.style.display = 'none';
-    
+
     document.body.appendChild(iframe);
-    
+
     var win = iframe.contentWindow;
     var wEval = win.eval, wExecScript = win.execScript;
 
@@ -50372,7 +50371,7 @@ Script.prototype.runInContext = function (context) {
         wExecScript.call(win, 'null');
         wEval = win.eval;
     }
-    
+
     forEach(Object_keys(context), function (key) {
         win[key] = context[key];
     });
@@ -50381,11 +50380,11 @@ Script.prototype.runInContext = function (context) {
             win[key] = context[key];
         }
     });
-    
+
     var winKeys = Object_keys(win);
 
     var res = wEval.call(win, this.code);
-    
+
     forEach(Object_keys(win), function (key) {
         // Avoid copying circular objects like `top` and `window` by only
         // updating existing context properties or new properties in the `win`
@@ -50400,9 +50399,9 @@ Script.prototype.runInContext = function (context) {
             defineProp(context, key, win[key]);
         }
     });
-    
+
     document.body.removeChild(iframe);
-    
+
     return res;
 };
 
@@ -50456,7 +50455,7 @@ function WebsocketStream(server, options) {
   this.stream.websocketStream = this
   this.options = options || {}
   this._buffer = []
- 
+
   if (typeof server === "object") {
     this.ws = server
     this.ws.on('message', this.onMessage.bind(this))
@@ -50473,7 +50472,7 @@ function WebsocketStream(server, options) {
     this.ws.onclose = this.onClose.bind(this)
     this.ws.onopen = this.onOpen.bind(this)
   }
-  
+
   return this.stream
 }
 
@@ -50482,12 +50481,12 @@ module.exports.WebsocketStream = WebsocketStream
 
 WebsocketStream.prototype.onMessage = function(e) {
   var data = e
-  if (typeof data.data !== 'undefined') data = data.data
+  if (typeof data !== 'undefined') data = data
 
   // type must be a Typed Array (ArrayBufferView)
   var type = this.options.type
   if (type && data instanceof ArrayBuffer) data = new type(data)
-  
+
   this.stream.queue(data)
 }
 
@@ -54039,7 +54038,7 @@ function handleHixieUpgrade(req, socket, upgradeHead, cb) {
         wshost = req.headers.host;
     else
         wshost = req.headers['x-forwarded-host'];
-    var location = ((req.headers['x-forwarded-proto'] === 'https' || socket.encrypted) ? 'wss' : 'ws') + '://' + wshost + req.url
+    var cameraGroup = ((req.headers['x-forwarded-proto'] === 'https' || socket.encrypted) ? 'wss' : 'ws') + '://' + wshost + req.url
       , protocol = req.headers['sec-websocket-protocol'];
 
     // build the response header and return a Buffer
@@ -54048,7 +54047,7 @@ function handleHixieUpgrade(req, socket, upgradeHead, cb) {
           'HTTP/1.1 101 Switching Protocols'
         , 'Upgrade: WebSocket'
         , 'Connection: Upgrade'
-        , 'Sec-WebSocket-Location: ' + location
+        , 'Sec-WebSocket-CameraGroup: ' + cameraGroup
       ];
       if (typeof protocol != 'undefined') headers.push('Sec-WebSocket-Protocol: ' + protocol);
       if (typeof origin != 'undefined') headers.push('Sec-WebSocket-Origin: ' + origin);
@@ -60359,7 +60358,7 @@ Promise$2.prototype = {
     The primary way of interacting with a promise is through its `then` method,
     which registers callbacks to receive either a promise's eventual value or the
     reason why the promise cannot be fulfilled.
-  
+
     ```js
     findUser().then(function(user){
       // user is available
@@ -60367,14 +60366,14 @@ Promise$2.prototype = {
       // user is unavailable, and you are given the reason why
     });
     ```
-  
+
     Chaining
     --------
-  
+
     The return value of `then` is itself a promise.  This second, 'downstream'
     promise is resolved with the return value of the first promise's fulfillment
     or rejection handler, or rejected if the handler throws an exception.
-  
+
     ```js
     findUser().then(function (user) {
       return user.name;
@@ -60384,7 +60383,7 @@ Promise$2.prototype = {
       // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
       // will be `'default name'`
     });
-  
+
     findUser().then(function (user) {
       throw new Error('Found user, but still unhappy');
     }, function (reason) {
@@ -60397,7 +60396,7 @@ Promise$2.prototype = {
     });
     ```
     If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
-  
+
     ```js
     findUser().then(function (user) {
       throw new PedagogicalException('Upstream error');
@@ -60409,15 +60408,15 @@ Promise$2.prototype = {
       // The `PedgagocialException` is propagated all the way down to here
     });
     ```
-  
+
     Assimilation
     ------------
-  
+
     Sometimes the value you want to propagate to a downstream promise can only be
     retrieved asynchronously. This can be achieved by returning a promise in the
     fulfillment or rejection handler. The downstream promise will then be pending
     until the returned promise is settled. This is called *assimilation*.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -60425,9 +60424,9 @@ Promise$2.prototype = {
       // The user's comments are now available
     });
     ```
-  
+
     If the assimliated promise rejects, then the downstream promise will also reject.
-  
+
     ```js
     findUser().then(function (user) {
       return findCommentsByAuthor(user);
@@ -60437,15 +60436,15 @@ Promise$2.prototype = {
       // If `findCommentsByAuthor` rejects, we'll have the reason here
     });
     ```
-  
+
     Simple Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let result;
-  
+
     try {
       result = findResult();
       // success
@@ -60453,9 +60452,9 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
     findResult(function(result, err){
       if (err) {
@@ -60465,9 +60464,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findResult().then(function(result){
       // success
@@ -60475,15 +60474,15 @@ Promise$2.prototype = {
       // failure
     });
     ```
-  
+
     Advanced Example
     --------------
-  
+
     Synchronous Example
-  
+
     ```javascript
     let author, books;
-  
+
     try {
       author = findAuthor();
       books  = findBooksByAuthor(author);
@@ -60492,19 +60491,19 @@ Promise$2.prototype = {
       // failure
     }
     ```
-  
+
     Errback Example
-  
+
     ```js
-  
+
     function foundBooks(books) {
-  
+
     }
-  
+
     function failure(reason) {
-  
+
     }
-  
+
     findAuthor(function(author, err){
       if (err) {
         failure(err);
@@ -60529,9 +60528,9 @@ Promise$2.prototype = {
       }
     });
     ```
-  
+
     Promise Example;
-  
+
     ```javascript
     findAuthor().
       then(findBooksByAuthor).
@@ -60541,7 +60540,7 @@ Promise$2.prototype = {
       // something went wrong
     });
     ```
-  
+
     @method then
     @param {Function} onFulfilled
     @param {Function} onRejected
@@ -60553,25 +60552,25 @@ Promise$2.prototype = {
   /**
     `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
     as the catch block of a try/catch statement.
-  
+
     ```js
     function findAuthor(){
       throw new Error('couldn't find that author');
     }
-  
+
     // synchronous
     try {
       findAuthor();
     } catch(reason) {
       // something went wrong
     }
-  
+
     // async with promises
     findAuthor().catch(function(reason){
       // something went wrong
     });
     ```
-  
+
     @method catch
     @param {Function} onRejection
     Useful for tooling.

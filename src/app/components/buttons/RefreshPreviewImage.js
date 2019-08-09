@@ -16,24 +16,24 @@ class RefreshPreviewImage extends Component {
   }
 
   flagTimeout = () => {
-    timeout[this.props.data.id] = setTimeout(() => {
+    timeout[this.props.data.uuid] = setTimeout(() => {
       this.setState({disabledFlag: false});
       message.error('Timeout for fetching image.');
     }, 90000);
   }
 
   removeTimeout = () => {
-    clearTimeout(timeout[this.props.data.id]);
+    clearTimeout(timeout[this.props.data.uuid]);
   }
 
   updatePreviewImage = () => {
-    this.props.updatePreviewImage(this.props.data.id);
+    this.props.updatePreviewImage(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid);
     this.setState({disabledFlag: true});
     this.flagTimeout();
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.data.id === nextProps.imageUpdateInProgressId) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.data.uuid === nextProps.imageUpdateInProgressUuid) {
       if (!nextProps.imageUpdateInProgress) {
         this.setState({disabledFlag: false});
         this.removeTimeout();
@@ -60,13 +60,13 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     imageUpdateInProgress: state.cameras.imageUpdateInProgress,
-    imageUpdateInProgressId: state.cameras.imageUpdateInProgressId,
+    imageUpdateInProgressUuid: state.cameras.imageUpdateInProgressUuid,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    updatePreviewImage: (cameraId) => dispatch(updatePreviewImage(cameraId))
+    updatePreviewImage: (user, cameraGroupsUuid, cameraUuid) => dispatch(updatePreviewImage(user, cameraGroupsUuid, cameraUuid))
   }
 }
 

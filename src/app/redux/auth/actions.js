@@ -2,11 +2,12 @@ import ReactGA from 'react-ga';
 import axios from 'axios';
 require('promise.prototype.finally').shim();
 
-import { clearLocationData } from '../locations/actions';
+import { clearCameraGroupData } from '../cameraGroups/actions';
 import { clearCameraData } from '../cameras/actions';
 import { clearInvitesData } from '../invites/actions';
 import { clearAlertData } from '../alerts/actions';
-import { fetchReceivedInvites } from '../invites/actions';
+import { fetchShareGroupInvites } from '../invites/actions';
+import { readUser, deleteUserDevice } from '../users/actions';
 
 import * as types from './actionTypes';
 
@@ -50,21 +51,28 @@ function resetPasswordSuccess() {
   }
 }
 
-function loginInProcess(bool) {
+export function toggleMute(mute) {
+  return {
+    type: types.TOGGLE_MUTE,
+    mute: mute
+  }
+}
+
+export function loginInProcess(bool) {
   return {
     type: types.LOGIN_IN_PROCESS,
     loginInProcess: bool
   }
 }
 
-function loginError(error) {
+export function loginError(error) {
   return {
     type: types.LOGIN_ERROR,
     loginError: error
   }
 }
 
-function loginSuccess(user) {
+export function loginSuccess(user) {
   return {
     type: types.LOGIN_SUCCESS,
     user
@@ -155,27 +163,6 @@ function getPasswordResetRequestError(error) {
   }
 }
 
-function bvcAuthSuccess(token) {
-  return {
-    type: types.BVC_AUTH_SUCCESS,
-    token
-  }
-}
-
-function bvcAuthInProcess(bool) {
-  return {
-    type: types.BVC_INTERACTION_IN_PROCESS,
-    bool
-  }
-}
-
-function bvcAuthError(error) {
-  return {
-    type: types.BVC_AUTH_ERROR,
-    error
-  }
-}
-
 export function loginMissing() {
   return {
     type: types.LOGIN_MISSING,
@@ -206,56 +193,55 @@ export function checkLogin() {
   return (dispatch) => {
     const jwt = sessionStorage.getItem('jwt');
     if (jwt) {
-      let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/me`;
-      axios.get(url, {headers: {Authorization: jwt}})
+      let url = `${process.env.REACT_APP_ROG_API_URL}/users`;
+      axios.get(url, {headers: {Authorization: 'Bearer'+' '+jwt}})
         .then(resp => {
           const user = {
             ...resp.data,
-            jwt
+            jwt: jwt
           };
-          dispatch(loginSuccess(user));
-          dispatch(fetchReceivedInvites(user));
-          if (jwtTokenRefresh === null) {
+
+          if (window.jwtTokenRefresh === null) {
+            dispatch(loginSuccess(user));
             dispatch(login(sessionStorage.getItem('email'), sessionStorage.getItem('password')));
+          } else {
+            dispatch(loginSuccess(user));
           }
         })
         .catch(error => {
           sessionStorage.removeItem('jwt');
           sessionStorage.removeItem('email');
           sessionStorage.removeItem('password');
-          if(jwtTokenRefresh !== null){
-            window.clearInterval(jwtTokenRefresh);
-            jwtTokenRefresh = null;
+          sessionStorage.removeItem('fcm_token_id');
+          sessionStorage.removeItem('fcm_token');
+          if(window.jwtTokenRefresh !== null){
+            window.clearInterval(window.jwtTokenRefresh);
+            window.jwtTokenRefresh = null;
           };
           dispatch(loginMissing());
         });
-    }
-    else {
+    } else {
       dispatch(loginMissing());
     }
   }
 }
 
-export function register(email, firstName, lastName, phone, password, confirmPassword, token) {
+export function register(email, firstName, lastName, password, confirmPassword, token) {
   return (dispatch) => {
     dispatch(registerError(''));
     dispatch(registerInProcess(true));
 
-    const url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/register`;
+    const url = `${process.env.REACT_APP_ROG_API_URL}/users`;
     const data = {
-      invitation_token: token,
-      user: {
-        first_name: firstName,
-        last_name: lastName,
-        password_confirm: confirmPassword,
-        email,
-        phone,
-        password
-      }
+      auth_token: token,
+      email,
+      first_name: firstName,
+      last_name: lastName,
+      password
     };
 
     axios.post(url, data)
-      .then((resp) => {
+      .then((response) => {
         dispatch(registerSuccess());
 
         const registrationEvent = {
@@ -266,19 +252,12 @@ export function register(email, firstName, lastName, phone, password, confirmPas
         };
 
         dispatch(trackEventAnalytics('registration', registrationEvent));
-
-        /*-- Needed for Woopra Trigger event --*/
-        // registrationEvent.registration_status = 'Registration Completed';
-        // setInterval(dispatch(trackEventAnalytics('registration', registrationEvent)), 1000);
       })
       .catch((error) => {
         let errMessage = 'Error registering. Please try again later';
-        if (error.response && error.response.data && error.response.data.errors) {
-          if (error.response.data.errors.password) {
-            errMessage = error.response.data.errors.password;
-          }
-          else if (error.response.data.errors.token) {
-            errMessage = 'Invalid invitation';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
           }
         }
         dispatch(registerError(errMessage));
@@ -290,43 +269,23 @@ export function register(email, firstName, lastName, phone, password, confirmPas
   }
 }
 
-export function resetPassword(password, confirmPassword, token) {
+export function resetPassword(new_password, confirmPassword, token) {
   return (dispatch) => {
     dispatch(resetPasswordError(''));
     dispatch(resetPasswordInProcess(true));
 
-    const url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/reset_password`;
-    const data = {
-      password_reset_token: token,
-      user: {
-        password_confirm: confirmPassword,
-        password
-      }
-    };
+    const url = `${process.env.REACT_APP_ROG_API_URL}/reset-password/${token}`;
+    const data = {new_password};
 
-    axios.post(url, data)
-      .then((resp) => {
+    axios.patch(url, data)
+      .then((response) => {
         dispatch(resetPasswordSuccess());
-
-        const registrationEvent = {
-          reset_password_status: 'Password Reset Successful',
-          reset_password_date: new Date().toString().split(' ').splice(1, 4).join(' ')
-        };
-
-        dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent));
-
-        /*-- Needed for Woopra Trigger event --*/
-        // resetPasswordEvent.reset_password_status = 'Password Reset Completed';
-        // setInterval(dispatch(trackEventAnalytics('resetPassword', resetPasswordEvent)), 1000);
       })
       .catch((error) => {
         let errMessage = 'Error resetting your password. Please try again later';
-        if (error.response && error.response.data && error.response.data.errors) {
-          if (error.response.data.errors.password) {
-            errMessage = error.response.data.errors.password;
-          }
-          else if (error.response.data.errors.token) {
-            errMessage = 'Invalid request';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
           }
         }
         dispatch(resetPasswordError(errMessage));
@@ -339,7 +298,7 @@ export function resetPassword(password, confirmPassword, token) {
 }
 
 // set timout variable to call login function to refresh token
-var jwtTokenRefresh = null;
+window.jwtTokenRefresh = null;
 
 export function login(email, password) {
   return (dispatch) => {
@@ -356,75 +315,36 @@ export function login(email, password) {
     else if (!cleanPassword) {
       dispatch(loginInProcess(false));
       dispatch(loginError('Please enter a password'));
-    }
-    else {
-      let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/sessions`;
-      axios.post(url, {session: {email: cleanEmail, password: cleanPassword}})
-        .then((resp) => {
-          const user = {
-            ...resp.data.user,
-            jwt: resp.data.jwt
-          };
-          sessionStorage.setItem('jwt', resp.data.jwt);
-          typeof(sessionStorage.getItem('email') == 'undefined') ? sessionStorage.setItem('email', email) : '';
-          typeof(sessionStorage.getItem('password') == 'undefined') ? sessionStorage.setItem('password', password) : '';
-
-          if (jwtTokenRefresh === null) {
-            jwtTokenRefresh = window.setInterval(
-              function(){
-                dispatch(login(email, password));
-              }, (30 * 60 * 1000), [email, password]
-            );
-          }
-
-          dispatch(loginSuccess(user));
-          dispatch(loginInProcess(false));
-          dispatch(authenticateBVCServer());
-          dispatch(fetchReceivedInvites(user));
-
-          const loginEvent = {
-            email: resp.data.user.email,
-            name: resp.data.user.firstName + ' ' + resp.data.user.lastName,
-            last_login: new Date().toString().split(' ').splice(1, 4).join(' ')
-          };
-
-          dispatch(trackEventAnalytics('login', loginEvent));
+    } else {
+      let url = `${process.env.REACT_APP_ROG_API_URL}/authenticate`;
+      axios.post(url, {email: cleanEmail, password: cleanPassword})
+        .then((response) => {
+          dispatch(readUser(response.data.jwt, window.jwtTokenRefresh, cleanEmail, cleanPassword));
         })
         .catch((error) => {
-          let errorMessage;
-          if (error.response) {
-            if (error.response.status === 500) {
-              errorMessage = 'Server error';
-            } else if (error.response.status === 422) {
-              errorMessage = error.response.data.errors.detail;
+          let errMessage = 'Error logging in';
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
             }
           }
-          else {
-            console.log(error);
-            errorMessage = 'Error logging in. Please try again later.';
-          }
-
-          dispatch(loginError(errorMessage));
+          dispatch(loginError(errMessage));
           dispatch(loginInProcess(false));
         });
     }
   }
 }
 
-function disconnectFromChannels(channels) {
-  for (const channel of channels) {
-    channel.leave();
-  }
-}
-
-export function logout(channels) {
+export function logout(user) {
   return (dispatch) => {
+    dispatch(deleteUserDevice(user.uuid, sessionStorage.getItem('fcm_token_id'), sessionStorage.getItem('fcm_token')));
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('email');
     sessionStorage.removeItem('password');
-    window.clearInterval(jwtTokenRefresh);
-    jwtTokenRefresh = null;
-    disconnectFromChannels(channels);
+    sessionStorage.removeItem('fcm_token_id');
+    sessionStorage.removeItem('fcm_token');
+    window.clearInterval(window.jwtTokenRefresh);
+    window.jwtTokenRefresh = null;
     dispatch(clearAssociatedData());
     dispatch(logoutSuccess());
   }
@@ -432,7 +352,7 @@ export function logout(channels) {
 
 export function clearAssociatedData() {
   return (dispatch) => {
-    dispatch(clearLocationData());
+    dispatch(clearCameraGroupData());
     dispatch(clearCameraData());
     dispatch(clearInvitesData());
     dispatch(clearAlertData());
@@ -445,8 +365,8 @@ export function sendInvitationEmail(email) {
     dispatch(sendInvitationInProcess(true));
 
     const invitationEmail = email.trim();
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/invitations`;
-    let data = {invitation: {email: invitationEmail}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/join-rog`;
+    let data = {email: invitationEmail};
 
     const invitationEvent = {
       email: invitationEmail,
@@ -468,10 +388,11 @@ export function sendInvitationEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Error sending invitation. Please try again later.';
-        if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.email) {
-          errMessage = 'An invitation has already been sent to this email.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
-
         dispatch(sendInvitationError(errMessage));
       })
       .finally(() => {
@@ -486,15 +407,17 @@ export function getInvitation(token) {
     dispatch(getInvitationError(''));
     dispatch(getInvitationInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/invitations/${token}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${token}`;
     axios.get(url)
       .then(resp => {
-        dispatch(getInvitationSuccess(resp.data.data));
+        dispatch(getInvitationSuccess(resp.data));
       })
       .catch(error => {
         let errMessage = 'Error getting invitation. Please try again later.';
-        if (error.response.status === 404) {
-          errMessage = 'Invalid invation';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
 
         dispatch(getInvitationError(errMessage));
@@ -512,8 +435,8 @@ export function sendPasswordResetRequestEmail(email) {
     dispatch(sendPasswordResetRequestInProcess(true));
 
     const passwordResetRequestEmail = email.trim();
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset_request`;
-    let data = {request: {email: passwordResetRequestEmail}};
+    let url = `${process.env.REACT_APP_ROG_API_URL}/forgot-password`;
+    let data = {email: passwordResetRequestEmail};
 
     const passwordResetRequestEvent = {
       email: passwordResetRequestEmail,
@@ -535,7 +458,11 @@ export function sendPasswordResetRequestEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Sorry, we can\'t find that email.';
-
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
+        }
         dispatch(sendPasswordResetRequestError(errMessage));
       })
       .finally(() => {
@@ -550,15 +477,18 @@ export function getPasswordResetRequest(token) {
     dispatch(getPasswordResetRequestError(''));
     dispatch(getPasswordResetRequestInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/api/v1/password_reset_form/${token}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${token}`;
     axios.get(url)
       .then(resp => {
-        dispatch(getPasswordResetRequestSuccess(resp.data.data));
+        console.log(response);
+        dispatch(getPasswordResetRequestSuccess(response.data));
       })
       .catch(error => {
-        let errMessage = 'Error getting Valid Password Reset Request. Please try again later.';
-        if (error.response.status === 404) {
-          let errMessage = 'Invalid request: 404';
+        let errMessage = 'Error getting Valid Password Reset Request.';
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
         dispatch(getPasswordResetRequestError(errMessage));
       })
@@ -566,53 +496,6 @@ export function getPasswordResetRequest(token) {
         dispatch(getPasswordResetRequestError(''));
         dispatch(getPasswordResetRequestInProcess(false));
       })
-  }
-}
-
-export function checkBVCAuthToken() {
-  return (dispatch) => {
-    const jwt = localStorage.getItem('bvc_jwt');
-    if (jwt) {
-      dispatch(loginSuccess(jwt));
-    } else {
-      dispatch(loginMissing());
-    }
-  }
-}
-
-export function authenticateBVCServer() {
-  return (dispatch) => {
-    dispatch(bvcAuthInProcess(true));
-    dispatch(bvcAuthError(''));
-
-    let url = `${process.env.REACT_APP_BVC_SERVER}/api/auth`;
-    let data = {username: 'rogt-1', password: 'qwerty1'};
-    axios.post(url, data)
-      .then((resp) => {
-        const bvc_authToken = resp.data.access_token;
-
-        localStorage.setItem('bvc_jwt', bvc_authToken);
-
-        dispatch(bvcAuthSuccess(bvc_authToken));
-        dispatch(bvcAuthInProcess(true));
-      })
-      .catch((error) => {
-        let errorMessage;
-        if (error.response) {
-          if (error.response.status === 500) {
-            errorMessage = 'Server error';
-          }
-          else if (error.response.status === 422) {
-            errorMessage = error.response.data.errors.detail;
-          }
-        }
-        else {
-          errorMessage = 'Error Authorizing. Please try again later.';
-        }
-
-        dispatch(bvcAuthError(errorMessage));
-        dispatch(bvcAuthInProcess(false));
-      });
   }
 }
 

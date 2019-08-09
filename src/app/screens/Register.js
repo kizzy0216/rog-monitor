@@ -19,15 +19,15 @@ class Register extends Component {
 
     this.state = {
       confirmDirty: false,
-      phoneError: false
+      // phoneError: false
     }
   }
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.props.getInvitation(this.props.match.params.token);
   }
 
-  componentWillReceiveProps = (nextProps) => {
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.registerSuccess && this.props.registerSuccess !== nextProps.registerSuccess) {
       message.success('Registration complete! Please log in.');
       this.props.history.push('/login');
@@ -50,7 +50,7 @@ class Register extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.register(values.email, values.firstName, values.lastName, values.phone, values.password, values.confirmPassword, this.props.match.params.token);
+        this.props.register(values.email, values.firstName, values.lastName, values.password, values.confirmPassword, this.props.match.params.token);
       }
 
     });
@@ -88,19 +88,19 @@ class Register extends Component {
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   }
 
-  checkPhoneNumber = (rule, value, callback) => {
-    const form = this.props.form;
-    if (!value) {
-      this.setState({phoneError: true});
-      callback('Please enter your phone number');
-    } else if (isNaN(value)) {
-      this.setState({phoneError: true});
-      callback('Please enter phone number integers only.');
-    } else {
-      this.setState({phoneError: false});
-      callback();
-    }
-  }
+  // checkPhoneNumber = (rule, value, callback) => {
+  //   const form = this.props.form;
+  //   if (!value) {
+  //     this.setState({phoneError: true});
+  //     callback('Please enter your phone number');
+  //   } else if (isNaN(value)) {
+  //     this.setState({phoneError: true});
+  //     callback('Please enter phone number integers only.');
+  //   } else {
+  //     this.setState({phoneError: false});
+  //     callback();
+  //   }
+  // }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -148,7 +148,7 @@ class Register extends Component {
                           <Input onBlur={this.validateStatus} />
                         )}
                       </FormItem>
-                      <FormItem label='Phone' hasFeedback>
+                      {/*{<FormItem label='Phone' hasFeedback>
                         {getFieldDecorator('phone', {
                           rules: [
                             {validator: this.checkPhoneNumber}
@@ -156,12 +156,12 @@ class Register extends Component {
                         })(
                           <Input onBlur={this.validateStatus} />
                         )}
-                      </FormItem>
+                      </FormItem>}
                       {this.state.phoneError ?
                         ''
                       :
-                        <div style={styles.phoneCaption} class="ant-form-explain">Standard call, messaging or data rates may apply</div>
-                      }
+                        <div style={styles.phoneCaption} className="ant-form-explain">Standard call, messaging or data rates may apply</div>
+                      }*/}
                       <FormItem label='Password' hasFeedback>
                         {getFieldDecorator('password', {
                           rules: [
@@ -258,9 +258,9 @@ const styles = {
     marginTop: 30,
     marginBottom: 10
   },
-  phoneCaption: {
-    marginTop: -20,
-  },
+  // phoneCaption: {
+  //   marginTop: -20,
+  // },
   signInLinkCaption: {
     fontSize: 16
   },
@@ -296,7 +296,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getInvitation: (token) => dispatch(getInvitation(token)),
-    register: (email, firstName, lastName, phone, password, passwordConfirm, token) => dispatch(register(email, firstName, lastName, phone, password, passwordConfirm, token))
+    register: (email, firstName, lastName, password, passwordConfirm, token) => dispatch(register(email, firstName, lastName, password, passwordConfirm, token))
   }
 }
 

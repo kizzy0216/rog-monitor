@@ -12,8 +12,6 @@ export default {
   getInvitationInProcess: false,
   getInvitationSuccess: false,
   getInvitationError: '',
-  bvcInteractionInProcess: false,
-  bvcAuthError: false,
   deleteAlertSuccess: false,
   createAlertSuccess: false,
   sendpasswordResetRequestInProcess: false,

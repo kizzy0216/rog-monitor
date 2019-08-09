@@ -5,44 +5,40 @@ import { Card, Select, Row, Col, Icon, Modal, Button, Input, Form, Tooltip, mess
 const Option = Select.Option;
 
 import CameraTiles from '../components/cameras/CameraTiles';
-import AddLocationModal from '../components/modals/AddLocationModal';
+import AddCameraGroupModal from '../components/modals/AddCameraGroupModal';
 import CameraOptionButtons from '../components/cameras/CameraOptionButtons';
 
-import { listenForNewImageThumbnails } from '../redux/cameras/actions';
-import * as locationActions from '../redux/locations/actions';
+import * as cameraGroupActions from '../redux/cameraGroups/actions';
 import { trackEventAnalytics } from '../redux/auth/actions';
-import { removeGuard } from '../redux/locations/actions';
+import { removeUserCameraGroupPrivilege } from '../redux/cameraGroups/actions';
 
 class CameraList extends Component {
   constructor(props) {
     super(props);
-    let currentGuard = '';
     this.state = {
-      rtspUrl: '',
       liveView: true,
-      locationButtonsVisible: false,
-      addLocationModalVisible: false
+      cameraGroupButtonsVisible: false,
+      addCameraGroupModalVisible: false
     }
   }
 
-  componentWillMount = () => {
-    this.props.actions.fetchLocations(this.props.user, this.props.rummage, true);
-    this.props.listenForNewImageThumbnails(this.props.user);
+  UNSAFE_componentWillMount() {
+    if (this.props.cameraGroups.length == 0){
+      this.props.actions.fetchCameraGroups(this.props.user);
+    }
   }
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.locations.length && !nextProps.selectedLocation.name) {
-      this.selectLocation(nextProps.locations[0]);
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.cameraGroups.length > 0) {
+      if (!nextProps.selectedCameraGroup.name || typeof nextProps.selectedCameraGroup === 'undefined'){
+        this.selectCameraGroup(nextProps.user, nextProps.cameraGroups[0]);
+      } else if (typeof nextProps.selectedCameraGroup.cameras === 'undefined' ||
+      typeof nextProps.selectedCameraGroup.userCameraGroupPrivileges === 'undefined') {
+        this.selectCameraGroup(nextProps.user, nextProps.selectedCameraGroup);
+      }
     }
 
-    if (this.props.selectedLocation.cameras.length > 0) {
-      const locationOwnedEvent = {
-        email: this.props.user.email,
-        name: this.props.user.firstName+ ' ' +this.props.user.lastName,
-        location_owned: this.props.locations.length,
-        camera_owned: this.props.selectedLocation.cameras.length
-      };
-
-      this.props.trackEventAnalytics('location owned', locationOwnedEvent);
+    if (nextProps.createCameraError && nextProps.createCameraError !== this.props.createCameraError) {
+      message.error(nextProps.createCameraError);
     }
 
     if (nextProps.deleteCameraError && nextProps.deleteCameraError !== this.props.deleteCameraError) {
@@ -53,81 +49,79 @@ class CameraList extends Component {
       message.error(nextProps.rescindInviteError);
     }
 
-    if (nextProps.removeGuardError && nextProps.removeGuardError !== this.props.removeGuardError) {
-      message.error(nextProps.removeGuardError);
+    if (nextProps.removeUserCameraGroupPrivilegeError && nextProps.removeUserCameraGroupPrivilegeError !== this.props.removeUserCameraGroupPrivilegeError) {
+      message.error(nextProps.removeUserCameraGroupPrivilegeError);
     }
   }
 
-  selectLocation = (location) => {
-    this.props.actions.selectLocation(location);
+  selectCameraGroup = (user, cameraGroup) => {
+    this.props.actions.selectCameraGroup(user, cameraGroup);
   }
 
-  toggleLocationButtonsVisability = () => {
-    this.setState({locationButtonsVisible: !this.state.locationButtonsVisible})
+  toggleCameraGroupButtonsVisability = () => {
+    this.setState({cameraGroupButtonsVisible: !this.state.cameraGroupButtonsVisible})
   }
 
-  toggleAddLocationModalVisibility = () => {
-    this.setState({addLocationModalVisible: !this.state.addLocationModalVisible})
+  toggleAddCameraGroupModalVisibility = () => {
+    this.setState({addCameraGroupModalVisible: !this.state.addCameraGroupModalVisible})
   }
 
   render() {
-    if (this.props.locations.length) {
+    if (this.props.cameraGroups.length > 0) {
       return (
         <div>
           <Row type='flex' justify='center' align='middle' style={styles.cameraOptions}>
-            {/* <Col xs={{span: 2}} sm={{span: 1}}>
-              {this.props.selectedLocation.myRole}
-            </Col> */}
             <Col xs={{span: 14}} sm={{span: 6}}>
-              <Select style={styles.select} value={this.props.selectedLocation.name}
-                      onSelect={(value, option) => this.selectLocation(option.props.location)}>
-                {this.props.locations.map(location => (
-                  <Option key={`location-${location.id}`} location={location}>{location.name}</Option>
+              <Select style={styles.select} value={this.props.selectedCameraGroup.name}
+                      onSelect={(value, option) => this.selectCameraGroup(this.props.user, option.props.cameraGroup)}>
+                {this.props.cameraGroups.map(cameraGroup => (
+                  <Option key={`cameragroup-${cameraGroup.id}`} cameraGroup={cameraGroup}>{cameraGroup.name}</Option>
                 ))}
               </Select>
             </Col>
-            <Col xs={{span: 2}} sm={{span: 1}} style={styles.toggleLocationOptionsContainer}>
-              {this.props.selectedLocation.myRole === 'viewer' ?
-                (
-                  this.props.selectedLocation.guards.map(guard => (
-                    guard.user.id == this.props.user.id ?
-                      <Tooltip key={guard.id} title='Remove Location' placement='bottom'>
-                        <Popconfirm title="Are you sure you want to stop viewing this location? This action cannot be undone." onConfirm={() => this.props.removeGuardInProcess ? '' : this.props.removeGuard(this.props.user, guard)} okText="Yes, remove location" cancelText="Nevermind">
-                          <Button type="danger" icon="close" className="removeLocationButton" style={styles.removeLocationButton} loading={this.props.removeGuardInProcess} disabled={this.props.removeGuardInProcess}></Button>
-                        </Popconfirm>
-                      </Tooltip>
-                    :
-                    ''
-                  ))
-                ) :
-                (
-                  <Tooltip title='Toggle Location Options' placement='bottom'>
-                    <Icon style={styles.toggleLocationOptions} type='ellipsis' onClick={this.toggleLocationButtonsVisability} />
+            <Col xs={{span: 2}} sm={{span: 1}} style={styles.toggleCameraGroupOptionsContainer}>
+                {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?          this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
+                  userCameraGroupPrivilege.users_uuid == this.props.user.uuid && 0 in userCameraGroupPrivilege.user_camera_group_privilege_ids ?
+                  <Tooltip key={userCameraGroupPrivilege.id} title='Toggle Camera Group Options' placement='bottom'>
+                    <Icon style={styles.toggleCameraGroupOptions} type='ellipsis' onClick={this.toggleCameraGroupButtonsVisability} />
                   </Tooltip>
-                )
-              }
+                  :
+                  <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
+                    <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.props.removeUserCameraGroupPrivilege(this.props.user, userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
+                      <Button type="danger" icon="close" className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
+                    </Popconfirm>
+                  </Tooltip>
+                )) : ''}
             </Col>
-            {this.props.selectedLocation.myRole === 'viewer' ?
-              (<span></span>) :
+            {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ? this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
+              userCameraGroupPrivilege.users_uuid == this.props.user.uuid && 0 in userCameraGroupPrivilege.user_camera_group_privilege_ids ?
+              (<CameraOptionButtons
+                key={userCameraGroupPrivilege.id}
+                user={this.props.user}
+                selectedCameraGroup={this.props.selectedCameraGroup}
+                visible={this.state.cameraGroupButtonsVisible}
+                cameraGroup={this.props.selectedCameraGroup}/>) :
               (
-                <CameraOptionButtons
-                  user={this.props.user}
-                  selectedLocation={this.props.selectedLocation}
-                  visible={this.state.locationButtonsVisible}
-                  locations={this.props.locations}/>
+                <span></span>
               )
-            }
+            )) : ''}
           </Row>
-
-          <CameraTiles user={this.props.user} location={this.props.selectedLocation} liveView={this.state.liveView} />
+          {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?
+            <CameraTiles user={this.props.user} cameraGroup={this.props.selectedCameraGroup} liveView={this.state.liveView} />
+          :
+          <Row type='flex' justify='start' style={styles.cameraListContainer}>
+            <p style={styles.noCamerasText}>
+              Sorry! <br/> An error occurred. <br/> Please reload the page. <br/> If you keep seeing this message, <br/> please email alex@gorog.co and let us know.
+            </p>
+          </Row>
+          }
         </div>
       )
-    }
-    else {
+    } else {
       return (
-        <Row type='flex' justify='start' style={styles.locationContainer}>
-          <Button style={styles.noLocationsBtn}>
-            <AddLocationModal linkText='Create a location to onboard cameras.' />
+        <Row type='flex' justify='start' style={styles.cameraGroupContainer}>
+          <Button style={styles.noCameraGroupsBtn}>
+            <AddCameraGroupModal linkText='Create a camera group to onboard cameras.' />
           </Button>
         </Row>
       )
@@ -142,22 +136,31 @@ const styles = {
   select: {
     width: '100%'
   },
-  toggleLocationOptionsContainer: {
+  toggleCameraGroupOptionsContainer: {
     width: 28
   },
-  toggleLocationOptions: {
+  toggleCameraGroupOptions: {
     transform: 'rotate(90deg)',
     fontSize: 18,
     paddingBottom: 10
   },
-  locationContainer: {
+  cameraGroupContainer: {
     height: 'calc(100vh - 65px)'
   },
-  noLocationsBtn: {
+  noCameraGroupsBtn: {
     margin: '0 auto',
     marginTop: 100,
     fontSize: 24,
     backgroundColor: 'transparent'
+  },
+  noCamerasText: {
+    margin: '0 auto',
+    textAlign: 'center',
+    marginTop: 100,
+    fontSize: 24
+  },
+  cameraListContainer: {
+    height: 'calc(100vh - 105px)'
   }
 };
 
@@ -165,24 +168,23 @@ const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
     newAlerts: state.auth.newAlerts,
-    locations: state.locations.locations,
-    selectedLocation: state.locations.selectedLocation,
-    fetchError: state.locations.fetchError,
-    fetchInProcess: state.locations.fetchInProcess,
+    cameraGroups: state.cameraGroups.cameraGroups,
+    selectedCameraGroup: state.cameraGroups.selectedCameraGroup,
+    fetchError: state.cameraGroups.fetchError,
+    fetchInProcess: state.cameraGroups.fetchInProcess,
     deleteCameraSuccess: state.cameras.deleteCameraSuccess,
     deleteCameraError: state.cameras.deleteCameraError,
-    removeGuardInProcess: state.locations.removeGuardInProcess,
-    removeGuardError: state.locations.removeGuardError
+    removeUserCameraGroupPrivilegeInProcess: state.cameraGroups.removeUserCameraGroupPrivilegeInProcess,
+    removeUserCameraGroupPrivilegeError: state.cameraGroups.removeUserCameraGroupPrivilegeError
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(locationActions, dispatch),
-    addLocationCamera: (user, location, name, rtspUrl, username, password) => dispatch(addLocationCamera(user, location, name, rtspUrl, username, password)),
+    actions: bindActionCreators(cameraGroupActions, dispatch),
+    addCameraGroupCamera: (user, cameraGroup, name, rtspUrl, username, password) => dispatch(addCameraGroupCamera(user, cameraGroup, name, rtspUrl, username, password)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
-    listenForNewImageThumbnails: (user) => dispatch(listenForNewImageThumbnails(user)),
-    removeGuard: (user, guard) => dispatch(removeGuard(user, guard)),
+    removeUserCameraGroupPrivilege: (user, userCameraGroupPrivilege) => dispatch(removeUserCameraGroupPrivilege(user, userCameraGroupPrivilege)),
   }
 };
 

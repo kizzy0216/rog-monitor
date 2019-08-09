@@ -8,8 +8,7 @@ import './assets/css/styles.css';
 import store from './app/redux/store';
 import App from './app/App.js';
 import App401 from './app/App401.js';
-// import registerServiceWorker from './registerServiceWorker';
-import {unregister} from './registerServiceWorker';
+import {registerServiceWorker, unregister} from './registerServiceWorker';
 
 if ((window.location.protocol + '//' + window.location.host) == 'https://rog-monitor-dev.herokuapp.com') {
   var credentials = window.prompt("Enter Realm Password");
@@ -23,6 +22,7 @@ if ((window.location.protocol + '//' + window.location.host) == 'https://rog-mon
 }
 
 function renderApp() {
+  console.log("Version 2.0");
   const ReduxApp = () => (
     <Provider store={store}>
       <App />

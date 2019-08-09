@@ -13,19 +13,27 @@ class CameraCardImg extends Component {
     };
   }
 
-  componentWillMount() {
-    if (this.props.data.image.original) {
-      this.setState({image: this.props.data.image.original});
-    } else if (this.props.bvcCameraConnectionFail && this.props.bvcCameraConnectionFailId === this.props.data.id) {
+  UNSAFE_componentWillMount() {
+    if (this.props.data.thumbnail_url) {
+      this.setState({image: this.props.data.thumbnail_url});
+    } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
       this.setState({image: cameraConnectError});
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.data.image.original) {
-      this.setState({image: nextProps.data.image.original});
-    } else if (nextProps.bvcCameraConnectionFail && nextProps.bvcCameraConnectionFailId === nextProps.data.id) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.data.imageUpdateInProgress && nextProps.data.uuid === nextProps.data.imageUpdateInProgressUuid) {
+      this.setState({image: loading});
+    } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
+      this.setState({image: nextProps.data.refreshCameraImage});
+    } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
+    } else {
+      for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
+        if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
+          this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
+        }
+      }
     }
   }
 
@@ -63,8 +71,8 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    bvcCameraConnectionFail: state.locations.bvcCameraConnectionFail,
-    bvcCameraConnectionFailId: state.locations.bvcCameraConnectionFailId
+    cameraConnectionFail: state.cameraGroups.cameraConnectionFail,
+    cameraConnectionFailUuid: state.cameraGroups.cameraConnectionFailUuid
   }
 }
 

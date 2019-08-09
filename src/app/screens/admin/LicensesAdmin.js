@@ -156,7 +156,7 @@ class EditableCell extends React.Component {
             },
           ],
           initialValue: record[dataIndex],
-        })(<InputNumber ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
+        })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
       </Form.Item>
     ) : (
       <div

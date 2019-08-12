@@ -66,7 +66,7 @@ class ExpandAlertModal extends Component {
         <img src={this.props.data.alert_image_url +'?auth='+ this.props.data.user.jwt} style={styles.alertCardImg} onClick={this.showModal} />
         <ExpandAlertForm
           onCancel={this.handleCancel}
-          alertImg={this.props.data.alert_image_url}
+          alertImg={this.props.data.alert_image_url +'?auth='+ this.props.data.user.jwt}
           visible={this.state.visible}
           alertType={trigger_type}
           cameraName={this.props.data.cameras_name}

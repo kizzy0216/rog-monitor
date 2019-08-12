@@ -76,7 +76,7 @@ class CameraCard extends Component {
               </div>
             </div>
           </Row>
-          <Row onClick={() => this.viewCameraStream()}>
+          <Row> {/*onClick={() => this.viewCameraStream()}*/}
             <CameraCardImg data={this.props} />
           </Row>
           {this.props.cameraGroup.myRole === 'viewer' ?

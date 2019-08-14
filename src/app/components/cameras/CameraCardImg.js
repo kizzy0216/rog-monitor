@@ -15,7 +15,7 @@ class CameraCardImg extends Component {
 
   UNSAFE_componentWillMount() {
     if (this.props.data.thumbnail_url) {
-      this.setState({image: this.props.data.thumbnail_url});
+      this.setState({image: this.props.data.thumbnail_url+'?auth='+ this.props.data.user.jwt});
     } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
       this.setState({image: cameraConnectError});
     }

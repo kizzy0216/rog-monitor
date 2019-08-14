@@ -46,7 +46,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return{
     toggleCameraEnabled: (user, cameraGroup, camera, cameraConnectionEnabled) => dispatch(toggleCameraEnabled(user, cameraGroup, camera, cameraConnectionEnabled)),
-    checkCameraEnabled: (user, cameraGroup, camera) => dispatch(checkCameraEnabled(user, cameraGroup, camera))
+    checkCameraEnabled: (user, cameraGroup, cameraUuid) => dispatch(checkCameraEnabled(user, cameraGroup, cameraUuid))
   }
 }
 

@@ -227,16 +227,16 @@ export function acceptInvite(user, invite) {
     dispatch(acceptInviteInProcess(true));
     dispatch(acceptInviteError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${invite.camera_groups_uuid}/privileges`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${invite.action}/privileges`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.post(url, config)
     .then(response => {
       dispatch(acceptInviteSuccess(invite));
       dispatch(fetchCameraGroups(user));
-      dispatch(fetchCameraGroupCameras(user, invite.cameraGroup));
     })
     .catch((error) => {
+      console.log(error);
       let errMessage = 'Error accepting invitation';
       if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
         if ('Error' in error.response.data) {
@@ -248,6 +248,7 @@ export function acceptInvite(user, invite) {
     .finally(() => {
       dispatch(acceptInviteError(''));
       dispatch(acceptInviteInProcess(false));
+      dispatch(fetchShareGroupInvites(user));
     });
   }
 }

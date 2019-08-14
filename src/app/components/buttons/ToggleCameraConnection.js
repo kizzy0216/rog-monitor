@@ -24,7 +24,7 @@ class ToggleCameraConnection extends Component {
   }
 
   render() {
-    let enabled = this.props.data.enabled;
+    let enabled = this.props.cameraConnectionEnabled;
     return (
       <Switch
         checkedChildren={<Icon type="check" />}

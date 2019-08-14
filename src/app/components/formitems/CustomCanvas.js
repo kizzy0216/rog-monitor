@@ -467,7 +467,7 @@ class CustomCanvas extends Component {
 
     if (this.props.getTriggers === true) {
       const line = CustomCanvas.lineObject([points[0].x, points[0].y, points[1].x, points[1].y], '#FF0000');
-      line.set({id: identity});
+      line.set({uuid: identity});
       line['type'] = 'VW';
 
       canvas.add(line);
@@ -553,7 +553,7 @@ class CustomCanvas extends Component {
       hasControls: false,
       originX: 'center',
       originY: 'center',
-      id: id
+      uuid: id
     });
   }
 
@@ -572,7 +572,7 @@ class CustomCanvas extends Component {
       hasControls: false,
       originX: 'center',
       originY: 'center',
-      id: id,
+      uuid: id,
       type: 'VW',
       lockMovementX: true,
       lockMovementY: true,

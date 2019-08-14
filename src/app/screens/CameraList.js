@@ -81,13 +81,13 @@ class CameraList extends Component {
             </Col>
             <Col xs={{span: 2}} sm={{span: 1}} style={styles.toggleCameraGroupOptionsContainer}>
                 {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?          this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
-                  userCameraGroupPrivilege.users_uuid == this.props.user.uuid && 0 in userCameraGroupPrivilege.user_camera_group_privilege_ids ?
+                  userCameraGroupPrivilege.users_uuid == this.props.user.uuid && userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ?
                   <Tooltip key={userCameraGroupPrivilege.id} title='Toggle Camera Group Options' placement='bottom'>
                     <Icon style={styles.toggleCameraGroupOptions} type='ellipsis' onClick={this.toggleCameraGroupButtonsVisability} />
                   </Tooltip>
                   :
                   <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
-                    <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.props.removeUserCameraGroupPrivilege(this.props.user, userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
+                    <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.props.removeUserCameraGroupPrivilege(this.props.user, userCameraGroupPrivilege.camera_groups_uuid, userCameraGroupPrivilege.uuid)} okText="Yes, remove camera group" cancelText="Nevermind">
                       <Button type="danger" icon="close" className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
                     </Popconfirm>
                   </Tooltip>
@@ -184,7 +184,7 @@ const mapDispatchToProps = (dispatch) => {
     actions: bindActionCreators(cameraGroupActions, dispatch),
     addCameraGroupCamera: (user, cameraGroup, name, rtspUrl, username, password) => dispatch(addCameraGroupCamera(user, cameraGroup, name, rtspUrl, username, password)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data)),
-    removeUserCameraGroupPrivilege: (user, userCameraGroupPrivilege) => dispatch(removeUserCameraGroupPrivilege(user, userCameraGroupPrivilege)),
+    removeUserCameraGroupPrivilege: (user, cameraGroupUuid, cameraGroupPrivilegeUuid) => dispatch(removeUserCameraGroupPrivilege(user, cameraGroupUuid, cameraGroupPrivilegeUuid)),
   }
 };
 

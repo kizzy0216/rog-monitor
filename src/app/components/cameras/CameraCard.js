@@ -45,6 +45,12 @@ class CameraCard extends Component {
 
   render() {
     if (this.props.liveView) {
+      let myRole = [];
+      for (var i = 0; i < this.props.cameraGroup.userCameraGroupPrivileges.length; i++) {
+        if (this.props.cameraGroup.userCameraGroupPrivileges[i].users_uuid == this.props.user.uuid) {
+          myRole = this.props.cameraGroup.userCameraGroupPrivileges[i].user_camera_group_privilege_ids
+        }
+      }
       return (
         <Card>
           <Row type='flex' justify='center'>
@@ -52,7 +58,7 @@ class CameraCard extends Component {
           </Row>
           <Row>
             <div>
-              {this.props.cameraGroup.myRole === 'viewer' ?
+              {!myRole.includes(0) ?
                 (<div></div>) :
                 <div>
                   <Col span={8} style={styles.alertModal}>
@@ -79,7 +85,7 @@ class CameraCard extends Component {
           <Row> {/*onClick={() => this.viewCameraStream()}*/}
             <CameraCardImg data={this.props} />
           </Row>
-          {this.props.cameraGroup.myRole === 'viewer' ?
+          {!myRole.includes(0) ?
             (<Row type='flex' style={styles.cameraCardButtons}>
               <Col span={20} offset={2}>
                 <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>

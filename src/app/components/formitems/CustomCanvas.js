@@ -355,11 +355,11 @@ class CustomCanvas extends Component {
           fabricCanvas.remove(value);
         });
         triggerPolygonAtrributes['fill'] = (entry.base_trigger.trigger_type === 'RA') ? "#FF0000" : ((entry.base_trigger.trigger_type === 'LD') ? '#0092f8' : '#00cd78');
-        triggerPolygonAtrributes['uuid'] = (entry.uuid !== undefined) ? entry.uuid : '';
+        triggerPolygonAtrributes['uuid'] = (entry.base_trigger.uuid !== undefined) ? entry.base_trigger.uuid : '';
         triggerPolygonAtrributes['type'] = entry.base_trigger.trigger_type;
         triggerPolygonAtrributes['duration'] = entry.base_trigger.trigger_duration;
         if (entry.base_trigger.trigger_type === 'VW') {
-          this.generateVirtualWall(fabricCanvas, points, entry.base_trigger.direction, entry.uuid);
+          this.generateVirtualWall(fabricCanvas, points, entry.base_trigger.direction, entry.base_trigger.uuid);
         } else {
           this.generatePolygon(fabricCanvas, points, this.lineArray, triggerPolygonAtrributes);
         }

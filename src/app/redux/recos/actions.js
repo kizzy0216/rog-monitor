@@ -23,7 +23,6 @@ export function readAllRecos() {
     dispatch(readRecosSuccess(""));
     axios.get(url, config)
     .then(response => {
-      console.log(response.data);
       dispatch(readRecosSuccess(response.data));
     })
     .catch((error) => {

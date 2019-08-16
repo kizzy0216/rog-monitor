@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Icon, Modal, Button, Row, Col, message } from 'antd';
 
-import { rescindInvite } from '../../redux/invites/actions';
+import { rescindInvite, fetchSentCameraGroupInvites } from '../../redux/invites/actions';
 import { removeUserCameraGroupPrivilege } from '../../redux/cameraGroups/actions';
 
 const UserCameraGroupSettings = (props) => {
@@ -14,8 +14,8 @@ const UserCameraGroupSettings = (props) => {
       onCancel={props.onCancel}
       footer={[null, null]}
     >
-      {props.invites.length > 0 ?
-        props.invites.map(invite => (
+      {props.sentInvites.length > 0 ?
+        props.sentInvites.map(invite => (
         <Row key={invite.uuid} style={styles.inviteContainer}>
           <Col xs={{span: 11, offset: 1}} style={styles.inviteNameContainer}>
             <Col xs={{span: 24}} style={styles.inviteName}>
@@ -65,6 +65,8 @@ class UserCameraGroupSettingsModal extends Component {
   constructor(props) {
     super(props);
 
+    props.fetchSentCameraGroupInvites(props.user, props.selectedCameraGroup.uuid);
+
     this.state = {
       visible: false
     }
@@ -81,6 +83,7 @@ class UserCameraGroupSettingsModal extends Component {
   };
 
   showModal = () => {
+    this.props.fetchSentCameraGroupInvites(this.props.user, this.props.selectedCameraGroup.uuid);
     this.setState({visible: true});
   };
 
@@ -104,7 +107,7 @@ class UserCameraGroupSettingsModal extends Component {
             userCameraGroupPrivileges={this.props.selectedCameraGroup.userCameraGroupPrivileges.filter(invite => invite.users_uuid !== this.props.user.uuid)}
             removeUserCameraGroupPrivilege={this.props.removeUserCameraGroupPrivilege}
             removeUserCameraGroupPrivilegeInProcess={this.props.removeUserCameraGroupPrivilegeInProcess}
-            invites={this.props.cameraGroupInvites}
+            sentInvites={this.props.sentInvites}
             rescindInvite={this.props.rescindInvite}
             rescindInviteInProcess={this.props.rescindInviteInProcess}
           />
@@ -167,14 +170,15 @@ const mapStateToProps = (state) => {
     rescindInviteInProcess: state.invites.rescindInviteInProcess,
     rescindInviteError: state.invites.rescindInviteError,
     selectedCameraGroup: state.cameraGroups.selectedCameraGroup,
-    cameraGroupInvites: state.invites.cameraGroupInvites
+    sentInvites: state.invites.sentInvites
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     removeUserCameraGroupPrivilege: (user, userCameraGroupPrivilege) => dispatch(removeUserCameraGroupPrivilege(user, userCameraGroupPrivilege)),
-    rescindInvite: (user, invite) => dispatch(rescindInvite(user, invite))
+    rescindInvite: (user, invite) => dispatch(rescindInvite(user, invite)),
+    fetchSentCameraGroupInvites: (user, camera_group_uuid) => dispatch(fetchSentCameraGroupInvites(user, camera_group_uuid))
   }
 }
 

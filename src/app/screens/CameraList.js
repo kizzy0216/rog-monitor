@@ -56,6 +56,7 @@ class CameraList extends Component {
 
   selectCameraGroup = (user, cameraGroup) => {
     this.props.actions.selectCameraGroup(user, cameraGroup);
+    this.setState({cameraGroupButtonsVisible: false});
   }
 
   toggleCameraGroupButtonsVisability = () => {

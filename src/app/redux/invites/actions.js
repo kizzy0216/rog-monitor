@@ -240,7 +240,6 @@ export function fetchUserCameraGroupInvites(user) {
 
     axios.get(url, config)
     .then(response => {
-      console.log(response.data);
       dispatch(fetchUserCameraGroupInvitesSuccess(response.data));
     })
     .catch((error) => {

@@ -285,7 +285,7 @@ export function acceptInvite(user, invite) {
     .finally(() => {
       dispatch(acceptInviteError(''));
       dispatch(acceptInviteInProcess(false));
-      dispatch(fetchShareGroupInvites(user, invite.action));
+      dispatch(fetchUserCameraGroupInvites(user, invite.action));
     });
   }
 }

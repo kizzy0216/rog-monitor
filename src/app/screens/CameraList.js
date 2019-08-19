@@ -56,6 +56,7 @@ class CameraList extends Component {
 
   selectCameraGroup = (user, cameraGroup) => {
     this.props.actions.selectCameraGroup(user, cameraGroup);
+    this.setState({cameraGroupButtonsVisible: false});
   }
 
   toggleCameraGroupButtonsVisability = () => {
@@ -86,11 +87,14 @@ class CameraList extends Component {
                     <Icon style={styles.toggleCameraGroupOptions} type='ellipsis' onClick={this.toggleCameraGroupButtonsVisability} />
                   </Tooltip>
                   :
+                  userCameraGroupPrivilege.users_uuid == this.props.user.uuid && !userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ?
                   <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
                     <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.props.removeUserCameraGroupPrivilege(this.props.user, userCameraGroupPrivilege.camera_groups_uuid, userCameraGroupPrivilege.uuid)} okText="Yes, remove camera group" cancelText="Nevermind">
                       <Button type="danger" icon="close" className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
                     </Popconfirm>
                   </Tooltip>
+                  :
+                  ''
                 )) : ''}
             </Col>
             {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ? this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
@@ -102,7 +106,7 @@ class CameraList extends Component {
                 visible={this.state.cameraGroupButtonsVisible}
                 cameraGroup={this.props.selectedCameraGroup}/>) :
               (
-                <span></span>
+                <span key={userCameraGroupPrivilege.id}></span>
               )
             )) : ''}
           </Row>

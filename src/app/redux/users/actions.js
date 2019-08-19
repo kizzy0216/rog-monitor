@@ -5,7 +5,7 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
-import { fetchShareGroupInvites } from '../invites/actions';
+import { fetchUserCameraGroupInvites } from '../invites/actions';
 import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login, toggleMute} from '../auth/actions';
 import {listenForNewAlerts} from '../alerts/actions';
 import {isEmpty} from '../helperFunctions';
@@ -57,7 +57,7 @@ export function fetchUserCameraLicenses(user) {
           user.cameraLicenses = [];
         }
         dispatch(setupFirebaseCloudMessaging(user));
-        dispatch(fetchShareGroupInvites(user));
+        dispatch(fetchUserCameraGroupInvites(user));
       })
       .catch((error) => {
         let errMessage = 'Error fetching user data. Please try again later.';

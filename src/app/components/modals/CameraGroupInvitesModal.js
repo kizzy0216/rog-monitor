@@ -18,11 +18,11 @@ const CameraGroupInvites = (props) => {
           <Row key={invite.uuid} type='flex' justify='start' style={styles.invitesListContainer}>
             <Col xs={{span: 24}} sm={{span: 11, offset: 1}} style={styles.adminNameContainer}>
               <Col xs={{span: 24}} style={styles.adminName}>
-                {invite.users_uuid}
+                {invite.first_name} {invite.last_name}
                 <p style={styles.date}>{moment(invite.inserted_at).format('MMM D')}</p>
               </Col>
               <Col xs={{span: 24}}>
-                Invited to join: {invite.action}
+                Invited to join: {invite.camera_group_name}
               </Col>
             </Col>
             <Col xs={{span: 24}} sm={{span: 11}} style={styles.acceptRejectButtons}>

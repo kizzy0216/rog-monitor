@@ -36,7 +36,14 @@ function deleteInvitationError(error) {
   }
 }
 
-function fetchShareGroupInvitesSuccess(cameraGroupInvites) {
+function fetchSentCameraGroupInvitesSuccess(sentInvites) {
+  return {
+    type: types.FETCH_SENT_SUCCESS,
+    sentInvites
+  }
+}
+
+function fetchUserCameraGroupInvitesSuccess(cameraGroupInvites) {
   return {
     type: types.FETCH_RECEIVED_SUCCESS,
     cameraGroupInvites
@@ -177,7 +184,6 @@ export function updateInvitation(invitation) {
 
 export function deleteInvitation(invitation_uuid) {
   return (dispatch) => {
-    console.log(invitation_uuid);
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${invitation_uuid}`;
 
@@ -194,17 +200,47 @@ export function deleteInvitation(invitation_uuid) {
   }
 }
 
-export function fetchShareGroupInvites(user) {
+export function fetchSentCameraGroupInvites(user, camera_group_uuid) {
   return (dispatch) => {
-    dispatch(fetchShareGroupInvitesSuccess(''));
+    dispatch(fetchSentCameraGroupInvitesSuccess(''));
     dispatch(fetchReceivedInProcess(true));
     dispatch(fetchReceivedError(''));
+
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group&action=${camera_group_uuid}`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    axios.get(url, config)
+    .then(response => {
+      dispatch(fetchSentCameraGroupInvitesSuccess(response.data));
+    })
+    .catch((error) => {
+      let errMessage = 'Error fetching recieved invites';
+      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if ('Error' in error.response.data) {
+          errMessage = error.response.data['Error'];
+        }
+      }
+      dispatch(fetchReceivedError(errMessage));
+    })
+    .finally(() => {
+      dispatch(fetchReceivedError(''));
+      dispatch(fetchReceivedInProcess(false));
+    });
+  }
+}
+
+export function fetchUserCameraGroupInvites(user) {
+  return (dispatch) => {
+    dispatch(fetchUserCameraGroupInvitesSuccess(''));
+    dispatch(fetchReceivedInProcess(true));
+    dispatch(fetchReceivedError(''));
+
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group&email=${user.email}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.get(url, config)
     .then(response => {
-      dispatch(fetchShareGroupInvitesSuccess(response.data));
+      dispatch(fetchUserCameraGroupInvitesSuccess(response.data));
     })
     .catch((error) => {
       let errMessage = 'Error fetching recieved invites';
@@ -248,7 +284,7 @@ export function acceptInvite(user, invite) {
     .finally(() => {
       dispatch(acceptInviteError(''));
       dispatch(acceptInviteInProcess(false));
-      dispatch(fetchShareGroupInvites(user));
+      dispatch(fetchUserCameraGroupInvites(user, invite.action));
     });
   }
 }
@@ -291,7 +327,7 @@ export function rescindInvite(user, invite) {
 
     axios.delete(url, config)
     .then(response => {
-      dispatch(fetchCameraGroups(user));
+      dispatch(fetchSentCameraGroupInvites(user, invite.action));
     })
     .catch((error) => {
       let errMessage = 'Error rescinding invitation';

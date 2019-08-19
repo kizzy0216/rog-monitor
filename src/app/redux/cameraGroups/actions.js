@@ -190,7 +190,17 @@ export function getUserCameraGroupPrivileges(user, cameraGroup) {
     axios.get(url, config)
       .then(response => {
         if (isEmpty(response.data) === false) {
-          cameraGroup.userCameraGroupPrivileges = response.data;
+          for (var i = 0; i < response.data.length; i++) {
+            if (response.data[i].users_uuid === user.uuid) {
+              if (response.data[i].user_camera_group_privilege_ids.includes(0)) {
+                cameraGroup.userCameraGroupPrivileges = response.data;
+                break;
+              } else {
+                cameraGroup.userCameraGroupPrivileges = [response.data[i]];
+                break;
+              }
+            }
+          }
         } else {
           cameraGroup.userCameraGroupPrivileges = [];
         }

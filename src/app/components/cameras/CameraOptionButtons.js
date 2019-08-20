@@ -8,24 +8,13 @@ import EditCameraGroupModal from '../modals/EditCameraGroupModal';
 import CameraGroupPrivilegeSettingsModal from '../modals/CameraGroupPrivilegeSettingsModal';
 import { fetchUserCameraLicenses } from '../../redux/users/actions';
 
-const SettingsMenu = (props) => (
-  <Menu>
-    <Menu.Item>
-      <EditCameraGroupModal selectedCameraGroup={props.selectedCameraGroup} />
-    </Menu.Item>
-    <Menu.Item>
-      <CameraGroupPrivilegeSettingsModal selectedCameraGroup={props.selectedCameraGroup} />
-    </Menu.Item>
-  </Menu>
-)
-
 class CameraOptionButtons extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       addCameraModalVisible: false,
-      shareCameraGroupModalVisible: false,
+      shareCameraGroupModalVisible: false
     }
   }
 
@@ -76,7 +65,18 @@ class CameraOptionButtons extends Component {
               toggleShareCameraGroupModalVisibility={this.toggleShareCameraGroupModalVisibility.bind(this)} />
           </Col>
           <Col xs={{span: 8}}>
-            <Dropdown selectedCameraGroup={this.props.selectedCameraGroup} overlay={<SettingsMenu selectedCameraGroup={this.props.selectedCameraGroup} />}>
+            <Dropdown
+            placement='bottomCenter'
+            overlay={
+              <Menu>
+                <Menu.Item>
+                  <EditCameraGroupModal selectedCameraGroup={this.props.selectedCameraGroup} />
+                </Menu.Item>
+                <Menu.Item>
+                  <CameraGroupPrivilegeSettingsModal selectedCameraGroup={this.props.selectedCameraGroup} />
+                </Menu.Item>
+              </Menu>
+            }>
               <Icon style={styles.edit} type='setting'/>
             </Dropdown>
           </Col>

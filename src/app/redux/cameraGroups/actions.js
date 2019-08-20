@@ -218,6 +218,7 @@ export function fetchCameraGroups(user) {
       .then(response => {
         if (isEmpty(response.data) === false) {
           dispatch(fetchSuccess(response.data));
+          dispatch(selectCameraGroup(user, response.data[0]));
         }
       })
       .catch(error => {
@@ -276,11 +277,11 @@ export function removeCameraGroup(user, cameraGroup) {
 
     axios.delete(url, config)
       .then((response) => {
-        dispatch(fetchCameraGroups(user));
-        dispatch(fetchCameraGroupCameras(user, cameraGroup));
+        dispatch(clearCameraGroupData());
         dispatch(removeCameraGroupSuccess(true));
         dispatch(removeCameraGroupSuccess(false));
-        dispatch(clearCameraGroupData());
+        dispatch(fetchCameraGroups(user));
+
       })
       .catch((error) => {
         let errMessage = 'Error removing cameraGroup. Please try again later.';

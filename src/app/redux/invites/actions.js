@@ -5,7 +5,7 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
-import { fetchCameraGroups } from '../cameraGroups/actions';
+import { fetchCameraGroups, selectCameraGroup } from '../cameraGroups/actions';
 import {isEmpty} from '../helperFunctions';
 
 function fetchReceivedInProcess(bool) {
@@ -270,6 +270,8 @@ export function acceptInvite(user, invite) {
     .then(response => {
       dispatch(acceptInviteSuccess(invite));
       dispatch(fetchCameraGroups(user));
+      let cameraGroup = {uuid: invite.action};
+      dispatch(selectCameraGroup(user, cameraGroup));
     })
     .catch((error) => {
       console.log(error);
@@ -284,7 +286,7 @@ export function acceptInvite(user, invite) {
     .finally(() => {
       dispatch(acceptInviteError(''));
       dispatch(acceptInviteInProcess(false));
-      dispatch(fetchUserCameraGroupInvites(user, invite.action));
+      dispatch(fetchUserCameraGroupInvites(user));
     });
   }
 }

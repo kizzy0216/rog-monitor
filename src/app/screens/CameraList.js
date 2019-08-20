@@ -74,9 +74,9 @@ class CameraList extends Component {
           <Row type='flex' justify='center' align='middle' style={styles.cameraOptions}>
             <Col xs={{span: 14}} sm={{span: 6}}>
               <Select style={styles.select} value={this.props.selectedCameraGroup.name}
-                      onSelect={(value, option) => this.selectCameraGroup(this.props.user, option.props.cameraGroup)}>
+                      onSelect={(value, option) => this.selectCameraGroup(this.props.user, option.props.cameragroup)}>
                 {this.props.cameraGroups.map(cameraGroup => (
-                  <Option key={`cameragroup-${cameraGroup.id}`} cameraGroup={cameraGroup}>{cameraGroup.name}</Option>
+                  <Option key={`cameragroup-${cameraGroup.id}`} cameragroup={cameraGroup}>{cameraGroup.name}</Option>
                 ))}
               </Select>
             </Col>

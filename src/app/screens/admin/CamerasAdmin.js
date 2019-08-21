@@ -46,7 +46,7 @@ const AddCameraForm = Form.create()(
         confirmLoading={props.addCameraInProcess}
       >
         <Form>
-          <Form.Item style={styles.videoContainer}>
+          {/*<Form.Item style={styles.videoContainer}>
             {props.fullRtspUrl ?
               (<RtspStream rtspUrl={props.fullRtspUrl} />) :
               (
@@ -61,7 +61,7 @@ const AddCameraForm = Form.create()(
               <Icon type='reload'></Icon>Test Live View
             </Button>
             <div style={styles.error}>{props.addCameraError}</div>
-          </Form.Item>
+          </Form.Item>*/}
           <Form.Item hasFeedback>
             {getFieldDecorator('camera_name', {rules: [
                 {required: true, message: 'Please input the camera name'}

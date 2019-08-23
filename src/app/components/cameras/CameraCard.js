@@ -58,14 +58,14 @@ class CameraCard extends Component {
           </Row>
           <Row>
             <div>
+              <Col span={8} style={styles.alertModal}>
+                <TriggerModal
+                  data={this.props}
+                />
+              </Col>
               {!myRole.includes(0) ?
                 (<div></div>) :
                 <div>
-                  <Col span={8} style={styles.alertModal}>
-                    <TriggerModal
-                      data={this.props}
-                    />
-                  </Col>
                   <Col span={8} style={styles.cameraConnectionSwitch}>
                     <ToggleCameraConnection
                       data={this.props}

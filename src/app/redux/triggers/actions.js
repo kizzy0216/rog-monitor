@@ -187,7 +187,6 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
     axios.post(url, triggerData, config)
       .then((response) => {
         dispatch(createTriggerSuccess(true));
-        dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
       .catch((error) => {
         let errMessage = 'Error creating trigger';
@@ -202,6 +201,7 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
       .finally(() => {
         dispatch(createTriggerSuccess(false));
         dispatch(createTriggerInProcess(false));
+        dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
   }
 }
@@ -217,7 +217,7 @@ export function fetchTriggers(user, cameraGroup, cameraUuid) {
     axios.get(url, config)
       .then((response) => {
         if (isEmpty(response.data)) {
-          resp.data = [];
+          response.data = [];
         }
         dispatch(fetchTriggersSuccess(response.data));
         dispatch(fetchTriggersInSuccess(true));

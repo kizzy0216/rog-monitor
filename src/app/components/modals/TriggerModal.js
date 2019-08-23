@@ -386,7 +386,6 @@ class AddTriggerModal extends Component {
   };
 
   sliderValue = (value) => {
-
     this.setState({
       loiteringSeconds: value,
     });

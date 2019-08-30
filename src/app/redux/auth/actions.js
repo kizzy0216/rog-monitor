@@ -479,11 +479,12 @@ export function getPasswordResetRequest(token) {
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/invitations/${token}`;
     axios.get(url)
-      .then(resp => {
+      .then(response => {
         console.log(response);
         dispatch(getPasswordResetRequestSuccess(response.data));
       })
       .catch(error => {
+        console.log(error);
         let errMessage = 'Error getting Valid Password Reset Request.';
         if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
           if ('Error' in error.response.data) {

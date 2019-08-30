@@ -255,9 +255,11 @@ export function register(email, firstName, lastName, password, confirmPassword, 
       })
       .catch((error) => {
         let errMessage = 'Error registering. Please try again later';
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+        if (typeof error.response != 'undefined') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
         }
         dispatch(registerError(errMessage));
@@ -283,9 +285,11 @@ export function resetPassword(new_password, confirmPassword, token) {
       })
       .catch((error) => {
         let errMessage = 'Error resetting your password. Please try again later';
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+        if (typeof error.response != 'undefined') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
         }
         dispatch(resetPasswordError(errMessage));
@@ -323,9 +327,11 @@ export function login(email, password) {
         })
         .catch((error) => {
           let errMessage = 'Error logging in';
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+          if (typeof error.response != 'undefined') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
             }
           }
           dispatch(loginError(errMessage));
@@ -388,9 +394,11 @@ export function sendInvitationEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Error sending invitation. Please try again later.';
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+        if (typeof error.response != 'undefined') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
         }
         dispatch(sendInvitationError(errMessage));
@@ -414,12 +422,13 @@ export function getInvitation(token) {
       })
       .catch(error => {
         let errMessage = 'Error getting invitation. Please try again later.';
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+        if (typeof error.response != 'undefined') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
         }
-
         dispatch(getInvitationError(errMessage));
       })
       .finally(() => {
@@ -458,9 +467,11 @@ export function sendPasswordResetRequestEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Sorry, we can\'t find that email.';
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+        if (typeof error.response != 'undefined') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
         }
         dispatch(sendPasswordResetRequestError(errMessage));
@@ -484,9 +495,11 @@ export function getPasswordResetRequest(token) {
       })
       .catch(error => {
         let errMessage = 'Error getting Valid Password Reset Request.';
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+        if (typeof error.response != 'undefined') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
         }
         dispatch(getPasswordResetRequestError(errMessage));

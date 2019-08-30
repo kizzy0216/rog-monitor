@@ -163,9 +163,11 @@ export function fetchAlerts(user) {
       })
       .catch((error) => {
         let errMessage = 'Error fecthing alerts';
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+        if (typeof error.response != 'undefined') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
         }
         dispatch(fetchError(errMessage));
@@ -203,9 +205,11 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching alerts';
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+        if (typeof error.response != 'undefined') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
         }
         dispatch(fetchError(errMessage));

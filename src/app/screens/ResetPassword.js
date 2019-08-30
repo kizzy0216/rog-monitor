@@ -15,7 +15,6 @@ const FormItem = Form.Item;
 
 class ResetPassword extends Component {
   constructor(props) {
-    console.log("HIT!");
     super(props);
 
     this.state = {

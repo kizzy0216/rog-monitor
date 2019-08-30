@@ -31,19 +31,19 @@ const CameraForm = Form.create()(
              cancelText='Cancel'
       >
         <Form>
-        <FormItem style={styles.videoContainer}>
-          {props.fullRtspUrl ?
-            (<RtspStream rtspUrl={props.fullRtspUrl} />) :
-            (
-              <p style={styles.videoContainerText}>No Video Available</p>
-            )
-          }
-        </FormItem>
+          {/*<FormItem style={styles.videoContainer}>
+            {props.fullRtspUrl ?
+              (<RtspStream rtspUrl={props.fullRtspUrl} />) :
+              (
+                <p style={styles.videoContainerText}>No Video Available</p>
+              )
+            }
+          </FormItem>
           <FormItem>
             <Button key='submit' type='primary' size='large' onClick={props.testLiveView}>
               <Icon type='reload'></Icon>Test Live View
             </Button>
-          </FormItem>
+          </FormItem>*/}
           <FormItem label='Camera Name' {...formItemLayout}>
             {getFieldDecorator('name', {
               'initialValue': cameraData.name

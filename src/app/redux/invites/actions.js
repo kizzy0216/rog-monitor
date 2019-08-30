@@ -144,9 +144,11 @@ export function fetchUserInvites(values) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching invitations';
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+        if (typeof error.response != 'undefined') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
         }
         dispatch(fetchReceivedError(errMessage));
@@ -172,9 +174,11 @@ export function updateInvitation(invitation) {
     axios.patch(url, data, config)
       .catch((error) => {
         let errMessage = 'Error updating invitation';
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+        if (typeof error.response != 'undefined') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
           }
         }
         dispatch(updateInvitationError(errMessage));
@@ -190,9 +194,11 @@ export function deleteInvitation(invitation_uuid) {
     axios.delete(url, config)
     .catch((error) => {
       let errMessage = 'Error deleting invitation';
-      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+      if (typeof error.response != 'undefined') {
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
       }
       dispatch(deleteInvitationError(errMessage));
@@ -215,9 +221,11 @@ export function fetchSentCameraGroupInvites(user, camera_group_uuid) {
     })
     .catch((error) => {
       let errMessage = 'Error fetching recieved invites';
-      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+      if (typeof error.response != 'undefined') {
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
       }
       dispatch(fetchReceivedError(errMessage));
@@ -244,9 +252,11 @@ export function fetchUserCameraGroupInvites(user) {
     })
     .catch((error) => {
       let errMessage = 'Error fetching recieved invites';
-      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+      if (typeof error.response != 'undefined') {
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
       }
       dispatch(fetchReceivedError(errMessage));
@@ -276,9 +286,11 @@ export function acceptInvite(user, invite) {
     .catch((error) => {
       console.log(error);
       let errMessage = 'Error accepting invitation';
-      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+      if (typeof error.response != 'undefined') {
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
       }
       dispatch(acceptInviteError(errMessage));
@@ -305,9 +317,11 @@ export function rejectInvite(user, invite) {
     })
     .catch((error) => {
       let errMessage = 'Error rejecting invitation';
-      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+      if (typeof error.response != 'undefined') {
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
       }
       dispatch(rejectInviteError(errMessage));
@@ -333,9 +347,11 @@ export function rescindInvite(user, invite) {
     })
     .catch((error) => {
       let errMessage = 'Error rescinding invitation';
-      if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+      if (typeof error.response != 'undefined') {
+        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if ('Error' in error.response.data) {
+            errMessage = error.response.data['Error'];
+          }
         }
       }
       dispatch(rescindInviteError(errMessage));

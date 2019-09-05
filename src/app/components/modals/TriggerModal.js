@@ -364,16 +364,18 @@ class AddTriggerModal extends Component {
     else if (this.props.polygonData !== nextProps.polygonData && !isEmpty(nextProps.polygonData) && !isEmpty(this.props.polygonData)) {
       this.setState({canvasMode: true});
     }
-    for (var i = 0; i < this.props.data.cameraGroup.userCameraGroupPrivileges.length; i++) {
-      if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].users_uuid === nextProps.data.user.uuid) {
-        if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].user_camera_group_privilege_ids.includes(0)) {
-          this.setState({cameraGroupOwner: true});
+    if (nextProps.data.cameraGroup.userCameraGroupPrivileges !== 'undefined') {
+      for (var i = 0; i < nextProps.data.cameraGroup.userCameraGroupPrivileges.length; i++) {
+        if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].users_uuid === nextProps.data.user.uuid) {
+          if (nextProps.data.cameraGroup.userCameraGroupPrivileges[i].user_camera_group_privilege_ids.includes(0)) {
+            this.setState({cameraGroupOwner: true});
+          }
         }
       }
-    }
-    for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
-      if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid) {
-        this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
+      for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
+        if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid) {
+          this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
+        }
       }
     }
   }

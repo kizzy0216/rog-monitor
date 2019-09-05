@@ -339,18 +339,28 @@ export function shareCameraGroup(user, cameraGroupUuid, inviteeEmail) {
   }
 }
 
-export function removeUserCameraGroupPrivilege(user, cameraGroupUuid, cameraGroupPrivilegeUuid) {
+export function removeUserCameraGroupPrivilege(user, cameraGroupUuid, cameraGroupPrivilegeUuid, cameraGroupPrivilege=null) {
   return (dispatch) => {
+    let user_uuid = null;
+    if (cameraGroupPrivilege !== null) {
+      user_uuid = cameraGroupPrivilege.users_uuid;
+    } else {
+      user_uuid = user.uuid;
+    }
     let cameraGroup = {uuid: cameraGroupUuid};
     dispatch(removeGuardError(''));
     dispatch(removeGuardInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/privileges/${cameraGroupPrivilegeUuid}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user_uuid}/camera-groups/${cameraGroupUuid}/privileges/${cameraGroupPrivilegeUuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
     .then(response => {
-      dispatch(fetchCameraGroups(user));
+      if (cameraGroupPrivilege !== null) {
+        dispatch(selectCameraGroup(user, cameraGroup));
+      } else {
+        dispatch(fetchCameraGroups(user));
+      }
     })
     .catch((error) => {
       let errMessage = 'Error removing user';

@@ -47,7 +47,7 @@ const UserCameraGroupSettings = (props) => {
               User Privileges: {userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ? 'Owner' : 'Member'}
             </Col>
           </Col>
-          <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.removeUserCameraGroupPrivilegeInProcess ? '' : props.removeUserCameraGroupPrivilege(props.user, invite)}>
+          <Col xs={{span: 6, offset: 3}} style={styles.rescindRemoveButtons} onClick={() => props.removeUserCameraGroupPrivilegeInProcess ? '' : props.removeUserCameraGroupPrivilege(props.user, userCameraGroupPrivilege.camera_groups_uuid, userCameraGroupPrivilege.uuid, userCameraGroupPrivilege)}>
             <Col xs={{span: 24}}>
               <Button style={styles.button}>Remove</Button>
             </Col>
@@ -176,7 +176,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    removeUserCameraGroupPrivilege: (user, userCameraGroupPrivilege) => dispatch(removeUserCameraGroupPrivilege(user, userCameraGroupPrivilege)),
+    removeUserCameraGroupPrivilege: (user, cameraGroupUuid, cameraGroupPrivilegeUuid, cameraGroupPrivilege) => dispatch(removeUserCameraGroupPrivilege(user, cameraGroupUuid, cameraGroupPrivilegeUuid, cameraGroupPrivilege)),
     rescindInvite: (user, invite) => dispatch(rescindInvite(user, invite)),
     fetchSentCameraGroupInvites: (user, camera_group_uuid) => dispatch(fetchSentCameraGroupInvites(user, camera_group_uuid))
   }

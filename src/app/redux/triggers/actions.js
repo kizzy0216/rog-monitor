@@ -236,7 +236,6 @@ export function fetchTriggers(user, cameraGroup, cameraUuid) {
         console.log(errMessage);
       })
       .finally(() => {
-        dispatch(fetchTriggersInSuccess(false));
         dispatch(fetchTriggersInProcess(false));
       })
   }
@@ -271,10 +270,15 @@ export function deleteTrigger(user, cameraGroupUuid, cameraUuid, baseTriggersUui
   }
 }
 
-export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow) {
+export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow, polygonData) {
   return (dispatch) => {
     dispatch(createTriggerTimeWindowInProcess(true));
-
+    for (var i = 0; i < polygonData.length; i++) {
+      if (triggersUuid == polygonData[i].base_trigger.uuid) {
+        triggersUuid = polygonData[i].uuid;
+        break;
+      }
+    }
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${cameraUuid}/triggers/${triggersUuid}/trigger-time-windows`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
@@ -308,9 +312,15 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
   }
 }
 
-export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow) {
+export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow, polygonData) {
   return (dispatch) => {
     dispatch(updateTriggerTimeWindowInProcess(true));
+    for (var i = 0; i < polygonData.length; i++) {
+      if (triggersUuid == polygonData[i].base_trigger.uuid) {
+        triggersUuid = polygonData[i].uuid;
+        break;
+      }
+    }
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${cameraUuid}/triggers/${triggersUuid}/trigger-time-windows/${timeWindow.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {

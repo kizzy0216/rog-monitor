@@ -691,11 +691,13 @@ class AddTriggerModal extends Component {
         trigger_windows.end_at = values.end_at.format('HH:mmZ').toString();
         trigger_windows.days_of_week = values.days_of_week;
         if (this.state.showShareOption) {
-          this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows);
+          console.log(this.triggerDetails);
+          console.log(this.props);
+          this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
           this.setState({showShareOption: false});
         } else {
           trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
-          this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows);
+          this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
         }
       }
     });
@@ -869,8 +871,8 @@ const mapDispatchToProps = (dispatch) => {
     clearTimeWindowData: (timeWindowSelect, values) => dispatch(clearTimeWindowData(timeWindowSelect, values)),
     setTriggerSpecificTimeWindows: (triggers, triggerUuid) => dispatch(setTriggerSpecificTimeWindows(triggers, triggerUuid)),
     addNewTriggerTimeWindow: (values) => dispatch(addNewTriggerTimeWindow(values)),
-    createTriggerTimeWindow: (user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow) => dispatch(createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow)),
-    updateTriggerTimeWindow: (user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow) => dispatch(updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow)),
+    createTriggerTimeWindow: (user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow, polygonData) => dispatch(createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow, polygonData)),
+    updateTriggerTimeWindow: (user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow, polygonData) => dispatch(updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, triggersUuid, timeWindow, polygonData)),
     deleteTriggerTimeWindow: (user, cameraGroupUuid, cameraUuid, baseTriggersUuid, timeWindow) => dispatch(deleteTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, baseTriggersUuid, timeWindow))
   }
 };

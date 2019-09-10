@@ -690,9 +690,8 @@ class AddTriggerModal extends Component {
         trigger_windows.start_at = values.start_at.format('HH:mmZ').toString();
         trigger_windows.end_at = values.end_at.format('HH:mmZ').toString();
         trigger_windows.days_of_week = values.days_of_week;
+        trigger_windows.shared = !!+values.shared;
         if (this.state.showShareOption) {
-          console.log(this.triggerDetails);
-          console.log(this.props);
           this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
           this.setState({showShareOption: false});
         } else {

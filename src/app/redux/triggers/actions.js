@@ -284,7 +284,8 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
     let data = {
       days_of_week: timeWindow.days_of_week,
       start_at: timeWindow.start_at,
-      end_at: timeWindow.end_at
+      end_at: timeWindow.end_at,
+      shared: timeWindow.shared
     };
 
     axios.post(url, data, config)

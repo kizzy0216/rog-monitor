@@ -610,7 +610,12 @@ class AddTriggerModal extends Component {
         end_at = moment.parseZone(end_at, "HH:mm");
       }
       if (isEmpty(triggerTimeWindow['start_at']) && isEmpty(triggerTimeWindow['end_at']) && isEmpty(triggerTimeWindow['days_of_week'])) {
-        this.setState({showShareOption: true});
+        for (var i = 0; i < this.props.data.polygonData.length; i++) {
+          if (this.props.data.polygonData[i].base_trigger.uuid == this.triggerDetails.currentTriggerUuid && this.props.data.polygonData[i].shared == true) {
+            this.setState({showShareOption: true});
+            break;
+          }
+        }
       } else {
         this.setState({showShareOption: false});
       }

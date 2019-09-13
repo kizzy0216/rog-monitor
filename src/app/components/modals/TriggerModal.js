@@ -14,7 +14,7 @@ const FormItem = Form.Item;
 const AddTriggerForm = Form.create()(
   (props) => {
     const {
-      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, showShareOption, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow
+      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, showShareOption, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -97,7 +97,7 @@ const AddTriggerForm = Form.create()(
                       <Button type="primary" icon="plus" onClick={addNewTimeWindow}></Button>
                     </div>
                   </FormItem>
-                  {cameraGroupOwner && showShareOption &&
+                  {cameraGroupOwner && showShareOption && selectedTriggerShared &&
                     <FormItem label="Make Private or Shared" {...formItemLayout}>
                       {getFieldDecorator('shared', {})(
                         <Select
@@ -329,6 +329,7 @@ class AddTriggerModal extends Component {
       time_zone: this.props.data.time_zone,
       cameraGroupOwner: false,
       showShareOption: false,
+      selectedTriggerShared: false,
       image: null
     }
 
@@ -612,11 +613,13 @@ class AddTriggerModal extends Component {
       if (isEmpty(triggerTimeWindow['start_at']) && isEmpty(triggerTimeWindow['end_at']) && isEmpty(triggerTimeWindow['days_of_week'])) {
         for (var i = 0; i < this.props.data.polygonData.length; i++) {
           if (this.props.data.polygonData[i].base_trigger.uuid == this.triggerDetails.currentTriggerUuid && this.props.data.polygonData[i].shared == true) {
-            this.setState({showShareOption: true});
+            this.setState({selectedTriggerShared: true});
             break;
           }
         }
+        this.setState({showShareOption: true});
       } else {
+        this.setState({selectedTriggerShared: false});
         this.setState({showShareOption: false});
       }
       this.form.setFieldsValue({days_of_week: triggerTimeWindow.days_of_week});
@@ -777,6 +780,7 @@ class AddTriggerModal extends Component {
           timeWindows={this.props.triggerTimeWindows}
           cameraGroupOwner={this.state.cameraGroupOwner}
           showShareOption={this.state.showShareOption}
+          selectedTriggerShared={this.state.selectedTriggerShared}
           addNewTimeWindow={this.handleAddNewTimeWindow}
           getTriggerSpecificTimeWindows={this.getTriggerSpecificTimeWindows}
           setTriggerTimeWindows={this.setTriggerTimeWindows}

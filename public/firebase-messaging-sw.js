@@ -8,13 +8,13 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// messaging.setBackgroundMessageHandler(payload => {
-//   const title = payload.notification.title;
-//   const options = {
-//     body: payload.notification.body,
-//     data: payload.data,
-//     icon: '/favicon.ico'
-//   }
-//
-//   return self.registration.showNotification(title, options);
-// })
+messaging.setBackgroundMessageHandler(payload => {
+  const title = payload.notification.title;
+  const options = {
+    body: payload.notification.body,
+    data: payload.data,
+    icon: '/favicon.ico'
+  }
+
+  return self.registration.showNotification(title, options);
+});

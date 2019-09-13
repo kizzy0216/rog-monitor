@@ -380,7 +380,6 @@ export function updateUserAdmin(user, values) {
     values.enabled = (values.enabled == "true");
     const data = JSON.parse(JSON.stringify(values));
     delete data.key;
-    delete data.uuid;
 
     axios.patch(url, data, config)
       .then((response) => {

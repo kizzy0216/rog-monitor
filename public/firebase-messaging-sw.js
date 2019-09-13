@@ -13,7 +13,6 @@ messaging.setBackgroundMessageHandler(payload => {
   const options = {
     body: payload.notification.body,
     data: payload.data,
-    link: '/#/alerts',
     icon: '/favicon.ico'
   }
 

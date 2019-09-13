@@ -95,6 +95,7 @@ class UsersAdmin extends Component {
           <EditableFormTable
             data={data}
             actions={this.props.actions}
+            adminUser={this.props.user}
           />
         </div>
       )
@@ -116,10 +117,10 @@ const EditableContext = React.createContext();
 class EditableCell extends React.Component {
   getInput = () => {
     if (this.props.dataIndex === 'enabled' || this.props.dataIndex === 'mute'){
-      return <Select placeholder="true or false" allowClear={true} dropdownMatchSelectWidth={true} style={{ width: 80 }}><Select.Option value={true}>true</Select.Option><Select.Option value={false}>false</Select.Option></Select>;
+      return <Select placeholder="true or false" allowClear={true} dropdownMatchSelectWidth={true} style={{ width: 80 }}><Select.Option value="true">true</Select.Option><Select.Option value="false">false</Select.Option></Select>;
     }
     if (this.props.dataIndex === 'user_privileges_id') {
-      return <Select placeholder="Select Privilege" allowClear={true} dropdownMatchSelectWidth={true} style={{ width: 80 }}><Select.Option value={0}>admin</Select.Option><Select.Option value={1}>reco</Select.Option><Select.Option value={2}>user</Select.Option></Select>;
+      return <Select placeholder="Select Privilege" allowClear={true} dropdownMatchSelectWidth={true} style={{ width: 80 }}><Select.Option value="0">admin</Select.Option><Select.Option value="1">reco</Select.Option><Select.Option value="2">user</Select.Option></Select>;
     }
     if (this.props.inputType === 'text') {
       return <Input />;
@@ -350,7 +351,7 @@ class EditableTable extends React.Component {
         });
         const newItem = newData[index];
         this.setState({ data: newData, editingKey: '' });
-        this.props.actions.updateUserAdmin(newItem);
+        this.props.actions.updateUserAdmin(this.props.adminUser, newItem);
       }
     });
   }
@@ -413,6 +414,7 @@ const styles={
 
 const mapStateToProps = (state) => {
   return {
+    user: state.auth.user,
     userData: state.users.userData,
     updateUserError: state.users.updateUserError,
     updateUserInProgress: state.users.updateUserInProgress,

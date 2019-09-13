@@ -615,6 +615,8 @@ class AddTriggerModal extends Component {
           if (this.props.data.polygonData[i].base_trigger.uuid == this.triggerDetails.currentTriggerUuid && this.props.data.polygonData[i].shared == true) {
             this.setState({selectedTriggerShared: true});
             break;
+          } else {
+            this.setState({selectedTriggerShared: false});
           }
         }
         this.setState({showShareOption: true});

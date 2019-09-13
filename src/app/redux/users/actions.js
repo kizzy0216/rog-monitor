@@ -375,6 +375,9 @@ export function updateUserAdmin(user, values) {
     dispatch(updateUserInProgress(true));
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
+    values.user_privileges_id = parseInt(values.user_privileges_id);
+    values.mute = (values.mute == "true");
+    values.enabled = (values.enabled == "true");
     const data = JSON.parse(JSON.stringify(values));
     delete data.key;
     delete data.uuid;
@@ -384,6 +387,8 @@ export function updateUserAdmin(user, values) {
         dispatch(updateUserData(response));
         dispatch(updateUserSuccess(true));
         dispatch(updateUserInProgress(false));
+        values.user_uuid = values.uuid;
+        dispatch(readUserByUuidAdmin(values));
       })
       .catch(error => {
         let errMessage = 'Error updating user';

@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Row, Col, Button, Pagination } from 'antd';
+import moment from 'moment-timezone';
 
 import AlertCard from '../components/alerts/AlertCard';
 
@@ -44,6 +45,9 @@ class Alerts extends Component {
 
   render() {
     if (this.props.alerts.length) {
+      var alerts = this.props.alerts.sort((a,b)=>{
+        return moment(a.time) - moment(b.time)
+      }).reverse();
       return (
         <div>
           {/* <Row type='flex' justify='center'>
@@ -65,7 +69,7 @@ class Alerts extends Component {
           </Row>
           <Row><Col>&nbsp;</Col></Row>
           <Row type='flex' justify='start'>
-            {this.props.alerts.map(alert => (
+            {alerts.map(alert=> (
               <Col key={`alert-${alert.id}`} xs={24} sm={12} md={8} lg={6}>
                 <AlertCard {...alert} />
               </Col>

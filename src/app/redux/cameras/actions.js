@@ -259,10 +259,13 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
     let data = {
       camera_groups_name: cameraGroup.name,
       camera_url: lowerCaseUrl,
-      camera_name: name,
-      username,
-      password
+      camera_name: name
     };
+
+    if (username !== null && typeof username !== 'undefined' && password !== null && typeof password !== 'undefined') {
+      data.username = username;
+      data.password = password
+    }
 
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.post(url, data, config)

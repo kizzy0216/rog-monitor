@@ -264,7 +264,7 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
 
     if (username !== null && typeof username !== 'undefined' && password !== null && typeof password !== 'undefined') {
       data.username = username;
-      data.password = password
+      data.password = password;
     }
 
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};

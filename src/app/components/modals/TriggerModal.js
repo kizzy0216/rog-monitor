@@ -721,6 +721,10 @@ class AddTriggerModal extends Component {
         let trigger_windows = {};
         trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
         this.props.deleteTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows);
+        this.handleResetData();
+        this.form.resetFields('time_window_select');
+        delete this.props.triggerTimeWindows[values.time_window_select];
+        this.props.setTriggerSpecificTimeWindows(this.props.triggerTimeWindows);
       }
     });
   }

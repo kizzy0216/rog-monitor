@@ -361,6 +361,15 @@ class AddTriggerModal extends Component {
         this.setState({deleteButton: false});
         this.setState({saveCancel: false});
       }
+      if (nextProps.createTriggerTimeWindowSuccess !== this.props.createTriggerTimeWindowSuccess && nextProps.createTriggerTimeWindowSuccess) {
+        message.success('Trigger time window created');
+      }
+      if (nextProps.updateTriggerTimeWindowSuccess !== this.props.updateTriggerTimeWindowSuccess && nextProps.updateTriggerTimeWindowSuccess) {
+        message.success('Trigger time window updated');
+      }
+      if (nextProps.deleteTriggerTimeWindowSuccess !== this.props.deleteTriggerTimeWindowSuccess && nextProps.deleteTriggerTimeWindowSuccess) {
+        message.success('Trigger time window deleted');
+      }
     }
     else if (this.props.polygonData !== nextProps.polygonData && !isEmpty(nextProps.polygonData) && !isEmpty(this.props.polygonData)) {
       this.setState({canvasMode: true});
@@ -721,6 +730,10 @@ class AddTriggerModal extends Component {
         let trigger_windows = {};
         trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
         this.props.deleteTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows);
+        this.handleResetData();
+        this.form.resetFields('time_window_select');
+        delete this.props.triggerTimeWindows[values.time_window_select];
+        this.props.setTriggerSpecificTimeWindows(this.props.triggerTimeWindows);
       }
     });
   }

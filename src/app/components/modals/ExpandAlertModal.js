@@ -7,7 +7,7 @@ import {Modal, Row, Col, Form} from 'antd';
 const ExpandAlertForm = Form.create()(
   (props) => {
     const {
-      onCancel, visible, showAlert, alertImg, alertType, cameraName, cameraGroupName, timestamp, formatDatetime
+      onCancel, visible, showAlert, alertImg, alertType, cameraName, cameraGroupName, timestamp, timezone, formatDatetime
     } = props;
 
     return (
@@ -21,7 +21,7 @@ const ExpandAlertForm = Form.create()(
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{alertType}</Col>
           <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{cameraName} at {cameraGroupName}</Col>
-          <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp)}</Col>
+          <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp, timezone)}</Col>
         </Row>
         <Row><img src={alertImg} style={styles.expandedImg} /></Row>
       </Modal>
@@ -37,8 +37,8 @@ class ExpandAlertModal extends Component {
     }
   }
 
-  formatDatetime = (timestamp) => {
-    const dt = moment(timestamp);
+  formatDatetime = (timestamp, timezone) => {
+    const dt = moment.tz(timestamp, timezone);
     return `${dt.format('L')} ${dt.format('LT')}`;
   }
 
@@ -72,6 +72,7 @@ class ExpandAlertModal extends Component {
           cameraName={this.props.data.cameras_name}
           cameraGroupName={this.props.data.camera_groups_name}
           timestamp={this.props.data.time}
+          timezone={this.props.data.cameras_time_zone}
           formatDatetime={this.formatDatetime}
         />
       </div>

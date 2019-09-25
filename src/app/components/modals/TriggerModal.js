@@ -609,7 +609,6 @@ class AddTriggerModal extends Component {
   }
 
   handleChangeTimeWindow = (fieldValue) => {
-    console.log(this.props);
     let triggerTimeWindow = this.props.triggerTimeWindows[fieldValue];
     if (typeof triggerTimeWindow !== 'undefined'){
       let start_at = triggerTimeWindow.start_at;
@@ -707,7 +706,6 @@ class AddTriggerModal extends Component {
       }
       if (typeof values.time_window_select != 'undefined') {
         let trigger_windows = {};
-        console.log(trigger_windows);
         trigger_windows.start_at = values.start_at.format('HH:mmZ').toString();
         trigger_windows.end_at = values.end_at.format('HH:mmZ').toString();
         trigger_windows.days_of_week = values.days_of_week;

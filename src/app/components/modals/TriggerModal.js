@@ -53,10 +53,10 @@ const AddTriggerForm = Form.create()(
                 </Col>
                 <Col span={16}>
                   {newLoiteringTrigger === true ?
-                    <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
+                    <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={15} max={1800}
                           step={1} onChange={sliderValue} value={loiteringSeconds}/>
                     :
-                    <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
+                    <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={15} max={1800}
                             step={1} onChange={sliderValue} value={loiteringSeconds} disabled />
                     }
                 </Col>
@@ -609,15 +609,16 @@ class AddTriggerModal extends Component {
   }
 
   handleChangeTimeWindow = (fieldValue) => {
+    console.log(this.props);
     let triggerTimeWindow = this.props.triggerTimeWindows[fieldValue];
     if (typeof triggerTimeWindow !== 'undefined'){
       let start_at = triggerTimeWindow.start_at;
       let end_at = triggerTimeWindow.end_at;
       if (start_at !== null) {
-        start_at = moment.parseZone(start_at, "HH:mm");
+        start_at = moment.parseZone(start_at, "HH:mm").tz(this.props.data.time_zone);
       }
       if (end_at !== null) {
-        end_at = moment.parseZone(end_at, "HH:mm");
+        end_at = moment.parseZone(end_at, "HH:mm").tz(this.props.data.time_zone);
       }
       if (isEmpty(triggerTimeWindow['start_at']) && isEmpty(triggerTimeWindow['end_at']) && isEmpty(triggerTimeWindow['days_of_week'])) {
         for (var i = 0; i < this.props.data.polygonData.length; i++) {
@@ -706,6 +707,7 @@ class AddTriggerModal extends Component {
       }
       if (typeof values.time_window_select != 'undefined') {
         let trigger_windows = {};
+        console.log(trigger_windows);
         trigger_windows.start_at = values.start_at.format('HH:mmZ').toString();
         trigger_windows.end_at = values.end_at.format('HH:mmZ').toString();
         trigger_windows.days_of_week = values.days_of_week;

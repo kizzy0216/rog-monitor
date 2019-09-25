@@ -491,7 +491,6 @@ export function deleteTriggerTimeWindowAdmin(user, triggerTimeWindow, camerasUui
 
     axios.delete(url, config)
       .then((response) => {
-        console.log(response);
         let values = {
           uuid: cameraGroupUuid,
           cameras_uuid: camerasUuid

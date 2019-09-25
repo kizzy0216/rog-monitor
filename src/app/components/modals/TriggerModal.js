@@ -53,10 +53,10 @@ const AddTriggerForm = Form.create()(
                 </Col>
                 <Col span={16}>
                   {newLoiteringTrigger === true ?
-                    <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
+                    <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={15} max={1800}
                           step={1} onChange={sliderValue} value={loiteringSeconds}/>
                     :
-                    <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={0} max={1800}
+                    <Slider tipFormatter={(value) => convertToMilitaryFormat(loiteringSeconds)} min={15} max={1800}
                             step={1} onChange={sliderValue} value={loiteringSeconds} disabled />
                     }
                 </Col>
@@ -706,6 +706,7 @@ class AddTriggerModal extends Component {
       }
       if (typeof values.time_window_select != 'undefined') {
         let trigger_windows = {};
+        console.log(trigger_windows);
         trigger_windows.start_at = values.start_at.format('HH:mmZ').toString();
         trigger_windows.end_at = values.end_at.format('HH:mmZ').toString();
         trigger_windows.days_of_week = values.days_of_week;

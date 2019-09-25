@@ -609,15 +609,16 @@ class AddTriggerModal extends Component {
   }
 
   handleChangeTimeWindow = (fieldValue) => {
+    console.log(this.props);
     let triggerTimeWindow = this.props.triggerTimeWindows[fieldValue];
     if (typeof triggerTimeWindow !== 'undefined'){
       let start_at = triggerTimeWindow.start_at;
       let end_at = triggerTimeWindow.end_at;
       if (start_at !== null) {
-        start_at = moment.parseZone(start_at, "HH:mm");
+        start_at = moment.parseZone(start_at, "HH:mm").tz(this.props.data.time_zone);
       }
       if (end_at !== null) {
-        end_at = moment.parseZone(end_at, "HH:mm");
+        end_at = moment.parseZone(end_at, "HH:mm").tz(this.props.data.time_zone);
       }
       if (isEmpty(triggerTimeWindow['start_at']) && isEmpty(triggerTimeWindow['end_at']) && isEmpty(triggerTimeWindow['days_of_week'])) {
         for (var i = 0; i < this.props.data.polygonData.length; i++) {

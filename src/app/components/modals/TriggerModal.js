@@ -614,10 +614,10 @@ class AddTriggerModal extends Component {
       let start_at = triggerTimeWindow.start_at;
       let end_at = triggerTimeWindow.end_at;
       if (start_at !== null) {
-        start_at = moment.parseZone(start_at, "HH:mm").tz(this.props.data.time_zone);
+        start_at = moment.parseZone(start_at, "HH:mm");
       }
       if (end_at !== null) {
-        end_at = moment.parseZone(end_at, "HH:mm").tz(this.props.data.time_zone);
+        end_at = moment.parseZone(end_at, "HH:mm");
       }
       if (isEmpty(triggerTimeWindow['start_at']) && isEmpty(triggerTimeWindow['end_at']) && isEmpty(triggerTimeWindow['days_of_week'])) {
         for (var i = 0; i < this.props.data.polygonData.length; i++) {

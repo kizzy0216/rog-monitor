@@ -609,16 +609,15 @@ class AddTriggerModal extends Component {
   }
 
   handleChangeTimeWindow = (fieldValue) => {
-    console.log(this.props);
     let triggerTimeWindow = this.props.triggerTimeWindows[fieldValue];
     if (typeof triggerTimeWindow !== 'undefined'){
       let start_at = triggerTimeWindow.start_at;
       let end_at = triggerTimeWindow.end_at;
       if (start_at !== null) {
-        start_at = moment.parseZone(start_at, "HH:mm").tz(this.props.data.time_zone);
+        start_at = moment(start_at, "HH:mm");
       }
       if (end_at !== null) {
-        end_at = moment.parseZone(end_at, "HH:mm").tz(this.props.data.time_zone);
+        end_at = moment(end_at, "HH:mm");
       }
       if (isEmpty(triggerTimeWindow['start_at']) && isEmpty(triggerTimeWindow['end_at']) && isEmpty(triggerTimeWindow['days_of_week'])) {
         for (var i = 0; i < this.props.data.polygonData.length; i++) {
@@ -651,7 +650,7 @@ class AddTriggerModal extends Component {
   handleUpdateStart = (fieldValue) => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment.parseZone(fieldValue).format('HH:mm'), 'start_at');
+      this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'start_at');
     }
   }
 
@@ -660,8 +659,8 @@ class AddTriggerModal extends Component {
     if (typeof timeWindowSelect !== 'undefined') {
       let startTime = this.props.triggerTimeWindows[timeWindowSelect].start_at;
       if (startTime !== null) {
-        if (moment.parseZone(startTime, 'HH:mm').isBefore(fieldValue, 'minute')) {
-          this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment.parseZone(fieldValue).format('HH:mm'), 'end_at');
+        if (moment(startTime, 'HH:mm').isBefore(fieldValue, 'minute')) {
+          this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'end_at');
         } else {
           message.error('Please select a time that is after the start time.');
         }
@@ -707,7 +706,6 @@ class AddTriggerModal extends Component {
       }
       if (typeof values.time_window_select != 'undefined') {
         let trigger_windows = {};
-        console.log(trigger_windows);
         trigger_windows.start_at = values.start_at.format('HH:mmZ').toString();
         trigger_windows.end_at = values.end_at.format('HH:mmZ').toString();
         trigger_windows.days_of_week = values.days_of_week;

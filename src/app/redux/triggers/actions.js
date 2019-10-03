@@ -285,7 +285,8 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       days_of_week: timeWindow.days_of_week,
       start_at: timeWindow.start_at,
       end_at: timeWindow.end_at,
-      shared: timeWindow.shared
+      shared: timeWindow.shared,
+      camera_wide: timeWindow.camera_wide
     };
 
     axios.post(url, data, config)
@@ -327,9 +328,10 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
     let data = {
       days_of_week: timeWindow.days_of_week,
       start_at: timeWindow.start_at,
-      end_at: timeWindow.end_at
+      end_at: timeWindow.end_at,
+      camera_wide: timeWindow.camera_wide
     };
-
+    console.log(data);
     axios.patch(url, data, config)
       .then((response) => {
         dispatch(updateTriggerTimeWindowSuccess(true));

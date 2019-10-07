@@ -292,7 +292,6 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
     axios.post(url, data, config)
       .then((response) => {
         dispatch(createTriggerTimeWindowSuccess(true));
-        dispatch(createTriggerTimeWindowSuccess(false));
         let cameraGroup = {uuid: cameraGroupUuid};
         dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
@@ -340,7 +339,6 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
     axios.patch(url, data, config)
       .then((response) => {
         dispatch(updateTriggerTimeWindowSuccess(true));
-        dispatch(updateTriggerTimeWindowSuccess(false));
         let cameraGroup = {uuid: cameraGroupUuid};
         dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })

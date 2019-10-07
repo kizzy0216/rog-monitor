@@ -385,14 +385,16 @@ class AddTriggerModal extends Component {
         this.setState({deleteButton: false});
         this.setState({saveCancel: false});
       }
-      if (nextProps.createTriggerTimeWindowSuccess !== this.props.createTriggerTimeWindowSuccess && nextProps.createTriggerTimeWindowSuccess) {
-        message.success('Trigger time window created');
-      }
-      if (nextProps.updateTriggerTimeWindowSuccess !== this.props.updateTriggerTimeWindowSuccess && nextProps.updateTriggerTimeWindowSuccess) {
-        message.success('Trigger time window updated');
-      }
-      if (nextProps.deleteTriggerTimeWindowSuccess !== this.props.deleteTriggerTimeWindowSuccess && nextProps.deleteTriggerTimeWindowSuccess) {
-        message.success('Trigger time window deleted');
+      if (this.triggerDetails['uuid'] !== undefined) {
+        if (nextProps.createTriggerTimeWindowSuccess && nextProps.createTriggerTimeWindowSuccess !== this.props.createTriggerTimeWindowSuccess) {
+          message.success('Trigger time window created');
+        }
+        if (nextProps.updateTriggerTimeWindowSuccess && nextProps.updateTriggerTimeWindowSuccess !== this.props.updateTriggerTimeWindowSuccess) {
+          message.success('Trigger time window updated');
+        }
+        if (nextProps.deleteTriggerTimeWindowSuccess && nextProps.deleteTriggerTimeWindowSuccess !== this.props.deleteTriggerTimeWindowSuccess) {
+          message.success('Trigger time window deleted');
+        }
       }
     }
     else if (this.props.polygonData !== nextProps.polygonData && !isEmpty(nextProps.polygonData) && !isEmpty(this.props.polygonData)) {

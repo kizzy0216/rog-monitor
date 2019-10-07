@@ -292,6 +292,7 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
     axios.post(url, data, config)
       .then((response) => {
         dispatch(createTriggerTimeWindowSuccess(true));
+        dispatch(createTriggerTimeWindowSuccess(false));
         let cameraGroup = {uuid: cameraGroupUuid};
         dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
@@ -310,6 +311,7 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       .finally(() => {
         dispatch(createTriggerTimeWindowSuccess(false));
         dispatch(createTriggerTimeWindowInProcess(false));
+        dispatch(createTriggerTimeWindowError(false));
       })
   }
 }
@@ -323,6 +325,9 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
         break;
       }
     }
+    if (isEmpty(timeWindow.camera_wide)) {
+      timeWindow.camera_wide = false;
+    }
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${cameraUuid}/triggers/${triggersUuid}/trigger-time-windows/${timeWindow.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
@@ -331,10 +336,11 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       end_at: timeWindow.end_at,
       camera_wide: timeWindow.camera_wide
     };
-    console.log(data);
+
     axios.patch(url, data, config)
       .then((response) => {
         dispatch(updateTriggerTimeWindowSuccess(true));
+        dispatch(updateTriggerTimeWindowSuccess(false));
         let cameraGroup = {uuid: cameraGroupUuid};
         dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })

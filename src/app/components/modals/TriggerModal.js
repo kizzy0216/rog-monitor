@@ -165,6 +165,7 @@ const AddTriggerForm = Form.create()(
                     <FormItem span={24}>
                       {getFieldDecorator('camera_wide', {})(
                         <Checkbox
+                          defaultChecked={false}
                           checked={cameraWide}
                           disabled={cameraWideDisabled}
                           onChange={toggleCameraWide}
@@ -304,6 +305,7 @@ const AddTriggerForm = Form.create()(
                       <FormItem span={24}>
                         {getFieldDecorator('camera_wide', {})(
                           <Checkbox
+                            defaultChecked={false}
                             checked={cameraWide}
                             disabled={cameraWideDisabled}
                             onChange={toggleCameraWide}

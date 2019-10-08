@@ -172,6 +172,12 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
     dispatch(createTriggerInProcess(true));
     dispatch(createTriggerError(false));
 
+    for (var i = 0; i < timewindows.length; i++) {
+      if (isEmpty(timewindows[i].camera_wide)) {
+        timewindows[i].camera_wide = false;
+      }
+    }
+
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}/triggers`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let triggerData = {

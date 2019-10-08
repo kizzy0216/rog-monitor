@@ -285,7 +285,8 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       days_of_week: timeWindow.days_of_week,
       start_at: timeWindow.start_at,
       end_at: timeWindow.end_at,
-      shared: timeWindow.shared
+      shared: timeWindow.shared,
+      camera_wide: timeWindow.camera_wide
     };
 
     axios.post(url, data, config)
@@ -309,6 +310,7 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       .finally(() => {
         dispatch(createTriggerTimeWindowSuccess(false));
         dispatch(createTriggerTimeWindowInProcess(false));
+        dispatch(createTriggerTimeWindowError(false));
       })
   }
 }
@@ -322,12 +324,16 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
         break;
       }
     }
+    if (isEmpty(timeWindow.camera_wide)) {
+      timeWindow.camera_wide = false;
+    }
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${cameraUuid}/triggers/${triggersUuid}/trigger-time-windows/${timeWindow.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {
       days_of_week: timeWindow.days_of_week,
       start_at: timeWindow.start_at,
-      end_at: timeWindow.end_at
+      end_at: timeWindow.end_at,
+      camera_wide: timeWindow.camera_wide
     };
 
     axios.patch(url, data, config)

@@ -300,11 +300,25 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
 
     axios.post(url, data, config)
       .then((response) => {
+        for (var i = 0; i < polygonData.length; i++) {
+          if (triggersUuid == polygonData[i].uuid) {
+            if (isEmpty(polygonData[i].time_windows)) {
+              data.uuid = response.data.uuid;
+              polygonData[i].time_windows.push(data);
+              dispatch(updateTriggerTimeWindowData(polygonData[i].time_windows));
+              break;
+            } else {
+              data.uuid = response.data.uuid;
+              polygonData[i].time_windows.push(data);
+              dispatch(updateTriggerTimeWindowData(polygonData[i].time_windows));
+              break;
+            }
+          }
+        }
         dispatch(createTriggerTimeWindowSuccess(true));
-        let cameraGroup = {uuid: cameraGroupUuid};
-        dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
       .catch((error) => {
+        console.log(error);
         let errMessage = 'Error creating trigger time window';
         if (typeof error.response != 'undefined') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {

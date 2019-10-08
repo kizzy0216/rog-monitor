@@ -759,9 +759,23 @@ class AddTriggerModal extends Component {
         if (this.state.showShareOption) {
           this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
           this.setState({showShareOption: false});
+          this.form.resetFields('time_window_select');
+          this.form.resetFields('days_of_week');
+          this.form.resetFields('camera_wide');
+          this.form.setFieldsValue({start_at: null});
+          this.form.setFieldsValue({end_at: null});
+          this.setState({cameraWideDisabled: false});
+          this.setState({cameraWide: false});
         } else {
           trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
           this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
+          this.form.resetFields('time_window_select');
+          this.form.resetFields('days_of_week');
+          this.form.resetFields('camera_wide');
+          this.form.setFieldsValue({start_at: null});
+          this.form.setFieldsValue({end_at: null});
+          this.setState({cameraWideDisabled: false});
+          this.setState({cameraWide: false});
         }
       }
     });

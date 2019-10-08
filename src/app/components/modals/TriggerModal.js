@@ -389,13 +389,13 @@ class AddTriggerModal extends Component {
       }
       if (this.triggerDetails['uuid'] !== undefined) {
         if (nextProps.createTriggerTimeWindowSuccess && nextProps.createTriggerTimeWindowSuccess !== this.props.createTriggerTimeWindowSuccess) {
-          message.success('Trigger time window created');
+          message.success('Trigger silence window created');
         }
         if (nextProps.updateTriggerTimeWindowSuccess && nextProps.updateTriggerTimeWindowSuccess !== this.props.updateTriggerTimeWindowSuccess) {
-          message.success('Trigger time window updated');
+          message.success('Trigger silence window updated');
         }
         if (nextProps.deleteTriggerTimeWindowSuccess && nextProps.deleteTriggerTimeWindowSuccess !== this.props.deleteTriggerTimeWindowSuccess) {
-          message.success('Trigger time window deleted');
+          message.success('Trigger silence window deleted');
         }
       }
     }

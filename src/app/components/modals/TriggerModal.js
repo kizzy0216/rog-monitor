@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Icon, Modal, Form, Spin, Button, Popover, message, Slider, Row, Col, TimePicker, Select} from 'antd';
+import {Icon, Modal, Form, Spin, Button, Popover, message, Slider, Row, Col, TimePicker, Select, Checkbox} from 'antd';
 import CustomCanvas from '../../components/formitems/CustomCanvas';
 import CustomInput from "../formitems/CustomInput";
 import {createTrigger, fetchTriggers, deleteTrigger, updateTimeWindowData, clearTimeWindowData, addNewTriggerTimeWindow, getTriggerSpecificTimeWindows, setTriggerSpecificTimeWindows, createTriggerTimeWindow, updateTriggerTimeWindow, deleteTriggerTimeWindow} from '../../redux/triggers/actions';
@@ -14,7 +14,7 @@ const FormItem = Form.Item;
 const AddTriggerForm = Form.create()(
   (props) => {
     const {
-      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, showShareOption, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow
+      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, showShareOption, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow, cameraWideDisabled, cameraWide, toggleCameraWide
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -162,6 +162,17 @@ const AddTriggerForm = Form.create()(
                     </FormItem>
                   </Row>
                   <Row>
+                    <FormItem span={24}>
+                      {getFieldDecorator('camera_wide', {})(
+                        <Checkbox
+                          checked={cameraWide}
+                          disabled={cameraWideDisabled}
+                          onChange={toggleCameraWide}
+                        >Add Silence Window to All Existing Triggers in This Camera</Checkbox>
+                      )}
+                    </FormItem>
+                  </Row>
+                  <Row>
                   <Col span={8}>
                     <Button type="danger" icon="delete" onClick={deleteTriggerTimeWindow}>Delete Silence Window</Button>
                   </Col>
@@ -290,6 +301,17 @@ const AddTriggerForm = Form.create()(
                       </FormItem>
                     </Row>
                     <Row>
+                      <FormItem span={24}>
+                        {getFieldDecorator('camera_wide', {})(
+                          <Checkbox
+                            checked={cameraWide}
+                            disabled={cameraWideDisabled}
+                            onChange={toggleCameraWide}
+                          >Add Silence Window to All Existing Triggers in This Camera</Checkbox>
+                        )}
+                      </FormItem>
+                    </Row>
+                    <Row>
                       <Button type="danger" icon="close" onClick={resetData}>Clear Silence Window</Button>
                     </Row>
                     <div>&nbsp;</div>
@@ -330,6 +352,8 @@ class AddTriggerModal extends Component {
       cameraGroupOwner: false,
       showShareOption: false,
       selectedTriggerShared: false,
+      cameraWide: false,
+      cameraWideDisabled: false,
       image: null
     }
 
@@ -361,14 +385,16 @@ class AddTriggerModal extends Component {
         this.setState({deleteButton: false});
         this.setState({saveCancel: false});
       }
-      if (nextProps.createTriggerTimeWindowSuccess !== this.props.createTriggerTimeWindowSuccess && nextProps.createTriggerTimeWindowSuccess) {
-        message.success('Trigger time window created');
-      }
-      if (nextProps.updateTriggerTimeWindowSuccess !== this.props.updateTriggerTimeWindowSuccess && nextProps.updateTriggerTimeWindowSuccess) {
-        message.success('Trigger time window updated');
-      }
-      if (nextProps.deleteTriggerTimeWindowSuccess !== this.props.deleteTriggerTimeWindowSuccess && nextProps.deleteTriggerTimeWindowSuccess) {
-        message.success('Trigger time window deleted');
+      if (this.triggerDetails['uuid'] !== undefined) {
+        if (nextProps.createTriggerTimeWindowSuccess && nextProps.createTriggerTimeWindowSuccess !== this.props.createTriggerTimeWindowSuccess) {
+          message.success('Trigger time window created');
+        }
+        if (nextProps.updateTriggerTimeWindowSuccess && nextProps.updateTriggerTimeWindowSuccess !== this.props.updateTriggerTimeWindowSuccess) {
+          message.success('Trigger time window updated');
+        }
+        if (nextProps.deleteTriggerTimeWindowSuccess && nextProps.deleteTriggerTimeWindowSuccess !== this.props.deleteTriggerTimeWindowSuccess) {
+          message.success('Trigger time window deleted');
+        }
       }
     }
     else if (this.props.polygonData !== nextProps.polygonData && !isEmpty(nextProps.polygonData) && !isEmpty(this.props.polygonData)) {
@@ -452,6 +478,8 @@ class AddTriggerModal extends Component {
   handleCancel = () => {
     this.setState({canvasMode: false});
     this.setState({visible: false});
+    this.setState({cameraWideDisabled: false});
+    this.setState({cameraWide: false});
     this.triggerDetails.currentTriggerType = '';
     this.triggerDetails.currentTriggerUuid = null;
   };
@@ -472,6 +500,8 @@ class AddTriggerModal extends Component {
       this.setState({triggers: true});
       this.setState({cameraGroupOwner: false});
       this.setState({showShareOption: false});
+      this.setState({cameraWideDisabled: false});
+      this.setState({cameraWide: false});
       this.triggerDetails.currentTriggerType = '';
     }
   };
@@ -525,6 +555,7 @@ class AddTriggerModal extends Component {
           delete values.end_at;
           delete values.days_of_week;
           delete values.time_window_select;
+          delete values.camera_wide;
           values.trigger_windows = [];
           this.props.triggerTimeWindows.forEach(function(trigger_window) {
             if (trigger_window.hasOwnProperty('start_at') && trigger_window.hasOwnProperty('end_at') && trigger_window.hasOwnProperty('days_of_week')) {
@@ -613,6 +644,7 @@ class AddTriggerModal extends Component {
     if (typeof triggerTimeWindow !== 'undefined'){
       let start_at = triggerTimeWindow.start_at;
       let end_at = triggerTimeWindow.end_at;
+      let camera_wide = triggerTimeWindow.camera_wide;
       if (start_at !== null) {
         start_at = moment(start_at, "HH:mm");
       }
@@ -633,6 +665,12 @@ class AddTriggerModal extends Component {
         this.setState({selectedTriggerShared: false});
         this.setState({showShareOption: false});
       }
+      if (camera_wide) {
+        this.setState({cameraWide: true});
+        this.setState({cameraWideDisabled: true});
+      } else {
+        this.setState({cameraWideDisabled: false});
+      }
       this.form.setFieldsValue({days_of_week: triggerTimeWindow.days_of_week});
       this.form.setFieldsValue({start_at: start_at});
       this.form.setFieldsValue({end_at: end_at});
@@ -642,6 +680,7 @@ class AddTriggerModal extends Component {
   handleAddNewTimeWindow = () => {
     this.form.resetFields('time_window_select');
     this.form.resetFields('days_of_week');
+    this.form.resetFields('camera_wide');
     this.form.setFieldsValue({start_at: null});
     this.form.setFieldsValue({end_at: null});
     this.props.addNewTriggerTimeWindow(this.props.triggerTimeWindows);
@@ -679,8 +718,11 @@ class AddTriggerModal extends Component {
 
   handleResetData = () => {
     this.form.resetFields('days_of_week');
+    this.form.resetFields('camera_wide');
     this.form.setFieldsValue({start_at: null});
     this.form.setFieldsValue({end_at: null});
+    this.setState({cameraWideDisabled: false});
+    this.setState({cameraWide: false});
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
       this.props.clearTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows);
@@ -692,6 +734,7 @@ class AddTriggerModal extends Component {
       if (polygonData[i].uuid == selectedPolygonUuid) {
         this.form.resetFields('time_window_select');
         this.form.resetFields('days_of_week');
+        this.form.resetFields('camera_wide');
         this.form.setFieldsValue({start_at: null});
         this.form.setFieldsValue({end_at: null});
         this.props.setTriggerSpecificTimeWindows(polygonData[i].time_windows);
@@ -710,6 +753,7 @@ class AddTriggerModal extends Component {
         trigger_windows.end_at = values.end_at.format('HH:mmZ').toString();
         trigger_windows.days_of_week = values.days_of_week;
         trigger_windows.shared = !!+values.shared;
+        trigger_windows.camera_wide = values.camera_wide;
         if (this.state.showShareOption) {
           this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
           this.setState({showShareOption: false});
@@ -748,6 +792,10 @@ class AddTriggerModal extends Component {
       message.error('Please select the days you would like the trigger time to be active. Your changes will not be saved!');
       this.handleResetData();
     }
+  }
+
+  handleToggleCameraWide = () => {
+    this.setState({ cameraWide: !this.state.cameraWide });
   }
 
   render() {
@@ -800,6 +848,9 @@ class AddTriggerModal extends Component {
           getTriggerSpecificTimeWindows={this.getTriggerSpecificTimeWindows}
           setTriggerTimeWindows={this.setTriggerTimeWindows}
           deleteTriggerTimeWindow={this.handleDeleteTriggerTimeWindow}
+          cameraWideDisabled={this.state.cameraWideDisabled}
+          cameraWide={this.state.cameraWide}
+          toggleCameraWide={this.handleToggleCameraWide}
         />
       </div>
     );

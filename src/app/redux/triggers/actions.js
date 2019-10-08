@@ -318,7 +318,6 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
         dispatch(createTriggerTimeWindowSuccess(true));
       })
       .catch((error) => {
-        console.log(error);
         let errMessage = 'Error creating trigger time window';
         if (typeof error.response != 'undefined') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {

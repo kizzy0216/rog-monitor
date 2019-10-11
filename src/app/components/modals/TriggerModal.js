@@ -165,7 +165,6 @@ const AddTriggerForm = Form.create()(
                     <FormItem span={24}>
                       {getFieldDecorator('camera_wide', {})(
                         <Checkbox
-                          defaultChecked={false}
                           checked={cameraWide}
                           disabled={cameraWideDisabled}
                           onChange={toggleCameraWide}
@@ -305,7 +304,6 @@ const AddTriggerForm = Form.create()(
                       <FormItem span={24}>
                         {getFieldDecorator('camera_wide', {})(
                           <Checkbox
-                            defaultChecked={false}
                             checked={cameraWide}
                             disabled={cameraWideDisabled}
                             onChange={toggleCameraWide}
@@ -671,6 +669,7 @@ class AddTriggerModal extends Component {
         this.setState({cameraWide: true});
         this.setState({cameraWideDisabled: true});
       } else {
+        this.setState({cameraWide: false});
         this.setState({cameraWideDisabled: false});
       }
       this.form.setFieldsValue({days_of_week: triggerTimeWindow.days_of_week});
@@ -757,6 +756,13 @@ class AddTriggerModal extends Component {
         trigger_windows.shared = !!+values.shared;
         trigger_windows.camera_wide = values.camera_wide;
         if (this.state.showShareOption) {
+          for (var i = 0; i < this.props.data.polygonData.length; i++) {
+            for (var x = 0; x < this.props.data.polygonData[i].time_windows.length; x++) {
+              if (typeof this.props.data.polygonData[i].time_windows[x].uuid === 'undefined') {
+                delete this.props.data.polygonData[i].time_windows[x];
+              }
+            }
+          }
           this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
           this.setState({showShareOption: false});
           this.form.resetFields('time_window_select');

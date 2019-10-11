@@ -285,7 +285,7 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
         break;
       }
     }
-    if (isEmpty(timeWindow.camera_wide)) {
+    if (isEmpty(timeWindow.camera_wide) && timeWindow.camera_wide !== true) {
       timeWindow.camera_wide = false;
     }
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${cameraUuid}/triggers/${triggersUuid}/trigger-time-windows`;
@@ -306,16 +306,17 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
               data.uuid = response.data.uuid;
               polygonData[i].time_windows.push(data);
               dispatch(updateTriggerTimeWindowData(polygonData[i].time_windows));
+              dispatch(createTriggerTimeWindowSuccess(true));
               break;
             } else {
               data.uuid = response.data.uuid;
               polygonData[i].time_windows.push(data);
               dispatch(updateTriggerTimeWindowData(polygonData[i].time_windows));
+              dispatch(createTriggerTimeWindowSuccess(true));
               break;
             }
           }
         }
-        dispatch(createTriggerTimeWindowSuccess(true));
       })
       .catch((error) => {
         let errMessage = 'Error creating trigger time window';

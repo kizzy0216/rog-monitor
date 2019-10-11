@@ -347,7 +347,7 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
         break;
       }
     }
-    if (isEmpty(timeWindow.camera_wide)) {
+    if (isEmpty(timeWindow.camera_wide) && timeWindow.camera_wide !== true) {
       timeWindow.camera_wide = false;
     }
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${cameraUuid}/triggers/${triggersUuid}/trigger-time-windows/${timeWindow.uuid}`;

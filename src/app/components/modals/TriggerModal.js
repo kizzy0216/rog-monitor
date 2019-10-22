@@ -690,7 +690,17 @@ class AddTriggerModal extends Component {
   handleUpdateStart = (fieldValue) => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'start_at');
+      let endTime = this.props.triggerTimeWindows[timeWindowSelect].end_at;
+      if (endTime !== null && typeof endTime !== 'undefined') {
+        if (moment(endTime, 'HH:mm').isAfter(fieldValue, 'minute')) {
+          this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'end_at');
+        } else {
+          message.error('Please select a time that is before the end time.');
+          this.form.resetFields('start_at');
+        }
+      } else {
+        this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'end_at');
+      }
     }
   }
 
@@ -698,14 +708,16 @@ class AddTriggerModal extends Component {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
       let startTime = this.props.triggerTimeWindows[timeWindowSelect].start_at;
-      if (startTime !== null) {
+      if (startTime !== null && typeof startTime !== 'undefined') {
         if (moment(startTime, 'HH:mm').isBefore(fieldValue, 'minute')) {
           this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'end_at');
         } else {
           message.error('Please select a time that is after the start time.');
+          this.form.resetFields('end_at');
         }
       } else {
         message.error('Please select a start time before selecting a stop time.');
+        this.form.resetFields('end_at');
       }
     }
   }
@@ -720,8 +732,8 @@ class AddTriggerModal extends Component {
   handleResetData = () => {
     this.form.resetFields('days_of_week');
     this.form.resetFields('camera_wide');
-    this.form.setFieldsValue({start_at: null});
-    this.form.setFieldsValue({end_at: null});
+    this.form.resetFields('start_at');
+    this.form.resetFields('end_at');
     this.setState({cameraWideDisabled: false});
     this.setState({cameraWide: false});
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
@@ -736,8 +748,8 @@ class AddTriggerModal extends Component {
         this.form.resetFields('time_window_select');
         this.form.resetFields('days_of_week');
         this.form.resetFields('camera_wide');
-        this.form.setFieldsValue({start_at: null});
-        this.form.setFieldsValue({end_at: null});
+        this.form.resetFields('start_at');
+        this.form.resetFields('end_at');
         this.props.setTriggerSpecificTimeWindows(polygonData[i].time_windows);
       }
     }
@@ -755,33 +767,39 @@ class AddTriggerModal extends Component {
         trigger_windows.days_of_week = values.days_of_week;
         trigger_windows.shared = !!+values.shared;
         trigger_windows.camera_wide = values.camera_wide;
-        if (this.state.showShareOption) {
-          for (var i = 0; i < this.props.data.polygonData.length; i++) {
-            for (var x = 0; x < this.props.data.polygonData[i].time_windows.length; x++) {
-              if (typeof this.props.data.polygonData[i].time_windows[x].uuid === 'undefined') {
-                delete this.props.data.polygonData[i].time_windows[x];
+        if (values.start_at.isBefore(values.end_at)) {
+          if (this.state.showShareOption) {
+            for (var i = 0; i < this.props.data.polygonData.length; i++) {
+              for (var x = 0; x < this.props.data.polygonData[i].time_windows.length; x++) {
+                if (typeof this.props.data.polygonData[i].time_windows[x].uuid === 'undefined') {
+                  delete this.props.data.polygonData[i].time_windows[x];
+                }
               }
             }
+            this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
+            this.setState({showShareOption: false});
+            this.form.resetFields('time_window_select');
+            this.form.resetFields('days_of_week');
+            this.form.resetFields('camera_wide');
+            this.form.setFieldsValue({start_at: null});
+            this.form.setFieldsValue({end_at: null});
+            this.setState({cameraWideDisabled: false});
+            this.setState({cameraWide: false});
+          } else {
+            trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
+            this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
+            this.form.resetFields('time_window_select');
+            this.form.resetFields('days_of_week');
+            this.form.resetFields('camera_wide');
+            this.form.setFieldsValue({start_at: null});
+            this.form.setFieldsValue({end_at: null});
+            this.setState({cameraWideDisabled: false});
+            this.setState({cameraWide: false});
           }
-          this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
-          this.setState({showShareOption: false});
-          this.form.resetFields('time_window_select');
-          this.form.resetFields('days_of_week');
-          this.form.resetFields('camera_wide');
-          this.form.setFieldsValue({start_at: null});
-          this.form.setFieldsValue({end_at: null});
-          this.setState({cameraWideDisabled: false});
-          this.setState({cameraWide: false});
         } else {
-          trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
-          this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
-          this.form.resetFields('time_window_select');
-          this.form.resetFields('days_of_week');
-          this.form.resetFields('camera_wide');
-          this.form.setFieldsValue({start_at: null});
-          this.form.setFieldsValue({end_at: null});
-          this.setState({cameraWideDisabled: false});
-          this.setState({cameraWide: false});
+          message.error('Please select a stop time that is after the start time.');
+          this.form.resetFields('start_at');
+          this.form.resetFields('end_at');
         }
       }
     });

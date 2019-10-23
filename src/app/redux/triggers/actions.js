@@ -176,6 +176,11 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
       if (isEmpty(timeWindows[i].camera_wide)) {
         timeWindows[i].camera_wide = false;
       }
+      if (isEmpty(timeWindows[i].days_of_week) || isEmpty(timeWindows[i].start_at) || isEmpty(timeWindows[i].end_at)) {
+        dispatch(createTriggerError(true));
+        console.log("One of the fields is null in an added trigger silence window");
+        return false;
+      }
     }
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}/triggers`;
@@ -284,6 +289,10 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
         triggersUuid = polygonData[i].uuid;
         break;
       }
+      if (isEmpty(polygonData[i].days_of_week) || isEmpty(polygonData[i].start_at) || isEmpty(polygonData[i].end_at)) {
+        dispatch(createTriggerError(true));
+        return false;
+      }
     }
     if (isEmpty(timeWindow.camera_wide) && timeWindow.camera_wide !== true) {
       timeWindow.camera_wide = false;
@@ -345,6 +354,10 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       if (triggersUuid == polygonData[i].base_trigger.uuid) {
         triggersUuid = polygonData[i].uuid;
         break;
+      }
+      if (isEmpty(polygonData[i].days_of_week) || isEmpty(polygonData[i].start_at) || isEmpty(polygonData[i].end_at)) {
+        dispatch(createTriggerError(true));
+        return false;
       }
     }
     if (isEmpty(timeWindow.camera_wide) && timeWindow.camera_wide !== true) {

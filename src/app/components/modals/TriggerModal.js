@@ -557,9 +557,13 @@ class AddTriggerModal extends Component {
           delete values.time_window_select;
           delete values.camera_wide;
           values.trigger_windows = [];
-          this.props.triggerTimeWindows.forEach(function(trigger_window) {
+          this.props.triggerTimeWindows.forEach(function(trigger_window, index) {
             if (trigger_window.hasOwnProperty('start_at') && trigger_window.hasOwnProperty('end_at') && trigger_window.hasOwnProperty('days_of_week')) {
-              values.trigger_windows.push(trigger_window);
+              if (!isEmpty(trigger_window.start_at) && !isEmpty(trigger_window.end_at) && !isEmpty(trigger_window.days_of_week)) {
+                values.trigger_windows.push(trigger_window);
+              } else {
+                message.error("There can be no blank fields in a trigger silence window. Trigger added without silence window: "+(index + 1));
+              }
             }
           });
           if (this.state.cameraGroupOwner == false || typeof values.shared == 'undefined') {
@@ -693,13 +697,13 @@ class AddTriggerModal extends Component {
       let endTime = this.props.triggerTimeWindows[timeWindowSelect].end_at;
       if (endTime !== null && typeof endTime !== 'undefined') {
         if (moment(endTime, 'HH:mm').isAfter(fieldValue, 'minute')) {
-          this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'end_at');
+          this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'start_at');
         } else {
           message.error('Please select a time that is before the end time.');
           this.form.resetFields('start_at');
         }
       } else {
-        this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'end_at');
+        this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'start_at');
       }
     }
   }

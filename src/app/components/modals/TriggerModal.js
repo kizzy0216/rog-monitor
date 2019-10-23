@@ -707,7 +707,7 @@ class AddTriggerModal extends Component {
   handleUpdateStop = (fieldValue) => {
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
     if (typeof timeWindowSelect !== 'undefined') {
-      let startTime = this.props.triggerTimeWindows[timeWindowSelect].start_at;
+      let startTime = this.form.getFieldProps('start_at').value;
       if (startTime !== null && typeof startTime !== 'undefined') {
         if (moment(startTime, 'HH:mm').isBefore(fieldValue, 'minute')) {
           this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'end_at');

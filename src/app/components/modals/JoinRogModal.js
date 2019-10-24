@@ -65,7 +65,7 @@ class RequestInviteModal extends Component {
         return;
       }
 
-      this.props.sendInvitationEmail(values.email);
+      this.props.sendInvitationEmail(values.email.toLowerCase());
     });
   };
 

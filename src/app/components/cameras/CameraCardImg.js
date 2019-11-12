@@ -3,19 +3,22 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
 import cameraConnectError from '../../../assets/img/connectError.jpeg'
+import VideoPlayer from 'react-video-js-player';
 
 class CameraCardImg extends Component {
 
   constructor() {
     super();
     this.state = {
-      image: loading
+      image: loading,
+      url: null
     };
   }
 
   UNSAFE_componentWillMount() {
     if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url+'?auth='+ this.props.data.user.jwt});
+      this.setState({url: this.props.data.reco_camera_url});
     } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
       this.setState({image: cameraConnectError});
     }
@@ -26,23 +29,44 @@ class CameraCardImg extends Component {
       this.setState({image: loading});
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage});
+      this.setState({url: nextProps.data.reco_camera_url});
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
           this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
+          this.setState({url: nextProps.data.cameraGroup.cameras[i].reco_camera_url});
         }
       }
     }
   }
 
   render() {
-    return (
-      <div style={styles.cameraCardImgContainer}>
-        <img src={this.state.image} style={styles.cameraCardImg} />
-      </div>
-    );
+    // TODO: get correct streaming proxy url from the controller and set it to the state correctly
+    if (this.state.url) {
+      return (
+        <div style={styles.cameraCardImgContainer}>
+          <VideoPlayer
+            controls={true}
+            hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
+            preload='auto'
+            bigPlayButton={false}
+            autoPlay={true}
+            height='170'
+            poster={this.state.image}
+            src={"http://150.136.154.96:32311/hls/stream.m3u8"}
+            className="cameraCardImg">
+          </VideoPlayer>
+        </div>
+      );
+    } else {
+      return (
+        <div style={styles.cameraCardImgContainer}>
+          <img src={this.state.image} style={styles.cameraCardImg} />
+        </div>
+      );
+    }
   }
 }
 

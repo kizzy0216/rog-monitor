@@ -289,10 +289,10 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
         triggersUuid = polygonData[i].uuid;
         break;
       }
-      if (isEmpty(polygonData[i].days_of_week) || isEmpty(polygonData[i].start_at) || isEmpty(polygonData[i].end_at)) {
-        dispatch(createTriggerError(true));
-        return false;
-      }
+    }
+    if (isEmpty(timeWindow.days_of_week) || isEmpty(timeWindow.start_at) || isEmpty(timeWindow.end_at)) {
+      dispatch(createTriggerTimeWindowError(true));
+      return false;
     }
     if (isEmpty(timeWindow.camera_wide) && timeWindow.camera_wide !== true) {
       timeWindow.camera_wide = false;

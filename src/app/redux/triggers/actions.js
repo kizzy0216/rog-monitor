@@ -291,6 +291,7 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       }
     }
     if (isEmpty(timeWindow.days_of_week) || isEmpty(timeWindow.start_at) || isEmpty(timeWindow.end_at)) {
+      dispatch(createTriggerTimeWindowInProcess(false));
       dispatch(createTriggerTimeWindowError(true));
       return false;
     }
@@ -357,7 +358,7 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       }
     }
     if (isEmpty(timeWindow.days_of_week) || isEmpty(timeWindow.start_at) || isEmpty(timeWindow.end_at)) {
-      dispatch(createTriggerError(true));
+      dispatch(updateTriggerTimeWindowInProcess(false));
       return false;
     }
     if (isEmpty(timeWindow.camera_wide) && timeWindow.camera_wide !== true) {

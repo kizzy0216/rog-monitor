@@ -3,19 +3,24 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
 import cameraConnectError from '../../../assets/img/connectError.jpeg'
+import VideoPlayer from 'react-video-js-player';
 
 class CameraCardImg extends Component {
 
   constructor() {
     super();
     this.state = {
-      image: loading
+      image: loading,
+      live_view_url: null
     };
   }
 
   UNSAFE_componentWillMount() {
     if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url+'?auth='+ this.props.data.user.jwt});
+      if (this.props.data.live_view_url) {
+        this.setState({live_view_url: this.props.data.live_view_url});
+      }
     } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
       this.setState({image: cameraConnectError});
     }
@@ -24,25 +29,51 @@ class CameraCardImg extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.data.imageUpdateInProgress && nextProps.data.uuid === nextProps.data.imageUpdateInProgressUuid) {
       this.setState({image: loading});
+      this.setState({live_view_url: null});
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage});
+      if (nextProps.data.live_view_url) {
+        this.setState({live_view_url: nextProps.data.live_view_url});
+      }
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
+      this.setState({live_view_url: null});
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
           this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
+          if (nextProps.data.cameraGroup.cameras[i].live_view_url) {
+            this.setState({live_view_url: nextProps.data.cameraGroup.cameras[i].live_view_url});
+          }
         }
       }
     }
   }
 
   render() {
-    return (
-      <div style={styles.cameraCardImgContainer}>
-        <img src={this.state.image} style={styles.cameraCardImg} />
-      </div>
-    );
+    if (this.state.live_view_url) {
+      return (
+        <div style={styles.cameraCardImgContainer}>
+          <VideoPlayer
+            controls={true}
+            hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
+            preload='auto'
+            bigPlayButton={false}
+            autoPlay={true}
+            height='170'
+            poster={this.state.image}
+            src={this.state.live_view_url}
+            className="cameraCardImg">
+          </VideoPlayer>
+        </div>
+      );
+    } else {
+      return (
+        <div style={styles.cameraCardImgContainer}>
+          <img src={this.state.image} style={styles.cameraCardImg} />
+        </div>
+      );
+    }
   }
 }
 

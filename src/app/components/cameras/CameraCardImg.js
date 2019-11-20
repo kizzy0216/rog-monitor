@@ -11,14 +11,16 @@ class CameraCardImg extends Component {
     super();
     this.state = {
       image: loading,
-      url: null
+      proxy_url: null
     };
   }
 
   UNSAFE_componentWillMount() {
     if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url+'?auth='+ this.props.data.user.jwt});
-      this.setState({url: this.props.data.reco_camera_url});
+      if (this.props.data.proxy_url) {
+        this.setState({proxy_url: this.props.data.proxy_url});
+      }
     } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
       this.setState({image: cameraConnectError});
     }
@@ -27,16 +29,22 @@ class CameraCardImg extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.data.imageUpdateInProgress && nextProps.data.uuid === nextProps.data.imageUpdateInProgressUuid) {
       this.setState({image: loading});
+      this.setState({proxy_url: null});
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage});
-      this.setState({url: nextProps.data.reco_camera_url});
+      if (nextProps.data.proxy_url) {
+        this.setState({proxy_url: nextProps.data.proxy_url});
+      }
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
+      this.setState({proxy_url: null});
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
           this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
-          this.setState({url: nextProps.data.cameraGroup.cameras[i].reco_camera_url});
+          if (nextProps.data.cameraGroup.cameras[i].proxy_url) {
+            this.setState({proxy_url: nextProps.data.cameraGroup.cameras[i].proxy_url});
+          }
         }
       }
     }
@@ -44,7 +52,8 @@ class CameraCardImg extends Component {
 
   render() {
     // TODO: get correct streaming proxy url from the controller and set it to the state correctly
-    if (this.state.url) {
+    console.log(this.props.data.cameraGroup.cameras);
+    if (this.state.proxy_url) {
       return (
         <div style={styles.cameraCardImgContainer}>
           <VideoPlayer
@@ -55,7 +64,7 @@ class CameraCardImg extends Component {
             autoPlay={true}
             height='170'
             poster={this.state.image}
-            src={"http://150.136.154.96:32311/hls/stream.m3u8"}
+            src={this.state.proxy_url}
             className="cameraCardImg">
           </VideoPlayer>
         </div>

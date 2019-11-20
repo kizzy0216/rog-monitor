@@ -11,15 +11,15 @@ class CameraCardImg extends Component {
     super();
     this.state = {
       image: loading,
-      proxy_url: null
+      live_view_url: null
     };
   }
 
   UNSAFE_componentWillMount() {
     if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url+'?auth='+ this.props.data.user.jwt});
-      if (this.props.data.proxy_url) {
-        this.setState({proxy_url: this.props.data.proxy_url});
+      if (this.props.data.live_view_url) {
+        this.setState({live_view_url: this.props.data.live_view_url});
       }
     } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
       this.setState({image: cameraConnectError});
@@ -29,21 +29,21 @@ class CameraCardImg extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.data.imageUpdateInProgress && nextProps.data.uuid === nextProps.data.imageUpdateInProgressUuid) {
       this.setState({image: loading});
-      this.setState({proxy_url: null});
+      this.setState({live_view_url: null});
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage});
-      if (nextProps.data.proxy_url) {
-        this.setState({proxy_url: nextProps.data.proxy_url});
+      if (nextProps.data.live_view_url) {
+        this.setState({live_view_url: nextProps.data.live_view_url});
       }
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
-      this.setState({proxy_url: null});
+      this.setState({live_view_url: null});
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
           this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
-          if (nextProps.data.cameraGroup.cameras[i].proxy_url) {
-            this.setState({proxy_url: nextProps.data.cameraGroup.cameras[i].proxy_url});
+          if (nextProps.data.cameraGroup.cameras[i].live_view_url) {
+            this.setState({live_view_url: nextProps.data.cameraGroup.cameras[i].live_view_url});
           }
         }
       }
@@ -51,7 +51,7 @@ class CameraCardImg extends Component {
   }
 
   render() {
-    if (this.state.proxy_url) {
+    if (this.state.live_view_url) {
       return (
         <div style={styles.cameraCardImgContainer}>
           <VideoPlayer
@@ -62,7 +62,7 @@ class CameraCardImg extends Component {
             autoPlay={true}
             height='170'
             poster={this.state.image}
-            src={this.state.proxy_url}
+            src={this.state.live_view_url}
             className="cameraCardImg">
           </VideoPlayer>
         </div>

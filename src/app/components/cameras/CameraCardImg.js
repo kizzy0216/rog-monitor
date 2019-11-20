@@ -51,8 +51,6 @@ class CameraCardImg extends Component {
   }
 
   render() {
-    // TODO: get correct streaming proxy url from the controller and set it to the state correctly
-    console.log(this.props.data.cameraGroup.cameras);
     if (this.state.proxy_url) {
       return (
         <div style={styles.cameraCardImgContainer}>

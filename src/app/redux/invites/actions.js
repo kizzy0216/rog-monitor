@@ -212,7 +212,7 @@ export function fetchSentCameraGroupInvites(user, camera_group_uuid) {
     dispatch(fetchReceivedInProcess(true));
     dispatch(fetchReceivedError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group&action=${camera_group_uuid}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group&action=${camera_group_uuid}&email=${sessionStorage.getItem('email')}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.get(url, config)

@@ -34,7 +34,7 @@ const UserCameraGroupSettings = (props) => {
             </Col>
           </Col>
         </Row>
-      )) : `You have not recieved any invitations.`}
+      )) : `There are no pending invitations.`}
 
       {props.userCameraGroupPrivileges.length > 0 ?
         props.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (

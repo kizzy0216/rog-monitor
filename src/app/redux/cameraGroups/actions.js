@@ -342,7 +342,6 @@ export function shareCameraGroup(user, cameraGroupUuid, inviteeEmail) {
 export function removeUserCameraGroupPrivilege(user, cameraGroupUuid, cameraGroupPrivilegeUuid, cameraGroupPrivilege=null) {
   return (dispatch) => {
     let user_uuid = null;
-    console.log(cameraGroupPrivilege);
     if (cameraGroupPrivilege !== null) {
       user_uuid = cameraGroupPrivilege.users_uuid;
     } else {

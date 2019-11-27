@@ -119,7 +119,7 @@ function clearAllAlerts() {
 export function listenForNewAlerts(user, messaging) {
   return (dispatch) => {
     messaging.onMessage(payload => {
-      console.log("Notification Received", payload);
+      // console.log("Notification Received", payload);
       dispatch(handleNewAlert(user, payload));
       dispatch(fetchAlerts(user));
     });

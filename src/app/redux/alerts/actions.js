@@ -165,8 +165,10 @@ export function fetchAlerts(user) {
         let errMessage = 'Error fecthing alerts';
         if (typeof error.response != 'undefined') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
             }
           }
         }

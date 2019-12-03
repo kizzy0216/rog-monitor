@@ -154,6 +154,8 @@ export function muteSound(user, mute) {
     }
     axios.patch(url, data, config)
       .then((response) => {
+        user.mute = response.data.user.mute;
+        dispatch(updateUserData(user));
         dispatch(toggleMute(response.data.user.mute));
       })
       .catch((err) => {

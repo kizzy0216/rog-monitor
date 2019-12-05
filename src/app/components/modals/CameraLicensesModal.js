@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Icon, Modal, Form, Input, Button } from 'antd';
+import {isEmpty} from '../../redux/helperFunctions';
 const FormItem = Form.Item;
 
 const CameraLicensesForm = Form.create()(
@@ -18,19 +19,25 @@ const CameraLicensesForm = Form.create()(
 
     const countTotalCameraLicenses = () => {
       let count = 0;
-      cameraLicenses.map(cameraLicense => cameraLicense.uuid !== null ? count++ : count)
+      if (!isEmpty(cameraLicenses)) {
+        cameraLicenses.map(cameraLicense => cameraLicense.uuid !== null ? count++ : count)
+      }
       return count;
     }
 
     const countUsedCameraLicenses = () => {
       let count = 0;
-      cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid !== null ? count++ : count)
+      if (!isEmpty(cameraLicenses)) {
+        cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid !== null ? count++ : count)
+      }
       return count;
     }
 
     const countAvailableCameraLicenses = () => {
       let count = 0;
-      cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid == null ? count++ : count)
+      if (!isEmpty(cameraLicenses)) {
+        cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid == null ? count++ : count)
+      }
       return count;
     }
 
@@ -58,14 +65,16 @@ const CameraLicensesForm = Form.create()(
     }];
 
     const data = [];
-    for (var i = 0; i < cameraLicenses.length; i++) {
-      data.push({
-        key: cameraLicenses[i].uuid,
-        owner: cameraLicenses[i].tier_0,
-        distributer: cameraLicenses[i].tier_1,
-        manager: cameraLicenses[i].tier_2,
-        cameras_uuid: cameraLicenses[i].cameras_uuid
-      });
+    if (!isEmpty(cameraLicenses)) {
+      for (var i = 0; i < cameraLicenses.length; i++) {
+        data.push({
+          key: cameraLicenses[i].uuid,
+          owner: cameraLicenses[i].tier_0,
+          distributer: cameraLicenses[i].tier_1,
+          manager: cameraLicenses[i].tier_2,
+          cameras_uuid: cameraLicenses[i].cameras_uuid
+        });
+      }
     }
 
     return (

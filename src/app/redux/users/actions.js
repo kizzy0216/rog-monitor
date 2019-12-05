@@ -174,25 +174,31 @@ export function muteSound(user, mute) {
 
 function setupFirebaseCloudMessaging(user){
   return (dispatch, getState, {getFirebase}) => {
-    const firebase = getFirebase();
-    const messaging = firebase.messaging();
-    messaging
-      .requestPermission()
-      .then(() => {
-        return messaging.getToken();
-       })
-      .then(token => {
-        // console.log("FCM Token:", token);
-        dispatch(checkForStoredUserDeviceToken(user, token, messaging));
-      })
-      .catch(error => {
-        if (error.code === "messaging/permission-blocked") {
-          alert("It looks like your web browser blocked our notifications. Please Unblock Notifications Manually through your browser's settings.");
-        } else {
-          dispatch(loginError(errMessage));
-          dispatch(loginInProcess(false));
-        }
-      });
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        // console.log('Notification permission granted.');
+        const firebase = getFirebase();
+        const messaging = firebase.messaging();
+        messaging
+          .requestPermission()
+          .then((currentToken) => {
+            return messaging.getToken();
+           })
+          .then(currentToken => {
+            // console.log("FCM Token:", currentToken);
+            dispatch(checkForStoredUserDeviceToken(user, currentToken, messaging));
+          })
+          .catch(error => {
+            let errMessage = 'Error setting up FCM notifications.';
+            if (error.code === "messaging/permission-blocked") {
+              errMessage = "It looks like your web browser blocked our notifications. Please Unblock Notifications Manually through your browser's settings.";
+            }
+            alert(errMessage);
+          });
+      } else {
+        console.log('Unable to get permission to notify.');
+      }
+    });
   }
 }
 

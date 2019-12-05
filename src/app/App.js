@@ -5,6 +5,8 @@ import AppRouter from './components/navigation/AppRouter';
 
 import { checkLogin, initialiseAnalyticsEngine } from './redux/auth/actions';
 import { listenForNewAlerts } from './redux/alerts/actions';
+import {logout} from './redux/auth/actions';
+import {isEmpty} from './redux/helperFunctions';
 import store from './redux/store';
 
 class App extends Component {
@@ -14,8 +16,7 @@ class App extends Component {
 
     this.state = {
       currentUser: null,
-      loading: true,
-      // socketSet: false
+      loading: true
     }
   }
 
@@ -29,15 +30,17 @@ class App extends Component {
     const { user } = store.getState().auth;
     if (this.state.currentUser !== user) {
       this.setState({currentUser: user});
-      // if (user && this.state.socketSet == false) {
-      //   this.setState({socketSet: true});
-      //   store.dispatch(listenForNewAlerts(user));
-      // }
     }
     this.setState({loading: false});
   }
 
   render() {
+    window.addEventListener("beforeunload", (ev) =>
+    {
+      if (!isEmpty(store.getState().auth)) {
+        dispatch(logout(store.getState().auth));
+      }
+    });
     if (this.state.loading) {
       return (<div style={{margin: 0, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 36}}>Loading</div>)
     }

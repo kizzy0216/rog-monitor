@@ -59,6 +59,12 @@ function deleteSuccess(alertUuid) {
   }
 }
 
+function clearAllAlerts() {
+  return {
+    type: types.CLEAR_ALL_NEW_ALERTS
+  }
+}
+
 export function mergeNewAlerts() {
   return {
     type: types.MERGE_NEW_ALERTS
@@ -84,35 +90,38 @@ function newAlert(alert, mute) {
   }
 }
 
+var previousAlert = null;
+
 function handleNewAlert(user, payload) {
-  if (payload.data.trigger_type == 'RA') {
-    payload.data.trigger_type = 'Restricted Area';
-  } else if (payload.data.trigger_type == 'VW') {
-    payload.data.trigger_type = 'Virtual Wall';
-  } else {
-    payload.data.trigger_type = 'Loitering Detected';
-  }
-  let alert = {
-    uuid: payload.data.uuid,
-    type: payload.data.trigger_type,
-    camera: {
-      name: payload.notification.title,
-      cameraGroup: {
-        name: payload.data.camera_groups_name
+  if (previousAlert !== payload.data.uuid) {
+    previousAlert = payload.data.uuid;
+    if (payload.data.trigger_type == 'RA') {
+      payload.data.trigger_type = 'Restricted Area';
+    } else if (payload.data.trigger_type == 'VW') {
+      payload.data.trigger_type = 'Virtual Wall';
+    } else if (payload.data.trigger_type == 'LD'){
+      payload.data.trigger_type = 'Loitering Detected';
+    }
+    let alert = {
+      uuid: payload.data.uuid,
+      type: payload.data.trigger_type,
+      camera: {
+        name: payload.notification.title,
+        cameraGroup: {
+          name: payload.data.camera_groups_name
+        }
       }
     }
-  }
-  return (dispatch) => {
-    if (typeof user.mute == 'undefined') {
-      user.mute = false;
+    return (dispatch) => {
+      if (typeof user.mute == 'undefined') {
+        user.mute = false;
+      }
+      dispatch(newAlert(alert, user.mute));
     }
-    dispatch(newAlert(alert, user.mute));
-  }
-}
-
-function clearAllAlerts() {
-  return {
-    type: types.CLEAR_ALL_NEW_ALERTS
+  } else {
+    return (dispatch) => {
+      dispatch(fetchError("duplicate alert"));
+    }
   }
 }
 
@@ -126,7 +135,7 @@ export function listenForNewAlerts(user, messaging) {
 
     messaging.onTokenRefresh(function(user, messaging) {
       messaging.getToken().then(function(refreshedToken) {
-        console.log('Token refreshed: ' + refreshedToken);
+        // console.log('Token refreshed: ' + refreshedToken);
         dispatch(storeUserDevice(user, refreshedToken, messaging));
       }).catch(function(err) {
         console.log('Unable to retrieve refreshed token ', err);

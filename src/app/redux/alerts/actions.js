@@ -90,47 +90,43 @@ function newAlert(alert, mute) {
   }
 }
 
-var previousAlert = null;
-
 function handleNewAlert(user, payload) {
-  if (previousAlert !== payload.data.uuid) {
-    previousAlert = payload.data.uuid;
-    if (payload.data.trigger_type == 'RA') {
-      payload.data.trigger_type = 'Restricted Area';
-    } else if (payload.data.trigger_type == 'VW') {
-      payload.data.trigger_type = 'Virtual Wall';
-    } else if (payload.data.trigger_type == 'LD'){
-      payload.data.trigger_type = 'Loitering Detected';
-    }
-    let alert = {
-      uuid: payload.data.uuid,
-      type: payload.data.trigger_type,
-      camera: {
-        name: payload.notification.title,
-        cameraGroup: {
-          name: payload.data.camera_groups_name
-        }
+  if (payload.data.trigger_type == 'RA') {
+    payload.data.trigger_type = 'Restricted Area';
+  } else if (payload.data.trigger_type == 'VW') {
+    payload.data.trigger_type = 'Virtual Wall';
+  } else if (payload.data.trigger_type == 'LD'){
+    payload.data.trigger_type = 'Loitering Detected';
+  }
+  let alert = {
+    uuid: payload.data.uuid,
+    type: payload.data.trigger_type,
+    camera: {
+      name: payload.notification.title,
+      cameraGroup: {
+        name: payload.data.camera_groups_name
       }
-    }
-    return (dispatch) => {
-      if (typeof user.mute == 'undefined') {
-        user.mute = false;
-      }
-      dispatch(newAlert(alert, user.mute));
-    }
-  } else {
-    return (dispatch) => {
-      dispatch(fetchError("duplicate alert"));
     }
   }
+  return (dispatch) => {
+    if (typeof user.mute == 'undefined') {
+      user.mute = false;
+    }
+    dispatch(newAlert(alert, user.mute));
+  }
 }
+
+var previousAlert = null;
 
 export function listenForNewAlerts(user, messaging) {
   return (dispatch) => {
     messaging.onMessage(payload => {
-      // console.log("Notification Received", payload);
-      dispatch(handleNewAlert(user, payload));
-      dispatch(fetchAlerts(user));
+      if (previousAlert !== payload.data.uuid) {
+        // console.log("Notification Received", payload);
+        previousAlert = payload.data.uuid;
+        dispatch(handleNewAlert(user, payload));
+        dispatch(fetchAlerts(user));
+      }
     });
 
     messaging.onTokenRefresh(function(user, messaging) {

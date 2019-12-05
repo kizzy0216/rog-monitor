@@ -549,7 +549,7 @@ class AddTriggerModal extends Component {
         this.triggerDetails['uuid'] = this.props.data.uuid;
         this.form.validateFields((err, values) => {
           if (err) {
-            return;
+            return message.error(err);
           }
           delete values.start_at;
           delete values.end_at;
@@ -764,7 +764,7 @@ class AddTriggerModal extends Component {
       if (err) {
         return;
       }
-      if (typeof values.time_window_select != 'undefined') {
+      if (typeof values.time_window_select != 'undefined' && values.start_at != null && values.end_at != null && values.days_of_week != null) {
         let trigger_windows = {};
         trigger_windows.start_at = values.start_at.format('HH:mmZ').toString();
         trigger_windows.end_at = values.end_at.format('HH:mmZ').toString();
@@ -805,6 +805,8 @@ class AddTriggerModal extends Component {
           this.form.resetFields('start_at');
           this.form.resetFields('end_at');
         }
+      } else {
+        message.error('Please select the days of week and time period for your silence window.');
       }
     });
   }

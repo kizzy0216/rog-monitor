@@ -774,11 +774,13 @@ class AddTriggerModal extends Component {
         if (values.start_at.isBefore(values.end_at)) {
           if (this.state.showShareOption) {
             for (var i = 0; i < this.props.data.polygonData.length; i++) {
+              let new_time_windows = []
               for (var x = 0; x < this.props.data.polygonData[i].time_windows.length; x++) {
-                if (typeof this.props.data.polygonData[i].time_windows[x].uuid === 'undefined') {
-                  delete this.props.data.polygonData[i].time_windows[x];
+                if (typeof this.props.data.polygonData[i].time_windows[x].uuid !== 'undefined') {
+                  new_time_windows.push(this.props.data.polygonData[i].time_windows[x]);
                 }
               }
+              this.props.data.polygonData[i].time_windows = new_time_windows;
             }
             this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
             this.setState({showShareOption: false});

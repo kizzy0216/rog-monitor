@@ -344,6 +344,9 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
         dispatch(createTriggerTimeWindowSuccess(false));
         dispatch(createTriggerTimeWindowInProcess(false));
         dispatch(createTriggerTimeWindowError(false));
+        let cameraGroup = {};
+        cameraGroup.uuid = cameraGroupUuid;
+        dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
   }
 }

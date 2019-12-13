@@ -685,7 +685,7 @@ class AddTriggerModal extends Component {
   handleAddNewTimeWindow = () => {
     this.form.resetFields('time_window_select');
     this.form.resetFields('days_of_week');
-    this.form.resetFields('camera_wide');
+    this.form.setFieldsValue({'camera_wide': false});
     this.form.setFieldsValue({start_at: null});
     this.form.setFieldsValue({end_at: null});
     this.props.addNewTriggerTimeWindow(this.props.triggerTimeWindows);
@@ -735,7 +735,7 @@ class AddTriggerModal extends Component {
 
   handleResetData = () => {
     this.form.resetFields('days_of_week');
-    this.form.resetFields('camera_wide');
+    this.form.setFieldsValue({'camera_wide': false});
     this.form.resetFields('start_at');
     this.form.resetFields('end_at');
     this.setState({cameraWideDisabled: false});
@@ -751,7 +751,7 @@ class AddTriggerModal extends Component {
       if (polygonData[i].uuid == selectedPolygonUuid) {
         this.form.resetFields('time_window_select');
         this.form.resetFields('days_of_week');
-        this.form.resetFields('camera_wide');
+        this.form.setFieldsValue({'camera_wide': false});
         this.form.resetFields('start_at');
         this.form.resetFields('end_at');
         this.props.setTriggerSpecificTimeWindows(polygonData[i].time_windows);
@@ -786,7 +786,7 @@ class AddTriggerModal extends Component {
             this.setState({showShareOption: false});
             this.form.resetFields('time_window_select');
             this.form.resetFields('days_of_week');
-            this.form.resetFields('camera_wide');
+            this.form.setFieldsValue({'camera_wide': false});
             this.form.setFieldsValue({start_at: null});
             this.form.setFieldsValue({end_at: null});
             this.setState({cameraWideDisabled: false});
@@ -796,7 +796,7 @@ class AddTriggerModal extends Component {
             this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
             this.form.resetFields('time_window_select');
             this.form.resetFields('days_of_week');
-            this.form.resetFields('camera_wide');
+            this.form.setFieldsValue({'camera_wide': false});
             this.form.setFieldsValue({start_at: null});
             this.form.setFieldsValue({end_at: null});
             this.setState({cameraWideDisabled: false});

@@ -13,6 +13,7 @@ class CameraCardImg extends Component {
       image: loading,
       live_view_url: null
     };
+    this.live_view_key = 0;
   }
 
   UNSAFE_componentWillMount() {
@@ -33,6 +34,7 @@ class CameraCardImg extends Component {
       this.setState({image: nextProps.data.refreshCameraImage+'?auth='+ this.props.data.user.jwt});
       if (nextProps.data.live_view_url) {
         this.setState({live_view_url: nextProps.data.live_view_url+'?auth='+ this.props.data.user.jwt});
+        this.live_view_key++;
       }
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
@@ -43,6 +45,7 @@ class CameraCardImg extends Component {
           this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url+'?auth='+ this.props.data.user.jwt});
           if (nextProps.data.cameraGroup.cameras[i].live_view_url) {
             this.setState({live_view_url: nextProps.data.cameraGroup.cameras[i].live_view_url+'?auth='+ this.props.data.user.jwt});
+            this.live_view_key++;
           }
         }
       }
@@ -51,13 +54,13 @@ class CameraCardImg extends Component {
 
   render() {
     return (
-      <div style={styles.cameraCardImgContainer}>
+      <div style={styles.cameraCardImgContainer} key={this.live_view_key}>
         {this.state.live_view_url ?
           <VideoPlayer
             controls={true}
             hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
             preload='auto'
-            bigPlayButton={false}
+            bigPlayButton={true}
             autoPlay={true}
             height='170'
             poster={this.state.image}

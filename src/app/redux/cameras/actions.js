@@ -217,7 +217,7 @@ export function updatePreviewImage(user, cameraGroup, cameraUuid) {
     dispatch(imageUpdateInProgress(true, cameraUuid));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}/image`;
 
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}, timeout: 90000};
     let data = {camera_groups_name: cameraGroup.name}
 
     axios.post(url, data, config)

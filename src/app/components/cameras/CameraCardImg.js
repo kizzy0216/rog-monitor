@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
-import cameraConnectError from '../../../assets/img/connectError.jpeg'
+import cameraConnectError from '../../../assets/img/connectError.gif'
 import VideoPlayer from 'react-video-js-player';
 
 class CameraCardImg extends Component {

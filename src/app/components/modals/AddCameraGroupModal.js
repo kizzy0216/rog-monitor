@@ -2,6 +2,7 @@ import React, { Component} from 'react';
 import { connect } from 'react-redux';
 import { Icon, Modal, Form, Input, Button, message } from 'antd';
 const FormItem = Form.Item;
+import { fetchUserCameraLicenses } from '../../redux/users/actions';
 
 import { addNewCameraGroup } from '../../redux/cameraGroups/actions';
 
@@ -54,9 +55,23 @@ class AddCameraGroupModal extends Component {
     }
   };
 
-  showModal = () => {
-    this.setState({visible: true});
-  };
+  toggleAddCameraGroupModalVisibility = () => {
+    let licensesAvailable = this.countAvailableCameraLicenses();
+    if (licensesAvailable >= 1) {
+      this.setState({visible: this.state.visible});
+    } else if (this.state.addCameraModalVisible === true) {
+      this.setState({visible: false});
+    } else {
+      message.error("You have reached your license limit. Please send an email requesting additional licenses to help@gorog.co");
+    }
+  }
+
+  countAvailableCameraLicenses = () => {
+    this.props.fetchUserCameraLicenses(this.props.user, this.props.cameraGroups)
+    let count = 0;
+    this.props.user.cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid == null ? count++ : count)
+    return count;
+  }
 
   resetFields = () => {
     this.form.resetFields();
@@ -83,7 +98,7 @@ class AddCameraGroupModal extends Component {
   render() {
     return (
       <div>
-        <div onClick={this.showModal}>
+        <div onClick={this.toggleAddCameraGroupModalVisibility}>
           <Icon type='environment-o'/>
           &nbsp;&nbsp;
           <span>{this.props.linkText}</span>
@@ -140,6 +155,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchUserCameraLicenses: (user, cameraGroup) => dispatch(fetchUserCameraLicenses(user, cameraGroup)),
     addNewCameraGroup: (user, cameraGroup) => dispatch(addNewCameraGroup(user, cameraGroup))
   }
 }

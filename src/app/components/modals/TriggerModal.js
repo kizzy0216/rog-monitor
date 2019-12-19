@@ -14,7 +14,7 @@ const FormItem = Form.Item;
 const AddTriggerForm = Form.create()(
   (props) => {
     const {
-      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, showShareOption, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow, cameraWideDisabled, cameraWide, toggleCameraWide
+      onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, showShareOption, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow, cameraWideDisabled, cameraWide, toggleCameraWide, canvasKey
     } = props;
     const {getFieldDecorator} = form;
     const formItemLayout = {
@@ -35,7 +35,7 @@ const AddTriggerForm = Form.create()(
              width="50%"
       >
         <Form>
-          <FormItem style={styles.triggersHideShow}>
+          <FormItem style={styles.triggersHideShow} key={canvasKey}>
             {triggerImg === null ?
               <img src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />:
               <img src={triggerImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
@@ -360,10 +360,14 @@ class AddTriggerModal extends Component {
     this.onImgLoad = this.onImgLoad.bind(this);
     this.triggerPointDirection = this.triggerPointDirection.bind(this);
     this.triggerExtras = this.triggerExtras.bind(this);
+    this.canvasKey = 0;
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
+      if (nextProps.polygonData !== undefined && !isEmpty(nextProps.polygonData) && this.props.polygonData !== nextProps.polygonData) {
+        this.canvasKey++;
+      }
       if (nextProps.fetchTriggerSuccess === true && !isEmpty(nextProps.polygonData)) {
         this.setState({canvasMode: true});
         if (this.triggerDetails.currentTriggerUuid !== null) {
@@ -899,6 +903,7 @@ class AddTriggerModal extends Component {
           cameraWideDisabled={this.state.cameraWideDisabled}
           cameraWide={this.state.cameraWide}
           toggleCameraWide={this.handleToggleCameraWide}
+          canvasKey={this.canvasKey}
         />
       </div>
     );

@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Icon, Switch } from 'antd';
-import { toggleCameraEnabled } from '../../redux/cameras/actions';
-import { checkCameraEnabled } from '../../redux/cameras/actions';
+import { toggleCameraEnabled, checkCameraEnabled, updatePreviewImage } from '../../redux/cameras/actions';
 
 class ToggleCameraConnection extends Component {
 
   toggleCameraEnabled = (enabled) => {
     this.props.toggleCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid, enabled);
+    this.props.updatePreviewImage(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid);
   }
 
   UNSAFE_componentWillMount() {
@@ -46,7 +46,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return{
     toggleCameraEnabled: (user, cameraGroup, camera, cameraConnectionEnabled) => dispatch(toggleCameraEnabled(user, cameraGroup, camera, cameraConnectionEnabled)),
-    checkCameraEnabled: (user, cameraGroup, cameraUuid) => dispatch(checkCameraEnabled(user, cameraGroup, cameraUuid))
+    checkCameraEnabled: (user, cameraGroup, cameraUuid) => dispatch(checkCameraEnabled(user, cameraGroup, cameraUuid)),
+    updatePreviewImage: (user, cameraGroup, cameraUuid) => dispatch(updatePreviewImage(user, cameraGroup, cameraUuid))
   }
 }
 

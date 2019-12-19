@@ -68,7 +68,7 @@ class CameraList extends Component {
   }
 
   render() {
-    if (this.props.cameraGroups.length > 0) {
+    if (this.props.cameraGroups.length > 0 && typeof this.props.selectedCameraGroup !== 'undefined') {
       return (
         <div>
           <Row type='flex' justify='center' align='middle' style={styles.cameraOptions}>
@@ -115,11 +115,20 @@ class CameraList extends Component {
           :
           <Row type='flex' justify='start' style={styles.cameraListContainer}>
             <p style={styles.noCamerasText}>
-              Sorry! <br/> An error occurred. <br/> Please reload the page. <br/> If you keep seeing this message, <br/> please email alex@gorog.co and let us know.
+              Sorry! <br/> An error occurred trying to get your camera group information. <br/> Please reload the page. <br/> If you keep seeing this message, <br/> please email help@gorog.co and let us know.
             </p>
           </Row>
           }
         </div>
+      )
+    } else if (this.props.cameraGroups.length > 0 && typeof this.props.selectedCameraGroup === 'undefined') {
+      this.selectCameraGroup(this.props.user, this.props.cameraGroups[0]);
+      return (
+        <Row type='flex' justify='start' style={styles.cameraListContainer}>
+          <p style={styles.noCamerasText}>
+            Loading
+          </p>
+        </Row>
       )
     } else {
       return (

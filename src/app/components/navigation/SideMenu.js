@@ -21,12 +21,9 @@ const SideMenu = () => (
       <CameraLicensesModal />
     </Menu.Item>
     <Menu.Item key='4'>
-      <UserDevicesModal />
-    </Menu.Item>
-    <Menu.Item key='5'>
       <CameraGroupInvitesModal />
     </Menu.Item>
-    <Menu.Item key='6'>
+    <Menu.Item key='5'>
       <LogoutItem/>
     </Menu.Item>
   </Menu>

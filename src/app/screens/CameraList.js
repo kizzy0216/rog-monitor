@@ -115,7 +115,7 @@ class CameraList extends Component {
           :
           <Row type='flex' justify='start' style={styles.cameraListContainer}>
             <p style={styles.noCamerasText}>
-              Sorry! <br/> An error occurred trying to get your camera group information. <br/> Please reload the page. <br/> If you keep seeing this message, <br/> please email help@gorog.co and let us know.
+              Loading Camera Group Information
             </p>
           </Row>
           }

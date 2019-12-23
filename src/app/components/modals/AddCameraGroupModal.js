@@ -58,7 +58,7 @@ class AddCameraGroupModal extends Component {
   toggleAddCameraGroupModalVisibility = () => {
     let licensesAvailable = this.countAvailableCameraLicenses();
     if (licensesAvailable >= 1) {
-      this.setState({visible: this.state.visible});
+      this.setState({visible: !this.state.visible});
     } else if (this.state.addCameraModalVisible === true) {
       this.setState({visible: false});
     } else {

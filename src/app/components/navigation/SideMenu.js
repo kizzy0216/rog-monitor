@@ -7,7 +7,6 @@ import UserSettings from '../../components/modals/UserSettings';
 import AddCameraGroupModal from  '../../components/modals/AddCameraGroupModal';
 import CameraGroupInvitesModal from '../../components/modals/CameraGroupInvitesModal';
 import CameraLicensesModal from '../../components/modals/CameraLicensesModal';
-import UserDevicesModal from '../../components/modals/UserDevicesModal';
 
 const SideMenu = () => (
   <Menu>

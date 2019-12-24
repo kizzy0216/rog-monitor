@@ -218,7 +218,16 @@ export function fetchCameraGroups(user) {
       .then(response => {
         if (isEmpty(response.data) === false) {
           dispatch(fetchSuccess(response.data));
-          dispatch(selectCameraGroup(user, response.data[0]));
+          if (!isEmpty(sessionStorage.getItem('selectedCameraGroupUuid'))) {
+            for (var i = 0; i < response.data.length; i++) {
+              if (sessionStorage.getItem('selectedCameraGroupUuid') === response.data[i].uuid) {
+                dispatch(selectCameraGroup(user, response.data[i]));
+                break;
+              }
+            }
+          } else {
+            dispatch(selectCameraGroup(user, response.data[0]));
+          }
         }
       })
       .catch(error => {

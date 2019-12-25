@@ -107,8 +107,12 @@ class Login extends Component {
                       <FormItem label='Email' hasFeedback>
                         {getFieldDecorator('email', {
                           rules: [
-                            { type: 'email', message: 'This is not a valid email' },
-                            { required: true, message: 'Please enter your email' }],
+                            {
+                              required: true,
+                              pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"),
+                              message: "Please enter a valid email address."
+                            }
+                          ]
                         })(
                           <Input />
                         )}

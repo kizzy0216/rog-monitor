@@ -21,9 +21,9 @@ const InviteForm = Form.create()(
           <FormItem hasFeedback>
             {getFieldDecorator('email', {
               rules: [{
-                type: 'email', message: 'This is not a valid email',
-              }, {
-                required: true, message: 'Please enter your email address',
+                required: true,
+                pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"),
+                message: "Please enter a valid email address."
               }],
             })(
               <Input style={styles.emailInput} prefix={<Icon type='mail' />} placeholder='Enter email address'/>

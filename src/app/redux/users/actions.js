@@ -181,8 +181,8 @@ function setupFirebaseCloudMessaging(user){
         const messaging = firebase.messaging();
         messaging
           .requestPermission()
-          .then((currentToken) => {
-            return messaging.getToken();
+          .then(() => {
+            return messaging.getToken("153344187169", "FCM");
            })
           .then(currentToken => {
             // console.log("FCM Token:", currentToken);
@@ -310,6 +310,9 @@ export function deleteUserDevice(userUuid, deviceUuid, token) {
           .deleteToken(token)
             .then((response) => {
               // console.log(response);
+            })
+            .catch(error => {
+              throw(error);
             });
       })
       .catch(error => {
@@ -321,7 +324,7 @@ export function deleteUserDevice(userUuid, deviceUuid, token) {
             }
           }
         }
-        console.log(errMessage);
+        throw(errMessage);
       });
   }
 }

@@ -46,7 +46,8 @@ const styles = {
     height: 'calc(100vh - 105px)'
   },
   cameraCard: {
-    minWidth: 320
+    minWidth: 320,
+    maxHeight: 304
   }
 }
 

@@ -48,7 +48,7 @@ function updateUserCameraLicenseData(data) {
 export function fetchUserCameraLicenses(user) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/licenses`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
         if (isEmpty(response.data) === false) {
@@ -84,9 +84,9 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
           ...response.data,
           jwt: jwt
         }
-        sessionStorage.setItem('jwt', jwt);
-        sessionStorage.setItem('email', email);
-        sessionStorage.setItem('password', password);
+        localStorage.setItem('jwt', jwt);
+        localStorage.setItem('email', email);
+        localStorage.setItem('password', password);
 
         if (window.jwtTokenRefresh === null) {
           window.jwtTokenRefresh = window.setInterval(
@@ -117,7 +117,7 @@ export function updateUser(user, values) {
     dispatch(updateUserError(''));
     dispatch(updateUserSuccess(false));
     dispatch(updateUserInProgress(true));
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
     const data = {
       first_name: values.firstName,
@@ -148,7 +148,7 @@ export function updateUser(user, values) {
 export function muteSound(user, mute) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     let data = {
       mute: mute
     }
@@ -205,7 +205,7 @@ function setupFirebaseCloudMessaging(user){
 function checkForStoredUserDeviceToken(user, token, messaging) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/devices`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
         user.devices = response.data;
@@ -214,8 +214,8 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
           let stored_device_token = user.devices[i].device_token;
           if (token === stored_device_token) {
             device_token_exists = true;
-            sessionStorage.setItem('fcm_token_id', user.devices[i].uuid)
-            sessionStorage.setItem('fcm_token', token)
+            localStorage.setItem('fcm_token_id', user.devices[i].uuid)
+            localStorage.setItem('fcm_token', token)
             dispatch(listenForNewAlerts(user, messaging));
             dispatch(loginSuccess(user));
             dispatch(loginInProcess(false));
@@ -243,7 +243,7 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
 export function storeUserDevice(user, token, messaging) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/devices`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     let data ={
       device_token: token,
       device_name: 'Web Browser Device'
@@ -251,8 +251,8 @@ export function storeUserDevice(user, token, messaging) {
     axios.post(url, data, config)
       .then((response) => {
         user.devices.push(response.data.user_device);
-        sessionStorage.setItem('fcm_token_id', response.data.user_device.uuid)
-        sessionStorage.setItem('fcm_token', token)
+        localStorage.setItem('fcm_token_id', response.data.user_device.uuid)
+        localStorage.setItem('fcm_token', token)
         dispatch(listenForNewAlerts(user, messaging));
         dispatch(loginSuccess(user));
         dispatch(loginInProcess(false));
@@ -276,7 +276,7 @@ export function storeUserDevice(user, token, messaging) {
 export function updateUserDevice(userUuid, deviceUuid, name) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userUuid}/devices/${deviceUuid}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     let data ={
       device_name: name
     }
@@ -301,7 +301,7 @@ export function updateUserDevice(userUuid, deviceUuid, name) {
 export function deleteUserDevice(userUuid, deviceUuid, token) {
   return (dispatch, getState, {getFirebase}) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${userUuid}/devices/${deviceUuid}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     axios.delete(url, config)
       .then((response) => {
         const firebase = getFirebase();
@@ -333,7 +333,7 @@ export function readUserByUuidAdmin(values) {
   return (dispatch) => {
     dispatch(updateUserData({}));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${values.user_uuid}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
         if (response.hasOwnProperty('data')) {
@@ -358,7 +358,7 @@ export function readUserByEmailAdmin(values) {
   return (dispatch) => {
     dispatch(updateUserData({}));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users?email=${values.email}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
         if (response.hasOwnProperty('data')) {
@@ -384,7 +384,7 @@ export function updateUserAdmin(user, values) {
     dispatch(updateUserError(''));
     dispatch(updateUserSuccess(false));
     dispatch(updateUserInProgress(true));
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
     values.user_privileges_id = parseInt(values.user_privileges_id);
     values.mute = (values.mute == "true");
@@ -417,7 +417,7 @@ export function updateUserAdmin(user, values) {
 
 export function deleteUserAdmin(user_uuid) {
   return (dispatch) => {
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user_uuid}`;
 
     axios.delete(url, config)
@@ -441,7 +441,7 @@ export function deleteUserAdmin(user_uuid) {
 export function createUserLicense(user, numberToAdd) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     let data = {
       number_to_add: numberToAdd
     };
@@ -468,7 +468,7 @@ export function readUserCameraLicensesAdmin(user) {
     dispatch(updateUserData({}));
     dispatch(updateUserCameraLicenseData({}));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
         if (!isEmpty(response.data)) {
@@ -493,7 +493,7 @@ export function readUserCameraLicensesAdmin(user) {
 export function updateUserLicense(user, license) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses/${license.uuid}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     let data = {
       tier_0: license.tier_0,
       tier_1: license.tier_1,
@@ -520,7 +520,7 @@ export function updateUserLicense(user, license) {
 export function deleteUserLicenseAdmin(user, license) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/licenses/${license['uuid']}`;
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
     axios.delete(url, config)
       .then((response) => {
         dispatch(readUserCameraLicensesAdmin(user));

@@ -54,7 +54,6 @@ class CameraCardImg extends Component {
   }
 
   render() {
-    console.log(this.props.data);
     return (
       <div style={styles.cameraCardImgContainer} key={this.live_view_key}>
         {this.state.live_view_url && this.props.data.enabled ?

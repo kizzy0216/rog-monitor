@@ -191,7 +191,7 @@ export function resetResetPasswordSuccess() {
 
 export function checkLogin() {
   return (dispatch) => {
-    const jwt = sessionStorage.getItem('jwt');
+    const jwt = localStorage.getItem('jwt');
     if (jwt) {
       let url = `${process.env.REACT_APP_ROG_API_URL}/users`;
       axios.get(url, {headers: {Authorization: 'Bearer'+' '+jwt}})
@@ -203,17 +203,17 @@ export function checkLogin() {
 
           if (window.jwtTokenRefresh === null) {
             dispatch(loginSuccess(user));
-            dispatch(login(sessionStorage.getItem('email'), sessionStorage.getItem('password')));
+            dispatch(login(localStorage.getItem('email'), localStorage.getItem('password')));
           } else {
             dispatch(loginSuccess(user));
           }
         })
         .catch(error => {
-          sessionStorage.removeItem('jwt');
-          sessionStorage.removeItem('email');
-          sessionStorage.removeItem('password');
-          sessionStorage.removeItem('fcm_token_id');
-          sessionStorage.removeItem('fcm_token');
+          localStorage.removeItem('jwt');
+          localStorage.removeItem('email');
+          localStorage.removeItem('password');
+          localStorage.removeItem('fcm_token_id');
+          localStorage.removeItem('fcm_token');
           if(window.jwtTokenRefresh !== null){
             window.clearInterval(window.jwtTokenRefresh);
             window.jwtTokenRefresh = null;
@@ -343,12 +343,12 @@ export function login(email, password) {
 
 export function logout(user) {
   return (dispatch) => {
-    dispatch(deleteUserDevice(user.uuid, sessionStorage.getItem('fcm_token_id'), sessionStorage.getItem('fcm_token')));
-    sessionStorage.removeItem('jwt');
-    sessionStorage.removeItem('email');
-    sessionStorage.removeItem('password');
-    sessionStorage.removeItem('fcm_token_id');
-    sessionStorage.removeItem('fcm_token');
+    dispatch(deleteUserDevice(user.uuid, localStorage.getItem('fcm_token_id'), localStorage.getItem('fcm_token')));
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('email');
+    localStorage.removeItem('password');
+    localStorage.removeItem('fcm_token_id');
+    localStorage.removeItem('fcm_token');
     window.clearInterval(window.jwtTokenRefresh);
     window.jwtTokenRefresh = null;
     dispatch(clearAssociatedData());

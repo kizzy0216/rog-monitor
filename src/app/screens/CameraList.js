@@ -57,7 +57,7 @@ class CameraList extends Component {
   }
 
   selectCameraGroup = (user, cameraGroup) => {
-    sessionStorage.setItem('selectedCameraGroupUuid', cameraGroup.uuid);
+    localStorage.setItem('selectedCameraGroupUuid', cameraGroup.uuid);
     this.props.actions.selectCameraGroup(user, cameraGroup);
     this.setState({cameraGroupButtonsVisible: false});
   }

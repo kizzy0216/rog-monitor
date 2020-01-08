@@ -9,8 +9,8 @@ firebase.initializeApp({
   messagingSenderId: "153344187169"
 });
 
-// const messaging = firebase.messaging();
-//
+const messaging = firebase.messaging();
+
 // messaging.onMessage(payload => {
 //   const title = payload.notification.title;
 //   const options = {

@@ -56,7 +56,7 @@ class CameraCardImg extends Component {
   render() {
     return (
       <div style={styles.cameraCardImgContainer} key={this.live_view_key}>
-        {this.state.live_view_url && this.props.data.enabled ?
+        {this.state.live_view_url && this.props.data.enabled && this.props.data.verified ?
           <VideoPlayer
             controls={true}
             hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}

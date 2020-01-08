@@ -11,17 +11,6 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.setBackgroundMessageHandler(function(payload) {
-  const title = payload.notification.title;
-  const options = {
-    body: payload.notification.body,
-    data: payload.data,
-    icon: '/favicon.ico'
-  }
-
-  return self.registration.showNotification(title, options);
-});
-
 self.addEventListener('notificationclick', function(event) {
     let url = event.notification.data.click_action;
     event.notification.close(); // Android needs explicit close.
@@ -31,8 +20,9 @@ self.addEventListener('notificationclick', function(event) {
             for (var i = 0; i < windowClients.length; i++) {
                 var client = windowClients[i];
                 // If so, just focus it.
-                console.log(client);
-                if (client.url === url && 'focus' in client) {
+                var website = document.createElement('a');
+                website.href = client.url;
+                if (url.includes(website.hostname) && 'focus' in client) {
                     return client.focus();
                 }
             }

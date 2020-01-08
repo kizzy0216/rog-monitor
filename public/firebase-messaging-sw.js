@@ -1,5 +1,5 @@
-importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/7.6.1/firebase-messaging.js');
 
 // TODO: move this to env config somehow
 firebase.initializeApp({
@@ -11,46 +11,35 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// messaging.onMessage(payload => {
-//   const title = payload.notification.title;
-//   const options = {
-//     body: payload.notification.body,
-//     data: payload.data,
-//     icon: '/favicon.ico'
-//   }
-//
-//   return self.registration.showNotification(title, options);
-// });
-//
-// messaging.setBackgroundMessageHandler(payload => {
-//   const title = payload.notification.title;
-//   const options = {
-//     body: payload.notification.body,
-//     data: payload.data,
-//     icon: '/favicon.ico'
-//   }
-//
-//   return self.registration.showNotification(title, options);
-// });
-//
-// self.addEventListener('notificationclick', function(event) {
-//     let url = event.notification.data.click_action;
-//     event.notification.close(); // Android needs explicit close.
-//     event.waitUntil(
-//         clients.matchAll({type: 'window'}).then( windowClients => {
-//             // Check if there is already a window/tab open with the target URL
-//             for (var i = 0; i < windowClients.length; i++) {
-//                 var client = windowClients[i];
-//                 // If so, just focus it.
-//                 console.log(client);
-//                 if (client.url === url && 'focus' in client) {
-//                     return client.focus();
-//                 }
-//             }
-//             // If not, then open the target URL in a new window/tab.
-//             if (clients.openWindow) {
-//                 return clients.openWindow(url);
-//             }
-//         })
-//     );
-// });
+messaging.setBackgroundMessageHandler(function(payload) {
+  const title = payload.notification.title;
+  const options = {
+    body: payload.notification.body,
+    data: payload.data,
+    icon: '/favicon.ico'
+  }
+
+  return self.registration.showNotification(title, options);
+});
+
+self.addEventListener('notificationclick', function(event) {
+    let url = event.notification.data.click_action;
+    event.notification.close(); // Android needs explicit close.
+    event.waitUntil(
+        clients.matchAll({type: 'window'}).then( windowClients => {
+            // Check if there is already a window/tab open with the target URL
+            for (var i = 0; i < windowClients.length; i++) {
+                var client = windowClients[i];
+                // If so, just focus it.
+                console.log(client);
+                if (client.url === url && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            // If not, then open the target URL in a new window/tab.
+            if (clients.openWindow) {
+                return clients.openWindow(url);
+            }
+        })
+    );
+});

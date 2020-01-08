@@ -120,22 +120,22 @@ var previousAlert = null;
 
 export function listenForNewAlerts(user, messaging) {
   return (dispatch) => {
-    messaging.onMessage(payload => {
+    messaging.onTokenRefresh(function(user, messaging) {
+      messaging.getToken("153344187169", "FCM").then(function(refreshedToken) {
+        // console.log('Token refreshed: ' + refreshedToken);
+        dispatch(storeUserDevice(user, refreshedToken, messaging));
+      }).catch(function(err) {
+        console.log('Unable to retrieve refreshed token ', err);
+      });
+    });
+
+    messaging.onMessage((payload) => {
       if (previousAlert !== payload.data.uuid) {
         // console.log("Notification Received", payload);
         previousAlert = payload.data.uuid;
         dispatch(handleNewAlert(user, payload));
         dispatch(fetchAlerts(user));
       }
-    });
-
-    messaging.onTokenRefresh(function(user, messaging) {
-      messaging.getToken().then(function(refreshedToken) {
-        // console.log('Token refreshed: ' + refreshedToken);
-        dispatch(storeUserDevice(user, refreshedToken, messaging));
-      }).catch(function(err) {
-        console.log('Unable to retrieve refreshed token ', err);
-      });
     });
   }
 }

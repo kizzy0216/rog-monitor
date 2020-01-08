@@ -15,7 +15,7 @@ class CameraTiles extends Component {
                 {...camera}
                 user={this.props.user}
                 cameraGroup={this.props.cameraGroup}
-                liveView={this.props.liveView} />
+              />
             </Col>
           ))}
         </Row>

@@ -44,80 +44,68 @@ class CameraCard extends Component {
   }
 
   render() {
-    if (this.props.liveView) {
-      let myRole = [];
-      for (var i = 0; i < this.props.cameraGroup.userCameraGroupPrivileges.length; i++) {
-        if (this.props.cameraGroup.userCameraGroupPrivileges[i].users_uuid == this.props.user.uuid) {
-          myRole = this.props.cameraGroup.userCameraGroupPrivileges[i].user_camera_group_privilege_ids
-        }
+    let myRole = [];
+    for (var i = 0; i < this.props.cameraGroup.userCameraGroupPrivileges.length; i++) {
+      if (this.props.cameraGroup.userCameraGroupPrivileges[i].users_uuid == this.props.user.uuid) {
+        myRole = this.props.cameraGroup.userCameraGroupPrivileges[i].user_camera_group_privilege_ids
       }
-      return (
-        <Card>
-          <Row type='flex' justify='center'>
-            <Col style={styles.cameraCardTitle}>{this.props.name}</Col>
-          </Row>
-          <Row>
-            <div>
-              <Col span={8} style={styles.alertModal}>
-                <TriggerModal
-                  data={this.props}
-                />
-              </Col>
-              {!myRole.includes(0) ?
-                (<div></div>) :
-                <div>
-                  <Col span={8} style={styles.cameraConnectionSwitch}>
-                    <ToggleCameraConnection
-                      data={this.props}
-                    />
-                  </Col>
-                </div>
-              }
+    }
+    return (
+      <Card>
+        <Row type='flex' justify='center'>
+          <Col style={styles.cameraCardTitle}>{this.props.name}</Col>
+        </Row>
+        <Row>
+          <div>
+            <Col span={8} style={styles.alertModal}>
+              <TriggerModal
+                data={this.props}
+              />
+            </Col>
+            {!myRole.includes(0) ?
+              (<div></div>) :
               <div>
-                <Col span={8} style={styles.refreshImage}>
-                  <RefreshPreviewImage
+                <Col span={8} style={styles.cameraConnectionSwitch}>
+                  <ToggleCameraConnection
                     data={this.props}
                   />
                 </Col>
               </div>
+            }
+            <div>
+              <Col span={8} style={styles.refreshImage}>
+                <RefreshPreviewImage
+                  data={this.props}
+                />
+              </Col>
             </div>
-          </Row>
-          <Row> {/*onClick={() => this.viewCameraStream()}*/}
-            <CameraCardImg data={this.props} />
-          </Row>
-          {!myRole.includes(0) ?
-            (<Row type='flex' style={styles.cameraCardButtons}>
-              <Col span={20} offset={2}>
-                <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
-              </Col>
-            </Row>) :
-            (<Row type='flex' style={styles.cameraCardButtons}>
-              <Col span={2}>
-                <EditCamera data={this.props} />
-              </Col>
-              <Col span={20}>
-                <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
-              </Col>
-              <Col span={2}>
-                <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
-                  <Icon type='delete' />
-                </Popconfirm>
-              </Col>
-            </Row>)
-          }
-        </Card>
-      )
-    }
-    else {
-      return (
-        <Card>
-          <div>
-            <Recorder cameraUuid={this.props.uuid} rtspUrl={this.props.rtspUrl} />
           </div>
-          <p>{this.props.name}</p>
-        </Card>
-      )
-    }
+        </Row>
+        <Row> {/*onClick={() => this.viewCameraStream()}*/}
+          <CameraCardImg data={this.props} />
+        </Row>
+        {!myRole.includes(0) ?
+          (<Row type='flex' style={styles.cameraCardButtons}>
+            <Col span={20} offset={2}>
+              <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
+            </Col>
+          </Row>) :
+          (<Row type='flex' style={styles.cameraCardButtons}>
+            <Col span={2}>
+              <EditCamera data={this.props} />
+            </Col>
+            <Col span={20}>
+              <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
+            </Col>
+            <Col span={2}>
+              <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
+                <Icon type='delete' />
+              </Popconfirm>
+            </Col>
+          </Row>)
+        }
+      </Card>
+    )
   }
 }
 

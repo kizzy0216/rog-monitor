@@ -17,7 +17,6 @@ class CameraList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      liveView: true,
       cameraGroupButtonsVisible: false,
       addCameraGroupModalVisible: false
     }
@@ -115,7 +114,7 @@ class CameraList extends Component {
             )) : ''}
           </Row>
           {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?
-            <CameraTiles user={this.props.user} cameraGroup={this.props.selectedCameraGroup} liveView={this.state.liveView} />
+            <CameraTiles user={this.props.user} cameraGroup={this.props.selectedCameraGroup} />
           :
           <Row type='flex' justify='start' style={styles.cameraListContainer}>
             <p style={styles.noCamerasText}>

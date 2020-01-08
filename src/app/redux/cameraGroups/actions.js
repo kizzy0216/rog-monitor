@@ -186,7 +186,7 @@ export function selectCameraGroup(user, cameraGroup) {
 export function getUserCameraGroupPrivileges(user, cameraGroup) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/privileges`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then(response => {
         if (isEmpty(response.data) === false) {
@@ -212,15 +212,15 @@ export function fetchCameraGroups(user) {
     dispatch(fetchSuccess([]));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.get(url, config)
       .then(response => {
         if (isEmpty(response.data) === false) {
           dispatch(fetchSuccess(response.data));
-          if (!isEmpty(localStorage.getItem('selectedCameraGroupUuid'))) {
+          if (!isEmpty(sessionStorage.getItem('selectedCameraGroupUuid'))) {
             for (var i = 0; i < response.data.length; i++) {
-              if (localStorage.getItem('selectedCameraGroupUuid') === response.data[i].uuid) {
+              if (sessionStorage.getItem('selectedCameraGroupUuid') === response.data[i].uuid) {
                 dispatch(selectCameraGroup(user, response.data[i]));
                 break;
               }
@@ -245,7 +245,7 @@ export function addNewCameraGroup(user, cameraGroup) {
     dispatch(addCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     let data = {
       camera_group_name: cameraGroup.name
@@ -284,7 +284,7 @@ export function removeCameraGroup(user, cameraGroup) {
     dispatch(removeCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
       .then((response) => {
@@ -319,7 +319,7 @@ export function shareCameraGroup(user, cameraGroupUuid, inviteeEmail) {
     dispatch(shareCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/invitations`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     let data = {
       email: inviteeEmail
@@ -361,7 +361,7 @@ export function removeUserCameraGroupPrivilege(user, cameraGroupUuid, cameraGrou
     dispatch(removeGuardInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user_uuid}/camera-groups/${cameraGroupUuid}/privileges/${cameraGroupPrivilegeUuid}`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
     .then(response => {
@@ -395,7 +395,7 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
     dispatch(editCameraGroupInProcess(true));
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     let data = {
       name: cameraGroupData.name,
@@ -432,7 +432,7 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
 export function createCameraGroup(user) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/camera-groups`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let data = {};
 
     axios.post(url, data, config)
@@ -459,7 +459,7 @@ export function readAllCameraGroupsForUser(user) {
     dispatch(fetchSuccessAdmin([]));
     dispatch(editCameraGroupError(""));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/camera-groups`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.get(url, config)
     .then((response) => {
@@ -487,7 +487,7 @@ export function readAllCameraGroupsForUser(user) {
 export function updateCameraGroup(user, values) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/camera-groups/${values.uuid}`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     let vacation_mode = 0;
     if (values.vacation_mode == "true" || values.vacation_mode == true) {
       vacation_mode = 1;
@@ -519,7 +519,7 @@ export function updateCameraGroup(user, values) {
 export function deleteCameraGroup(user, values) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/camera-groups/${values.uuid}`;
-    let config = {headers: {Authorization: 'Bearer '+localStorage.getItem('jwt')}};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)
     .then((response) => {

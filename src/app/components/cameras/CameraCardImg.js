@@ -34,7 +34,7 @@ class CameraCardImg extends Component {
       this.live_view_key++;
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage+'?auth='+ this.props.data.user.jwt});
-      if (nextProps.data.live_view_url) {
+      if (nextProps.data.live_view_url && this.props.live_view_url !== nextProps.live_view_url) {
         this.setState({live_view_url: nextProps.data.live_view_url+'?auth='+ this.props.data.user.jwt});
         this.live_view_key++;
       }

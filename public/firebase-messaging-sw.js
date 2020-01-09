@@ -12,7 +12,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 self.addEventListener('notificationclick', function(event) {
-    let url = event.notification.data.click_action;
+    let url = event.notification.data.web_client_url;
     event.notification.close(); // Android needs explicit close.
     event.waitUntil(
         clients.matchAll({type: 'window'}).then( windowClients => {

@@ -739,9 +739,9 @@ class AddTriggerModal extends Component {
 
   handleResetData = () => {
     this.form.resetFields('days_of_week');
-    this.form.setFieldsValue({'camera_wide': false});
     this.form.resetFields('start_at');
     this.form.resetFields('end_at');
+    this.form.setFieldsValue({'camera_wide': false});
     this.setState({cameraWideDisabled: false});
     this.setState({cameraWide: false});
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
@@ -756,6 +756,8 @@ class AddTriggerModal extends Component {
         this.form.resetFields('time_window_select');
         this.form.resetFields('days_of_week');
         this.form.setFieldsValue({'camera_wide': false});
+        this.setState({cameraWideDisabled: false});
+        this.setState({cameraWide: false});
         this.form.resetFields('start_at');
         this.form.resetFields('end_at');
         this.props.setTriggerSpecificTimeWindows(polygonData[i].time_windows);

@@ -102,7 +102,7 @@ function handleNewAlert(user, payload) {
     uuid: payload.data.uuid,
     type: payload.data.trigger_type,
     camera: {
-      name: payload.notification.title,
+      name: payload.data.camera_name,
       cameraGroup: {
         name: payload.data.camera_groups_name
       }
@@ -149,7 +149,7 @@ export function fetchAlerts(user) {
     let currentPage = 1;
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}}
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}}
     axios.get(url, config)
       .then((response) => {
         if (!isEmpty(response.data)) {

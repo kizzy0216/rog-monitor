@@ -10,7 +10,7 @@ import App from './app/App.js';
 import App401 from './app/App401.js';
 import {registerServiceWorker, unregister} from './registerServiceWorker';
 
-if ((window.location.protocol + '//' + window.location.host) == 'https://rog-monitor-dev.herokuapp.com') {
+if ((window.location.protocol + '//' + window.location.host) == 'https://dev.monitor.gorog.co' || (window.location.protocol + '//' + window.location.host) == 'https://stage.monitor.gorog.co') {
   var credentials = window.prompt("Enter Realm Password");
   if (!credentials|| credentials !== 'GoRogTeam!') {
     render401();

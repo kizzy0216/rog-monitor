@@ -11,23 +11,36 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+messaging.setBackgroundMessageHandler(function(payload) {
+  const title = payload.data.camera_name;
+  const options = {
+    body: payload.data.trigger_type,
+    data: payload.data,
+    icon: '/logo192x192.png',
+    image: payload.data.alert_image_url_with_token
+  }
+
+  return self.registration.showNotification(title, options);
+});
+
 self.addEventListener('notificationclick', function(event) {
-    let url = event.notification.data.web_client_url;
-    event.notification.close(); // Android needs explicit close.
-    event.waitUntil(
-        clients.matchAll({type: 'window'}).then( windowClients => {
-            // Check if there is already a window/tab open with the target URL
-            for (var i = 0; i < windowClients.length; i++) {
-                var client = windowClients[i];
-                // If so, just focus it.
-                if (client.url.includes(url) && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            // If not, then open the target URL in a new window/tab.
-            if (clients.openWindow) {
-                return clients.openWindow(url);
-            }
-        })
+  let url = event.notification.data.web_client_url;
+  event.notification.close(); // Android needs explicit close.
+  event.waitUntil(
+      clients.matchAll({includeUncontrolled: true, type: 'window'}).then( windowClients => {
+          // Check if there is already a window/tab open with the target URL
+          for (var i = 0; i < windowClients.length; i++) {
+              var client = windowClients[i];
+              // If so, just focus it.
+              if (client.url.includes(url) && 'focus' in client) {
+                // return client.navigate(url + '/#/alerts').then(client => client.focus());
+                return client.focus();
+              }
+          }
+          // If not, then open the target URL in a new window/tab.
+          if (clients.openWindow) {
+              return clients.openWindow(url);
+          }
+      })
     );
 });

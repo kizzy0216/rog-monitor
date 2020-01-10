@@ -23,23 +23,23 @@ if ((window.location.protocol + '//' + window.location.host) == 'https://dev.mon
 
 function renderApp() {
   console.log("Version 2.0");
+  // registerServiceWorker();
+  unregister();
   const ReduxApp = () => (
     <Provider store={store}>
       <App />
     </Provider>
   )
   ReactDOM.render(<ReduxApp />, document.getElementById('root'));
-  // registerServiceWorker();
-  unregister();
 }
 
 function render401() {
+  // registerServiceWorker();
+  unregister();
   const ErrorApp = () => (
     <Provider store={store}>
       <App401 />
     </Provider>
   )
   ReactDOM.render(<ErrorApp />, document.getElementById('root'));
-  // registerServiceWorker();
-  unregister();
 }

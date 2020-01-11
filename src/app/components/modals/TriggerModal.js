@@ -797,6 +797,7 @@ class AddTriggerModal extends Component {
             this.form.setFieldsValue({end_at: null});
             this.setState({cameraWideDisabled: false});
             this.setState({cameraWide: false});
+            this.setState({deleteButton: false});
           } else {
             trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
             this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
@@ -807,6 +808,7 @@ class AddTriggerModal extends Component {
             this.form.setFieldsValue({end_at: null});
             this.setState({cameraWideDisabled: false});
             this.setState({cameraWide: false});
+            this.setState({deleteButton: false});
           }
         } else {
           message.error('Please select a stop time that is after the start time.');
@@ -832,6 +834,7 @@ class AddTriggerModal extends Component {
         this.form.resetFields('time_window_select');
         delete this.props.triggerTimeWindows[values.time_window_select];
         this.props.setTriggerSpecificTimeWindows(this.props.triggerTimeWindows);
+        this.setState({deleteButton: false});
       }
     });
   }

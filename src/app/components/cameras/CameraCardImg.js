@@ -11,7 +11,7 @@ class CameraCardImg extends Component {
     super();
     this.state = {
       image: loading,
-      live_view_url: null
+      live_view_url: false
     };
   }
 
@@ -29,15 +29,16 @@ class CameraCardImg extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.data.imageUpdateInProgress && nextProps.data.uuid === nextProps.data.imageUpdateInProgressUuid) {
       this.setState({image: loading});
-      this.setState({live_view_url: null});
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage+'?auth='+ this.props.data.user.jwt});
       if (nextProps.data.live_view_url && this.props.live_view_url !== nextProps.live_view_url) {
         this.setState({live_view_url: nextProps.data.live_view_url+'?auth='+ this.props.data.user.jwt});
+      } else if (nextProps.data.live_view_url === null || typeof nextProps.data.live_view_url === 'undefined') {
+        this.setState({live_view_url: false});
       }
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
-      this.setState({live_view_url: null});
+      this.setState({live_view_url: false});
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {

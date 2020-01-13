@@ -13,7 +13,6 @@ class CameraCardImg extends Component {
       image: loading,
       live_view_url: null
     };
-    this.live_view_key = 0;
   }
 
   UNSAFE_componentWillMount() {
@@ -31,24 +30,20 @@ class CameraCardImg extends Component {
     if (nextProps.data.imageUpdateInProgress && nextProps.data.uuid === nextProps.data.imageUpdateInProgressUuid) {
       this.setState({image: loading});
       this.setState({live_view_url: null});
-      this.live_view_key++;
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage+'?auth='+ this.props.data.user.jwt});
       if (nextProps.data.live_view_url && this.props.live_view_url !== nextProps.live_view_url) {
         this.setState({live_view_url: nextProps.data.live_view_url+'?auth='+ this.props.data.user.jwt});
-        this.live_view_key++;
       }
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
       this.setState({live_view_url: null});
-      this.live_view_key++;
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
           this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url+'?auth='+ this.props.data.user.jwt});
           if (nextProps.data.cameraGroup.cameras[i].live_view_url) {
             this.setState({live_view_url: nextProps.data.cameraGroup.cameras[i].live_view_url+'?auth='+ this.props.data.user.jwt});
-            this.live_view_key++;
           }
         }
       }
@@ -58,7 +53,7 @@ class CameraCardImg extends Component {
   render() {
     if (this.state.live_view_url && this.props.data.enabled && !this.props.data.imageUpdateInProgress) {
       return (
-        <div style={styles.cameraCardImgContainer} key={this.live_view_key}>
+        <div style={styles.cameraCardImgContainer}>
           <VideoPlayer
             controls={true}
             hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
@@ -74,7 +69,7 @@ class CameraCardImg extends Component {
       );
     } else {
       return (
-        <div style={styles.cameraCardImgContainer} key={this.live_view_key}>
+        <div style={styles.cameraCardImgContainer}>
           <img src={this.state.image} style={styles.cameraCardImg} />
         </div>
       );

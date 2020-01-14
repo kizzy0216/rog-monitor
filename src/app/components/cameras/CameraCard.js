@@ -11,7 +11,9 @@ import { trackEventAnalytics } from '../../redux/auth/actions';
 import TriggerModal from '../modals/TriggerModal';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import CameraCardImg from './CameraCardImg';
+import CameraCardVideo from './CameraCardVideo';
 import ToggleCameraConnection from '../buttons/ToggleCameraConnection';
+import {isEmpty} from '../../redux/helperFunctions';
 
 class CameraCard extends Component {
   constructor(props) {
@@ -44,6 +46,7 @@ class CameraCard extends Component {
   }
 
   render() {
+    console.log(this.props);
     let myRole = [];
     for (var i = 0; i < this.props.cameraGroup.userCameraGroupPrivileges.length; i++) {
       if (this.props.cameraGroup.userCameraGroupPrivileges[i].users_uuid == this.props.user.uuid) {
@@ -81,8 +84,12 @@ class CameraCard extends Component {
             </div>
           </div>
         </Row>
-        <Row> {/*onClick={() => this.viewCameraStream()}*/}
-          <CameraCardImg data={this.props} />
+        <Row>
+          {isEmpty(this.props.live_view_url || !this.props.enabled || this.props.imageUpdateInProgress) ?
+            <CameraCardImg data={this.props} />
+            :
+            <CameraCardVideo data={this.props} />
+          }
         </Row>
         {!myRole.includes(0) ?
           (<Row type='flex' style={styles.cameraCardButtons}>

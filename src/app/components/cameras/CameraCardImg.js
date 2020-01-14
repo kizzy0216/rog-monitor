@@ -51,10 +51,16 @@ class CameraCardImg extends Component {
     }
   }
 
+  uuidv4 = () => {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+  }
+
   render() {
     if (this.state.live_view_url && this.props.data.enabled && !this.props.data.imageUpdateInProgress) {
       return (
-        <div style={styles.cameraCardImgContainer}>
+        <div style={styles.cameraCardImgContainer} key={this.uuidv4}>
           <VideoPlayer
             controls={true}
             hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
@@ -70,7 +76,7 @@ class CameraCardImg extends Component {
       );
     } else {
       return (
-        <div style={styles.cameraCardImgContainer}>
+        <div style={styles.cameraCardImgContainer} key={this.uuidv4}>
           <img src={this.state.image} style={styles.cameraCardImg} />
         </div>
       );

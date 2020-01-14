@@ -31,12 +31,13 @@ class CameraCardImg extends Component {
     if (nextProps.data.imageUpdateInProgress && nextProps.data.uuid === nextProps.data.imageUpdateInProgressUuid) {
       this.setState({image: loading});
       this.setState({live_view_url: false});
+      this.live_view_key = this.uuidv4;
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage+'?auth='+ this.props.data.user.jwt});
       if (nextProps.data.live_view_url) {
         this.setState({live_view_url: nextProps.data.live_view_url+'?auth='+ this.props.data.user.jwt});
-        this.live_view_key = this.uuidv4;
       }
+      this.live_view_key = this.uuidv4;
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
       this.setState({live_view_url: false});
@@ -47,8 +48,8 @@ class CameraCardImg extends Component {
           this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url+'?auth='+ this.props.data.user.jwt});
           if (nextProps.data.cameraGroup.cameras[i].live_view_url) {
             this.setState({live_view_url: nextProps.data.cameraGroup.cameras[i].live_view_url+'?auth='+ this.props.data.user.jwt});
-            this.live_view_key = this.uuidv4;
           }
+          this.live_view_key = this.uuidv4;
         }
       }
     }

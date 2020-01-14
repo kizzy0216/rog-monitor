@@ -85,8 +85,9 @@ class CameraCard extends Component {
         </Row>
         <Row>
           {
-            isEmpty(this.props.live_view_url) || 
-            (!this.props.cameraConnectionEnabled && this.props.uuid == this.props.cameraConnectionUuid) || (this.props.imageUpdateInProgress && this.props.imageUpdateInProgressUuid == this.props.uuid)
+            isEmpty(this.props.live_view_url) ||
+            (!this.props.cameraConnectionEnabled && this.props.uuid == this.props.cameraConnectionUuid) ||
+            (this.props.imageUpdateInProgress && this.props.imageUpdateInProgressUuid == this.props.uuid)
             ?
             <CameraCardImg data={this.props} />
             :

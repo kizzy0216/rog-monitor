@@ -85,7 +85,7 @@ class CameraCard extends Component {
           </div>
         </Row>
         <Row>
-          {isEmpty(this.props.live_view_url || !this.props.enabled || this.props.imageUpdateInProgress) ?
+          {isEmpty(this.props.live_view_url) || !this.props.enabled || this.props.imageUpdateInProgress ?
             <CameraCardImg data={this.props} />
             :
             <CameraCardVideo data={this.props} />

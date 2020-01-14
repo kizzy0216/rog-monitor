@@ -30,6 +30,9 @@ class CameraCardImg extends Component {
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage+'?auth='+ this.props.data.user.jwt});
       this.key = this.uuidv4;
+    } else if (nextProps.refreshCameraError && nextProps.refreshCameraErrorUuid === nextProps.data.uuid) {
+      this.setState({image: cameraConnectError});
+      this.key = this.uuidv4;
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
       this.key = this.uuidv4;

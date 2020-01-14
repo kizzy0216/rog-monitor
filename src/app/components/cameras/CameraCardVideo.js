@@ -38,6 +38,9 @@ class CameraCardImg extends Component {
         this.setState({live_view_url: nextProps.data.live_view_url+'?auth='+ this.props.data.user.jwt});
       }
       this.key = this.uuidv4;
+    } else if (nextProps.refreshCameraError && nextProps.refreshCameraErrorUuid === nextProps.data.uuid) {
+      this.setState({image: cameraConnectError});
+      this.key = this.uuidv4;
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
       this.setState({live_view_url: false});

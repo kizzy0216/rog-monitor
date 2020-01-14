@@ -62,8 +62,9 @@ class CameraCardImg extends Component {
   }
 
   render() {
+    let viewComponent = null;
     if (this.state.live_view_url && this.props.data.enabled && !this.props.imageUpdateInProgress) {
-      const viewComponent =
+      viewComponent =
         <VideoPlayer
           controls={true}
           hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
@@ -76,7 +77,7 @@ class CameraCardImg extends Component {
           className="cameraCardImg">
         </VideoPlayer>
     } else {
-      const viewComponent = <img src={this.state.image} style={styles.cameraCardImg} />
+      viewComponent = <img src={this.state.image} style={styles.cameraCardImg} />
     }
     return (
       <div style={styles.cameraCardImgContainer} key={this.live_view_key}>

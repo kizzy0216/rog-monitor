@@ -85,7 +85,7 @@ class CameraCard extends Component {
           </div>
         </Row>
         <Row>
-          {isEmpty(this.props.live_view_url) || !this.props.enabled || (this.props.imageUpdateInProgress && this.props.imageUpdateInProgressUuid == this.props.uuid) ?
+          {isEmpty(this.props.live_view_url) || (!this.props.cameraConnectionEnabled && this.props.uuid == this.props.cameraConnectionUuid) || (this.props.imageUpdateInProgress && this.props.imageUpdateInProgressUuid == this.props.uuid) ?
             <CameraCardImg data={this.props} />
             :
             <CameraCardVideo data={this.props} />
@@ -144,7 +144,9 @@ const mapStateToProps = (state) => {
     refreshCameraError: state.cameras.refreshCameraError,
     refreshCameraErrorUuid: state.cameras.refreshCameraErrorUuid,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
-    imageUpdateSuccessUuid: state.cameras.imageUpdateSuccessUuid
+    imageUpdateSuccessUuid: state.cameras.imageUpdateSuccessUuid,
+    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
+    cameraConnectionUuid: state.cameras.cameraConnectionUuid
   }
 };
 const mapDispatchToProps = (dispatch) => {

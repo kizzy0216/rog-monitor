@@ -61,20 +61,22 @@ class CameraCardImg extends Component {
   }
 
   render() {
-    const viewComponent = this.state.live_view_url ?
-      <VideoPlayer
-        controls={true}
-        hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
-        preload='auto'
-        bigPlayButton={true}
-        autoPlay={true}
-        height='170'
-        poster={this.state.image}
-        src={this.state.live_view_url}
-        className="cameraCardImg">
-      </VideoPlayer>
-    :
-      <img src={this.state.image} style={styles.cameraCardImg} />;
+    if (this.state.live_view_url && this.props.data.enabled && !this.props.imageUpdateInProgress) {
+      const viewComponent =
+        <VideoPlayer
+          controls={true}
+          hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
+          preload='auto'
+          bigPlayButton={true}
+          autoPlay={true}
+          height='170'
+          poster={this.state.image}
+          src={this.state.live_view_url}
+          className="cameraCardImg">
+        </VideoPlayer>
+    } else {
+      const viewComponent = <img src={this.state.image} style={styles.cameraCardImg} />
+    }
     return (
       <div style={styles.cameraCardImgContainer} key={this.live_view_key}>
         {viewComponent}

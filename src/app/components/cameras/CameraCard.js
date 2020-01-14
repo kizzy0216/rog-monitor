@@ -46,7 +46,6 @@ class CameraCard extends Component {
   }
 
   render() {
-    console.log(this.props);
     let myRole = [];
     for (var i = 0; i < this.props.cameraGroup.userCameraGroupPrivileges.length; i++) {
       if (this.props.cameraGroup.userCameraGroupPrivileges[i].users_uuid == this.props.user.uuid) {
@@ -85,7 +84,10 @@ class CameraCard extends Component {
           </div>
         </Row>
         <Row>
-          {isEmpty(this.props.live_view_url) || (!this.props.cameraConnectionEnabled && this.props.uuid == this.props.cameraConnectionUuid) || (this.props.imageUpdateInProgress && this.props.imageUpdateInProgressUuid == this.props.uuid) ?
+          {
+            isEmpty(this.props.live_view_url) || 
+            (!this.props.cameraConnectionEnabled && this.props.uuid == this.props.cameraConnectionUuid) || (this.props.imageUpdateInProgress && this.props.imageUpdateInProgressUuid == this.props.uuid)
+            ?
             <CameraCardImg data={this.props} />
             :
             <CameraCardVideo data={this.props} />

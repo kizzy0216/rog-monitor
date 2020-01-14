@@ -74,8 +74,7 @@ class CameraCardImg extends Component {
         className="cameraCardImg">
       </VideoPlayer>
     :
-      <img src={this.state.image} style={styles.cameraCardImg} />
-    ;
+      <img src={this.state.image} style={styles.cameraCardImg} />;
     return (
       <div style={styles.cameraCardImgContainer} key={this.live_view_key}>
         {viewComponent}

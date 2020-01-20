@@ -1,5 +1,5 @@
-// import firebase from 'firebase/app';
-// import 'firebase/messaging';
+import firebase from 'firebase/app';
+import 'firebase/messaging';
 // In production, we register a service worker to serve assets from local cache.
 
 // This lets the app load faster on subsequent visits in production, and gives
@@ -21,7 +21,7 @@ const isLocalhost = Boolean(
 );
 
 export function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
+  if (/*process.env.NODE_ENV === 'production' &&*/ 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
     if (publicUrl.origin !== window.location.origin) {
@@ -32,7 +32,7 @@ export function registerServiceWorker() {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      const swUrl = `${process.env.PUBLIC_URL}/notification-service-worker.js`;
       if (isLocalhost) {
         // This is running on localhost. Lets check if a service worker still exists or not.
         checkValidServiceWorker(swUrl);
@@ -48,8 +48,6 @@ function registerValidSW(swUrl) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
-      // const messaging = firebase.messaging();
-      // messaging.useServiceWorker(registration);
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {
@@ -69,6 +67,8 @@ function registerValidSW(swUrl) {
           }
         };
       };
+      const messaging = firebase.messaging();
+      messaging.useServiceWorker(registration);
     })
     .catch(error => {
       console.error('Error during service worker registration:', error);
@@ -96,9 +96,7 @@ function checkValidServiceWorker(swUrl) {
       }
     })
     .catch(() => {
-      alert(
-        'No internet connection found. App is running in offline mode.'
-      );
+      alert('No internet connection found. App is running in offline mode.');
     });
 }
 

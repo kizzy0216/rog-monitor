@@ -38,7 +38,7 @@ class App extends Component {
     window.addEventListener("beforeunload", (ev) =>
     {
       if (!isEmpty(store.getState().auth)) {
-        dispatch(logout(store.getState().auth));
+        logout(store.getState().auth);
       }
     });
     if (this.state.loading) {

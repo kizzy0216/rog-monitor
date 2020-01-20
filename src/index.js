@@ -22,9 +22,9 @@ if ((window.location.protocol + '//' + window.location.host) == 'https://dev.mon
 }
 
 function renderApp() {
-  console.log("Version 2.0");
-  // registerServiceWorker();
-  unregister();
+  console.log("Version 2.1");
+  registerServiceWorker();
+  // unregister();
   const ReduxApp = () => (
     <Provider store={store}>
       <App />
@@ -34,8 +34,8 @@ function renderApp() {
 }
 
 function render401() {
-  // registerServiceWorker();
-  unregister();
+  registerServiceWorker();
+  // unregister();
   const ErrorApp = () => (
     <Provider store={store}>
       <App401 />

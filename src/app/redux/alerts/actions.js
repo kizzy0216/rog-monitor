@@ -2,8 +2,6 @@ import axios from 'axios';
 require('promise.prototype.finally').shim();
 
 import initialState from './initialState';
-
-import { Socket } from '../../../lib/phoenix/phoenix';
 import newAlertSound from '../../../assets/audio/newAlert.mp3';
 import { updateUserData, storeUserDevice } from '../users/actions';
 import * as types from './actionTypes';

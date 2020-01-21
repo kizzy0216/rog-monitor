@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Card, Icon, Row, Col, Popconfirm, Button, Switch } from 'antd';
 import moment, { lang } from 'moment';
-
-import Recorder from '../video/Recorder';
 import EditCamera from '../cameras/EditCamera';
 import { deleteCamera } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
@@ -29,19 +27,6 @@ class CameraCard extends Component {
   deleteCamera = () => {
     this.props.deleteCamera(this.props.user, this.props.camera_groups_uuid, this.props.uuid);
   };
-
-  viewCameraStream = () => {
-    const cameraViewEvent = {
-      email: this.props.user.email,
-      name: this.props.user.firstName+ ' ' +this.props.user.lastName,
-      cameraGroup_viewed: this.props.cameraGroup.name,
-      camera_viewed: this.props.name
-    };
-
-    this.props.trackEventAnalytics('camera viewed', cameraViewEvent);
-
-    this.props.history.push(`/camera-groups/${this.props.camera_groups_uuid}/cameras/${this.props.uuid}/stream`);
-  }
 
   render() {
     let myRole = [];
@@ -81,7 +66,7 @@ class CameraCard extends Component {
             </div>
           </div>
         </Row>
-        <Row> {/*onClick={() => this.viewCameraStream()}*/}
+        <Row>
           <CameraCardImg data={this.props} />
         </Row>
         {!myRole.includes(0) ?

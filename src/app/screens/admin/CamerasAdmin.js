@@ -5,7 +5,6 @@ import * as camerasActions from '../../redux/cameras/actions';
 import { Table, Input, Button, Popconfirm, Form, InputNumber, message, Radio, Modal, Icon } from 'antd';
 import { isEmpty } from '../../redux/helperFunctions';
 import Highlighter from 'react-highlight-words';
-import RtspStream from '../../components/video/RtspStream';
 
 const UsersForm = Form.create()(
   (props) => {
@@ -494,7 +493,7 @@ class EditableTable extends React.Component {
         render: (text, record) =>
           this.state.dataSource.length >= 1 ? (
             <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-              <a href="javascript:;">Delete</a>
+              <a href="/#">Delete</a>
             </Popconfirm>
           ) : null
       }

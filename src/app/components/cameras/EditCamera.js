@@ -5,7 +5,6 @@ import moment from 'moment-timezone';
 
 import { editCamera } from '../../redux/cameras/actions';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
-import RtspStream from '../video/RtspStream';
 
 const Option = Select.Option;
 const FormItem = Form.Item;

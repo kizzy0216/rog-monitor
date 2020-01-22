@@ -10,36 +10,48 @@ class CameraCardImg extends Component {
   constructor() {
     super();
     this.state = {
-      image: loading
+      image: loading,
+      live_view_url: false
     };
     this.key = this.uuidv4;
   }
 
   UNSAFE_componentWillMount() {
-    if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
-      this.setState({image: cameraConnectError});
-    } else if (this.props.data.thumbnail_url) {
+    if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url+'?auth='+ this.props.data.user.jwt});
+      if (this.props.data.live_view_url) {
+        this.setState({live_view_url: this.props.data.live_view_url+'?auth='+ this.props.data.user.jwt});
+      }
+    } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
+      this.setState({image: cameraConnectError});
     }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.data.imageUpdateInProgress && nextProps.data.uuid === nextProps.data.imageUpdateInProgressUuid) {
       this.setState({image: loading});
+      this.setState({live_view_url: false});
       this.key = this.uuidv4;
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage+'?auth='+ this.props.data.user.jwt});
+      if (nextProps.data.live_view_url) {
+        this.setState({live_view_url: nextProps.data.live_view_url+'?auth='+ this.props.data.user.jwt});
+      }
       this.key = this.uuidv4;
     } else if (nextProps.refreshCameraError && nextProps.refreshCameraErrorUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
       this.key = this.uuidv4;
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
       this.setState({image: cameraConnectError});
+      this.setState({live_view_url: false});
       this.key = this.uuidv4;
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
           this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url+'?auth='+ this.props.data.user.jwt});
+          if (nextProps.data.cameraGroup.cameras[i].live_view_url) {
+            this.setState({live_view_url: nextProps.data.cameraGroup.cameras[i].live_view_url+'?auth='+ this.props.data.user.jwt});
+          }
           this.key = this.uuidv4;
         }
       }
@@ -55,7 +67,17 @@ class CameraCardImg extends Component {
   render() {
     return (
       <div style={styles.cameraCardImgContainer} key={this.key}>
-        <img src={this.state.image} style={styles.cameraCardImg} />
+        <VideoPlayer
+          controls={true}
+          hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
+          preload='auto'
+          bigPlayButton={true}
+          autoPlay={true}
+          height='170'
+          poster={this.state.image}
+          src={this.state.live_view_url}
+          className="cameraCardImg">
+        </VideoPlayer>
       </div>
     );
   }

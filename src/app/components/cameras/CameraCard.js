@@ -9,7 +9,9 @@ import { trackEventAnalytics } from '../../redux/auth/actions';
 import TriggerModal from '../modals/TriggerModal';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import CameraCardImg from './CameraCardImg';
+import CameraCardVideo from './CameraCardVideo';
 import ToggleCameraConnection from '../buttons/ToggleCameraConnection';
+import {isEmpty} from '../../redux/helperFunctions';
 
 class CameraCard extends Component {
   constructor(props) {
@@ -67,7 +69,16 @@ class CameraCard extends Component {
           </div>
         </Row>
         <Row>
-          <CameraCardImg data={this.props} />
+          {
+            isEmpty(this.props.live_view_url) ||
+            (!this.props.cameraConnectionEnabled && this.props.uuid == this.props.cameraConnectionUuid) ||
+            (this.props.imageUpdateInProgress && this.props.imageUpdateInProgressUuid == this.props.uuid)
+            ?
+            <CameraCardImg data={this.props} />
+            :
+            <CameraCardVideo data={this.props} />
+          }
+
         </Row>
         {!myRole.includes(0) ?
           (<Row type='flex' style={styles.cameraCardButtons}>
@@ -122,7 +133,9 @@ const mapStateToProps = (state) => {
     refreshCameraError: state.cameras.refreshCameraError,
     refreshCameraErrorUuid: state.cameras.refreshCameraErrorUuid,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
-    imageUpdateSuccessUuid: state.cameras.imageUpdateSuccessUuid
+    imageUpdateSuccessUuid: state.cameras.imageUpdateSuccessUuid,
+    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
+    cameraConnectionUuid: state.cameras.cameraConnectionUuid
   }
 };
 const mapDispatchToProps = (dispatch) => {

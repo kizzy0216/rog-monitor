@@ -739,9 +739,9 @@ class AddTriggerModal extends Component {
 
   handleResetData = () => {
     this.form.resetFields('days_of_week');
-    this.form.setFieldsValue({'camera_wide': false});
     this.form.resetFields('start_at');
     this.form.resetFields('end_at');
+    this.form.setFieldsValue({'camera_wide': false});
     this.setState({cameraWideDisabled: false});
     this.setState({cameraWide: false});
     let timeWindowSelect = this.form.getFieldProps('time_window_select').value;
@@ -756,6 +756,8 @@ class AddTriggerModal extends Component {
         this.form.resetFields('time_window_select');
         this.form.resetFields('days_of_week');
         this.form.setFieldsValue({'camera_wide': false});
+        this.setState({cameraWideDisabled: false});
+        this.setState({cameraWide: false});
         this.form.resetFields('start_at');
         this.form.resetFields('end_at');
         this.props.setTriggerSpecificTimeWindows(polygonData[i].time_windows);
@@ -795,6 +797,7 @@ class AddTriggerModal extends Component {
             this.form.setFieldsValue({end_at: null});
             this.setState({cameraWideDisabled: false});
             this.setState({cameraWide: false});
+            this.setState({deleteButton: false});
           } else {
             trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
             this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentTriggerUuid, trigger_windows, this.props.data.polygonData);
@@ -805,6 +808,7 @@ class AddTriggerModal extends Component {
             this.form.setFieldsValue({end_at: null});
             this.setState({cameraWideDisabled: false});
             this.setState({cameraWide: false});
+            this.setState({deleteButton: false});
           }
         } else {
           message.error('Please select a stop time that is after the start time.');
@@ -830,6 +834,7 @@ class AddTriggerModal extends Component {
         this.form.resetFields('time_window_select');
         delete this.props.triggerTimeWindows[values.time_window_select];
         this.props.setTriggerSpecificTimeWindows(this.props.triggerTimeWindows);
+        this.setState({deleteButton: false});
       }
     });
   }

@@ -1,3 +1,7 @@
+This repo is tied to an AWS Codepipeline pipeline which will automatically deploy commits from the stage or master branches. 
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>

@@ -192,6 +192,8 @@ function setupFirebaseCloudMessaging(user){
             let errMessage = 'Error setting up FCM notifications.';
             if (error.code === "messaging/permission-blocked") {
               errMessage = "It looks like your web browser blocked our notifications. Please Unblock Notifications Manually through your browser's settings.";
+            } else {
+              console.log(error);
             }
             alert(errMessage);
           });

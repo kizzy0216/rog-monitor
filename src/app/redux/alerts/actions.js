@@ -88,7 +88,8 @@ function newAlert(alert, mute) {
   }
 }
 
-function handleNewAlert(user, payload) {
+export function handleNewAlert(user, payload) {
+  console.log("Handle New Alert");
   if (payload.data.trigger_type == 'RA') {
     payload.data.trigger_type = 'Restricted Area';
   } else if (payload.data.trigger_type == 'VW') {
@@ -118,27 +119,37 @@ var previousAlert = null;
 
 export function listenForNewAlerts(user, messaging) {
   return (dispatch) => {
-    messaging.onTokenRefresh(function(user, messaging) {
-      messaging.getToken("153344187169", "FCM").then(function(refreshedToken) {
-        console.log('Token refreshed: ' + refreshedToken);
-        dispatch(storeUserDevice(user, refreshedToken, messaging));
-      }).catch(function(err) {
-        console.log('Unable to retrieve refreshed token ', err);
-      });
-    });
+    // messaging.onMessage((payload) => {
+    //   console.log("Notification Received", payload);
+    //   if (previousAlert !== payload.data.uuid) {
+    //     previousAlert = payload.data.uuid;
+    //     dispatch(handleNewAlert(payload));
+    //     dispatch(fetchAlerts());
+    //   }
+    // });
 
-    messaging.onMessage((payload) => {
+    navigator.serviceWorker.addEventListener("message", (payload) => {
+      payload = payload.data.firebaseMessagingData;
       if (previousAlert !== payload.data.uuid) {
-        console.log("Notification Received", payload);
         previousAlert = payload.data.uuid;
         dispatch(handleNewAlert(user, payload));
         dispatch(fetchAlerts(user));
       }
     });
+
+    messaging.onTokenRefresh(function(user, messaging) {
+      messaging.getToken("153344187169", "FCM").then(function(refreshedToken) {
+        // console.log('Token refreshed: ' + refreshedToken);
+        dispatch(storeUserDevice(user, refreshedToken, messaging));
+      }).catch(function(err) {
+        console.log('Unable to retrieve refreshed token ', err);
+      });
+    });
   }
 }
 
 export function fetchAlerts(user) {
+  console.log("Fetch Alerts");
   return (dispatch) => {
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));

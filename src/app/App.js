@@ -4,7 +4,6 @@ import LoginRouter from './components/navigation/LoginRouter';
 import AppRouter from './components/navigation/AppRouter';
 
 import { checkLogin, initialiseAnalyticsEngine } from './redux/auth/actions';
-import { listenForNewAlerts } from './redux/alerts/actions';
 import {logout} from './redux/auth/actions';
 import {isEmpty} from './redux/helperFunctions';
 import store from './redux/store';

@@ -9,6 +9,27 @@ import store from './app/redux/store';
 import App from './app/App.js';
 import App401 from './app/App401.js';
 import {registerServiceWorker, unregister} from './registerServiceWorker';
+import firebase from 'firebase/app';
+import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
+
+const config = {
+  projectId: "rog-2-0",
+  apiKey: "AIzaSyCY1oTVrozQfDrCG1k-b3Q4Iw5iWSF_LIM",
+  appId: "1:153344187169:web:64dd90de0f9831cc643c60",
+  messagingSenderId: "153344187169"
+};
+
+const rrfConfig = {
+  userProfile: 'users'
+};
+
+const rrfProps = {
+  firebase: firebase,
+  config: rrfConfig,
+  dispatch: store.dispatch
+}
+
+firebase.initializeApp(config);
 
 if ((window.location.protocol + '//' + window.location.host) == 'https://dev.monitor.gorog.co' || (window.location.protocol + '//' + window.location.host) == 'https://stage.monitor.gorog.co') {
   var credentials = window.prompt("Enter Realm Password");
@@ -27,7 +48,9 @@ function renderApp() {
   // unregister();
   const ReduxApp = () => (
     <Provider store={store}>
-      <App />
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <App/>
+      </ReactReduxFirebaseProvider>
     </Provider>
   )
   ReactDOM.render(<ReduxApp />, document.getElementById('root'));

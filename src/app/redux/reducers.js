@@ -9,6 +9,7 @@ import users from './users/reducer';
 import triggers from './triggers/reducer';
 import systemConfigurations from './systemConfiguration/reducer';
 import recos from './recos/reducer';
+import { firebaseReducer } from 'react-redux-firebase';
 
 export default combineReducers({
   auth,
@@ -19,5 +20,6 @@ export default combineReducers({
   users,
   triggers,
   systemConfigurations,
-  recos
+  recos,
+  firebase: firebaseReducer
 });

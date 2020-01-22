@@ -12,6 +12,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.setBackgroundMessageHandler(function(payload) {
+  console.log("Notification Received: " + payload);
   const title = payload.data.camera_name;
   const options = {
     body: payload.data.trigger_type,
@@ -24,6 +25,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
+  console.log("Notification Clicked");
   let url = event.notification.data.web_client_url;
   event.notification.close(); // Android needs explicit close.
   event.waitUntil(

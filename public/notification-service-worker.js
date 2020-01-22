@@ -12,7 +12,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.setBackgroundMessageHandler(function(payload) {
-  console.log(payload);
+  // console.log(payload);
   const title = (payload.data.trigger_type + ' by ' + payload.data.camera_name);
   const options = {
     body: payload.data.camera_groups_name,

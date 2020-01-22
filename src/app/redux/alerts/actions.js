@@ -89,7 +89,6 @@ function newAlert(alert, mute) {
 }
 
 export function handleNewAlert(user, payload) {
-  console.log("Handle New Alert");
   if (payload.data.trigger_type == 'RA') {
     payload.data.trigger_type = 'Restricted Area';
   } else if (payload.data.trigger_type == 'VW') {
@@ -149,7 +148,6 @@ export function listenForNewAlerts(user, messaging) {
 }
 
 export function fetchAlerts(user) {
-  console.log("Fetch Alerts");
   return (dispatch) => {
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));

@@ -411,7 +411,7 @@ export function deleteTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, baseT
       .then((response) => {
         dispatch(deleteTriggerTimeWindowSuccess(true));
         let cameraGroup = {uuid: cameraGroupUuid};
-        dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
+        // dispatch(fetchTriggers(user, cameraGroup, cameraUuid));
       })
       .catch((error) => {
         let errMessage = 'Error deleting trigger time window';

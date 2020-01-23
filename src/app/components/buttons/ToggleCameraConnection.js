@@ -28,7 +28,7 @@ class ToggleCameraConnection extends Component {
     return (
       <Switch
         checkedChildren={<Icon type="check" />}
-        unCheckedChildren={<Icon type="cross" />}
+        unCheckedChildren={<Icon type="close" />}
         onChange={() => this.toggleCameraEnabled(!enabled)}
         checked={enabled}
       />

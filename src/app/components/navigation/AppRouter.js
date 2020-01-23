@@ -17,7 +17,6 @@ import Alerts from '../../screens/Alerts';
 import CameraList from '../../screens/CameraList';
 import CameraDetails from '../../screens/CameraDetails';
 import CameraCreate from '../../screens/CameraCreate';
-import CameraStream from '../../screens/CameraStream';
 import RecosAdmin from '../../screens/admin/RecosAdmin';
 import UsersAdmin from '../../screens/admin/UsersAdmin';
 import CameraGroupsAdmin from '../../screens/admin/CameraGroupsAdmin';
@@ -78,7 +77,6 @@ class AppRouter extends Component {
                 <Switch>
                   <Route path='/cameras' component={CameraList} />
                   <Route path='/cameras/:uuid' component={CameraDetails} />
-                  <Route path='/camera-groups/:cameraGroupUuid/cameras/:uuid/stream' component={CameraStream} />
                   <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
                   <Route path='/alerts' component={Alerts} />
                   <Route path='/recos-admin' component={RecosAdmin} />
@@ -97,7 +95,6 @@ class AppRouter extends Component {
                 <Switch>
                   <Route path='/cameras' component={CameraList} />
                   <Route path='/cameras/:uuid' component={CameraDetails} />
-                  <Route path='/camera-groups/:cameraGroupUuid/cameras/:uuid/stream' component={CameraStream} />
                   <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
                   <Route path='/alerts' component={Alerts} />
                   <Redirect to='/cameras' />

@@ -2,15 +2,19 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 const systemConfigurations = (state = initialState, action) => {
-  switch (action.type) {
-    case types.READ_SYSTEM_CONFIGURATIONS_SUCCESS:
-      return {
-        ...state,
-        data: action.systemConfigurations
-      }
+  if (typeof action !== 'undefined') {
+    switch (action.type) {
+      case types.READ_SYSTEM_CONFIGURATIONS_SUCCESS:
+        return {
+          ...state,
+          data: action.systemConfigurations
+        }
 
-    default:
-      return state;
+      default:
+        return state;
+    }
+  } else {
+    return state
   }
 }
 

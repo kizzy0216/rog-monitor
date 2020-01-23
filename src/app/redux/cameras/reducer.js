@@ -2,142 +2,146 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 const cameras = (state = initialState, action) => {
-  switch (action.type) {
-    case types.FETCH_CAMERA_AUTH_RTSP_URL_SUCCESS:
-      return {
-        ...state,
-        authRtspUrl: action.authRtspUrl
-      }
-
-    case types.FETCH_CAMERA_AUTH_RTSP_URL_IN_PROCESS:
-      return {
-        ...state,
-        fetchInProcess: action.fetchInProcess
-      }
-
-    case types.FETCH_CAMERA_AUTH_RTSP_URL_ERROR:
-      return {
-        ...state,
-        fetchError: action.fetchError
-      }
-
-    case types.CLEAR_CAMERA_DATA:
+  if (typeof action !== 'undefined') {
+    switch (action.type) {
+      case types.FETCH_CAMERA_AUTH_RTSP_URL_SUCCESS:
         return {
           ...state,
-          authRtspUrl: action.authRtspUrl,
+          authRtspUrl: action.authRtspUrl
         }
 
-    case types.ADD_CAMERA_ERROR:
-      return {
-        ...state,
-        addCameraError: action.addCameraError
-      }
-
-    case types.ADD_CAMERA_IN_PROCESS:
-      return {
-        ...state,
-        addCameraInProcess: action.addCameraInProcess
-      }
-
-    case types.ADD_CAMERA_SUCCESS:
-      return {
-        ...state,
-        addCameraSuccess: action.addCameraSuccess
-      }
-
-    case types.DELETE_CAMERA_ERROR:
+      case types.FETCH_CAMERA_AUTH_RTSP_URL_IN_PROCESS:
         return {
           ...state,
-          deleteCameraError: action.deleteCameraError
+          fetchInProcess: action.fetchInProcess
         }
 
-    case types.DELETE_CAMERA_IN_PROCESS:
+      case types.FETCH_CAMERA_AUTH_RTSP_URL_ERROR:
         return {
           ...state,
-          deleteCameraInProcess: action.deleteCameraInProcess
+          fetchError: action.fetchError
         }
 
-    case types.DELETE_CAMERA_SUCCESS:
+      case types.CLEAR_CAMERA_DATA:
+          return {
+            ...state,
+            authRtspUrl: action.authRtspUrl,
+          }
+
+      case types.ADD_CAMERA_ERROR:
         return {
           ...state,
-          deleteCameraSuccess: action.deleteCameraSuccess
+          addCameraError: action.addCameraError
         }
 
-    case types.REFRESH_CAMERA_IMAGE:
-      return {
-        ...state,
-        refreshCameraUuid: action.refreshCameraUuid,
-        refreshCameraImage: action.refreshCameraImage
-      }
+      case types.ADD_CAMERA_IN_PROCESS:
+        return {
+          ...state,
+          addCameraInProcess: action.addCameraInProcess
+        }
 
-    case types.IMAGE_UPDATE_IN_PROGRESS:
-      return{
-        ...state,
-        imageUpdateInProgress: action.imageUpdateInProgress,
-        imageUpdateInProgressUuid: action.imageUpdateInProgressUuid
-      }
+      case types.ADD_CAMERA_SUCCESS:
+        return {
+          ...state,
+          addCameraSuccess: action.addCameraSuccess
+        }
 
-    case types.REFRESH_CAMERA_ERROR:
-      return{
-        ...state,
-        refreshCameraError: action.refreshCameraError,
-        refreshCameraErrorUuid: action.refreshCameraErrorUuid
-      }
+      case types.DELETE_CAMERA_ERROR:
+          return {
+            ...state,
+            deleteCameraError: action.deleteCameraError
+          }
 
-    case types.IMAGE_UPDATE_SUCCESS:
-      return{
-        ...state,
-        imageUpdateSuccess: action.imageUpdateSuccess,
-        imageUpdateSuccessUuid: action.imageUpdateSuccessUuid
-      }
+      case types.DELETE_CAMERA_IN_PROCESS:
+          return {
+            ...state,
+            deleteCameraInProcess: action.deleteCameraInProcess
+          }
 
-    case types.EDIT_CAMERA_IN_PROCESS:
-      return{
-        ...state,
-        editCameraInProcess: action.editCameraInProcess
-      }
+      case types.DELETE_CAMERA_SUCCESS:
+          return {
+            ...state,
+            deleteCameraSuccess: action.deleteCameraSuccess
+          }
 
-    case types.EDIT_CAMERA_SUCCESS:
-      return {
-        ...state,
-        editCameraSuccess: action.editCameraSuccess
-      }
+      case types.REFRESH_CAMERA_IMAGE:
+        return {
+          ...state,
+          refreshCameraUuid: action.refreshCameraUuid,
+          refreshCameraImage: action.refreshCameraImage
+        }
 
-    case types.EDIT_CAMERA_ERROR:
-      return {
-        ...state,
-        editCameraError: action.editCameraError
-      }
+      case types.IMAGE_UPDATE_IN_PROGRESS:
+        return{
+          ...state,
+          imageUpdateInProgress: action.imageUpdateInProgress,
+          imageUpdateInProgressUuid: action.imageUpdateInProgressUuid
+        }
 
-    case types.UPDATE_CAMERA:
-      return {
-        ...state,
-        name: action.name,
-        rtspUrl: action.rtspUrl,
-        username: action.username
-      }
+      case types.REFRESH_CAMERA_ERROR:
+        return{
+          ...state,
+          refreshCameraError: action.refreshCameraError,
+          refreshCameraErrorUuid: action.refreshCameraErrorUuid
+        }
 
-    case types.CAMERA_CONNECTION_ENABLED:
-      return {
-        ...state,
-        cameraConnectionEnabled: action.cameraConnectionEnabled,
-        cameraConnectionUuid: action.cameraConnectionUuid
-      }
+      case types.IMAGE_UPDATE_SUCCESS:
+        return{
+          ...state,
+          imageUpdateSuccess: action.imageUpdateSuccess,
+          imageUpdateSuccessUuid: action.imageUpdateSuccessUuid
+        }
 
-    case types.UPDATE_ALERT_TIME_WINDOWS_DATA:
-      return {
-        ...state,
-        alert_windows: action.alert_windows
-      }
+      case types.EDIT_CAMERA_IN_PROCESS:
+        return{
+          ...state,
+          editCameraInProcess: action.editCameraInProcess
+        }
 
-    case types.FETCH_SUCCESS_ADMIN:
-      return {
-        ...state,
-        camerasAdmin: action.camerasAdmin
-      }
+      case types.EDIT_CAMERA_SUCCESS:
+        return {
+          ...state,
+          editCameraSuccess: action.editCameraSuccess
+        }
 
-    default:
-      return state;
+      case types.EDIT_CAMERA_ERROR:
+        return {
+          ...state,
+          editCameraError: action.editCameraError
+        }
+
+      case types.UPDATE_CAMERA:
+        return {
+          ...state,
+          name: action.name,
+          rtspUrl: action.rtspUrl,
+          username: action.username
+        }
+
+      case types.CAMERA_CONNECTION_ENABLED:
+        return {
+          ...state,
+          cameraConnectionEnabled: action.cameraConnectionEnabled,
+          cameraConnectionUuid: action.cameraConnectionUuid
+        }
+
+      case types.UPDATE_ALERT_TIME_WINDOWS_DATA:
+        return {
+          ...state,
+          alert_windows: action.alert_windows
+        }
+
+      case types.FETCH_SUCCESS_ADMIN:
+        return {
+          ...state,
+          camerasAdmin: action.camerasAdmin
+        }
+
+      default:
+        return state;
+    }
+  } else {
+    return state
   }
 }
 

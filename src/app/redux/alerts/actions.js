@@ -2,8 +2,6 @@ import axios from 'axios';
 require('promise.prototype.finally').shim();
 
 import initialState from './initialState';
-
-import { Socket } from '../../../lib/phoenix/phoenix';
 import newAlertSound from '../../../assets/audio/newAlert.mp3';
 import { updateUserData, storeUserDevice } from '../users/actions';
 import * as types from './actionTypes';
@@ -90,7 +88,7 @@ function newAlert(alert, mute) {
   }
 }
 
-function handleNewAlert(user, payload) {
+export function handleNewAlert(user, payload) {
   if (payload.data.trigger_type == 'RA') {
     payload.data.trigger_type = 'Restricted Area';
   } else if (payload.data.trigger_type == 'VW') {
@@ -102,7 +100,7 @@ function handleNewAlert(user, payload) {
     uuid: payload.data.uuid,
     type: payload.data.trigger_type,
     camera: {
-      name: payload.notification.title,
+      name: payload.data.camera_name,
       cameraGroup: {
         name: payload.data.camera_groups_name
       }
@@ -120,6 +118,24 @@ var previousAlert = null;
 
 export function listenForNewAlerts(user, messaging) {
   return (dispatch) => {
+    // messaging.onMessage((payload) => {
+    //   console.log("Notification Received", payload);
+    //   if (previousAlert !== payload.data.uuid) {
+    //     previousAlert = payload.data.uuid;
+    //     dispatch(handleNewAlert(payload));
+    //     dispatch(fetchAlerts());
+    //   }
+    // });
+
+    navigator.serviceWorker.addEventListener("message", (payload) => {
+      payload = payload.data.firebaseMessagingData;
+      if (previousAlert !== payload.data.uuid) {
+        previousAlert = payload.data.uuid;
+        dispatch(handleNewAlert(user, payload));
+        dispatch(fetchAlerts(user));
+      }
+    });
+
     messaging.onTokenRefresh(function(user, messaging) {
       messaging.getToken("153344187169", "FCM").then(function(refreshedToken) {
         // console.log('Token refreshed: ' + refreshedToken);
@@ -127,15 +143,6 @@ export function listenForNewAlerts(user, messaging) {
       }).catch(function(err) {
         console.log('Unable to retrieve refreshed token ', err);
       });
-    });
-
-    messaging.onMessage((payload) => {
-      if (previousAlert !== payload.data.uuid) {
-        // console.log("Notification Received", payload);
-        previousAlert = payload.data.uuid;
-        dispatch(handleNewAlert(user, payload));
-        dispatch(fetchAlerts(user));
-      }
     });
   }
 }
@@ -149,7 +156,7 @@ export function fetchAlerts(user) {
     let currentPage = 1;
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
-    let config = {headers: {Authorization: 'Bearer '+user.jwt}}
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}}
     axios.get(url, config)
       .then((response) => {
         if (!isEmpty(response.data)) {

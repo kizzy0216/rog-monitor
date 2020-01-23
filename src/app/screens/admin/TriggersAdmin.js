@@ -106,7 +106,7 @@ class TriggersAdmin extends Component {
         width: 200,
         render: (text, record) =>
           <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDeleteTrigger(record.key)}>
-            <a href="javascript:;">Delete</a>
+            <a href="/#">Delete</a>
           </Popconfirm>
       }
     ];
@@ -209,7 +209,7 @@ class TriggersAdmin extends Component {
         width: 200,
         render: (text, record) =>
           <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDeleteTriggerTimeWindow(record)}>
-            <a href="javascript:;">Delete</a>
+            <a href="/#">Delete</a>
           </Popconfirm>
       }
     ];

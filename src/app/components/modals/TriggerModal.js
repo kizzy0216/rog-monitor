@@ -206,9 +206,9 @@ const AddTriggerForm = Form.create()(
               onVisibleChange={handleVisibility}
             >
               {!saveCancel &&
-                <Button type="secondary">
+                <div type="secondary">
                   <CustomInput trigger={true} visibility={visibility} handleSaveCancel={handleSaveCancel} fetchTriggerInProcess={fetchTriggerInProcess}/>
-                </Button>
+                </div>
               }
             </Popover>
           </FormItem>

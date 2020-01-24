@@ -193,11 +193,11 @@ const AddTriggerForm = Form.create()(
               title='Select Trigger Type to Add'
               content={
                 <div style={styles.triggerType}>
-                  <a href="/#" onClick={() => showTrigger('RA')}>Restricted Area</a>
+                  <Button type="secondary" onClick={() => showTrigger('RA')}>Restricted Area</Button>
                   <br/>
-                  <a href="/#" onClick={() => showTrigger('VW')}>Virtual Wall</a>
+                  <Button type="secondary" onClick={() => showTrigger('VW')}>Virtual Wall</Button>
                   <br/>
-                  <a href="/#" onClick={() => showTrigger('LD')}>Loitering</a>
+                  <Button type="secondary" onClick={() => showTrigger('LD')}>Loitering</Button>
                   <br/>
                 </div>
               }
@@ -206,9 +206,9 @@ const AddTriggerForm = Form.create()(
               onVisibleChange={handleVisibility}
             >
               {!saveCancel &&
-                <a href="/#">
+                <div type="secondary">
                   <CustomInput trigger={true} visibility={visibility} handleSaveCancel={handleSaveCancel} fetchTriggerInProcess={fetchTriggerInProcess}/>
-                </a>
+                </div>
               }
             </Popover>
           </FormItem>

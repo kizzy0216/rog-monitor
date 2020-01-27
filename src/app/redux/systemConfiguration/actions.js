@@ -20,14 +20,19 @@ export function readSystemConfigurations() {
     })
     .catch((error) => {
       let errMessage = 'Error fetching recieved invites';
-      if (typeof error.response != 'undefined') {
+      if (typeof error != 'undefined') {
+        errMessage = error;
         if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+          if (typeof error.response.data === 'object') {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
+          } else {
+            errMessage = error.response.data;
           }
         }
       }
-      console.log(errMessage);
+      throw(errMessage);
     })
   }
 }
@@ -45,14 +50,19 @@ export function updateSystemConfiguration(systemConfigurationUuid, key, value) {
     axios.patch(url, data, config)
     .catch((error) => {
       let errMessage = 'Error fetching recieved invites';
-      if (typeof error.response != 'undefined') {
+      if (typeof error != 'undefined') {
+        errMessage = error;
         if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+          if (typeof error.response.data === 'object') {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
+          } else {
+            errMessage = error.response.data;
           }
         }
       }
-      console.log(errMessage);
+      throw(errMessage);
     })
   }
 }

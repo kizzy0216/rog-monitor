@@ -255,10 +255,15 @@ export function register(email, firstName, lastName, password, confirmPassword, 
       })
       .catch((error) => {
         let errMessage = 'Error registering. Please try again later';
-        if (typeof error.response != 'undefined') {
+        if (typeof error != 'undefined') {
+          errMessage = error;
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
           }
         }
@@ -285,10 +290,15 @@ export function resetPassword(new_password, confirmPassword, token) {
       })
       .catch((error) => {
         let errMessage = 'Error resetting your password. Please try again later';
-        if (typeof error.response != 'undefined') {
+        if (typeof error != 'undefined') {
+          errMessage = error;
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
           }
         }
@@ -327,10 +337,15 @@ export function login(email, password) {
         })
         .catch((error) => {
           let errMessage = 'Error logging in';
-          if (typeof error.response != 'undefined') {
+          if (typeof error != 'undefined') {
+            errMessage = error;
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
             }
           }

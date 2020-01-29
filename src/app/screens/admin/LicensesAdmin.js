@@ -29,6 +29,31 @@ const UsersForm = Form.create()(
   }
 );
 
+const LicenseAddForm = Form.create()(
+  (props) => {
+    const {handleAdd, form} = props;
+    const {getFieldDecorator} = props.form;
+
+    return (
+      <Form layout={'inline'} onSubmit={handleAdd} style={styles.formstyles}>
+        <Form.Item label="Number Of Licenses To Add" hasFeedback>
+          {getFieldDecorator('number_to_add', {
+            'initialValue': 0,
+            rules: [
+              {type: 'number', message: 'Please enter a valid integer'}
+            ]
+          })(
+            <InputNumber placeholder="0" min={0} />
+          )}
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">Add License(s)</Button>
+        </Form.Item>
+      </Form>
+    )
+  }
+)
+
 class LicensesAdmin extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +70,7 @@ class LicensesAdmin extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.form.validateFields((err, values) => {
+    this.form.validateFields(['user_uuid'], (err, values) => {
       if (!err) {
         this.props.actions.readUserCameraLicensesAdmin(values);
       }
@@ -56,13 +81,19 @@ class LicensesAdmin extends Component {
     this.form = form;
   };
 
-  handleAdd = () => {
-    if (!isEmpty(this.props.userData)) {
-      this.props.actions.createUserLicense(this.props.userData, 1);
-    }
+  handleAdd = (e) => {
+    e.preventDefault();
+    this.form.validateFields(['number_to_add'], (err, values) => {
+      if (!err) {
+        if (!isEmpty(this.props.userData)) {
+          this.props.actions.createUserLicense(this.props.userData, values.number_to_add);
+        }
+      }
+    });
   };
 
   render(){
+    let count = 0;
     const data = [];
     if (!isEmpty(this.props.cameraLicenseData)) {
       for (var i = 0; i < this.props.cameraLicenseData.length; i++) {
@@ -74,6 +105,7 @@ class LicensesAdmin extends Component {
           tier_1: this.props.cameraLicenseData[i]['tier_1'],
           tier_2: this.props.cameraLicenseData[i]['tier_2']
         }
+        count++;
       }
       return(
         <div>
@@ -81,9 +113,11 @@ class LicensesAdmin extends Component {
             ref={this.saveFormRef}
             handleSubmit={this.handleSubmit}
           />
-          <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-            Add a License
-          </Button>
+          <LicenseAddForm
+            ref={this.saveFormRef}
+            handleAdd={this.handleAdd}
+          />
+          <div style={{paddingBottom: 10, paddingLeft: 20, marginTop: -40}}>Total Licenses For This User: {count}</div>
           <EditableTable
             data={data}
             userData={this.props.userData}
@@ -91,16 +125,26 @@ class LicensesAdmin extends Component {
           />
         </div>
       )
-    } else {
+    } else if (!isEmpty(this.props.userData)) {
       return(
         <div>
           <UsersForm
             ref={this.saveFormRef}
             handleSubmit={this.handleSubmit}
           />
-          <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-            Add a License
-          </Button>
+          <LicenseAddForm
+            ref={this.saveFormRef}
+            handleAdd={this.handleAdd}
+          />
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <UsersForm
+            ref={this.saveFormRef}
+            handleSubmit={this.handleSubmit}
+          />
         </div>
       )
     }

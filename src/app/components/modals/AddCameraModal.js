@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, Form, Input, Icon, message } from 'antd';
 
-import RtspStream from '../video/RtspStream';
-
 import { addCamera } from '../../redux/cameras/actions';
 
 const FormItem = Form.Item;

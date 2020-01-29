@@ -48,13 +48,13 @@ class CustomInput extends Component {
             }
             {
              !this.props.visibility &&
-             <Button key='add_trigger' type='primary' size='large'>
+              <Button key='add_trigger' type='primary' size='large'>
                 Add Trigger
               </Button>
             }
             {
              this.props.visibility &&
-             <Button key='cancel' size='large' onClick={() => this.props.handleSaveCancel('cancel')} style={styles.cancelBtn}>
+              <Button key='cancel' size='large' onClick={() => this.props.handleSaveCancel('cancel')} style={styles.cancelBtn}>
                 Cancel
               </Button>
             }

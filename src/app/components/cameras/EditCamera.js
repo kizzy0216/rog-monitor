@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Icon, Modal, Form, Input, Button, message, TimePicker, Select } from 'antd';
+import { Row, Icon, Modal, Form, Input, Button, message, TimePicker, Select, Switch } from 'antd';
 import moment from 'moment-timezone';
 
 import { editCamera } from '../../redux/cameras/actions';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
-import RtspStream from '../video/RtspStream';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
 const CameraForm = Form.create()(
   (props) => {
-    const {onCancel, visible, onCreate, form, cameraData, updateTimeZone, createSelectItems} = props;
+    const {onCancel, visible, onCreate, form, cameraData, updateTimeZone, createSelectItems, toggleVacationMode, vacationMode} = props;
     const {getFieldDecorator, fullRtspUrl} = form;
     const formItemLayout = {
       labelCol: {
@@ -31,19 +30,18 @@ const CameraForm = Form.create()(
              cancelText='Cancel'
       >
         <Form>
-          {/*<FormItem style={styles.videoContainer}>
-            {props.fullRtspUrl ?
-              (<RtspStream rtspUrl={props.fullRtspUrl} />) :
-              (
-                <p style={styles.videoContainerText}>No Video Available</p>
-              )
-            }
+          <FormItem label="Vacation Mode" {...formItemLayout}>
+            {getFieldDecorator('vacation_mode', {
+              'initialValue': cameraData.vacation_mode
+            })(
+              <Switch
+                checkedChildren={<Icon type="check" />}
+                unCheckedChildren={<Icon type="close" />}
+                onChange={toggleVacationMode}
+                checked={vacationMode}
+              />
+            )}
           </FormItem>
-          <FormItem>
-            <Button key='submit' type='primary' size='large' onClick={props.testLiveView}>
-              <Icon type='reload'></Icon>Test Live View
-            </Button>
-          </FormItem>*/}
           <FormItem label='Camera Name' {...formItemLayout}>
             {getFieldDecorator('name', {
               'initialValue': cameraData.name
@@ -101,7 +99,8 @@ class EditCamera extends Component {
       error: false,
       flag: false,
       time_zone: this.props.data.time_zone,
-      fullRtspUrl: null
+      fullRtspUrl: null,
+      vacation_mode: this.props.data.vacation_mode
     }
   }
 
@@ -146,29 +145,8 @@ class EditCamera extends Component {
     this.setState({time_zone: fieldValue});
   }
 
-  getFullRtspUrl = (camera_url, username, password) => {
-    let index = camera_url.indexOf(":");
-    let protocol = camera_url.substr(0, index + 3).toLowerCase();
-    let urlAddress = camera_url.substr(index + 3);
-    let lowerCaseUrl = (protocol + `${username}:${password}@` + urlAddress);
-    return lowerCaseUrl;
-  }
-
-  testLiveView = () => {
-    let isChrome = window.chrome || window.chrome.webstore;
-    let isFirefox = typeof InstallTrigger !== 'undefined';
-    let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-    if (!isChrome && !isFirefox && !isOpera) {
-      alert('Sorry, live video requires the desktop Chrome, Firefox, or Opera web browser.');
-    } else {
-      const form = this.form;
-      form.validateFields(['camera_url', 'username', 'password'], (err, values) => {
-        if (err) return;
-        this.setState({fullRtspUrl: null}, () => {
-          this.setState({fullRtspUrl: this.getFullRtspUrl(values.camera_url, values.username, values.password)});
-        });
-      })
-    }
+  handleToggleVacationMode = (fieldValue) => {
+    this.setState({vacation_mode: fieldValue});
   }
 
   UNSAFE_componentWillReceiveProps(nextProps){
@@ -201,8 +179,8 @@ class EditCamera extends Component {
           createSelectItems={this.handleCreateSelectItems}
           error={this.state.error}
           cameraData={this.props.data}
-          testLiveView={this.testLiveView}
-          fullRtspUrl={this.state.fullRtspUrl}
+          toggleVacationMode={this.handleToggleVacationMode}
+          vacationMode={this.state.vacation_mode}
         />
       </div>
     );

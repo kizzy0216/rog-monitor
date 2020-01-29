@@ -261,10 +261,15 @@ export function addNewCameraGroup(user, cameraGroup) {
       })
       .catch((error) => {
         let errMessage = 'Error creating camera. Please try again later.';
-        if (typeof error.response != 'undefined') {
+        if (typeof error != 'undefined') {
+          errMessage = error;
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
           }
         }
@@ -296,10 +301,15 @@ export function removeCameraGroup(user, cameraGroup) {
       })
       .catch((error) => {
         let errMessage = 'Error removing cameraGroup. Please try again later.';
-        if (typeof error.response != 'undefined') {
+        if (typeof error != 'undefined') {
+          errMessage = error;
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
           }
         }
@@ -331,10 +341,15 @@ export function shareCameraGroup(user, cameraGroupUuid, inviteeEmail) {
       })
       .catch((error) => {
         let errMessage = 'Error sharing cameraGroup. Please try again later.';
-        if (typeof error.response != 'undefined') {
+        if (typeof error != 'undefined') {
+          errMessage = error;
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
           }
         }
@@ -373,10 +388,15 @@ export function removeUserCameraGroupPrivilege(user, cameraGroupUuid, cameraGrou
     })
     .catch((error) => {
       let errMessage = 'Error removing user';
-      if (typeof error.response != 'undefined') {
+      if (typeof error != 'undefined') {
+        errMessage = error;
         if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+          if (typeof error.response.data === 'object') {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
+          } else {
+            errMessage = error.response.data;
           }
         }
       }
@@ -413,10 +433,15 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
       })
       .catch((error) => {
         let errMessage = 'Error editing camera group. Please try again later.';
-        if (typeof error.response != 'undefined') {
+        if (typeof error != 'undefined') {
+          errMessage = error;
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
           }
         }
@@ -441,10 +466,15 @@ export function createCameraGroup(user) {
     })
     .catch((error) => {
       let errMessage = 'Error creating camera group. Please try again later.';
-      if (typeof error.response != 'undefined') {
+      if (typeof error != 'undefined') {
+        errMessage = error;
         if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+          if (typeof error.response.data === 'object') {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
+          } else {
+            errMessage = error.response.data;
           }
         }
       }
@@ -472,10 +502,15 @@ export function readAllCameraGroupsForUser(user) {
     })
     .catch((error) => {
       let errMessage = 'Error fetching camera groups. Please try again later.';
-      if (typeof error.response != 'undefined') {
+      if (typeof error != 'undefined') {
+        errMessage = error;
         if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+          if (typeof error.response.data === 'object') {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
+          } else {
+            errMessage = error.response.data;
           }
         }
       }
@@ -503,10 +538,15 @@ export function updateCameraGroup(user, values) {
     })
     .catch((error) => {
       let errMessage = 'Error updating camera group. Please try again later.';
-      if (typeof error.response != 'undefined') {
+      if (typeof error != 'undefined') {
+        errMessage = error;
         if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+          if (typeof error.response.data === 'object') {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
+          } else {
+            errMessage = error.response.data;
           }
         }
       }
@@ -527,10 +567,15 @@ export function deleteCameraGroup(user, values) {
     })
     .catch((error) => {
       let errMessage = 'Error deleting camera group. Please try again later.';
-      if (typeof error.response != 'undefined') {
+      if (typeof error != 'undefined') {
+        errMessage = error;
         if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if ('Error' in error.response.data) {
-            errMessage = error.response.data['Error'];
+          if (typeof error.response.data === 'object') {
+            if ('Error' in error.response.data) {
+              errMessage = error.response.data['Error'];
+            }
+          } else {
+            errMessage = error.response.data;
           }
         }
       }

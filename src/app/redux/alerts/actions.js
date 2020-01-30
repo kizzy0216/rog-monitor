@@ -268,8 +268,17 @@ export function deleteAlert(user, alertUuid) {
       })
       .catch(error => {
         let errMessage = 'Error deleting alert';
-        if ('Error' in error.response.data) {
-          errMessage = error.response.data['Error'];
+        if (typeof error != 'undefined') {
+          errMessage = error;
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
+            }
+          }
         }
         dispatch(deleteError(errMessage));
       })

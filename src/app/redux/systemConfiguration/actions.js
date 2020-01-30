@@ -22,7 +22,7 @@ export function readSystemConfigurations() {
       let errMessage = 'Error fetching recieved invites';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
           if (typeof error.response.data === 'object') {
             if ('Error' in error.response.data) {
               errMessage = error.response.data['Error'];
@@ -52,7 +52,7 @@ export function updateSystemConfiguration(systemConfigurationUuid, key, value) {
       let errMessage = 'Error fetching recieved invites';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
           if (typeof error.response.data === 'object') {
             if ('Error' in error.response.data) {
               errMessage = error.response.data['Error'];

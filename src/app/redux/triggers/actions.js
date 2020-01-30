@@ -203,7 +203,7 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
         let errMessage = 'Error creating trigger';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -244,7 +244,7 @@ export function fetchTriggers(user, cameraGroup, cameraUuid) {
         let errMessage = 'Error fetching triggers';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -277,7 +277,7 @@ export function deleteTrigger(user, cameraGroupUuid, cameraUuid, baseTriggersUui
         let errMessage = 'Error deleting trigger'
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -347,7 +347,7 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
         let errMessage = 'Error creating trigger time window';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -406,7 +406,7 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
         let errMessage = 'Error updating trigger time window';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -442,7 +442,7 @@ export function deleteTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, baseT
         let errMessage = 'Error deleting trigger time window';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -480,7 +480,7 @@ export function fetchTriggersAdmin(user, values) {
         let errMessage = 'Error fetching triggers';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -515,7 +515,7 @@ export function deleteTriggerAdmin(user, values, camerasUuid, cameraGroupUuid) {
         let errMessage = 'Error deleting trigger'
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -552,7 +552,7 @@ export function updateTriggerTimeWindowAdmin(user, values, trigger, cameraGroupU
         let errMessage = 'Error updating trigger time window';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -592,7 +592,7 @@ export function deleteTriggerTimeWindowAdmin(user, triggerTimeWindow, camerasUui
         let errMessage = 'Error deleting trigger time window';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];

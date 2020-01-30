@@ -1,5 +1,6 @@
 export default {
   user: {},
+  mute: false,
   loginInProcess: false,
   loginError: false,
   registerInProcess: false,

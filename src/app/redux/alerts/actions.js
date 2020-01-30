@@ -177,7 +177,7 @@ export function fetchAlerts(user) {
         let errMessage = 'Error fecthing alerts';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -224,7 +224,7 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
         let errMessage = 'Error fecthing alerts';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];
@@ -270,7 +270,7 @@ export function deleteAlert(user, alertUuid) {
         let errMessage = 'Error deleting alert';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
               if ('Error' in error.response.data) {
                 errMessage = error.response.data['Error'];

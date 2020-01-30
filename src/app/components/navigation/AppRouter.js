@@ -36,7 +36,7 @@ class AppRouter extends Component {
 
     this.state = {
       collapsed: true,
-      mute: props.mute
+      mute: props.user.mute
     }
   }
 
@@ -147,8 +147,7 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.auth.user,
-    mute: state.auth.user.mute
+    user: state.auth.user
   }
 }
 

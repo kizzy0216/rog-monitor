@@ -146,13 +146,15 @@ export function fetchUserInvites(values) {
         let errMessage = 'Error fetching invitations';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -181,13 +183,15 @@ export function updateInvitation(invitation) {
         let errMessage = 'Error updating invitation';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -206,13 +210,15 @@ export function deleteInvitation(invitation_uuid) {
       let errMessage = 'Error deleting invitation';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if (typeof error.response.data === 'object') {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
-          } else {
-            errMessage = error.response.data;
           }
         }
       }
@@ -238,13 +244,15 @@ export function fetchSentCameraGroupInvites(user, camera_group_uuid) {
       let errMessage = 'Error fetching recieved invites';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if (typeof error.response.data === 'object') {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
-          } else {
-            errMessage = error.response.data;
           }
         }
       }
@@ -274,13 +282,15 @@ export function fetchUserCameraGroupInvites(user) {
       let errMessage = 'Error fetching recieved invites';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if (typeof error.response.data === 'object') {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
-          } else {
-            errMessage = error.response.data;
           }
         }
       }
@@ -309,17 +319,18 @@ export function acceptInvite(user, invite) {
       dispatch(selectCameraGroup(user, cameraGroup));
     })
     .catch((error) => {
-      console.log(error);
       let errMessage = 'Error accepting invitation';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if (typeof error.response.data === 'object') {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
-          } else {
-            errMessage = error.response.data;
           }
         }
       }
@@ -349,13 +360,15 @@ export function rejectInvite(user, invite) {
       let errMessage = 'Error rejecting invitation';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if (typeof error.response.data === 'object') {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
-          } else {
-            errMessage = error.response.data;
           }
         }
       }
@@ -384,13 +397,15 @@ export function rescindInvite(user, invite) {
       let errMessage = 'Error rescinding invitation';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if (typeof error.response.data === 'object') {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
-          } else {
-            errMessage = error.response.data;
           }
         }
       }

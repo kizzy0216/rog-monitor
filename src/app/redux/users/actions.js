@@ -63,13 +63,15 @@ export function fetchUserCameraLicenses(user) {
         let errMessage = 'Error fetching user data. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -106,13 +108,15 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
         let errMessage = 'Error fetching user data. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -144,13 +148,15 @@ export function updateUser(user, values) {
         let errMessage = 'Error updating user';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -177,13 +183,15 @@ export function muteSound(user, mute) {
         let errMessage = 'Error fetching user device data. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -251,13 +259,15 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
         let errMessage = 'Error fetching user device data. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -289,13 +299,15 @@ export function storeUserDevice(user, token, messaging) {
         let errMessage = 'Error storing user device token.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -320,13 +332,15 @@ export function updateUserDevice(userUuid, deviceUuid, name) {
         let errMessage = 'Error updating user device data. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -356,13 +370,15 @@ export function deleteUserDevice(userUuid, deviceUuid, token) {
         let errMessage = 'Error deleting user device data. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -386,13 +402,15 @@ export function readUserByUuidAdmin(values) {
         let errMessage = 'Error fetching user';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -416,13 +434,15 @@ export function readUserByEmailAdmin(values) {
         let errMessage = 'Error fetching user';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -456,13 +476,15 @@ export function updateUserAdmin(user, values) {
         let errMessage = 'Error updating user';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -485,13 +507,15 @@ export function deleteUserAdmin(user_uuid) {
         let errMessage = 'Error updating user';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -515,13 +539,15 @@ export function createUserLicense(user, numberToAdd) {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -547,13 +573,15 @@ export function readUserCameraLicensesAdmin(user) {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -579,13 +607,15 @@ export function updateUserLicense(user, license) {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -606,13 +636,15 @@ export function deleteUserLicenseAdmin(user, license) {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }

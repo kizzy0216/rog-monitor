@@ -177,13 +177,15 @@ export function fetchAlerts(user) {
         let errMessage = 'Error fecthing alerts';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -224,13 +226,15 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
         let errMessage = 'Error fecthing alerts';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -270,13 +274,15 @@ export function deleteAlert(user, alertUuid) {
         let errMessage = 'Error deleting alert';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }

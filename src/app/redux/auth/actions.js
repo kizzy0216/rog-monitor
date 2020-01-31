@@ -257,13 +257,15 @@ export function register(email, firstName, lastName, password, confirmPassword, 
         let errMessage = 'Error registering. Please try again later';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -292,13 +294,15 @@ export function resetPassword(new_password, confirmPassword, token) {
         let errMessage = 'Error resetting your password. Please try again later';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -339,13 +343,15 @@ export function login(email, password) {
           let errMessage = 'Error logging in';
           if (typeof error != 'undefined') {
             errMessage = error;
-            if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-              if (typeof error.response.data === 'object') {
-                if ('Error' in error.response.data) {
-                  errMessage = error.response.data['Error'];
+            if (typeof error === 'object') {
+              if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+                if (typeof error.response.data === 'object') {
+                  if ('Error' in error.response.data) {
+                    errMessage = error.response.data['Error'];
+                  }
+                } else {
+                  errMessage = error.response.data;
                 }
-              } else {
-                errMessage = error.response.data;
               }
             }
           }
@@ -409,10 +415,17 @@ export function sendInvitationEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Error sending invitation. Please try again later.';
-        if (typeof error.response != 'undefined') {
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error != 'undefined') {
+          errMessage = error;
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
+              }
             }
           }
         }
@@ -437,10 +450,17 @@ export function getInvitation(token) {
       })
       .catch(error => {
         let errMessage = 'Error getting invitation. Please try again later.';
-        if (typeof error.response != 'undefined') {
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error != 'undefined') {
+          errMessage = error;
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
+              }
             }
           }
         }
@@ -483,9 +503,15 @@ export function sendPasswordResetRequestEmail(email) {
       .catch(error => {
         let errMessage = 'Sorry, we can\'t find that email.';
         if (typeof error.response != 'undefined') {
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
+              }
             }
           }
         }
@@ -511,9 +537,15 @@ export function getPasswordResetRequest(token) {
       .catch(error => {
         let errMessage = 'Error getting Valid Password Reset Request.';
         if (typeof error.response != 'undefined') {
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
+              }
             }
           }
         }

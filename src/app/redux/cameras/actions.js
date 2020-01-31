@@ -199,13 +199,15 @@ export function fetchCameraUrl(user, cameraGroupsUuid, cameraUuid) {
         let errMessage = 'Error fetching Camera Url';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -234,13 +236,15 @@ export function updatePreviewImage(user, cameraGroup, cameraUuid) {
         let errMessage = 'Error refreshing camera image';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -291,13 +295,15 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
         let errMessage = 'Error creating camera. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -355,13 +361,15 @@ export function editCamera(user, cameraUuid, cameraData) {
         let errMessage = 'Error editing camera. Please try again later.';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -393,16 +401,18 @@ export function deleteCamera(user, cameraGroupsUuid, cameraUuid) {
         let errMessage = 'Error deleting camera';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
-              if (errMessage.includes('Camera Deleted.')){
-                dispatch(fetchCameraGroups(user));
-                dispatch(fetchCameraGroupCameras(user, cameraGroup));
-                dispatch(fetchUserCameraLicenses(user));
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+                if (errMessage.includes('Camera Deleted.')){
+                  dispatch(fetchCameraGroups(user));
+                  dispatch(fetchCameraGroupCameras(user, cameraGroup));
+                  dispatch(fetchUserCameraLicenses(user));
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -429,13 +439,15 @@ export function toggleCameraEnabled(user, cameraGroup, cameraUuid, flag) {
         let errMessage = 'Error toggling camera connection';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -456,13 +468,15 @@ export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
         let errMessage = 'Error checking camera connection';
         if (typeof error != 'undefined') {
           errMessage = error;
-          if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-            if (typeof error.response.data === 'object') {
-              if ('Error' in error.response.data) {
-                errMessage = error.response.data['Error'];
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
               }
-            } else {
-              errMessage = error.response.data;
             }
           }
         }
@@ -493,13 +507,15 @@ export function createCameraAdmin(user, values) {
           let errMessage = 'Error creating camera. Please try again later.';
           if (typeof error != 'undefined') {
             errMessage = error;
-            if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-              if (typeof error.response.data === 'object') {
-                if ('Error' in error.response.data) {
-                  errMessage = error.response.data['Error'];
+            if (typeof error === 'object') {
+              if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+                if (typeof error.response.data === 'object') {
+                  if ('Error' in error.response.data) {
+                    errMessage = error.response.data['Error'];
+                  }
+                } else {
+                  errMessage = error.response.data;
                 }
-              } else {
-                errMessage = error.response.data;
               }
             }
           }
@@ -511,13 +527,15 @@ export function createCameraAdmin(user, values) {
       let errMessage = 'Error fetching camera groups. Please try again later.';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if (typeof error.response.data === 'object') {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
-          } else {
-            errMessage = error.response.data;
           }
         }
       }
@@ -546,13 +564,15 @@ export function readCamerasInGroupAdmin(user, values) {
       let errMessage = 'Error fetching cameras. Please try again later.';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if (typeof error.response.data === 'object') {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
-          } else {
-            errMessage = error.response.data;
           }
         }
       }
@@ -585,13 +605,15 @@ export function updateCameraAdmin(user, values) {
       let errMessage = 'Error updating camera. Please try again later.';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if (typeof error.response.data === 'object') {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
-          } else {
-            errMessage = error.response.data;
           }
         }
       }
@@ -613,13 +635,15 @@ export function deleteCameraAdmin(user, values) {
       let errMessage = 'Error deleting camera. Please try again later.';
       if (typeof error != 'undefined') {
         errMessage = error;
-        if (typeof error === 'object' && error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
-          if (typeof error.response.data === 'object') {
-            if ('Error' in error.response.data) {
-              errMessage = error.response.data['Error'];
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
             }
-          } else {
-            errMessage = error.response.data;
           }
         }
       }

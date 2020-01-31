@@ -67,7 +67,7 @@ class AddCameraGroupModal extends Component {
   }
 
   countAvailableCameraLicenses = () => {
-    this.props.fetchUserCameraLicenses(this.props.user, this.props.cameraGroups)
+    this.props.fetchUserCameraLicenses(this.props.user)
     let count = 0;
     this.props.user.cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid == null ? count++ : count)
     return count;
@@ -155,7 +155,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchUserCameraLicenses: (user, cameraGroup) => dispatch(fetchUserCameraLicenses(user, cameraGroup)),
+    fetchUserCameraLicenses: (user) => dispatch(fetchUserCameraLicenses(user)),
     addNewCameraGroup: (user, cameraGroup) => dispatch(addNewCameraGroup(user, cameraGroup))
   }
 }

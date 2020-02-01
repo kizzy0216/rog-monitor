@@ -26,8 +26,8 @@ export function readAllRecos() {
     })
     .catch((error) => {
       let errMessage = 'Error fetching Recos';
-      if (typeof error != 'undefined') {
-        errMessage = error;
+      if (error.response != undefined) {
+        errMessage = error.response;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {

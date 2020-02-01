@@ -220,6 +220,7 @@ export function fetchCameraUrl(user, cameraGroupsUuid, cameraUuid) {
 }
 
 export function updatePreviewImage(user, cameraGroup, cameraUuid) {
+  // re-factor logic to retry up to three times with a timeout of 29 seconds on each attempt
   return (dispatch) => {
     dispatch(imageUpdateInProgress(true, cameraUuid));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}/image`;

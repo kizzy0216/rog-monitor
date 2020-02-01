@@ -144,8 +144,8 @@ export function fetchUserInvites(values) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching invitations';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -181,8 +181,8 @@ export function updateInvitation(invitation) {
     axios.patch(url, data, config)
       .catch((error) => {
         let errMessage = 'Error updating invitation';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -208,8 +208,8 @@ export function deleteInvitation(invitation_uuid) {
     axios.delete(url, config)
     .catch((error) => {
       let errMessage = 'Error deleting invitation';
-      if (error != undefined) {
-        errMessage = error;
+      if (error.response != undefined) {
+        errMessage = error.response;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
@@ -242,8 +242,8 @@ export function fetchSentCameraGroupInvites(user, camera_group_uuid) {
     })
     .catch((error) => {
       let errMessage = 'Error fetching recieved invites';
-      if (error != undefined) {
-        errMessage = error;
+      if (error.response != undefined) {
+        errMessage = error.response;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
@@ -280,8 +280,8 @@ export function fetchUserCameraGroupInvites(user) {
     })
     .catch((error) => {
       let errMessage = 'Error fetching recieved invites';
-      if (error != undefined) {
-        errMessage = error;
+      if (error.response != undefined) {
+        errMessage = error.response;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
@@ -320,8 +320,8 @@ export function acceptInvite(user, invite) {
     })
     .catch((error) => {
       let errMessage = 'Error accepting invitation';
-      if (error != undefined) {
-        errMessage = error;
+      if (error.response != undefined) {
+        errMessage = error.response;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
@@ -358,8 +358,8 @@ export function rejectInvite(user, invite) {
     })
     .catch((error) => {
       let errMessage = 'Error rejecting invitation';
-      if (error != undefined) {
-        errMessage = error;
+      if (error.response != undefined) {
+        errMessage = error.response;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {
@@ -395,8 +395,8 @@ export function rescindInvite(user, invite) {
     })
     .catch((error) => {
       let errMessage = 'Error rescinding invitation';
-      if (error != undefined) {
-        errMessage = error;
+      if (error.response != undefined) {
+        errMessage = error.response;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
             if (typeof error.response.data === 'object') {

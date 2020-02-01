@@ -61,8 +61,8 @@ export function fetchUserCameraLicenses(user) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching user data. Please try again later.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -106,8 +106,8 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
       })
       .catch(error => {
         let errMessage = 'Error fetching user data. Please try again later.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -146,8 +146,8 @@ export function updateUser(user, values) {
       })
       .catch(error => {
         let errMessage = 'Error updating user';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -181,8 +181,8 @@ export function muteSound(user, mute) {
       })
       .catch((err) => {
         let errMessage = 'Error fetching user device data. Please try again later.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -257,8 +257,8 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
       })
       .catch(error => {
         let errMessage = 'Error fetching user device data. Please try again later.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -297,8 +297,8 @@ export function storeUserDevice(user, token, messaging) {
       .catch(error => {
         console.log(error);
         let errMessage = 'Error storing user device token.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -330,8 +330,8 @@ export function updateUserDevice(userUuid, deviceUuid, name) {
       })
       .catch(error => {
         let errMessage = 'Error updating user device data. Please try again later.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -368,8 +368,8 @@ export function deleteUserDevice(userUuid, deviceUuid, token) {
       })
       .catch(error => {
         let errMessage = 'Error deleting user device data. Please try again later.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -400,8 +400,8 @@ export function readUserByUuidAdmin(values) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching user';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -432,8 +432,8 @@ export function readUserByEmailAdmin(values) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching user';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -474,8 +474,8 @@ export function updateUserAdmin(user, values) {
       })
       .catch(error => {
         let errMessage = 'Error updating user';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -505,8 +505,8 @@ export function deleteUserAdmin(user_uuid) {
       })
       .catch(error => {
         let errMessage = 'Error updating user';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -537,8 +537,8 @@ export function createUserLicense(user, numberToAdd) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -571,8 +571,8 @@ export function readUserCameraLicensesAdmin(user) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -605,8 +605,8 @@ export function updateUserLicense(user, license) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -634,8 +634,8 @@ export function deleteUserLicenseAdmin(user, license) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching user licnese data. Please try again later.';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {

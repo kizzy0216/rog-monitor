@@ -201,8 +201,8 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
       })
       .catch((error) => {
         let errMessage = 'Error creating trigger';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -244,8 +244,8 @@ export function fetchTriggers(user, cameraGroup, cameraUuid) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching triggers';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -279,8 +279,8 @@ export function deleteTrigger(user, cameraGroupUuid, cameraUuid, baseTriggersUui
       })
       .catch((error) => {
         let errMessage = 'Error deleting trigger'
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -351,8 +351,8 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       })
       .catch((error) => {
         let errMessage = 'Error creating trigger time window';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -412,8 +412,8 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       })
       .catch((error) => {
         let errMessage = 'Error updating trigger time window';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -450,8 +450,8 @@ export function deleteTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, baseT
       })
       .catch((error) => {
         let errMessage = 'Error deleting trigger time window';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -490,8 +490,8 @@ export function fetchTriggersAdmin(user, values) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching triggers';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -527,8 +527,8 @@ export function deleteTriggerAdmin(user, values, camerasUuid, cameraGroupUuid) {
       })
       .catch((error) => {
         let errMessage = 'Error deleting trigger'
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -566,8 +566,8 @@ export function updateTriggerTimeWindowAdmin(user, values, trigger, cameraGroupU
       .catch((error) => {
         console.log(error);
         let errMessage = 'Error updating trigger time window';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {
@@ -608,8 +608,8 @@ export function deleteTriggerTimeWindowAdmin(user, triggerTimeWindow, camerasUui
       })
       .catch((error) => {
         let errMessage = 'Error deleting trigger time window';
-        if (error != undefined) {
-          errMessage = error;
+        if (error.response != undefined) {
+          errMessage = error.response;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
               if (typeof error.response.data === 'object') {

@@ -201,7 +201,7 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
       })
       .catch((error) => {
         let errMessage = 'Error creating trigger';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -244,7 +244,7 @@ export function fetchTriggers(user, cameraGroup, cameraUuid) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching triggers';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -279,7 +279,7 @@ export function deleteTrigger(user, cameraGroupUuid, cameraUuid, baseTriggersUui
       })
       .catch((error) => {
         let errMessage = 'Error deleting trigger'
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -351,7 +351,7 @@ export function createTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       })
       .catch((error) => {
         let errMessage = 'Error creating trigger time window';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -412,7 +412,7 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       })
       .catch((error) => {
         let errMessage = 'Error updating trigger time window';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -450,7 +450,7 @@ export function deleteTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, baseT
       })
       .catch((error) => {
         let errMessage = 'Error deleting trigger time window';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -490,7 +490,7 @@ export function fetchTriggersAdmin(user, values) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching triggers';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -527,7 +527,7 @@ export function deleteTriggerAdmin(user, values, camerasUuid, cameraGroupUuid) {
       })
       .catch((error) => {
         let errMessage = 'Error deleting trigger'
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -566,7 +566,7 @@ export function updateTriggerTimeWindowAdmin(user, values, trigger, cameraGroupU
       .catch((error) => {
         console.log(error);
         let errMessage = 'Error updating trigger time window';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -608,7 +608,7 @@ export function deleteTriggerTimeWindowAdmin(user, triggerTimeWindow, camerasUui
       })
       .catch((error) => {
         let errMessage = 'Error deleting trigger time window';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {

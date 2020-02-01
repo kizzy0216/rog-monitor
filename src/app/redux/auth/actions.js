@@ -255,7 +255,7 @@ export function register(email, firstName, lastName, password, confirmPassword, 
       })
       .catch((error) => {
         let errMessage = 'Error registering. Please try again later';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -292,7 +292,7 @@ export function resetPassword(new_password, confirmPassword, token) {
       })
       .catch((error) => {
         let errMessage = 'Error resetting your password. Please try again later';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -341,7 +341,7 @@ export function login(email, password) {
         })
         .catch((error) => {
           let errMessage = 'Error logging in';
-          if (typeof error != 'undefined') {
+          if (error != undefined) {
             errMessage = error;
             if (typeof error === 'object') {
               if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -415,7 +415,7 @@ export function sendInvitationEmail(email) {
       })
       .catch(error => {
         let errMessage = 'Error sending invitation. Please try again later.';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -450,7 +450,7 @@ export function getInvitation(token) {
       })
       .catch(error => {
         let errMessage = 'Error getting invitation. Please try again later.';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {

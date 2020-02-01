@@ -197,7 +197,7 @@ export function fetchCameraUrl(user, cameraGroupsUuid, cameraUuid) {
       })
       .catch((error) => {
         let errMessage = 'Error fetching Camera Url';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -235,7 +235,7 @@ export function updatePreviewImage(user, cameraGroup, cameraUuid) {
       })
       .catch((error) => {
         let errMessage = 'Error refreshing camera image';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -294,7 +294,7 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
       })
       .catch((error) => {
         let errMessage = 'Error creating camera. Please try again later.';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -360,7 +360,7 @@ export function editCamera(user, cameraUuid, cameraData) {
       })
       .catch((error) => {
         let errMessage = 'Error editing camera. Please try again later.';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -400,7 +400,7 @@ export function deleteCamera(user, cameraGroupsUuid, cameraUuid) {
       })
       .catch((error) => {
         let errMessage = 'Error deleting camera';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -438,7 +438,7 @@ export function toggleCameraEnabled(user, cameraGroup, cameraUuid, flag) {
       })
       .catch((error)=>{
         let errMessage = 'Error toggling camera connection';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -467,7 +467,7 @@ export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
       })
       .catch((error)=>{
         let errMessage = 'Error checking camera connection';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -506,7 +506,7 @@ export function createCameraAdmin(user, values) {
         })
         .catch((error) => {
           let errMessage = 'Error creating camera. Please try again later.';
-          if (typeof error != 'undefined') {
+          if (error != undefined) {
             errMessage = error;
             if (typeof error === 'object') {
               if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -526,7 +526,7 @@ export function createCameraAdmin(user, values) {
     })
     .catch((error) => {
       let errMessage = 'Error fetching camera groups. Please try again later.';
-      if (typeof error != 'undefined') {
+      if (error != undefined) {
         errMessage = error;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -563,7 +563,7 @@ export function readCamerasInGroupAdmin(user, values) {
     })
     .catch((error) => {
       let errMessage = 'Error fetching cameras. Please try again later.';
-      if (typeof error != 'undefined') {
+      if (error != undefined) {
         errMessage = error;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -604,7 +604,7 @@ export function updateCameraAdmin(user, values) {
     })
     .catch((error) => {
       let errMessage = 'Error updating camera. Please try again later.';
-      if (typeof error != 'undefined') {
+      if (error != undefined) {
         errMessage = error;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -634,7 +634,7 @@ export function deleteCameraAdmin(user, values) {
     })
     .catch((error) => {
       let errMessage = 'Error deleting camera. Please try again later.';
-      if (typeof error != 'undefined') {
+      if (error != undefined) {
         errMessage = error;
         if (typeof error === 'object') {
           if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {

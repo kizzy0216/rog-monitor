@@ -175,7 +175,7 @@ export function fetchAlerts(user) {
       })
       .catch((error) => {
         let errMessage = 'Error fecthing alerts';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -224,7 +224,7 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
       })
       .catch((error) => {
         let errMessage = 'Error fecthing alerts';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
@@ -272,7 +272,7 @@ export function deleteAlert(user, alertUuid) {
       })
       .catch(error => {
         let errMessage = 'Error deleting alert';
-        if (typeof error != 'undefined') {
+        if (error != undefined) {
           errMessage = error;
           if (typeof error === 'object') {
             if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {

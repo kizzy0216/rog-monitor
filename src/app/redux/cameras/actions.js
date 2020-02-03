@@ -12,6 +12,7 @@ import axiosRetry from 'axios-retry';
 
 axiosRetry(axios, { retries: 3 });
 axiosRetry(axios, { retryDelay: axiosRetry.exponentialDelay});
+axiosRetry(axios, { shouldResetTimeout: true });
 
 function fetchInProcess(bool) {
   return {

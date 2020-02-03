@@ -8,6 +8,11 @@ import * as types from './actionTypes';
 import { fetchCameraGroups, selectCameraGroup, getUserCameraGroupPrivileges } from '../cameraGroups/actions';
 import { fetchUserCameraLicenses } from '../users/actions';
 import {isEmpty} from '../helperFunctions';
+import axiosRetry from 'axios-retry';
+
+axiosRetry(axios, { retries: 3 });
+axiosRetry(axios, { retryDelay: axiosRetry.exponentialDelay});
+axiosRetry(axios, { shouldResetTimeout: true });
 
 function fetchInProcess(bool) {
   return {
@@ -220,12 +225,11 @@ export function fetchCameraUrl(user, cameraGroupsUuid, cameraUuid) {
 }
 
 export function updatePreviewImage(user, cameraGroup, cameraUuid) {
-  // re-factor logic to retry up to three times with a timeout of 29 seconds on each attempt
   return (dispatch) => {
     dispatch(imageUpdateInProgress(true, cameraUuid));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}/image`;
 
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}, timeout: 90000};
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}, timeout: 29000};
     let data = {camera_groups_name: cameraGroup.name}
 
     axios.post(url, data, config)

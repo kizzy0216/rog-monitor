@@ -232,7 +232,7 @@ export function updatePreviewImage(user, cameraGroup, cameraUuid) {
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}, timeout: 29000};
     let data = {camera_groups_name: cameraGroup.name}
 
-    axios.post(url, data, config)
+    axios.put(url, data, config)
       .then((response) => {
         dispatch(refreshCameraImage(cameraUuid, response.data['Success']));
         dispatch(imageUpdateSuccess(true, cameraUuid));

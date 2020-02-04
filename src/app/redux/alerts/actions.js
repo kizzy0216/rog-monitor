@@ -128,10 +128,15 @@ export function listenForNewAlerts(user, messaging) {
     // });
 
     navigator.serviceWorker.addEventListener("message", (payload) => {
-      payload = payload.data.firebaseMessagingData;
-      if (previousAlert !== payload.data.uuid) {
-        previousAlert = payload.data.uuid;
-        dispatch(handleNewAlert(user, payload));
+      // console.log("Notification Received", payload);
+      if (payload.data.hasOwnProperty('firebaseMessagingData')) {
+        payload = payload.data.firebaseMessagingData;
+        if (previousAlert !== payload.data.uuid) {
+          previousAlert = payload.data.uuid;
+          dispatch(handleNewAlert(user, payload));
+          dispatch(fetchAlerts(user));
+        }
+      } else {
         dispatch(fetchAlerts(user));
       }
     });

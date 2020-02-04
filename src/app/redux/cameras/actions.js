@@ -10,9 +10,7 @@ import { fetchUserCameraLicenses } from '../users/actions';
 import {isEmpty} from '../helperFunctions';
 import axiosRetry from 'axios-retry';
 
-axiosRetry(axios, { retries: 3 });
-axiosRetry(axios, { retryDelay: axiosRetry.exponentialDelay});
-axiosRetry(axios, { shouldResetTimeout: true });
+axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay, shouldResetTimeout: true });
 
 function fetchInProcess(bool) {
   return {

@@ -21,6 +21,19 @@ messaging.setBackgroundMessageHandler(function(payload) {
     image: payload.data.alert_image_url_with_token
   }
 
+  let url = payload.data.web_client_url;
+  clients.matchAll({includeUncontrolled: false, type: 'window'}).then( windowClients => {
+    // Check if there is already a window/tab open with the target URL
+    for (var i = 0; i < windowClients.length; i++) {
+        var client = windowClients[i];
+        if (client.url.includes(url) && 'focus' in client) {
+          client.postMessage({
+            msg: "Hey I just got a fetch from you!"
+          });
+        }
+    }
+  })
+
   return self.registration.showNotification(title, options);
 });
 

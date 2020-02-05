@@ -122,9 +122,12 @@ export function listenForNewAlerts(user, messaging) {
     //   console.log("Notification Received", payload);
     //   if (previousAlert !== payload.data.uuid) {
     //     previousAlert = payload.data.uuid;
-    //     dispatch(handleNewAlert(payload));
-    //     dispatch(fetchAlerts());
+    //     dispatch(handleNewAlert(user, payload));
+    //     dispatch(fetchAlerts(user));
     //   }
+    // } else {
+    //   dispatch(fetchAlerts(user));
+    // }
     // });
 
     navigator.serviceWorker.addEventListener("message", (payload) => {

@@ -107,6 +107,16 @@ export function handleNewAlert(user, payload) {
     }
   }
   return (dispatch) => {
+    navigator.serviceWorker.ready.then(registration => {
+      const title = (payload.data.trigger_type + ' by ' + payload.data.camera_name);
+      const options = {
+        body: payload.data.camera_groups_name,
+        data: payload.data,
+        icon: '/logo192x192.png',
+        image: payload.data.alert_image_url_with_token
+      }
+      registration.showNotification(title, options);
+    })
     if (typeof user.mute == 'undefined') {
       user.mute = false;
     }

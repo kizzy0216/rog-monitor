@@ -28,7 +28,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
         var client = windowClients[i];
         if (client.url.includes(url) && 'focus' in client) {
           client.postMessage({
-            msg: "Hey I just got a fetch from you!"
+            msg: "fetchAlerts"
           });
         }
     }

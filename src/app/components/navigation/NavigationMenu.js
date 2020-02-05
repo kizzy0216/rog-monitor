@@ -10,21 +10,21 @@ class NavigationMenu extends Component {
   UNSAFE_componentWillMount = () => {
     this.props.fetchAlerts(this.props.user);
   }
-  UNSAFE_componentWillReceiveProps = (nextProps) => {
-    if (nextProps.newAlerts.length) {
-      const alert = nextProps.newAlerts[0];
-
-      notification.open({
-        message: 'Alert:',
-        description: `${alert.type} by ${alert.camera.name} at ${alert.camera.cameraGroup.name}`,
-        duration: 5,
-        style: {
-        marginTop: 30
-      },
-      });
-      nextProps.clearNewAlerts();
-    }
-  }
+  // UNSAFE_componentWillReceiveProps = (nextProps) => {
+  //   if (nextProps.newAlerts.length) {
+  //     const alert = nextProps.newAlerts[0];
+  //
+  //     notification.open({
+  //       message: 'Alert:',
+  //       description: `${alert.type} by ${alert.camera.name} at ${alert.camera.cameraGroup.name}`,
+  //       duration: 5,
+  //       style: {
+  //         marginTop: 30
+  //       }
+  //     });
+  //     nextProps.clearNewAlerts();
+  //   }
+  // }
 
   goToPath = (path) => {
     if (path === '/alerts') {

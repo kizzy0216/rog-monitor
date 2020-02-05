@@ -19,8 +19,8 @@ class NavigationMenu extends Component {
         description: `${alert.type} by ${alert.camera.name} at ${alert.camera.cameraGroup.name}`,
         duration: 5,
         style: {
-        marginTop: 30
-      },
+          marginTop: 30
+        }
       });
       nextProps.clearNewAlerts();
     }

@@ -150,6 +150,13 @@ export function listenForNewAlerts(user, messaging) {
           dispatch(fetchAlerts(user));
         }
       } else {
+        if (typeof user.mute == 'undefined') {
+          user.mute = false;
+        }
+        if (user.mute === false) {
+          var audio = new Audio(newAlertSound);
+          audio.play();
+        }
         dispatch(fetchAlerts(user));
       }
     });

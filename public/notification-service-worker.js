@@ -42,13 +42,13 @@ self.addEventListener('notificationclick', function(event) {
   let url = event.notification.data.web_client_url;
   event.notification.close(); // Android needs explicit close.
   event.waitUntil(
-      clients.matchAll({includeUncontrolled: false, type: 'window'}).then( windowClients => {
+      clients.matchAll({includeUncontrolled: false, type: 'all'}).then( windowClients => {
           // Check if there is already a window/tab open with the target URL
           for (var i = 0; i < windowClients.length; i++) {
               var client = windowClients[i];
               // If so, just focus it.
               if (client.url.includes(url) && 'focus' in client) {
-                return client.navigate(url + '/#/alerts').then(client => client.focus());
+                return client.navigate('/#/alerts').then(client => client.focus());
               }
           }
           // If not, then open the target URL in a new window/tab.

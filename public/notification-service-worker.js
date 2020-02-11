@@ -12,7 +12,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.setBackgroundMessageHandler(function(payload) {
-  console.log(payload);
+  console.log(payload.data.web_client_url);
   const title = (payload.data.trigger_type + ' by ' + payload.data.camera_name);
   const options = {
     body: payload.data.camera_groups_name,
@@ -38,7 +38,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
-  console.log("Notification Clicked" + event.notification.data);
+  console.log("Notification Clicked" + event.notification.data.web_client_url);
   let url = event.notification.data.web_client_url;
   event.notification.close(); // Android needs explicit close.
   event.waitUntil(

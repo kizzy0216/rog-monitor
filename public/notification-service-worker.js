@@ -41,7 +41,7 @@ self.addEventListener('notificationclick', function(event) {
   let url = event.notification.data.web_client_url;
   event.notification.close(); // Android needs explicit close.
   event.waitUntil(
-      clients.matchAll({includeUncontrolled: false, type: 'all'}).then( windowClients => {
+      clients.matchAll({includeUncontrolled: false, type: 'window'}).then( windowClients => {
           // Check if there is already a window/tab open with the target URL
           for (var i = 0; i < windowClients.length; i++) {
               var client = windowClients[i];

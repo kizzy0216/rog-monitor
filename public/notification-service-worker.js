@@ -12,7 +12,6 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.setBackgroundMessageHandler(function(payload) {
-  console.log(payload.data.web_client_url);
   const title = (payload.data.trigger_type + ' by ' + payload.data.camera_name);
   const options = {
     body: payload.data.camera_groups_name,
@@ -26,6 +25,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
     // Check if there is already a window/tab open with the target URL
     for (var i = 0; i < windowClients.length; i++) {
         var client = windowClients[i];
+        console.log("CLIENT URL: " + client.url);
         if (client.url.includes(url) && 'focus' in client) {
           client.postMessage({
             msg: "fetchAlerts"
@@ -38,15 +38,15 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
-  console.log("Notification Clicked" + event.notification.data.web_client_url);
   let url = event.notification.data.web_client_url;
   event.notification.close(); // Android needs explicit close.
   event.waitUntil(
-      clients.matchAll({includeUncontrolled: false, type: 'all'}).then( windowClients => {
+      clients.matchAll({includeUncontrolled: false, type: 'window'}).then( windowClients => {
           // Check if there is already a window/tab open with the target URL
           for (var i = 0; i < windowClients.length; i++) {
               var client = windowClients[i];
               // If so, just focus it.
+              console.log("CLIENT URL: " + client.url);
               if (client.url.includes(url) && 'focus' in client) {
                 return client.navigate(url + '/#/alerts').then(client => client.focus());
               }

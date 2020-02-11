@@ -142,9 +142,9 @@ export function listenForNewAlerts(user, messaging) {
 
     navigator.serviceWorker.addEventListener("message", (payload) => {
       // console.log("Notification Received", payload);
-      payload = payload.data.firebaseMessagingData;
       if (previousAlert !== payload.data.uuid) {
         if (payload.data.hasOwnProperty('firebaseMessagingData')) {
+          payload = payload.data.firebaseMessagingData;
           dispatch(handleNewAlert(user, payload));
           dispatch(fetchAlerts(user));
         } else {

@@ -22,6 +22,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
   }
 
   let url = payload.data.web_client_url;
+  console.log(url);
   clients.matchAll({includeUncontrolled: false, type: 'window'}).then( windowClients => {
     // Check if there is already a window/tab open with the target URL
     for (var i = 0; i < windowClients.length; i++) {

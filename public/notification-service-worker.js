@@ -48,7 +48,7 @@ self.addEventListener('notificationclick', function(event) {
               var client = windowClients[i];
               // If so, just focus it.
               if (client.url.includes(url) && 'focus' in client) {
-                return client.navigate('/#/alerts').then(client => client.focus());
+                return client.navigate(url + '/#/alerts').then(client => client.focus());
               }
           }
           // If not, then open the target URL in a new window/tab.

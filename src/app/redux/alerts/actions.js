@@ -149,7 +149,8 @@ export function listenForNewAlerts(user, messaging) {
           dispatch(handleNewAlert(user, payload));
           dispatch(fetchAlerts(user));
         }
-      } else {
+      } else if (previousAlert !== payload.data.uuid) {
+        previousAlert = payload.data.uuid;
         if (typeof user.mute == 'undefined') {
           user.mute = false;
         }

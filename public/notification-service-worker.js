@@ -1,8 +1,6 @@
 importScripts('https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/7.6.1/firebase-messaging.js');
 
-self.clients.claim();
-
 // TODO: move this to env config somehow
 firebase.initializeApp({
   projectId: "rog-2-0",
@@ -58,3 +56,11 @@ self.addEventListener('notificationclick', function(event) {
       })
     );
 });
+
+self.addEventListener('install', function (event) {
+  return self.skipWaiting();
+})
+
+self.addEventListener('activate', function (event) {
+  return self.clients.claim();
+})

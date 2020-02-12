@@ -67,6 +67,7 @@ function registerValidSW(swUrl) {
           }
         };
       };
+      clients.claim();
       const messaging = firebase.messaging();
       messaging.useServiceWorker(registration);
     })

@@ -67,13 +67,13 @@ function registerValidSW(swUrl) {
           }
         };
       };
-      clients.claim();
       const messaging = firebase.messaging();
       messaging.useServiceWorker(registration);
     })
     .catch(error => {
       console.error('Error during service worker registration:', error);
     });
+  clients.claim();
 }
 
 function checkValidServiceWorker(swUrl) {

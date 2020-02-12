@@ -25,7 +25,6 @@ messaging.setBackgroundMessageHandler(function(payload) {
     // Check if there is already a window/tab open with the target URL
     for (var i = 0; i < windowClients.length; i++) {
         var client = windowClients[i];
-        console.log("CLIENT URL: " + client.url);
         if (client.url.includes(url) && 'focus' in client) {
           client.postMessage({
             msg: "fetchAlerts"
@@ -46,7 +45,6 @@ self.addEventListener('notificationclick', function(event) {
           for (var i = 0; i < windowClients.length; i++) {
               var client = windowClients[i];
               // If so, just focus it.
-              console.log("CLIENT URL: " + client.url);
               if (client.url.includes(url) && 'focus' in client) {
                 return client.navigate(url + '/#/alerts').then(client => client.focus());
               }

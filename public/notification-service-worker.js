@@ -56,3 +56,5 @@ self.addEventListener('notificationclick', function(event) {
       })
     );
 });
+
+self.skipWaiting();

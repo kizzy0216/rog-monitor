@@ -48,6 +48,7 @@ function registerValidSW(swUrl) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
+      self.clients.claim();
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         installingWorker.onstatechange = () => {
@@ -73,7 +74,6 @@ function registerValidSW(swUrl) {
     .catch(error => {
       console.error('Error during service worker registration:', error);
     });
-  clients.claim();
 }
 
 function checkValidServiceWorker(swUrl) {

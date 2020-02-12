@@ -57,4 +57,10 @@ self.addEventListener('notificationclick', function(event) {
     );
 });
 
-self.skipWaiting();
+self.addEventListener('ininstall', function (event) {
+  return self.skipWaiting();
+})
+
+self.addEventListener('onactivate', function (event) {
+  return clients.claim();
+})

@@ -144,7 +144,7 @@ function removeGuardError(error) {
   }
 }
 
-function cameraGroupSelected(selectedCameraGroup) {
+export function cameraGroupSelected(selectedCameraGroup) {
   return {
     type: types.CAMERA_GROUP_SELECTED,
     selectedCameraGroup

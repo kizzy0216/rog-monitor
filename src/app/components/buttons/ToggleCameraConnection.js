@@ -8,7 +8,6 @@ class ToggleCameraConnection extends Component {
 
   toggleCameraEnabled = (enabled) => {
     this.props.toggleCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid, enabled);
-    // if enabled is set to true, set an interval function that will poll the controller to check for a live view and stop it when we get a live view back. After x tries, clear the interval
   }
 
   UNSAFE_componentWillMount() {

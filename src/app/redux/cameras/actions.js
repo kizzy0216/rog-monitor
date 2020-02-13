@@ -5,7 +5,7 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
-import { fetchCameraGroups, selectCameraGroup, getUserCameraGroupPrivileges } from '../cameraGroups/actions';
+import { fetchCameraGroups, selectCameraGroup, getUserCameraGroupPrivileges, cameraGroupSelected } from '../cameraGroups/actions';
 import { fetchUserCameraLicenses } from '../users/actions';
 import {isEmpty} from '../helperFunctions';
 import axiosRetry from 'axios-retry';
@@ -437,7 +437,6 @@ export function toggleCameraEnabled(user, cameraGroup, cameraUuid, flag) {
     axios.patch(url, data, config)
       .then((response) => {
         dispatch(checkCameraEnabled(user, cameraGroup, cameraUuid));
-        dispatch(fetchCameraGroupCameras(user, cameraGroup));
       })
       .catch((error)=>{
         let errMessage = 'Error toggling camera connection';
@@ -467,6 +466,12 @@ export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
     axios.get(url, config)
       .then((response) => {
         dispatch(cameraConnectionEnabled(response.data.enabled, cameraUuid));
+        for (var i = 0; i < cameraGroup.cameras.length; i++) {
+          if (cameraUuid == cameraGroup.cameras[i].uuid) {
+            cameraGroup.cameras[i] = response.data;
+          }
+        }
+        dispatch(cameraGroupSelected(cameraGroup));
       })
       .catch((error)=>{
         let errMessage = 'Error checking camera connection';

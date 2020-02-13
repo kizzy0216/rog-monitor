@@ -5,7 +5,7 @@ import initialState from './initialState';
 
 import * as types from './actionTypes';
 
-import { fetchCameraGroups, selectCameraGroup, getUserCameraGroupPrivileges, cameraGroupSelected } from '../cameraGroups/actions';
+import { fetchCameraGroups, cameraGroupSelected, getUserCameraGroupPrivileges } from '../cameraGroups/actions';
 import { fetchUserCameraLicenses } from '../users/actions';
 import {isEmpty} from '../helperFunctions';
 import axiosRetry from 'axios-retry';
@@ -468,6 +468,7 @@ export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
         dispatch(cameraConnectionEnabled(response.data.enabled, cameraUuid));
         for (var i = 0; i < cameraGroup.cameras.length; i++) {
           if (cameraUuid == cameraGroup.cameras[i].uuid) {
+            console.log(response.data.name + ' has live_view_url: ' + isEmpty(response.data.live_view_url) + ' in checkCameraEnabled');
             cameraGroup.cameras[i] = response.data;
             dispatch(cameraGroupSelected(cameraGroup));
             break;

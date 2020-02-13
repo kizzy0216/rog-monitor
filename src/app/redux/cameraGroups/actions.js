@@ -144,7 +144,7 @@ function removeGuardError(error) {
   }
 }
 
-function cameraGroupSelected(selectedCameraGroup) {
+export function cameraGroupSelected(selectedCameraGroup) {
   return {
     type: types.CAMERA_GROUP_SELECTED,
     selectedCameraGroup
@@ -200,7 +200,7 @@ export function getUserCameraGroupPrivileges(user, cameraGroup) {
         cameraGroup.userCameraGroupPrivileges = [];
       })
       .finally(() => {
-        dispatch(cameraGroupSelected(cameraGroup));
+        export dispatch(cameraGroupSelected(cameraGroup));
       });
   }
 }

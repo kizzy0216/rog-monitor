@@ -465,6 +465,7 @@ export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
+        console.log(response.data);
         dispatch(cameraConnectionEnabled(response.data.enabled, cameraUuid));
         for (var i = 0; i < cameraGroup.cameras.length; i++) {
           if (cameraUuid == cameraGroup.cameras[i].uuid) {

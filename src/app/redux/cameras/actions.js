@@ -469,7 +469,6 @@ export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
         for (var i = 0; i < cameraGroup.cameras.length; i++) {
           if (cameraUuid == cameraGroup.cameras[i].uuid) {
             cameraGroup.cameras[i] = response.data;
-            console.log(cameraGroup);
             dispatch(cameraGroupSelected(cameraGroup));
             break;
           }

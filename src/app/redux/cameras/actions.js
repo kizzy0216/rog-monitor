@@ -436,7 +436,7 @@ export function toggleCameraEnabled(user, cameraGroup, cameraUuid, flag) {
     let data = {enabled: flag}
     axios.patch(url, data, config)
       .then((response) => {
-        // dispatch(checkCameraEnabled(user, cameraGroup, cameraUuid));
+        dispatch(checkCameraEnabled(user, cameraGroup, cameraUuid));
         dispatch(fetchCameraGroupCameras(user, cameraGroup));
       })
       .catch((error)=>{

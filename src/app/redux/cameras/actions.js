@@ -469,9 +469,10 @@ export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
         for (var i = 0; i < cameraGroup.cameras.length; i++) {
           if (cameraUuid == cameraGroup.cameras[i].uuid) {
             cameraGroup.cameras[i] = response.data;
+            dispatch(cameraGroupSelected(cameraGroup));
+            break;
           }
         }
-        dispatch(cameraGroupSelected(cameraGroup));
       })
       .catch((error)=>{
         let errMessage = 'Error checking camera connection';

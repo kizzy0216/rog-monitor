@@ -200,7 +200,7 @@ export function getUserCameraGroupPrivileges(user, cameraGroup) {
         cameraGroup.userCameraGroupPrivileges = [];
       })
       .finally(() => {
-        export dispatch(cameraGroupSelected(cameraGroup));
+        dispatch(cameraGroupSelected(cameraGroup));
       });
   }
 }

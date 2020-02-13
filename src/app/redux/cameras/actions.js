@@ -437,12 +437,6 @@ export function toggleCameraEnabled(user, cameraGroup, cameraUuid, flag) {
     axios.patch(url, data, config)
       .then((response) => {
         dispatch(checkCameraEnabled(user, cameraGroup, cameraUuid));
-        for (var i = 0; i < cameraGroup.cameras.length; i++) {
-          if (cameraUuid == cameraGroup.cameras[i].uuid) {
-            cameraGroup.cameras[i] = response.data;
-          }
-        }
-        dispatch(cameraGroupSelected(cameraGroup));
       })
       .catch((error)=>{
         let errMessage = 'Error toggling camera connection';
@@ -472,6 +466,12 @@ export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
     axios.get(url, config)
       .then((response) => {
         dispatch(cameraConnectionEnabled(response.data.enabled, cameraUuid));
+        for (var i = 0; i < cameraGroup.cameras.length; i++) {
+          if (cameraUuid == cameraGroup.cameras[i].uuid) {
+            cameraGroup.cameras[i] = response.data;
+          }
+        }
+        dispatch(cameraGroupSelected(cameraGroup));
       })
       .catch((error)=>{
         let errMessage = 'Error checking camera connection';

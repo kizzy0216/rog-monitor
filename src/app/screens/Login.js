@@ -146,7 +146,7 @@ class Login extends Component {
                       </p>
                     </div>
                     <div style={styles.forgotPassword}>
-                      <a href='/#' onClick={this.toggleRequestPasswordResetModalVisibility}>I forgot my Password</a>
+                      <Button type="secondary" onClick={this.toggleRequestPasswordResetModalVisibility}>I forgot my Password</Button>
                     </div>
                     <RequestPasswordResetModal visible={this.state.requestPasswordResetModal} toggleRequestPasswordResetModalVisibility={this.toggleRequestPasswordResetModalVisibility.bind(this)} />
                   </Col>

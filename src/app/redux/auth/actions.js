@@ -479,7 +479,6 @@ export function sendPasswordResetRequestEmail(email) {
     dispatch(sendPasswordResetRequestInProcess(true));
 
     const passwordResetRequestEmail = email.trim()
-    console.log(passwordResetRequestEmail);
     let url = `${process.env.REACT_APP_ROG_API_URL}/forgot-password`;
     let data = {email: passwordResetRequestEmail};
 

@@ -37,7 +37,7 @@ class Login extends Component {
   }
 
   toggleRequestPasswordResetModalVisibility = () => {
-    this.setState({requestPasswordResetModalVisible: !this.state.requestPasswordResetModalVisible});
+    this.setState({requestPasswordResetModal: !this.state.requestPasswordResetModal});
   }
 
   render() {
@@ -148,7 +148,7 @@ class Login extends Component {
                     <div style={styles.forgotPassword}>
                       <a href='/#' onClick={this.toggleRequestPasswordResetModalVisibility}>I forgot my Password</a>
                     </div>
-                    <RequestPasswordResetModal visible={this.state.requestPasswordResetModalVisible} toggleRequestPasswordResetModalVisibility={this.toggleRequestPasswordResetModalVisibility.bind(this)} />
+                    <RequestPasswordResetModal visible={this.state.requestPasswordResetModal} toggleRequestPasswordResetModalVisibility={this.toggleRequestPasswordResetModalVisibility.bind(this)} />
                   </Col>
                 </Row>
               </Col>

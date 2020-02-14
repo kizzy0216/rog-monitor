@@ -478,17 +478,18 @@ export function sendPasswordResetRequestEmail(email) {
     dispatch(sendPasswordResetRequestError(''));
     dispatch(sendPasswordResetRequestInProcess(true));
 
-    const passwordResetRequestEmail = email.trim();
+    const passwordResetRequestEmail = email.trim()
+    console.log(passwordResetRequestEmail);
     let url = `${process.env.REACT_APP_ROG_API_URL}/forgot-password`;
     let data = {email: passwordResetRequestEmail};
 
-    const passwordResetRequestEvent = {
-      email: passwordResetRequestEmail,
-      password_reset_request_status: 'PasswordResetRequest Sent',
-      password_reset_request_date: new Date().toString().split(' ').splice(1, 4).join(' ')
-    };
-
-    dispatch(trackEventAnalytics('passwordResetRequest', passwordResetRequestEvent));
+    // const passwordResetRequestEvent = {
+    //   email: passwordResetRequestEmail,
+    //   password_reset_request_status: 'PasswordResetRequest Sent',
+    //   password_reset_request_date: new Date().toString().split(' ').splice(1, 4).join(' ')
+    // };
+    //
+    // dispatch(trackEventAnalytics('passwordResetRequest', passwordResetRequestEvent));
 
 
     /*-- Needed for Woopra Trigger event --*/

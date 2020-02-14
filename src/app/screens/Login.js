@@ -225,7 +225,7 @@ const styles = {
   },
   signUpText: {
     paddingTop: 40,
-    paddingBottom: 20,
+    paddingBottom: 0,
     fontWeight: 600,
     fontSize: 16
   },
@@ -233,7 +233,7 @@ const styles = {
     fontWeight: 600,
     textAlign: 'center',
     paddingTop: 0,
-    paddingBottom: 20,
+    paddingBottom: 0,
     fontSize: 16
   },
   loginError: {
@@ -245,7 +245,7 @@ const styles = {
     fontWeight: 700
   },
   forgotPassword: {
-    marginTop: 20
+    marginTop: 0
   },
   titleText: {
     textAlign: 'center',

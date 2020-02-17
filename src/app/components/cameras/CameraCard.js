@@ -37,7 +37,7 @@ class CameraCard extends Component {
         myRole = this.props.cameraGroup.userCameraGroupPrivileges[i].user_camera_group_privilege_ids
       }
     }
-    console.log(this.props.name + ' has live view: ' + isEmpty(this.props.live_view_url) + ' in render of cameraCard');
+    console.log(this.props.name + ' has live_view_url: ' + this.props.live_view_url + ' in render of cameraCard');
     return (
       <Card>
         <Row type='flex' justify='center'>

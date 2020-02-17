@@ -31,6 +31,19 @@ class CameraCard extends Component {
     this.props.deleteCamera(this.props.user, this.props.camera_groups_uuid, this.props.uuid);
   };
 
+  state = {
+  cachedSomeProp: null
+  // ... rest of initial state
+};
+
+static getDerivedStateFromProps(nextProps, prevState) {
+  for (var i = 0; i < nextProps.cameraGroup.cameras.length; i++) {
+    if (nextProps.cameraGroup.cameras[i].uuid == nextProps.uuid) {
+      return {live_view_url: nextProps.cameraGroup.cameras[i].live_view_url}
+    }
+  }
+}
+
   render() {
     let myRole = [];
     for (var i = 0; i < this.props.cameraGroup.userCameraGroupPrivileges.length; i++) {
@@ -38,11 +51,7 @@ class CameraCard extends Component {
         myRole = this.props.cameraGroup.userCameraGroupPrivileges[i].user_camera_group_privilege_ids
       }
     }
-    for (var i = 0; i < this.props.cameraGroup.cameras.length; i++) {
-      if (this.props.cameraGroup.cameras[i].uuid == this.props.uuid) {
-        this.setState({live_view_url: this.props.cameraGroup.cameras[i].live_view_url});
-      }
-    }
+
     return (
       <Card>
         <Row type='flex' justify='center'>

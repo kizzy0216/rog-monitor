@@ -468,7 +468,6 @@ export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
         dispatch(cameraConnectionEnabled(response.data.enabled, cameraUuid));
         for (var i = 0; i < cameraGroup.cameras.length; i++) {
           if (cameraUuid == cameraGroup.cameras[i].uuid) {
-            console.log(response.data.name + ' has live_view_url: ' + response.data.live_view_url + ' in checkCameraEnabled');
             cameraGroup.cameras[i] = response.data;
             dispatch(cameraGroupSelected(cameraGroup));
             break;

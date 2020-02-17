@@ -37,6 +37,12 @@ class CameraCard extends Component {
         myRole = this.props.cameraGroup.userCameraGroupPrivileges[i].user_camera_group_privilege_ids
       }
     }
+    for (var i = 0; i < this.props.cameraGroup.cameras.length; i++) {
+      if (this.props.cameraGroup.cameras[i].uuid == this.props.uuid) {
+        console.log('camera group data: ' + this.props.cameraGroup.cameras[i].live_view_url);
+        console.log('camera card data: ' + this.props.live_view_url);
+      }
+    }
     return (
       <Card>
         <Row type='flex' justify='center'>

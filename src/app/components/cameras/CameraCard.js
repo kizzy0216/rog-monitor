@@ -17,7 +17,8 @@ class CameraCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      flag: false
+      flag: false,
+      live_view_url: props.live_view_url
     }
   }
 
@@ -39,8 +40,7 @@ class CameraCard extends Component {
     }
     for (var i = 0; i < this.props.cameraGroup.cameras.length; i++) {
       if (this.props.cameraGroup.cameras[i].uuid == this.props.uuid) {
-        console.log('camera group data: ' + this.props.cameraGroup.cameras[i].live_view_url);
-        console.log('camera card data: ' + this.props.live_view_url);
+        this.setState({live_view_url: this.props.cameraGroup.cameras[i].live_view_url});
       }
     }
     return (
@@ -76,7 +76,7 @@ class CameraCard extends Component {
         </Row>
         <Row>
           {
-            isEmpty(this.props.live_view_url) ||
+            isEmpty(this.state.live_view_url) ||
             (!this.props.cameraConnectionEnabled && this.props.uuid == this.props.cameraConnectionUuid) ||
             (this.props.imageUpdateInProgress && this.props.imageUpdateInProgressUuid == this.props.uuid)
             ?

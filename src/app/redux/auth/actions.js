@@ -482,25 +482,13 @@ export function sendPasswordResetRequestEmail(email) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/forgot-password`;
     let data = {email: passwordResetRequestEmail};
 
-    // const passwordResetRequestEvent = {
-    //   email: passwordResetRequestEmail,
-    //   password_reset_request_status: 'PasswordResetRequest Sent',
-    //   password_reset_request_date: new Date().toString().split(' ').splice(1, 4).join(' ')
-    // };
-    //
-    // dispatch(trackEventAnalytics('passwordResetRequest', passwordResetRequestEvent));
-
-
-    /*-- Needed for Woopra Trigger event --*/
-    // passwordResetRequestEvent.invite_status = 'PasswordResetRequest Received';
-    // setInterval(dispatch(trackEventAnalytics('passwordResetRequest', passwordResetRequestEvent)), 1000);
-
     axios.post(url, data)
       .then(resp => {
         dispatch(sendPasswordResetRequestSuccess(true));
         dispatch(sendPasswordResetRequestSuccess(false));
       })
       .catch(error => {
+        console.log(error);
         let errMessage = 'Sorry, we can\'t find that email.';
         if (typeof error.response != 'undefined') {
           if (typeof error === 'object') {

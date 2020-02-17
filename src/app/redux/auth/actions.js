@@ -488,7 +488,6 @@ export function sendPasswordResetRequestEmail(email) {
         dispatch(sendPasswordResetRequestSuccess(false));
       })
       .catch(error => {
-        console.log(error);
         let errMessage = 'Sorry, we can\'t find that email.';
         if (typeof error.response != 'undefined') {
           if (typeof error === 'object') {

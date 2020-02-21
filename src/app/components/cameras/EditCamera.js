@@ -37,6 +37,13 @@ const CameraForm = Form.create()(
               <Input style={styles.input} type='text' placeholder="Camera Name" />
             )}
           </FormItem>
+          <FormItem label="Camera SKU" {...formItemLayout}>
+            {getFieldDecorator('camera_sku', {
+              'initialValue': cameraData.uuid.slice(-8)
+            })(
+              <Input style={styles.input} type='text' disabled />
+            )}
+          </FormItem>
           <FormItem label='URL' {...formItemLayout}>
             {getFieldDecorator('camera_url', {
               'initialValue': cameraData.camera_url
@@ -54,13 +61,6 @@ const CameraForm = Form.create()(
           <FormItem label='Password' {...formItemLayout}>
             {getFieldDecorator('password')(
               <Input style={styles.input} type='password' placeholder="********" />
-            )}
-          </FormItem>
-          <FormItem label="Camera SKU" {...formItemLayout}>
-            {getFieldDecorator('camera_sku', {
-              'initialValue': cameraData.uuid.slice(-8)
-            })(
-              <Input style={styles.input} type='text' disabled />
             )}
           </FormItem>
           <FormItem label="Vacation Mode" {...formItemLayout}>

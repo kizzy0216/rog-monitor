@@ -56,6 +56,25 @@ const CameraForm = Form.create()(
               <Input style={styles.input} type='password' placeholder="********" />
             )}
           </FormItem>
+          <FormItem label="Camera SKU" {...formItemLayout}>
+            {getFieldDecorator('camera_sku', {
+              'initialValue': cameraData.uuid.slice(-8)
+            })(
+              <Input style={styles.input} type='text' disabled />
+            )}
+          </FormItem>
+          <FormItem label="Vacation Mode" {...formItemLayout}>
+            {getFieldDecorator('vacation_mode', {
+              'initialValue': cameraData.vacation_mode
+            })(
+              <Switch
+                checkedChildren={<Icon type="check" />}
+                unCheckedChildren={<Icon type="close" />}
+                onChange={toggleVacationMode}
+                checked={vacationMode}
+              />
+            )}
+          </FormItem>
           <FormItem label="Camera Time Zone">
             {getFieldDecorator('time_zone', {
               'initialValue': cameraData.time_zone
@@ -71,25 +90,6 @@ const CameraForm = Form.create()(
               >
                 {props.createSelectItems()}
               </Select>
-            )}
-          </FormItem>
-          <FormItem label="Vacation Mode" {...formItemLayout}>
-            {getFieldDecorator('vacation_mode', {
-              'initialValue': cameraData.vacation_mode
-            })(
-              <Switch
-                checkedChildren={<Icon type="check" />}
-                unCheckedChildren={<Icon type="close" />}
-                onChange={toggleVacationMode}
-                checked={vacationMode}
-              />
-            )}
-          </FormItem>
-          <FormItem label="Camera SKU" {...formItemLayout}>
-            {getFieldDecorator('camera_sku', {
-              'initialValue': cameraData.uuid.slice(-8)
-            })(
-              <Input style={styles.input} type='text' disabled />
             )}
           </FormItem>
         </Form>

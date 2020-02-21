@@ -30,18 +30,6 @@ const CameraForm = Form.create()(
              cancelText='Cancel'
       >
         <Form>
-          <FormItem label="Vacation Mode" {...formItemLayout}>
-            {getFieldDecorator('vacation_mode', {
-              'initialValue': cameraData.vacation_mode
-            })(
-              <Switch
-                checkedChildren={<Icon type="check" />}
-                unCheckedChildren={<Icon type="close" />}
-                onChange={toggleVacationMode}
-                checked={vacationMode}
-              />
-            )}
-          </FormItem>
           <FormItem label='Camera Name' {...formItemLayout}>
             {getFieldDecorator('name', {
               'initialValue': cameraData.name
@@ -83,6 +71,25 @@ const CameraForm = Form.create()(
               >
                 {props.createSelectItems()}
               </Select>
+            )}
+          </FormItem>
+          <FormItem label="Vacation Mode" {...formItemLayout}>
+            {getFieldDecorator('vacation_mode', {
+              'initialValue': cameraData.vacation_mode
+            })(
+              <Switch
+                checkedChildren={<Icon type="check" />}
+                unCheckedChildren={<Icon type="close" />}
+                onChange={toggleVacationMode}
+                checked={vacationMode}
+              />
+            )}
+          </FormItem>
+          <FormItem label="Camera SKU" {...formItemLayout}>
+            {getFieldDecorator('camera_sku', {
+              'initialValue': cameraData.uuid.slice(-8)
+            })(
+              <Input style={styles.input} type='text' disabled />
             )}
           </FormItem>
         </Form>

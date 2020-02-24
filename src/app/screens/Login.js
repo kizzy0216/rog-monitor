@@ -66,7 +66,7 @@ class Login extends Component {
                 <Row type='flex' justify='center' align='bottom'>
                   <Col sm={{span: 24}} style={styles.downloadBtnContainer}>
                     <div style={styles.howItWorksLink}>
-                      <a href='https://www.gorog.co/setup' target="_blank">Learn how it works.</a>
+                      <a href='https://www.gorog.co' target="_blank">Learn how it works.</a>
                     </div>
                   </Col>
                 </Row>

@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Col, Button, Pagination } from 'antd';
+import { Row, Col, Button, Pagination, Select, Menu, Form } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
-
 import AlertCard from '../components/alerts/AlertCard';
-
+import AlertFilters from '../components/alerts/AlertFilters';
 import * as alertActions from '../redux/alerts/actions';
 
 class Alerts extends Component {
@@ -15,17 +15,14 @@ class Alerts extends Component {
 
     this.state = {
       videoSource: null,
-      open: true
+      open: true,
+      selectedFilterType: 4
     }
   }
 
   UNSAFE_componentWillMount = () => {
     this.props.actions.markUserAlertsViewed(this.props.user);
   }
-
-  // selectAlert = (alert) => {
-  //   this.setState({videoSource: alert.video});
-  // }
 
   clearAlerts = () => {
     this.props.actions.clearAlerts();
@@ -35,12 +32,19 @@ class Alerts extends Component {
   }
 
   handlePaginationChange = (page, pageSize) => {
-    // TODO: change this to handle the display of the next page of alerts
     this.props.actions.fetchAlertsWithPagination(this.props.user, page, pageSize);
   }
 
   handleOnPageSizeChange = (current, size) => {
     this.props.actions.fetchAlertsWithPagination(this.props.user, current, size);
+  }
+
+  handleFilterTypeChange = (e) => {
+    this.setState({selectedFilterType: int(e.key)})
+  }
+
+  handleAlertFilterChange = (filter_parameter) => {
+    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.data.user, this.props.data.pagination.current_page, this.props.data.pagination.per_page, this.props.selectedFilterType, filter_parameter);
   }
 
   render() {
@@ -50,11 +54,28 @@ class Alerts extends Component {
       }).reverse();
       return (
         <div>
-          {/* <Row type='flex' justify='center'>
-            <Col>
-              <Button onClick={this.clearAlerts}>Clear All</Button>
-            </Col>
-          </Row> */}
+        <Row type='flex' justify='center'>
+          <Form layout={"inline"} onFinish={this.handleAlertFilterChange}>
+            <Select
+              placeholder="Select Filter Type"
+              allowClear={true}
+              dropdownMatchSelectWidth={true}
+              style={{ width: 150 }}
+              onChange={this.handleFilterTypeChange}
+              defaultValue={4}
+            >
+              <Select.Option value={0}>Camera Name</Select.Option>
+              <Select.Option value={1}>Camera Group Name</Select.Option>
+              <Select.Option value={2}>Trigger Type</Select.Option>
+              <Select.Option value={3}>Date/Time Range</Select.Option>
+              <Select.Option value={4}>Most Recent</Select.Option>
+            </Select>
+            <AlertFilters
+              data = {this.props}
+              selectedFilterType = {this.state.selectedFilterType}
+            />
+          </Form>
+        </Row>
           <Row type='flex' justify='center'>
             <Pagination
               showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}

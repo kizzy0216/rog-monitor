@@ -29,35 +29,41 @@ class AlertFilters extends Component {
     switch (this.props.selectedFilterType) {
       case 0:
         return (
-          <div>
-            <Form.Item>
+          <Form.Item hasFeedback>
+            {this.props.formProps.getFieldDecorator('filter_parameter', {
+              rules: [
+                {required: true, message: "This field is required"}
+              ]
+            })(
               <Input placeholder="Camera Name" />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">Submit</Button>
-            </Form.Item>
-          </div>
+            )}
+          </Form.Item>
         )
         break;
       case 1:
         return (
-          <div>
-            <Form.Item>
+          <Form.Item hasFeedback>
+            {this.props.formProps.getFieldDecorator('filter_parameter', {
+              rules: [
+                {required: true, message: "This field is required"}
+              ]
+            })(
               <Input placeholder="Camera Group Name" />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">Submit</Button>
-            </Form.Item>
-          </div>
+            )}
+          </Form.Item>
         )
         break;
       case 2:
         return (
-          <div>
-            <Form.Item>
+          <Form.Item hasFeedback>
+            {this.props.formProps.getFieldDecorator('filter_parameter', {
+              rules: [
+                {required: true, message: "This field is required"}
+              ]
+            })(
               <Select
                 placeholder="Select Trigger Type"
-                allowClear={true}
+                allowClear={false}
                 dropdownMatchSelectWidth={true}
                 style={{ width: 150 }}
               >
@@ -65,34 +71,30 @@ class AlertFilters extends Component {
                 <Select.Option value="VW">Virtual Wall</Select.Option>
                 <Select.Option value="LD">Loitering Detection</Select.Option>
               </Select>
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">Submit</Button>
-            </Form.Item>
-          </div>
+            )}
+          </Form.Item>
         )
         break;
       case 3:
         return (
-          <div>
-            <Form.Item name="range-time-picker" label="RangePicker[showTime]" {...rangeConfig}>
+          <Form.Item {...rangeConfig} hasFeedback>
+            {this.props.formProps.getFieldDecorator('filter_parameter', {
+              rules: [
+                {required: true, message: "This field is required"}
+              ]
+            })(
               <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">Submit</Button>
-            </Form.Item>
-          </div>
+            )}
+          </Form.Item>
         )
         break;
       default:
         return (
-          <div>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" value={null}>
-                Most Recent Alerts
-              </ Button>
-            </Form.Item>
-          </div>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Most Recent Alerts
+            </ Button>
+          </Form.Item>
         )
     }
   }

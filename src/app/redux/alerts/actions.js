@@ -277,8 +277,13 @@ export function fetchAlertsWithPaginationAndFilters(user, page, pageSize, filter
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
-    let itemsPerPage = pageSize;
-    let currentPage = page;
+    let itemsPerPage = 20;
+    let currentPage = 1;
+
+    if (!isEmpty(page) && !isEmpty(pageSize)) {
+      itemsPerPage = pageSize;
+      currentPage = page;
+    }
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${currentPage}&per_page=${itemsPerPage}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
@@ -294,6 +299,8 @@ export function fetchAlertsWithPaginationAndFilters(user, page, pageSize, filter
             to: currentPage  * itemsPerPage
           };
           dispatch(fetchSuccessWithPagination(response.data, pagination));
+        } else {
+          dispatch(fetchSuccessWithPagination({}, {}));
         }
       })
       .catch((error) => {

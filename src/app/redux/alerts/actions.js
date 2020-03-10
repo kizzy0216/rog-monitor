@@ -272,6 +272,62 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
   }
 }
 
+export function fetchAlertsWithPaginationAndFilters(user, page, pageSize, filter_type, filter_parameter) {
+  return (dispatch) => {
+    dispatch(fetchError(''));
+    dispatch(fetchInProcess(true));
+
+    let itemsPerPage = 20;
+    let currentPage = 1;
+
+    if (!isEmpty(page) && !isEmpty(pageSize)) {
+      itemsPerPage = pageSize;
+      currentPage = page;
+    }
+
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${currentPage}&per_page=${itemsPerPage}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}}
+    axios.get(url, config)
+      .then((response) => {
+        if (!isEmpty(response.data)) {
+          let pagination = {
+            total: response.data[0]['total_alerts'],
+            per_page: itemsPerPage,
+            current_page: currentPage,
+            last_page: Math.ceil(response.data[0]['total_alerts'] / itemsPerPage),
+            from: ((currentPage - 1) * itemsPerPage) + 1,
+            to: currentPage  * itemsPerPage
+          };
+          dispatch(fetchSuccessWithPagination(response.data, pagination));
+        } else {
+          dispatch(fetchSuccessWithPagination({}, {}));
+        }
+      })
+      .catch((error) => {
+        let errMessage = 'Error fecthing alerts';
+        if (error.response != undefined) {
+          errMessage = error.response;
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
+              }
+            }
+          }
+        }
+        dispatch(fetchError(errMessage));
+      })
+      .finally(() => {
+        dispatch(fetchError(''));
+        dispatch(fetchInProcess(false));
+      });
+  }
+}
+
 export function markUserAlertsViewed(user) {
   return(dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts`;

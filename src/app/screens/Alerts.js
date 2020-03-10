@@ -2,12 +2,57 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Col, Button, Pagination } from 'antd';
+import { Row, Col, Button, Pagination, Select, Menu, Form } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
-
 import AlertCard from '../components/alerts/AlertCard';
-
+import AlertFilters from '../components/alerts/AlertFilters';
 import * as alertActions from '../redux/alerts/actions';
+
+const AlertSortingForm = Form.create()(
+  (props) => {
+    const {AlertFilterChange, FilterTypeChange, ComponentProperties, selectedFilterType, form} = props;
+    const {getFieldDecorator} = props.form;
+    return (
+      <Form layout="inline" onSubmit={AlertFilterChange}  style={styles.formstyles}>
+        <Form.Item hasFeedback>
+          {getFieldDecorator('filter_type', {
+            rules: [
+              {required: true, message: "This field is required"}
+            ]
+          })(
+            <Select
+              placeholder="Select Filter Type"
+              allowClear={false}
+              dropdownMatchSelectWidth={true}
+              style={{ width: 150 }}
+              onChange={FilterTypeChange}
+              initialValue={4}
+            >
+              <Select.Option value={0}>Camera Name</Select.Option>
+              <Select.Option value={1}>Camera Group Name</Select.Option>
+              <Select.Option value={2}>Trigger Type</Select.Option>
+              <Select.Option value={3}>Date/Time Range</Select.Option>
+              <Select.Option value={4}>Most Recent</Select.Option>
+            </Select>
+          )}
+        </Form.Item>
+        <AlertFilters
+          data = {ComponentProperties}
+          selectedFilterType = {selectedFilterType}
+          formProps = {props.form}
+        />
+        {selectedFilterType !== 4 ?
+          <Form.Item>
+            <Button type="primary" htmlType="submit">Submit</Button>
+          </Form.Item>
+        :
+          <div></div>
+        }
+      </Form>
+    );
+  }
+);
 
 class Alerts extends Component {
   constructor(props) {
@@ -15,17 +60,14 @@ class Alerts extends Component {
 
     this.state = {
       videoSource: null,
-      open: true
+      open: true,
+      selectedFilterType: 4
     }
   }
 
   UNSAFE_componentWillMount = () => {
     this.props.actions.markUserAlertsViewed(this.props.user);
   }
-
-  // selectAlert = (alert) => {
-  //   this.setState({videoSource: alert.video});
-  // }
 
   clearAlerts = () => {
     this.props.actions.clearAlerts();
@@ -35,13 +77,29 @@ class Alerts extends Component {
   }
 
   handlePaginationChange = (page, pageSize) => {
-    // TODO: change this to handle the display of the next page of alerts
     this.props.actions.fetchAlertsWithPagination(this.props.user, page, pageSize);
   }
 
   handleOnPageSizeChange = (current, size) => {
     this.props.actions.fetchAlertsWithPagination(this.props.user, current, size);
   }
+
+  handleFilterTypeChange = (e) => {
+    this.setState({selectedFilterType: parseInt(e)})
+  }
+
+  handleAlertFilterChange = (e) => {
+    e.preventDefault();
+    this.form.validateFields((err, values) => {
+      if (!err) {
+        this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.pagination.current_page, this.props.pagination.per_page, this.state.selectedFilterType, values.filter_parameter);
+      }
+    });
+  }
+
+  alertSortingFormRef = (form) => {
+    this.form = form;
+  };
 
   render() {
     if (this.props.alerts.length) {
@@ -50,11 +108,15 @@ class Alerts extends Component {
       }).reverse();
       return (
         <div>
-          {/* <Row type='flex' justify='center'>
-            <Col>
-              <Button onClick={this.clearAlerts}>Clear All</Button>
-            </Col>
-          </Row> */}
+        <Row type='flex' justify='center'>
+        <AlertSortingForm
+          ref={this.alertSortingFormRef}
+          AlertFilterChange={this.handleAlertFilterChange}
+          FilterTypeChange={this.handleFilterTypeChange}
+          ComponentProperties={this.props}
+          selectedFilterType={this.state.selectedFilterType}
+        />
+        </Row>
           <Row type='flex' justify='center'>
             <Pagination
               showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
@@ -79,13 +141,24 @@ class Alerts extends Component {
       )
     } else {
       return (
-        <Row type='flex' justify='start' style={styles.alertListContainer}>
-          <p style={styles.noAlertsText}>
-            Things are looking good!
-            <br />
-            You have no alerts.
-          </p>
-        </Row>
+        <div>
+          <Row type='flex' justify='center'>
+          <AlertSortingForm
+            ref={this.alertSortingFormRef}
+            AlertFilterChange={this.handleAlertFilterChange}
+            FilterTypeChange={this.handleFilterTypeChange}
+            ComponentProperties={this.props}
+            selectedFilterType={this.state.selectedFilterType}
+          />
+          </Row>
+          <Row type='flex' justify='start' style={styles.alertListContainer}>
+            <p style={styles.noAlertsText}>
+              Things are looking good!
+              <br />
+              You have no alerts.
+            </p>
+          </Row>
+        </div>
       )
     }
   }
@@ -100,6 +173,9 @@ const styles = {
   },
   alertListContainer: {
     height: 'calc(100vh - 65px)'
+  },
+  formstyles: {
+    textAlign: 'center'
   }
 };
 

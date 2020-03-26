@@ -1,138 +1,135 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Icon, Modal, Form, Input, Button } from 'antd';
+import { Table, Modal, Form, Input, Button } from 'antd';
+import {IdcardOutlined} from '@ant-design/icons';
 import {isEmpty} from '../../redux/helperFunctions';
 const FormItem = Form.Item;
 
-const CameraLicensesForm = Form.create()(
-  (props) => {
-    const {onCancel, visible, onCreate, form, cancelSave, cancelSaveButton, error, cameraLicenses, cameraGroups, updatelicenses} = props;
-    const {getFieldDecorator} = form;
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 12 },
-      },
-      wrapperCol: {
-        xs: { span: 12 },
-      },
-    };
+const CameraLicensesForm = ({onCancel, visible, cancelSave, cancelSaveButton, error, cameraLicenses, cameraGroups, updatelicenses}) => {
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 12 },
+    },
+    wrapperCol: {
+      xs: { span: 12 },
+    },
+  };
 
-    const countTotalCameraLicenses = () => {
-      let count = 0;
-      if (!isEmpty(cameraLicenses)) {
-        cameraLicenses.map(cameraLicense => cameraLicense.uuid !== null ? count++ : count)
-      }
-      return count;
-    }
-
-    const countUsedCameraLicenses = () => {
-      let count = 0;
-      if (!isEmpty(cameraLicenses)) {
-        cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid !== null ? count++ : count)
-      }
-      return count;
-    }
-
-    const countAvailableCameraLicenses = () => {
-      let count = 0;
-      if (!isEmpty(cameraLicenses)) {
-        cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid == null ? count++ : count)
-      }
-      return count;
-    }
-
-    const columns = [{
-      title: 'Owner',
-      dataIndex: 'owner',
-      width: 100,
-      align: 'center'
-    }, {
-      title: 'Distributer',
-      dataIndex: 'distributer',
-      width: 100,
-      align: 'center'
-    }, {
-      title: 'Manager',
-      dataIndex: 'manager',
-      width: 100,
-      align: 'center'
-    }, {
-      title: 'Camera ID',
-      dataIndex: 'cameras_uuid',
-      width: 100,
-      align: 'center',
-      fixed: 'right'
-    }];
-
-    const data = [];
+  const countTotalCameraLicenses = () => {
+    let count = 0;
     if (!isEmpty(cameraLicenses)) {
-      for (var i = 0; i < cameraLicenses.length; i++) {
-        data.push({
-          key: cameraLicenses[i].uuid,
-          owner: cameraLicenses[i].tier_0,
-          distributer: cameraLicenses[i].tier_1,
-          manager: cameraLicenses[i].tier_2,
-          cameras_uuid: cameraLicenses[i].cameras_uuid
-        });
-      }
+      cameraLicenses.map(cameraLicense => cameraLicense.uuid !== null ? count++ : count)
     }
-
-    return (
-      <Modal title='Camera License Settings'
-             visible={visible}
-             style={styles.modal}
-             onCancel={onCancel}
-             footer={[
-               error &&
-               <span style={styles.error}>Number of licenses may not be less than number of Used Licenses</span>
-             ]}
-             className='cameraLicensesModal'
-      >
-        <Table
-          columns={[{
-            title: 'Total',
-            dataIndex: 'total',
-            width: '33%',
-            align: 'center'
-          }, {
-            title: 'Used',
-            dataIndex: 'used',
-            width: '34%',
-            align: 'center'
-          }, {
-            title: 'Available',
-            dataIndex: 'available',
-            width: '33%',
-            align: 'center'
-          }]}
-          dataSource={[{
-            key: 1,
-            total: countTotalCameraLicenses(),
-            used: countUsedCameraLicenses(),
-            available: countAvailableCameraLicenses(),
-          }]}
-          pagination={false}
-          scroll={{ y: 100 }}
-          style={{maxWidth: 417, margin: '0 auto'}}
-          size="small"
-        />
-        <div style={{height: 10}}></div>
-        <Table
-          columns={columns}
-          dataSource={data}
-          pagination={false}
-          scroll={{ x: 400, y: 300 }}
-          style={{maxWidth: 417, margin: '0 auto'}}
-          size="small"
-        />
-        <div style={{height: 20}}></div>
-        <div style={styles.subscriptionAgreement}>
-          <a target='_blank' href='https://www.gorog.co/subscription-agreement'>Subscription Agreement</a>
-        </div>
-      </Modal>
-    );
+    return count;
   }
-);
+
+  const countUsedCameraLicenses = () => {
+    let count = 0;
+    if (!isEmpty(cameraLicenses)) {
+      cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid !== null ? count++ : count)
+    }
+    return count;
+  }
+
+  const countAvailableCameraLicenses = () => {
+    let count = 0;
+    if (!isEmpty(cameraLicenses)) {
+      cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid == null ? count++ : count)
+    }
+    return count;
+  }
+
+  const columns = [{
+    title: 'Owner',
+    dataIndex: 'owner',
+    width: 100,
+    align: 'center'
+  }, {
+    title: 'Distributer',
+    dataIndex: 'distributer',
+    width: 100,
+    align: 'center'
+  }, {
+    title: 'Manager',
+    dataIndex: 'manager',
+    width: 100,
+    align: 'center'
+  }, {
+    title: 'Camera ID',
+    dataIndex: 'cameras_uuid',
+    width: 100,
+    align: 'center',
+    fixed: 'right'
+  }];
+
+  const data = [];
+  if (!isEmpty(cameraLicenses)) {
+    for (var i = 0; i < cameraLicenses.length; i++) {
+      data.push({
+        key: cameraLicenses[i].uuid,
+        owner: cameraLicenses[i].tier_0,
+        distributer: cameraLicenses[i].tier_1,
+        manager: cameraLicenses[i].tier_2,
+        cameras_uuid: cameraLicenses[i].cameras_uuid
+      });
+    }
+  }
+
+  return (
+    <Modal title='Camera License Settings'
+           visible={visible}
+           style={styles.modal}
+           onCancel={onCancel}
+           footer={[
+             error &&
+             <span style={styles.error}>Number of licenses may not be less than number of Used Licenses</span>
+           ]}
+           className='cameraLicensesModal'
+    >
+      <Table
+        columns={[{
+          title: 'Total',
+          dataIndex: 'total',
+          width: '33%',
+          align: 'center'
+        }, {
+          title: 'Used',
+          dataIndex: 'used',
+          width: '34%',
+          align: 'center'
+        }, {
+          title: 'Available',
+          dataIndex: 'available',
+          width: '33%',
+          align: 'center'
+        }]}
+        dataSource={[{
+          key: 1,
+          total: countTotalCameraLicenses(),
+          used: countUsedCameraLicenses(),
+          available: countAvailableCameraLicenses(),
+        }]}
+        pagination={false}
+        scroll={{ y: 100 }}
+        style={{maxWidth: 417, margin: '0 auto'}}
+        size="small"
+      />
+      <div style={{height: 10}}></div>
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={false}
+        scroll={{ x: 400, y: 300 }}
+        style={{maxWidth: 417, margin: '0 auto'}}
+        size="small"
+      />
+      <div style={{height: 20}}></div>
+      <div style={styles.subscriptionAgreement}>
+        <a target='_blank' href='https://www.gorog.co/subscription-agreement'>Subscription Agreement</a>
+      </div>
+    </Modal>
+  );
+};
 
 class CameraLicenses extends Component {
   constructor(props) {
@@ -168,11 +165,7 @@ class CameraLicenses extends Component {
 
   handleCreate = (e) => {
     const form = this.form;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
+    form.validateFields().then(values => {
       if (values.licenses < values.used) {
         this.setState({error: true});
       } else {
@@ -185,23 +178,17 @@ class CameraLicenses extends Component {
     });
   };
 
-  saveFormRef = (form) => {
-    this.form = form;
-  };
-
   render() {
     return (
       <div>
         <div onClick={this.showModal}>
-          <Icon type="idcard" />
+          <IdcardOutlined />
           &nbsp;&nbsp;
           <span>Licenses</span>
         </div>
         <CameraLicensesForm
-          ref={this.saveFormRef}
           visible={this.state.visible}
           onCancel={this.handleCancel}
-          onCreate={this.handleCreate}
           cancelSaveButton={this.cancelSaveButton}
           cancelSave={this.state.hidden}
           error={this.state.error}

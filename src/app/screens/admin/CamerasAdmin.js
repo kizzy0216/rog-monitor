@@ -1,108 +1,60 @@
-import React, { Component } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as camerasActions from '../../redux/cameras/actions';
-import { Table, Input, Button, Popconfirm, Form, InputNumber, message, Radio, Modal, Icon } from 'antd';
+import { Table, Input, Button, Popconfirm, Form, InputNumber, message, Radio, Modal } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { isEmpty } from '../../redux/helperFunctions';
 import Highlighter from 'react-highlight-words';
 
-const UsersForm = Form.create()(
-  (props) => {
-    const {handleSubmit, form} = props;
-    const {getFieldDecorator} = props.form;
+const UsersForm = ({handleSubmit, form}) => {
+  return (
+    <Form layout={'inline'} onFinish={handleSubmit} style={styles.formstyles} ref={form}>
+      <Form.Item label="Camera Group uuid" name="camera_groups_uuid" rules={[{type: 'string', message: 'Please enter a valid integer'}]} hasFeedback>
+        <Input placeholder="Enter uuid" />
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit">Submit</Button>
+      </Form.Item>
+    </Form>
+  );
+};
 
-    return (
-      <Form layout={'inline'} onSubmit={handleSubmit} style={styles.formstyles}>
-        <Form.Item label="Camera Group uuid" hasFeedback>
-          {getFieldDecorator('camera_groups_uuid', {
-            rules: [
-              {type: 'string', message: 'Please enter a valid integer'}
-            ]
-          })(
-            <Input placeholder="Enter uuid" />
-          )}
+const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess}) => {
+  const layout = {
+    wrapperCol: {
+      span: 16,
+      offset: 4
+    }
+  };
+  return (
+    <Modal title='Add a Camera'
+      visible={visible}
+      onCancel={onCancel}
+      onOk={onCreate}
+      okText='Add'
+      cancelText='Cancel'
+      confirmLoading={addCameraInProcess}
+    >
+      <Form ref={form} {...layout}>
+        <Form.Item name="camera_name" rules={[{required: true, message: 'Please input the camera name'}]} hasFeedback>
+          <Input placeholder='Enter camera name'/>
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">Submit</Button>
+        <Form.Item name="camera_url" rules={[{required: true, message: 'Please enter the camera URL'}]} hasFeedback>
+          <Input placeholder='Enter Camera URL'/>
+        </Form.Item>
+        <Form.Item name="username" rules={[{required: false, message: 'Please enter the camera username'}]} hasFeedback>
+          <Input placeholder='Enter camera username'/>
+        </Form.Item>
+        <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
+          <Input type='password' placeholder='Enter camera password'/>
         </Form.Item>
       </Form>
-    );
-  }
-);
+    </Modal>
+  );
+};
 
-const AddCameraForm = Form.create()(
-  (props) => {
-    const {visible, onCancel, onCreate, form} = props;
-    const {getFieldDecorator} = form;
-
-    return (
-      <Modal title='Add a Camera'
-        visible={visible}
-        onCancel={onCancel}
-        onOk={onCreate}
-        okText='Add'
-        cancelText='Cancel'
-        confirmLoading={props.addCameraInProcess}
-      >
-        <Form>
-          {/*<Form.Item style={styles.videoContainer}>
-            {props.fullRtspUrl ?
-              (<RtspStream rtspUrl={props.fullRtspUrl} />) :
-              (
-                <p style={styles.videoContainerText}>
-                  {props.addCameraInProcess ? 'Adding camera' : 'No Video Available'}
-                </p>
-              )
-            }
-          </Form.Item>
-          <Form.Item hasFeedback>
-            <Button key='submit' type='primary' size='large' onClick={props.testLiveView}>
-              <Icon type='reload'></Icon>Test Live View
-            </Button>
-            <div style={styles.error}>{props.addCameraError}</div>
-          </Form.Item>*/}
-          <Form.Item hasFeedback>
-            {getFieldDecorator('camera_name', {rules: [
-                {required: true, message: 'Please input the camera name'}
-              ]
-            })(
-              <Input placeholder='Enter camera name'/>
-            )}
-          </Form.Item>
-          <Form.Item hasFeedback>
-            {getFieldDecorator('camera_url', {rules: [
-                {required: true, message: 'Please enter the camera URL'}
-              ]
-            })(
-              <Input placeholder='Enter Camera URL'/>
-            )}
-
-          </Form.Item>
-          <Form.Item hasFeedback>
-            {getFieldDecorator('username', {
-              rules: [
-                {required: false, message: 'Please enter the camera username'}
-              ]
-            })(
-              <Input placeholder='Enter camera username'/>
-            )}
-          </Form.Item>
-          <Form.Item hasFeedback>
-            {getFieldDecorator('password', {
-              rules: [
-                {required: false, message: 'Please enter the camera password'}
-              ]
-            })(
-              <Input type='password' placeholder='Enter camera password'/>
-            )}
-          </Form.Item>
-        </Form>
-      </Modal>
-    );
-  }
-);
-
-class CamerasAdmin extends Component {
+class CamerasAdmin extends React.Component {
   constructor(props) {
     super(props);
 
@@ -122,12 +74,9 @@ class CamerasAdmin extends Component {
   }
 
   handleSubmit = (e) => {
-    e.preventDefault();
-    this.form.validateFields((err, values) => {
-      if (!err) {
-        this.setState({camera_groups_uuid: values.camera_groups_uuid});
-        this.props.actions.readCamerasInGroupAdmin(this.props.user, values);
-      }
+    this.form.validateFields().then(values => {
+      this.setState({camera_groups_uuid: values.camera_groups_uuid});
+      this.props.actions.readCamerasInGroupAdmin(this.props.user, values);
     });
   }
 
@@ -171,9 +120,7 @@ class CamerasAdmin extends Component {
       alert('Sorry, live video requires the desktop Chrome, Firefox, or Opera web browser.');
     } else {
       const form = this.formRef;
-      form.validateFields(['camera_url', 'username', 'password'], (err, values) => {
-        if (err) return;
-
+      form.validateFields(['camera_url', 'username', 'password']).then(values => {
         this.setState({fullRtspUrl: null}, () => {
           this.setState({fullRtspUrl: this.getFullRtspUrl(values.camera_url, values.username, values.password)});
         });
@@ -184,8 +131,7 @@ class CamerasAdmin extends Component {
   handleCreate = () => {
     if (typeof this.state.camera_groups_uuid !== "undefined") {
       const form = this.formRef;
-      form.validateFields((err, values) => {
-        if (err) return;
+      form.validateFields().then(values => {
         values.camera_groups_uuid = this.state.camera_groups_uuid;
         this.props.actions.createCameraAdmin(this.props.user, values);
         this.setState({ visible: false });
@@ -225,14 +171,14 @@ class CamerasAdmin extends Component {
       return(
         <div>
           <UsersForm
-            ref={this.cameraGroupFormRef}
+            form={this.cameraGroupFormRef}
             handleSubmit={this.handleSubmit}
           />
           <Button onClick={this.showModal} type="primary" style={{ marginBottom: 16 }}>
             Add a Camera
           </Button>
           <AddCameraForm
-            ref={this.addCameraFormRef}
+            form={this.addCameraFormRef}
             visible={this.state.visible}
             onCancel={this.handleCancel}
             onCreate={this.handleCreate}
@@ -252,14 +198,14 @@ class CamerasAdmin extends Component {
       return(
         <div>
           <UsersForm
-            ref={this.cameraGroupFormRef}
+            form={this.cameraGroupFormRef}
             handleSubmit={this.handleSubmit}
           />
           <Button onClick={this.showModal} type="primary" style={{ marginBottom: 16 }}>
             Add a Camera
           </Button>
           <AddCameraForm
-            ref={this.addCameraFormRef}
+            form={this.addCameraFormRef}
             visible={this.state.visible}
             onCancel={this.handleCancel}
             onCreate={this.handleCreate}
@@ -276,88 +222,85 @@ class CamerasAdmin extends Component {
 
 const EditableContext = React.createContext();
 
-const EditableRow = ({ form, index, ...props }) => (
-  <EditableContext.Provider value={form}>
-    <tr {...props} />
-  </EditableContext.Provider>
-);
+const EditableRow = ({ index, ...props }) => {
+  const [form] = Form.useForm();
+  return (
+    <Form form={form} component={false}>
+      <EditableContext.Provider value={form}>
+        <tr {...props} />
+      </EditableContext.Provider>
+    </Form>
+  );
+};
 
-const EditableFormRow = Form.create()(EditableRow);
+const EditableCell = ({
+  title,
+  editable,
+  children,
+  dataIndex,
+  record,
+  handleSave,
+  ...restProps
+}) => {
+  const [editing, setEditing] = useState(false);
+  const inputRef = useRef();
+  const form = useContext(EditableContext);
+  useEffect(() => {
+    if (editing) {
+      inputRef.current.focus();
+    }
+  }, [editing]);
 
-class EditableCell extends React.Component {
-  state = {
-    editing: false,
-  };
-
-  toggleEdit = () => {
-    const editing = !this.state.editing;
-    this.setState({ editing }, () => {
-      if (editing) {
-        this.input.focus();
-      }
+  const toggleEdit = () => {
+    setEditing(!editing);
+    form.setFieldsValue({
+      [dataIndex]: record[dataIndex],
     });
   };
 
-  save = e => {
-    const { record, handleSave } = this.props;
-    this.form.validateFields((error, values) => {
-      if (error && error[e.currentTarget.uuid]) {
-        return;
-      }
-      this.toggleEdit();
+  const save = async e => {
+    try {
+      const values = await form.validateFields();
+      toggleEdit();
       handleSave({ ...record, ...values });
-    });
+    } catch (errInfo) {
+      console.log('Save failed:', errInfo);
+    }
   };
 
-  renderCell = form => {
-    this.form = form;
-    const { children, dataIndex, record, title } = this.props;
-    const { editing } = this.state;
-    return editing ? (
-      <Form.Item style={{ margin: 0 }}>
-        {form.getFieldDecorator(dataIndex, {
-          rules: [
-            {
-              required: false,
-              message: `${title} is required.`,
-            },
-          ],
-          initialValue: record[dataIndex],
-        })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
+  let childNode = children;
+
+  if (editable) {
+    childNode = editing ? (
+      <Form.Item
+        style={{
+          margin: 0,
+        }}
+        name={dataIndex}
+        rules={[
+          {
+            required: true,
+            message: `${title} is required.`,
+          },
+        ]}
+      >
+        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
     ) : (
       <div
         className="editable-cell-value-wrap"
-        style={{ paddingRight: 24 }}
-        onClick={this.toggleEdit}
+        style={{
+          paddingRight: 24,
+        }}
+        onClick={toggleEdit}
       >
         {children}
       </div>
     );
-  };
-
-  render() {
-    const {
-      editable,
-      dataIndex,
-      title,
-      record,
-      index,
-      handleSave,
-      children,
-      ...restProps
-    } = this.props;
-    return (
-      <td {...restProps}>
-        {editable ? (
-          <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>
-        ) : (
-          children
-        )}
-      </td>
-    );
   }
-}
+
+  return <td {...restProps}>{childNode}</td>;
+};
 
 class EditableTable extends React.Component {
   constructor(props) {
@@ -521,7 +464,7 @@ class EditableTable extends React.Component {
         <Button
           type="primary"
           onClick={() => this.handleSearch(selectedKeys, confirm)}
-          icon="search"
+          icon={<SearchOutlined />}
           size="small"
           style={{ width: 90, marginRight: 8 }}
         >
@@ -533,7 +476,7 @@ class EditableTable extends React.Component {
       </div>
     ),
     filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
     onFilter: (value, record) =>
       record[dataIndex]
@@ -572,17 +515,11 @@ class EditableTable extends React.Component {
     this.props.actions.updateCameraAdmin(this.props.user, newData[index]);
   };
 
-
-
-  saveFormRef = (form) => {
-    this.form = form;
-  };
-
   render() {
     const { dataSource } = this.state;
     const components = {
       body: {
-        row: EditableFormRow,
+        row: EditableRow,
         cell: EditableCell,
       },
     };
@@ -602,23 +539,22 @@ class EditableTable extends React.Component {
       };
     });
     return (
-      <div>
-        <Table
-          components={components}
-          rowClassName={() => 'editable-row'}
-          bordered
-          dataSource={dataSource}
-          columns={columns}
-          scroll={{ x:5200, y: 500 }}
-        />
-      </div>
+      <Table
+        components={components}
+        rowClassName={() => 'editable-row'}
+        bordered
+        dataSource={dataSource}
+        columns={columns}
+        scroll={{ x:5200, y: 500 }}
+      />
     );
   }
 }
 
 const styles={
   formstyles: {
-    textAlign: 'center'
+    width: 500,
+    margin: '0 auto'
   },
   videoContainer: {
     backgroundColor: 'black',

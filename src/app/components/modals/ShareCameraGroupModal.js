@@ -1,45 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, Form, Input, Icon, message } from 'antd';
+import { Button, Modal, Form, Input, message } from 'antd';
+import { MailOutlined, LoadingOutlined, ShareAltOutlined } from '@ant-design/icons';
 const FormItem = Form.Item;
 
 import { shareCameraGroup } from '../../redux/cameraGroups/actions';
 
-const ShareCameraGroupForm = Form.create()(
-  (props) => {
-    const {visible, onCancel, onCreate, form, selectedCameraGroup, shareCameraGroupInProcess} = props;
-    const {getFieldDecorator} = form;
-
-    return (
-      <Modal title={`Share Camera Group to View ${selectedCameraGroup.name}'s Cameras`}
-        visible={visible}
-        okText='Create'
-        onCancel={onCancel}
-        footer={[null, null]}
-      >
-        <Form layout='vertical'>
-          <FormItem>
-            {getFieldDecorator('email', {
-              rules: [{
-                required: true,
-                pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"),
-                message: "Please enter a valid email address."
-              }],
-            })(
-              <Input style={styles.emailInput} prefix={<Icon type='mail' />} placeholder='Enter email address'/>
-            )}
-
-          </FormItem>
-          <FormItem>
-            <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={shareCameraGroupInProcess}>
-              <Icon type={shareCameraGroupInProcess ? 'loading' : 'share-alt'} />Invite
-            </Button>
-          </FormItem>
-        </Form>
-      </Modal>
-    );
-  }
-);
+const ShareCameraGroupForm = ({visible, onCancel, onCreate, form, selectedCameraGroup, shareCameraGroupInProcess}) => {
+  const layout = {
+    wrapperCol: {
+      span: 16,
+      offset: 4
+    }
+  };
+  return (
+    <Modal title={`Share Camera Group to View ${selectedCameraGroup.name}'s Cameras`}
+      visible={visible}
+      okText='Create'
+      onCancel={onCancel}
+      footer={[null, null]}
+    >
+      <Form layout='vertical' ref={form} {...layout}>
+        <FormItem
+          name="email"
+          rules={[{
+            required: true,
+            pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"),
+            message: "Please enter a valid email address."
+          }]}
+        >
+          <Input style={styles.emailInput} prefix={<MailOutlined />} placeholder='Enter email address'/>
+        </FormItem>
+        <FormItem>
+          <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={shareCameraGroupInProcess}>
+            {shareCameraGroupInProcess ? <LoadingOutlined /> : <ShareAltOutlined />}Invite
+          </Button>
+        </FormItem>
+      </Form>
+    </Modal>
+  );
+};
 
 class ShareCameraGroupModal extends Component {
   UNSAFE_componentWillReceiveProps = (nextProps) => {
@@ -59,11 +59,7 @@ class ShareCameraGroupModal extends Component {
 
   handleCreate = () => {
     const form = this.form;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
+    form.validateFields().then(values => {
       this.props.shareCameraGroup(this.props.user, this.props.selectedCameraGroup.uuid, values.email);
     });
   };
@@ -76,7 +72,7 @@ class ShareCameraGroupModal extends Component {
     return (
       <div>
         <ShareCameraGroupForm
-          ref={this.saveFormRef}
+          form={this.saveFormRef}
           visible={this.props.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}

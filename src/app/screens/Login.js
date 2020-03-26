@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Layout, Row, Col, Form, Icon, Button, Input, Checkbox } from 'antd';
+import { Layout, Row, Col, Form, Button, Input, Checkbox } from 'antd';
+import { LoadingOutlined, LockOutlined } from '@ant-design/icons';
 const { Header, Content } = Layout;
 
 import logoFull from '../../assets/img/logo-full.png';
@@ -10,7 +11,21 @@ import RegisterBtn from '../components/navigation/RegisterBtn';
 import JoinRogModal from '../components/modals/JoinRogModal';
 import RequestPasswordResetModal from '../components/modals/RequestPasswordResetModal';
 
-const FormItem = Form.Item;
+const layout = {
+  labelCol: {
+    span: 6,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+};
+
+const tailLayout = {
+  wrapperCol: {
+    offset: 6,
+    span: 16,
+  },
+};
 
 class Login extends Component {
   constructor(props) {
@@ -22,14 +37,8 @@ class Login extends Component {
     }
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.props.login(values.email, values.password);
-      }
-
-    });
+  handleSubmit = (values) => {
+    this.props.login(values.email, values.password);
   }
 
   toggleInviteModalVisibility = () => {
@@ -41,11 +50,9 @@ class Login extends Component {
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
     return (
       <Layout>
         <Header style={styles.header}>
-          {/* <Col xs={{span: 0}} sm={{span: 12}}><h3 style={styles.chromeText}>ROG Monitor requires the Google Chrome web browser.</h3></Col> */}
           <img style={styles.headerLogo} src={logoFull} height='50px'/>
         </Header>
         <Layout>
@@ -103,42 +110,48 @@ class Login extends Component {
                 </Row>
                 <Row type='flex' justify='center' align='middle'>
                   <Col xs={{span: 18}} sm={{span: 12}}>
-                    <Form onSubmit={this.handleSubmit} className='login-form'>
-                      <FormItem label='Email' hasFeedback>
-                        {getFieldDecorator('email', {
-                          rules: [
-                            {
-                              required: true,
-                              pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"),
-                              message: "Please enter a valid email address."
-                            }
-                          ]
-                        })(
-                          <Input />
-                        )}
-                      </FormItem>
-                      <FormItem label='Password' hasFeedback>
-                        {getFieldDecorator('password', {
-                          rules: [
-                            { required: true, message: 'Please enter your password' }
-                          ],
-                        })(
-                          <Input type='password' />
-                        )}
-                      </FormItem>
-                      <FormItem>
-                        {getFieldDecorator('remember', {
-                          valuePropName: 'checked',
-                          initialValue: true,
-                        })(
-                          <Checkbox style={styles.rememberUserUuid}>Remember my user ID</Checkbox>
-                        )}
-                      </FormItem>
-                      <FormItem>
+                    <Form
+                      onFinish={this.handleSubmit}
+                      className='login-form'
+                      initialValues={{remember: true}}
+                      {...layout}
+                    >
+                      <Form.Item
+                        name="email"
+                        label='Email'
+                        hasFeedback
+                        rules={[
+                          {
+                            required: true,
+                            pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"),
+                            message: "Please enter a valid email address."
+                          }
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        name="password"
+                        label='Password'
+                        rules={[
+                          { required: true, message: 'Please enter your password' }
+                        ]}
+                        hasFeedback
+                      >
+                        <Input.Password />
+                      </Form.Item>
+                      <Form.Item
+                        name="remember"
+                        valuePropName="checked"
+                        {...tailLayout}
+                      >
+                        <Checkbox style={styles.rememberUserUuid}>Remember my user ID</Checkbox>
+                      </Form.Item>
+                      <Form.Item {...tailLayout}>
                         <Button style={styles.signInBtn} type='primary' htmlType='submit' disabled={this.props.loginInProcess}>
-                          <Icon type={this.props.loginInProcess ? 'loading' : 'lock'} style={styles.font13} />&nbsp;Sign In
+                          {this.props.loginInProcess ? <LoadingOutlined style={styles.font13} /> : <LockOutlined style={styles.font13} />}&nbsp;Sign In
                         </Button>
-                      </FormItem>
+                      </Form.Item>
                     </Form>
                     <div style={styles.licenseAgreement}>
                       <p>
@@ -282,5 +295,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const WrappedLoginForm = Form.create()(Login);
-export default connect(mapStateToProps, mapDispatchToProps)(WrappedLoginForm);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

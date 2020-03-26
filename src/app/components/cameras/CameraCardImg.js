@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
-import cameraConnectError from '../../../assets/img/connectError.gif'
-import VideoPlayer from 'react-video-js-player';
+import connectError from '../../../assets/img/connectError.gif'
 
 class CameraCardImg extends Component {
 
@@ -17,7 +16,7 @@ class CameraCardImg extends Component {
 
   UNSAFE_componentWillMount() {
     if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
-      this.setState({image: cameraConnectError});
+      this.setState({image: connectError});
     } else if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url+'?auth='+ this.props.data.user.jwt});
     }
@@ -31,10 +30,10 @@ class CameraCardImg extends Component {
       this.setState({image: nextProps.data.refreshCameraImage+'?auth='+ this.props.data.user.jwt});
       this.key = this.uuidv4;
     } else if (nextProps.refreshCameraError && nextProps.refreshCameraErrorUuid === nextProps.data.uuid) {
-      this.setState({image: cameraConnectError});
+      this.setState({image: connectError});
       this.key = this.uuidv4;
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
-      this.setState({image: cameraConnectError});
+      this.setState({image: connectError});
       this.key = this.uuidv4;
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
@@ -65,6 +64,7 @@ const styles = {
   cameraCardImgContainer: {
     backgroundColor: 'white',
     height: 170,
+    width: '100%',
     position: 'relative',
     margin: '0 auto',
     paddingLeft: 0,
@@ -75,7 +75,7 @@ const styles = {
     maxWidth: '100%',
     maxHeight: '100%',
     width: 'auto',
-    height: 'auto',
+    height: 170,
     top: 0,
     bottom: 0,
     left: 0,

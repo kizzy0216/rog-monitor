@@ -1,19 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component, useContext, useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import {Modal, Icon, Table, Input, Button, Popconfirm, Form} from 'antd';
+import {Modal, Table, Input, Button, Popconfirm, Form} from 'antd';
+import MobileOutlined from '@ant-design/icons';
 import { updateUserDevice, deleteUserDevice } from '../../redux/users/actions';
 
 
-const FormItem = Form.Item;
 const EditableContext = React.createContext();
 
-const EditableRow = ({ form, index, ...props }) => (
-  <EditableContext.Provider value={form}>
-    <tr {...props} />
-  </EditableContext.Provider>
-);
+const EditableRow = ({ index, ...props }) => {
+  const [form] = Form.useForm();
+  return (
+    <Form form={form} component={false}>
+      <EditableContext.Provider value={form}>
+        <tr {...props} />
+      </EditableContext.Provider>
+    </Form>
+  );
+};
 
-const EditableFormRow = Form.create()(EditableRow);
+const EditableFormRow = () => (EditableRow);
 
 class EditableCell extends Component {
   state = {
@@ -31,10 +36,10 @@ class EditableCell extends Component {
 
   save = (e) => {
     const { record, handleSave } = this.props;
-    this.form.validateFields((error, values) => {
-      if (error && error[e.currentTarget.uuid]) {
-        return;
-      }
+    this.form.validateFields().then(values => {
+      // if (error && error[e.currentTarget.uuid]) {
+      //   return;
+      // }
       this.toggleEdit();
       handleSave({ ...record, ...values });
     });
@@ -59,7 +64,7 @@ class EditableCell extends Component {
               this.form = form;
               return (
                 editing ? (
-                  <FormItem className="editable-cell-input">
+                  <Form.Item className="editable-cell-input">
                     {form.getFieldDecorator(dataIndex, {
                       rules: [{
                         required: true,
@@ -74,7 +79,7 @@ class EditableCell extends Component {
                         style={{ width: '100%', borderRadius: '4px' }}
                       />
                     )}
-                  </FormItem>
+                  </Form.Item>
                 ) : (
                   <div
                     className="editable-cell-value-wrap"
@@ -202,33 +207,30 @@ class EditableTable extends Component {
   }
 }
 
-const UserDevicesForm = Form.create()(
-  (props) => {
-    const {onCancel, visible, error, userDevices, updateUserDevice, deleteUserDevice} = props;
+const UserDevicesForm = ({onCancel, visible, error, userDevices, updateUserDevice, deleteUserDevice}) => {
 
-    return (
-      <Modal title='User Devices'
-             visible={visible}
-             style={styles.modal}
-             onCancel={onCancel}
-             footer={[
-               error &&
-               <span style={styles.error}>You cannot remove a device that is currently in use.</span>
-             ]}
-             className='userDevicesModal'
-      >
-        <EditableTable
-          userDevices={userDevices}
-          updateUserDevice={updateUserDevice}
-          deleteUserDevice={deleteUserDevice}
-        />
-        <div style={styles.subscriptionAgreement}>
-          <a target='_blank' href='https://www.gorog.co/subscription-agreement'>Subscription Agreement</a>
-        </div>
-      </Modal>
-    );
-  }
-);
+  return (
+    <Modal title='User Devices'
+           visible={visible}
+           style={styles.modal}
+           onCancel={onCancel}
+           footer={[
+             error &&
+             <span style={styles.error}>You cannot remove a device that is currently in use.</span>
+           ]}
+           className='userDevicesModal'
+    >
+      <EditableTable
+        userDevices={userDevices}
+        updateUserDevice={updateUserDevice}
+        deleteUserDevice={deleteUserDevice}
+      />
+      <div style={styles.subscriptionAgreement}>
+        <a target='_blank' href='https://www.gorog.co/subscription-agreement'>Subscription Agreement</a>
+      </div>
+    </Modal>
+  );
+};
 
 class UserDevices extends Component {
   constructor(props) {
@@ -254,7 +256,7 @@ class UserDevices extends Component {
     return (
       <div>
         <div onClick={this.showModal}>
-          <Icon type="mobile" />
+          <MobileOutlined />
           &nbsp;&nbsp;
           <span>User Devices</span>
         </div>

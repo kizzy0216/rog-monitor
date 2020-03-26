@@ -1,44 +1,46 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, Form, Input, Icon, message } from 'antd';
+import { Button, Modal, Form, Input, message } from 'antd';
+import { MailOutlined } from '@ant-design/icons';
 const FormItem = Form.Item;
 
 import { sendInvitationEmail } from '../../redux/auth/actions';
 
-const InviteForm = Form.create()(
-  (props) => {
-    const {visible, onCancel, onCreate, form, sendInvitationInProcess} = props;
-    const {getFieldDecorator} = form;
-
-    return (
-      <Modal title='Request an invite'
-        visible={visible}
-        okText='Send'
-        onCancel={onCancel}
-        footer={[null, null]}
-      >
-        <Form>
-          <FormItem hasFeedback>
-            {getFieldDecorator('email', {
-              rules: [{
-                required: true,
-                pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"),
-                message: "Please enter a valid email address."
-              }],
-            })(
-              <Input style={styles.emailInput} prefix={<Icon type='mail' />} placeholder='Enter email address'/>
-            )}
-          </FormItem>
-          <FormItem>
-            <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={sendInvitationInProcess}>
-              Request
-            </Button>
-          </FormItem>
-        </Form>
-      </Modal>
-    );
-  }
-);
+const InviteForm = ({visible, onCancel, onCreate, form, sendInvitationInProcess}) => {
+  const layout = {
+    wrapperCol: {
+      span: 16,
+      offset: 4
+    }
+  };
+  return (
+    <Modal title='Request an invite'
+      visible={visible}
+      okText='Send'
+      onCancel={onCancel}
+      footer={[null, null]}
+    >
+      <Form ref={form} {...layout}>
+        <FormItem
+          name="email"
+          rules={[{
+            required: true,
+            pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"),
+            message: "Please enter a valid email address."
+          }]}
+          hasFeedback
+        >
+          <Input prefix={<MailOutlined />} placeholder='Enter email address'/>
+        </FormItem>
+        <FormItem>
+          <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={sendInvitationInProcess}>
+            Request
+          </Button>
+        </FormItem>
+      </Form>
+    </Modal>
+  );
+};
 
 class RequestInviteModal extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -60,24 +62,20 @@ class RequestInviteModal extends Component {
 
   handleCreate = () => {
     const form = this.form;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
+    form.validateFields().then(values => {
       this.props.sendInvitationEmail(values.email.toLowerCase());
     });
   };
 
   saveFormRef = (form) => {
-    this.form = form;
+    this.form = form
   };
 
   render() {
     return (
       <div>
         <InviteForm
-          ref={this.saveFormRef}
+          form={this.saveFormRef}
           visible={this.props.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
@@ -88,11 +86,7 @@ class RequestInviteModal extends Component {
   }
 }
 
-const styles = {
-  emailInput: {
-    textAlign: 'center'
-  }
-};
+const styles = {};
 
 const mapStateToProps = (state) => {
   return {

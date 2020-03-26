@@ -9,50 +9,48 @@ import AlertCard from '../components/alerts/AlertCard';
 import AlertFilters from '../components/alerts/AlertFilters';
 import * as alertActions from '../redux/alerts/actions';
 
-const AlertSortingForm = Form.create()(
-  (props) => {
-    const {AlertFilterChange, FilterTypeChange, ComponentProperties, selectedFilterType, form} = props;
-    const {getFieldDecorator} = props.form;
-    return (
-      <Form layout="inline" onSubmit={AlertFilterChange}  style={styles.formstyles}>
-        <Form.Item hasFeedback>
-          {getFieldDecorator('filter_type', {
-            rules: [
-              {required: true, message: "This field is required"}
-            ]
-          })(
-            <Select
-              placeholder="Select Filter Type"
-              allowClear={false}
-              dropdownMatchSelectWidth={true}
-              style={{ width: 150 }}
-              onChange={FilterTypeChange}
-              initialValue={4}
-            >
-              <Select.Option value={0}>Camera Name</Select.Option>
-              <Select.Option value={1}>Camera Group Name</Select.Option>
-              <Select.Option value={2}>Trigger Type</Select.Option>
-              <Select.Option value={3}>Date/Time Range</Select.Option>
-              <Select.Option value={4}>Most Recent</Select.Option>
-            </Select>
-          )}
+const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentProperties, selectedFilterType, form}) => {
+  return (
+    <Form
+      layout="inline"
+      onFinish={AlertFilterChange}
+      style={styles.formstyles}
+      initialValues={{filter_type: 4}}
+      ref={form}
+    >
+      <Form.Item
+        name="filter_type"
+        rules={[{required: true, message: "This field is required"}]}
+        hasFeedback
+      >
+        <Select
+          placeholder="Select Filter Type"
+          allowClear={false}
+          dropdownMatchSelectWidth={true}
+          style={{ width: 185 }}
+          onChange={FilterTypeChange}
+        >
+          <Select.Option value={0}>Camera Name</Select.Option>
+          <Select.Option value={1}>Camera Group Name</Select.Option>
+          <Select.Option value={2}>Trigger Type</Select.Option>
+          <Select.Option value={3}>Date/Time Range</Select.Option>
+          <Select.Option value={4}>Most Recent</Select.Option>
+        </Select>
+      </Form.Item>
+      <AlertFilters
+        data = {ComponentProperties}
+        selectedFilterType = {selectedFilterType}
+      />
+      {selectedFilterType !== 4 ?
+        <Form.Item>
+          <Button type="primary" htmlType="submit">Submit</Button>
         </Form.Item>
-        <AlertFilters
-          data = {ComponentProperties}
-          selectedFilterType = {selectedFilterType}
-          formProps = {props.form}
-        />
-        {selectedFilterType !== 4 ?
-          <Form.Item>
-            <Button type="primary" htmlType="submit">Submit</Button>
-          </Form.Item>
-        :
-          <div></div>
-        }
-      </Form>
-    );
-  }
-);
+      :
+        <div></div>
+      }
+    </Form>
+  );
+};
 
 class Alerts extends Component {
   constructor(props) {
@@ -65,7 +63,7 @@ class Alerts extends Component {
     }
   }
 
-  UNSAFE_componentWillMount = () => {
+  UNSAFE_componentDidMount() {
     this.props.actions.markUserAlertsViewed(this.props.user);
   }
 
@@ -85,15 +83,15 @@ class Alerts extends Component {
   }
 
   handleFilterTypeChange = (e) => {
+    if (this.form.getFieldsValue().hasOwnProperty('filter_parameter') && typeof this.form.getFieldsValue()['filter_parameter'] !== 'undefined') {
+      this.form.resetFields(['filter_parameter']);
+    }
     this.setState({selectedFilterType: parseInt(e)})
   }
 
   handleAlertFilterChange = (e) => {
-    e.preventDefault();
-    this.form.validateFields((err, values) => {
-      if (!err) {
-        this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.pagination.current_page, this.props.pagination.per_page, this.state.selectedFilterType, values.filter_parameter);
-      }
+    this.form.validateFields().then(values => {
+      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.pagination.current_page, this.props.pagination.per_page, this.state.selectedFilterType, values.filter_parameter);
     });
   }
 
@@ -110,7 +108,7 @@ class Alerts extends Component {
         <div>
         <Row type='flex' justify='center'>
         <AlertSortingForm
-          ref={this.alertSortingFormRef}
+          form={this.alertSortingFormRef}
           AlertFilterChange={this.handleAlertFilterChange}
           FilterTypeChange={this.handleFilterTypeChange}
           ComponentProperties={this.props}
@@ -144,7 +142,7 @@ class Alerts extends Component {
         <div>
           <Row type='flex' justify='center'>
           <AlertSortingForm
-            ref={this.alertSortingFormRef}
+            form={this.alertSortingFormRef}
             AlertFilterChange={this.handleAlertFilterChange}
             FilterTypeChange={this.handleFilterTypeChange}
             ComponentProperties={this.props}

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Icon, Switch } from 'antd';
+import { Switch } from 'antd';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { toggleCameraEnabled, checkCameraEnabled } from '../../redux/cameras/actions';
 
 class ToggleCameraConnection extends Component {
@@ -26,8 +27,8 @@ class ToggleCameraConnection extends Component {
     let enabled = this.props.cameraConnectionEnabled;
     return (
       <Switch
-        checkedChildren={<Icon type="check" />}
-        unCheckedChildren={<Icon type="close" />}
+        checkedChildren={<CheckOutlined />}
+        unCheckedChildren={<CloseOutlined />}
         onChange={() => this.toggleCameraEnabled(!enabled)}
         checked={enabled}
       />

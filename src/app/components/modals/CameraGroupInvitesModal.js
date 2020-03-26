@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Modal, Button, Badge, Row, Col, message } from 'antd';
+import { Modal, Button, Badge, Row, Col, message } from 'antd';
+import { MailOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { acceptInvite, rejectInvite } from '../../redux/invites/actions';
 
@@ -31,7 +32,7 @@ const CameraGroupInvites = (props) => {
                   <Button style={styles.button}>Accept</Button>
                 </Col>
                 <Col xs={{span: 24}}>
-                  <Icon type='check' />
+                  <CheckOutlined />
                 </Col>
               </Col>
               <Col xs={{span: 12}} style={styles.buttonBorder} onClick={() => props.rejectInviteInProcess ? '' : props.rejectInvite(props.user, invite)}>
@@ -39,7 +40,7 @@ const CameraGroupInvites = (props) => {
                   <Button style={styles.button}>Reject</Button>
                 </Col>
                 <Col xs={{span: 24}}>
-                  <Icon type='close' />
+                  <CloseOutlined />
                 </Col>
               </Col>
             </Col>
@@ -92,7 +93,7 @@ class CameraGroupInvitesModal extends Component {
     return (
       <Badge count={this.props.cameraGroupInvites.length}>
         <div onClick={this.showModal}>
-          <Icon type='mail'/>
+          <MailOutlined />
           &nbsp;&nbsp;
           <span>Camera Group Invites</span>
         </div>

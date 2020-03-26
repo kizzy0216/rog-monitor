@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Menu, Icon, Badge, notification } from 'antd';
+import { Menu, Badge, notification } from 'antd';
+import { VideoCameraOutlined, AlertOutlined, DatabaseOutlined, EllipsisOutlined, MailOutlined, UserOutlined, IdcardOutlined, TeamOutlined, RadiusUpleftOutlined, CloudServerOutlined, MobileOutlined, ClusterOutlined } from '@ant-design/icons';
 
 import { fetchAlerts, clearNewAlerts, markUserAlertsViewed } from '../../redux/alerts/actions';
 import { isEmpty } from '../../redux/helperFunctions';
@@ -48,44 +49,47 @@ class NavigationMenu extends Component {
         defaultSelectedKeys={[this.props.location.pathname]}
         onClick={({key}) => this.goToPath(key)}>
         <Menu.Item key='/cameras'>
-          <Icon type='video-camera' className='nav-icon' />
+          <VideoCameraOutlined className='nav-icon' />
         </Menu.Item>
         <Menu.Item key='/alerts'>
           <Badge count={!isEmpty(this.props.alerts) ? this.props.alerts[0].new_alerts: 0}>
-            <Icon type='alert' className='nav-icon' />
+            <AlertOutlined className='nav-icon' />
           </Badge>
         </Menu.Item>
         {this.props.user.user_privileges_id == 0 ?
-          <Menu.SubMenu title={<Icon type="ellipsis" className='nav-icon' />}>
+          <Menu.SubMenu title={<EllipsisOutlined className='nav-icon' />}>
             <Menu.Item key='/system-configuration-admin'>
-              <Icon type="database" className='nav-icon' /> System Configuration
+              <DatabaseOutlined className='nav-icon' /> System Configuration
+            </Menu.Item>
+            <Menu.Item key='/live-view-admin'>
+              <ClusterOutlined className='nav-icon' /> Live View Status
             </Menu.Item>
             <Menu.Item key='/invitations-admin'>
-              <Icon type="mail" className='nav-icon' /> Invitations
+              <MailOutlined className='nav-icon' /> Invitations
             </Menu.Item>
             <Menu.Item key='/users-admin'>
-              <Icon type="user" className='nav-icon' /> Users
+              <UserOutlined className='nav-icon' /> Users
             </Menu.Item>
             <Menu.Item key='/licenses-admin'>
-              <Icon type="idcard" className='nav-icon' /> Licenses
+              <IdcardOutlined className='nav-icon' /> Licenses
             </Menu.Item>
             <Menu.Item key='/camera-groups-admin'>
-              <Icon type="team" className='nav-icon' /> Camera Groups
+              <TeamOutlined className='nav-icon' /> Camera Groups
             </Menu.Item>
             <Menu.Item key='/cameras-admin'>
-              <Icon type="video-camera" className='nav-icon' /> Cameras
+              <VideoCameraOutlined className='nav-icon' /> Cameras
             </Menu.Item>
             <Menu.Item key='/triggers-admin'>
-              <Icon type="radius-setting" className='nav-icon' /> Triggers
+              <RadiusUpleftOutlined className='nav-icon' /> Triggers
             </Menu.Item>
             <Menu.Item key='/recos-admin'>
-              <Icon type="cloud-server" className='nav-icon' /> Recos
+              <CloudServerOutlined className='nav-icon' /> Recos
             </Menu.Item>
             <Menu.Item key='/devices-admin'>
-              <Icon type="mobile" className='nav-icon' /> Devices
+              <MobileOutlined className='nav-icon' /> Devices
             </Menu.Item>
             <Menu.Item key='/alerts-admin'>
-              <Icon type="alert" className='nav-icon' /> Alerts
+              <AlertOutlined className='nav-icon' /> Alerts
             </Menu.Item>
           </Menu.SubMenu>
           :

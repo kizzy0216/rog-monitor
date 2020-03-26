@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Layout, Row, Col, Form, Icon, Button, Input, Checkbox, message } from 'antd';
+import { Layout, Row, Col, Form, Button, Input, Checkbox, message } from 'antd';
+import { LoadingOutlined, LockOutlined } from '@ant-design/icons';
 const { Header, Content } = Layout;
 
 import axios from 'axios';
@@ -10,8 +11,6 @@ import logoFull from '../../assets/img/logo-full.png';
 
 import { getInvitation, register } from '../redux/auth/actions';
 import SignInLink from '../components/navigation/SignInLink';
-
-const FormItem = Form.Item;
 
 class Register extends Component {
   constructor(props) {
@@ -47,14 +46,14 @@ class Register extends Component {
   }
 
   handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        this.props.register(values.email, values.firstName, values.lastName, values.password, values.confirmPassword, this.props.match.params.token);
-      }
-
+    this.props.form.validateFields().then(values => {
+      this.props.register(values.email, values.firstName, values.lastName, values.password, values.confirmPassword, this.props.match.params.token);
     });
   }
+
+  onFinishFailed = ({ errorFields }) => {
+    form.scrollToField(errorFields[0].name);
+  };
 
   checkAgreement = (rule, value, callback) => {
     const form = this.props.form;
@@ -88,22 +87,7 @@ class Register extends Component {
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   }
 
-  // checkPhoneNumber = (rule, value, callback) => {
-  //   const form = this.props.form;
-  //   if (!value) {
-  //     this.setState({phoneError: true});
-  //     callback('Please enter your phone number');
-  //   } else if (isNaN(value)) {
-  //     this.setState({phoneError: true});
-  //     callback('Please enter phone number integers only.');
-  //   } else {
-  //     this.setState({phoneError: false});
-  //     callback();
-  //   }
-  // }
-
   render() {
-    const { getFieldDecorator } = this.props.form;
     return (
       <Layout>
         <Header style={styles.header}>
@@ -122,81 +106,43 @@ class Register extends Component {
                 </Row>
                 <Row type='flex' justify='center' align='middle'>
                   <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}}>
-                    <Form onSubmit={this.handleSubmit} className='register-form'>
-                      <FormItem label='Email Address' hasFeedback>
-                        {getFieldDecorator('email', {
-                          initialValue: this.props.invitation ? this.props.invitation.email : ''
-                        })(
-                          <Input onBlur={this.validateStatus} readOnly />
-                        )}
-                      </FormItem>
-                      <FormItem label='First Name' hasFeedback>
-                        {getFieldDecorator('firstName', {
-                          rules: [
-                            {required: true, message: 'Please enter your first name'}
-                          ],
-                        })(
-                          <Input onBlur={this.validateStatus} />
-                        )}
-                      </FormItem>
-                      <FormItem label='Last Name' hasFeedback>
-                        {getFieldDecorator('lastName', {
-                          rules: [
-                            {required: true, message: 'Please enter your last name'}
-                          ],
-                        })(
-                          <Input onBlur={this.validateStatus} />
-                        )}
-                      </FormItem>
-                      {/*{<FormItem label='Phone' hasFeedback>
-                        {getFieldDecorator('phone', {
-                          rules: [
-                            {validator: this.checkPhoneNumber}
-                          ],
-                        })(
-                          <Input onBlur={this.validateStatus} />
-                        )}
-                      </FormItem>}
-                      {this.state.phoneError ?
-                        ''
-                      :
-                        <div style={styles.phoneCaption} className="ant-form-explain">Standard call, messaging or data rates may apply</div>
-                      }*/}
-                      <FormItem label='Password' hasFeedback>
-                        {getFieldDecorator('password', {
-                          rules: [
-                            {required: true, message: 'Please choose a password'},
-                            {validator: this.checkPasswordLength}
-                          ],
-                        })(
-                          <Input type='password' onBlur={this.validateStatus} />
-                        )}
-                      </FormItem>
-                      <FormItem label="Confirm Password" hasFeedback>
-                        {getFieldDecorator('confirmPassword', {
-                          rules: [
-                            {required: true, message: 'Please confirm your password'},
-                            {validator: this.checkConfirmPassword}
-                          ],
-                        })(
-                          <Input type="password" onBlur={this.handleConfirmBlur} />
-                        )}
-                      </FormItem>
-                      <FormItem>
-                        {getFieldDecorator('termsOfUse', {
-                          rules: [
-                            {validator: this.checkAgreement}
-                          ]
-                        })(
+                    <Form onFinish={this.handleSubmit} initialValues={{email: this.props.invitation ? this.props.invitation.email : ''}} className='register-form'>
+                      <Form.Item label='Email Address' name="email" hasFeedback>
+                        <Input onBlur={this.validateStatus} readOnly />
+                      </Form.Item>
+                      <Form.Item label='First Name' name="firstName" rules={[{required: true, message: 'Please enter your first name'}]} hasFeedback>
+                        <Input onBlur={this.validateStatus} />
+                      </Form.Item>
+                      <Form.Item label='Last Name' name="lastName" rules={[{required: true, message: 'Please enter your last name'}]} hasFeedback>
+                        <Input onBlur={this.validateStatus} />
+                      </Form.Item>
+                      <Form.Item label='Password' name="password"
+                        rules={[
+                          {required: true, message: 'Please choose a password'},
+                          {validator: this.checkPasswordLength}
+                        ]}
+                        hasFeedback
+                      >
+                        <Input type='password' onBlur={this.validateStatus} />
+                      </Form.Item>
+                      <Form.Item label="Confirm Password" name="confirmPassword"
+                        rules={[
+                          {required: true, message: 'Please confirm your password'},
+                          {validator: this.checkConfirmPassword}
+                        ]}
+                        hasFeedback
+                      >
+                        <Input type="password" onBlur={this.handleConfirmBlur} />
+                      </Form.Item>
+                      <Form.Item name="termsOfUse" rules={[{validator: this.checkAgreement}]}>
                         <Checkbox>By clicking Sign Up, you acknowledge you have read and agree to the <a href='https://www.gorog.co/terms-of-use' target='_blank'>Terms of Use</a>.</Checkbox>
-                        )}
-                      </FormItem>
-                      <FormItem>
+                      </Form.Item>
+                      <Form.Item>
                         <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.registerInProcess}>
-                          <Icon type={this.props.registerInProcess ? 'loading' : 'lock'} style={styles.font13} />
+                          {this.props.registerInProcess ? <LoadingOutlined style={styles.font13} /> : <LockOutlined style={styles.font13} />}
                           &nbsp;Sign Up
                         </Button>
-                      </FormItem>
+                      </Form.Item>
                     </Form>
                   </Col>
                 </Row>
@@ -300,5 +246,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const WrappedRegisterForm = Form.create()(Register);
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WrappedRegisterForm));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Register));

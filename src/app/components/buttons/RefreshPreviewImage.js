@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Icon, Button, message } from 'antd';
+import { Button, message } from 'antd';
+import { LoadingOutlined, SyncOutlined } from '@ant-design/icons';
 import { updatePreviewImage } from '../../redux/cameras/actions';
 
 let timeout = {};
@@ -44,7 +45,7 @@ class RefreshPreviewImage extends Component {
   render() {
     return (
         <Button style={styles.getThumbnailBtn} onClick={this.updatePreviewImage} disabled={this.state.disabledFlag}>
-          {this.state.disabledFlag ? <Icon  type='loading' /> : <Icon type='reload' />}
+          {this.state.disabledFlag ? <LoadingOutlined /> : <SyncOutlined />}
         </Button>
     );
   }

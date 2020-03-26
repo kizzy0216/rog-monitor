@@ -3,41 +3,25 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as usersActions from '../../redux/users/actions';
 import { isEmpty } from '../../redux/helperFunctions';
-import { Form, Input, Button, Table, InputNumber, Popconfirm, Icon, Select, message } from 'antd';
+import { Form, Input, Button, Table, InputNumber, Popconfirm, Select, message } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
-const UsersForm = Form.create()(
-  (props) => {
-    const {handleSubmit, form} = props;
-    const {getFieldDecorator} = props.form;
-
-    return (
-      <Form layout={'inline'} onSubmit={handleSubmit} style={styles.formstyles}>
-        <Form.Item label="User uuid" hasFeedback>
-          {getFieldDecorator('user_uuid', {
-            rules: [
-              {type: 'string', message: 'Please enter a valid integer'}
-            ]
-          })(
-            <Input placeholder="Enter uuid" />
-          )}
-        </Form.Item>
-        <Form.Item label="Email" hasFeedback>
-          {getFieldDecorator('email', {
-            rules: [
-              {type: 'string', message: 'Please enter a valid string'}
-            ]
-          })(
-            <Input placeholder="Enter Email" />
-          )}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">Submit</Button>
-        </Form.Item>
-      </Form>
-    );
-  }
-);
+const UsersForm = ({handleSubmit, form}) => {
+  return (
+    <Form layout={'inline'} onFinish={handleSubmit} style={styles.formstyles} ref={form}>
+      <Form.Item label="User uuid" name="user_uuid" rules={[{type: 'string', message: 'Please enter a valid UUID'}]} hasFeedback>
+        <Input placeholder="Enter uuid" />
+      </Form.Item>
+      <Form.Item label="Email" name="email" rules={[{type: 'string', message: 'Please enter a valid string'}]} hasFeedback>
+        <Input placeholder="Enter Email" />
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit">Submit</Button>
+      </Form.Item>
+    </Form>
+  );
+};
 
 class UsersAdmin extends Component {
   constructor(props) {
@@ -54,17 +38,15 @@ class UsersAdmin extends Component {
   }
 
   handleSubmit = (e) => {
-    e.preventDefault();
-    this.form.validateFields((err, values) => {
-      if (!err) {
-        if (values.email !== undefined) {
-          this.props.actions.readUserByEmailAdmin(values);
-        } else {
-          this.props.actions.readUserByUuidAdmin(values);
-        }
+    this.form.validateFields().then(values => {
+      if (values.email !== undefined) {
+        this.props.actions.readUserByEmailAdmin(values);
+      } else {
+        this.props.actions.readUserByUuidAdmin(values);
       }
+    }).finally(() => {
+      this.form.resetFields();
     });
-    this.form.resetFields();
   };
 
   saveFormRef = (form) => {
@@ -89,10 +71,10 @@ class UsersAdmin extends Component {
       return(
         <div>
           <UsersForm
-            ref={this.saveFormRef}
+            form={this.saveFormRef}
             handleSubmit={this.handleSubmit}
           />
-          <EditableFormTable
+          <EditableTable
             data={data}
             actions={this.props.actions}
             adminUser={this.props.user}
@@ -103,7 +85,7 @@ class UsersAdmin extends Component {
       return(
         <div>
           <UsersForm
-            ref={this.saveFormRef}
+            form={this.saveFormRef}
             handleSubmit={this.handleSubmit}
           />
         </div>
@@ -127,7 +109,7 @@ class EditableCell extends React.Component {
     }
   };
 
-  renderCell = ({ getFieldDecorator }) => {
+  renderCell = () => {
     const {
       editing,
       dataIndex,
@@ -138,19 +120,12 @@ class EditableCell extends React.Component {
       children,
       ...restProps
     } = this.props;
+    const inputNode = this.getInput();
     return (
       <td {...restProps}>
         {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`,
-                },
-              ],
-              initialValue: record[dataIndex],
-            })(this.getInput())}
+          <Form.Item style={{ margin: 0 }} name={dataIndex} rules={[{required: true, message: `Please Input ${title}!`}]}>
+            {inputNode}
           </Form.Item>
         ) : (
           children
@@ -237,8 +212,8 @@ class EditableTable extends React.Component {
           return editable ? (
             <span>
               <EditableContext.Consumer>
-                {form => (
-                  <Popconfirm title="Save changes?" onConfirm={() => this.save(form, record.key)}>
+                {() => (
+                  <Popconfirm title="Save changes?" onConfirm={() => this.save(record)}>
                     <Button type="secondary"
                       style={{ marginRight: 8 }}
                     >
@@ -251,7 +226,7 @@ class EditableTable extends React.Component {
             </span>
           ) : (
             <div>
-              <Button type="secondary" disabled={editingKey !== ''} onClick={() => this.edit(record.key)} style={{ marginRight: 8 }}>
+              <Button type="secondary" disabled={editingKey !== ''} onClick={() => this.edit(record)} style={{ marginRight: 8 }}>
                 Edit
               </Button>
               <Popconfirm title="delete record?" onConfirm={() => this.delete(record.key)}>
@@ -282,7 +257,7 @@ class EditableTable extends React.Component {
         <Button
           type="primary"
           onClick={() => this.handleSearch(selectedKeys, confirm)}
-          icon="search"
+          icon={<SearchOutlined />}
           size="small"
           style={{ width: 90, marginRight: 8 }}
         >
@@ -294,7 +269,7 @@ class EditableTable extends React.Component {
       </div>
     ),
     filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
     onFilter: (value, record) =>
       record[dataIndex]
@@ -332,11 +307,9 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: '' });
   };
 
-  save(form, key) {
-    form.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
+  save(record) {
+    let key = record.key;
+    this.form.validateFields().then(row => {
       const newData = [...this.state.data];
       const index = newData.findIndex(item => key === item.key);
       if (index > -1) {
@@ -352,8 +325,9 @@ class EditableTable extends React.Component {
     });
   }
 
-  edit(key) {
-    this.setState({ editingKey: key });
+  edit(record) {
+    this.form.setFieldsValue({ ...record });
+    this.setState({ editingKey: record.key });
   }
 
   delete(key) {
@@ -361,6 +335,10 @@ class EditableTable extends React.Component {
     this.setState({ data: dataSource.filter(item => item.key !== key) });
     this.props.actions.deleteUserAdmin(key);
   };
+
+  formRef = (form) => {
+    this.form = form;
+  }
 
   render() {
     const components = {
@@ -385,7 +363,7 @@ class EditableTable extends React.Component {
       };
     });
     return (
-      <EditableContext.Provider value={this.props.form}>
+      <Form ref={this.formRef} component={false}>
         <Table
           components={components}
           bordered
@@ -395,16 +373,15 @@ class EditableTable extends React.Component {
           pagination={false}
           scroll={{ x: 1300, y: '90vh' }}
         />
-      </EditableContext.Provider>
+      </Form>
     );
   }
 }
 
-const EditableFormTable = Form.create()(EditableTable);
-
 const styles={
   formstyles: {
-    textAlign: 'center'
+    width: 650,
+    margin: '0 auto'
   }
 };
 

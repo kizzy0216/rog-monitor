@@ -1,28 +1,30 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as systemConfigurationActions from '../../redux/systemConfiguration/actions';
+import * as liveViewActions from '../../redux/liveView/actions';
 import { Table, Input, InputNumber, Popconfirm, Form, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
-class SystemConfigurationAdmin extends Component {
+class LiveViewAdmin extends Component {
   constructor(props) {
     super(props);
 
-    this.props.actions.readSystemConfigurations();
+    this.props.actions.readLiveViews();
 
     this.state={}
   }
 
   render(){
     const data = [];
-    if (this.props.systemConfigurations !== null) {
-      for (var i = 0; i < this.props.systemConfigurations.length; i++) {
+    if (this.props.liveViews !== null) {
+      for (var i = 0; i < this.props.liveViews.length; i++) {
         data[i] = {
-          key: this.props.systemConfigurations[i]['uuid'],
-          name: this.props.systemConfigurations[i]['key'],
-          value: this.props.systemConfigurations[i]['value']
+          key: this.props.liveViews[i]['id'],
+          uuid: this.props.liveViews[i]['uuid'],
+          camera_name: this.props.liveViews[i]['camera_name'],
+          camera_url: this.props.liveViews[i]['camera_url'],
+          camera_group_name: this.props.liveViews[i]['camera_group_name']
         }
       }
     }
@@ -86,48 +88,34 @@ class EditableTable extends React.Component {
 
     this.columns = [
       {
-        title: 'name',
-        dataIndex: 'name',
-        width: '33%',
+        title: 'Camera Group Name',
+        dataIndex: 'camera_group_name',
+        width: '25%',
         editable: false,
-        ...this.getColumnSearchProps('name'),
-        sorter: (a, b) => { return a.name.localeCompare(b.name)},
+        ...this.getColumnSearchProps('camera_group_name'),
+        sorter: (a, b) => { return a.camera_group_name.localeCompare(b.camera_group_name)},
         sortDirections: ['descend', 'ascend']
       },
       {
-        title: 'value',
-        dataIndex: 'value',
-        width: '34%',
-        editable: true,
+        title: 'Camera Name',
+        dataIndex: 'camera_name',
+        width: '25%',
+        editable: false,
+        ...this.getColumnSearchProps('camera_name'),
+        sorter: (a, b) => { return a.camera_name.localeCompare(b.camera_name)},
+        sortDirections: ['descend', 'ascend']
       },
       {
-        title: 'operation',
-        dataIndex: 'operation',
-        width: '33%',
-        render: (text, record) => {
-          const { editingKey } = this.state;
-          const editable = this.isEditing(record);
-          return editable ? (
-            <span>
-              <EditableContext.Consumer>
-                {() => (
-                  <Popconfirm title="Save changes?" onConfirm={() => this.save(record)}>
-                    <Button type="secondary"
-                      style={{ marginRight: 8 }}
-                    >
-                      Save
-                    </Button>
-                  </Popconfirm>
-                )}
-              </EditableContext.Consumer>
-              <Button type="secondary" onClick={() => this.cancel(record.key)}>Cancel</Button>
-            </span>
-          ) : (
-            <Button type="secondary" disabled={editingKey !== ''} onClick={() => this.edit(record)}>
-              Edit
-            </Button>
-          );
-        },
+        title: 'UUID',
+        dataIndex: 'uuid',
+        width: '25%',
+        editable: false,
+      },
+      {
+        title: 'Camera URL',
+        dataIndex: 'camera_url',
+        width: '25%',
+        editable: false,
       },
     ];
   }
@@ -215,7 +203,6 @@ class EditableTable extends React.Component {
         });
         const newItem = newData[index];
         this.setState({ data: newData, editingKey: '' });
-        this.props.actions.updateSystemConfiguration(newItem['key'], newItem['name'], newItem['value'])
       }
     });
   }
@@ -272,14 +259,14 @@ const styles={};
 
 const mapStateToProps = (state) => {
   return {
-    systemConfigurations: state.systemConfigurations.data
+    liveViews: state.liveView.data
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(systemConfigurationActions, dispatch)
+    actions: bindActionCreators(liveViewActions, dispatch)
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SystemConfigurationAdmin);
+export default connect(mapStateToProps, mapDispatchToProps)(LiveViewAdmin);

@@ -1,44 +1,46 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, Form, Input, Icon, message } from 'antd';
+import { Button, Modal, Form, Input, message } from 'antd';
+import MailOutlined from '@ant-design/icons';
 const FormItem = Form.Item;
 
 import { sendPasswordResetRequestEmail } from '../../redux/auth/actions';
 
-const PasswordResetForm = Form.create()(
-  (props) => {
-    const {visible, onCancel, onCreate, form, sendPasswordResetInProcess} = props;
-    const {getFieldDecorator} = form;
-
-    return (
-      <Modal title='Request to Reset Password'
-        visible={visible}
-        okText='Send'
-        onCancel={onCancel}
-        footer={[null, null]}
-      >
-        <Form>
-          <FormItem hasFeedback>
-            {getFieldDecorator('email', {
-              rules: [{
-                required: true,
-                pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"),
-                message: "Please enter a valid email address."
-              }],
-            })(
-              <Input style={styles.emailInput} prefix={<Icon type='mail' />} placeholder='Enter email address'/>
-            )}
-          </FormItem>
-          <FormItem>
-            <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={sendPasswordResetInProcess}>
-              Request
-            </Button>
-          </FormItem>
-        </Form>
-      </Modal>
-    );
-  }
-);
+const PasswordResetForm = ({visible, onCancel, onCreate, form, sendPasswordResetInProcess}) => {
+  const layout = {
+    wrapperCol: {
+      span: 16,
+      offset: 4
+    }
+  };
+  return (
+    <Modal title='Request to Reset Password'
+      visible={visible}
+      okText='Send'
+      onCancel={onCancel}
+      footer={[null, null]}
+    >
+      <Form ref={form} {...layout}>
+        <FormItem
+          name="email"
+          hasFeedback
+          rules={[{
+            required: true,
+            pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"),
+            message: "Please enter a valid email address."
+          }]}
+        >
+          <Input style={styles.emailInput} prefix={<MailOutlined />} placeholder='Enter email address'/>
+        </FormItem>
+        <FormItem>
+          <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={sendPasswordResetInProcess}>
+            Request
+          </Button>
+        </FormItem>
+      </Form>
+    </Modal>
+  );
+};
 
 class RequestPasswordResetModal extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -60,11 +62,7 @@ class RequestPasswordResetModal extends Component {
 
   handleCreate = () => {
     const form = this.form;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
+    form.validateFields().then(values => {
       this.props.sendPasswordResetRequestEmail(values.email);
     });
   };
@@ -77,7 +75,7 @@ class RequestPasswordResetModal extends Component {
     return (
       <div>
         <PasswordResetForm
-          ref={this.saveFormRef}
+          form={this.saveFormRef}
           visible={this.props.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}

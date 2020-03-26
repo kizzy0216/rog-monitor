@@ -1,61 +1,53 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import store from '../../redux/store';
-import { Icon, Modal, Form, Input, Button, message } from 'antd';
+import { Modal, Form, Input, Button, message } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 const FormItem = Form.Item;
 
 import { updateUser } from '../../redux/users/actions';
 
 import CustomInput from '../../components/formitems/CustomInput';
 
-const UserSettingsForm = Form.create()(
-  (props) => {
-    const {onCancel, visible, onCreate, updateUser, form, userData, updateUserSuccess} = props;
-    const {getFieldDecorator} = form;
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 16 },
-      },
-    };
-    return (
-      <Modal title='User Settings'
-             visible={visible}
-             style={styles.modal}
-             onCancel={onCancel}
-             onOk={onCreate}
-             okText='Save'
-             cancelText='Cancel'
+const UserSettingsForm = ({onCancel, visible, onCreate, updateUser, form, userData, updateUserSuccess}) => {
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 6 },
+    },
+    wrapperCol: {
+      xs: { span: 16 },
+    },
+  };
+  return (
+    <Modal title='User Settings'
+           visible={visible}
+           style={styles.modal}
+           onCancel={onCancel}
+           onOk={onCreate}
+           okText='Save'
+           cancelText='Cancel'
+    >
+      <Form
+        initialValues={{
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email
+        }}
+        ref={form}
       >
-        <Form>
-          <FormItem label='First Name' {...formItemLayout}>
-            {getFieldDecorator('firstName', {
-              'initialValue': userData.firstName
-            })(
-              <Input placeholder="First Name" style={styles.input} />
-            )}
-          </FormItem>
-          <FormItem label='Last Name' {...formItemLayout}>
-            {getFieldDecorator('lastName', {
-              'initialValue': userData.lastName
-            })(
-              <Input placeholder="Last Name" style={styles.input}  />
-            )}
-          </FormItem>
-          <FormItem label='Email' {...formItemLayout}>
-            {getFieldDecorator('email', {
-              'initialValue': userData.email
-            })(
-              <Input placeholder="Email" style={styles.input} disabled />
-            )}
-          </FormItem>
-        </Form>
-      </Modal>
-    );
-  }
-);
+        <FormItem label='First Name' name="firstName" {...formItemLayout}>
+          <Input placeholder="First Name" style={styles.input} />
+        </FormItem>
+        <FormItem label='Last Name' name="lastName" {...formItemLayout}>
+          <Input placeholder="Last Name" style={styles.input}  />
+        </FormItem>
+        <FormItem label='Email' name="email" {...formItemLayout}>
+          <Input placeholder="Email" style={styles.input} disabled />
+        </FormItem>
+      </Form>
+    </Modal>
+  );
+};
 
 class UserSettings extends Component {
   constructor(props) {
@@ -82,11 +74,7 @@ class UserSettings extends Component {
   };
   handleCreate = (e) => {
     const form = this.form;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
+    form.validateFields().then(values => {
       this.props.updateUser(this.props.user, values);
     });
   };
@@ -105,12 +93,12 @@ class UserSettings extends Component {
     return (
       <div>
         <div onClick={this.showModal}>
-          <Icon type='user'/>
+          <UserOutlined />
           &nbsp;&nbsp;
           <span>User Settings</span>
         </div>
         <UserSettingsForm
-          ref={(form) => this.form = form}
+          form={(form) => this.form = form}
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}

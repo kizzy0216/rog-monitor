@@ -6,7 +6,8 @@ import {
   Redirect,
   Switch
 } from 'react-router-dom';
-import { Layout, Row, Col, Icon, Button } from 'antd';
+import { Layout, Row, Col, Button } from 'antd';
+import { CloseOutlined, SoundOutlined } from '@ant-design/icons';
 const { Header, Sider, Content } = Layout;
 
 import Hamburger from './Hamburger';
@@ -27,6 +28,7 @@ import InvitationsAdmin from '../../screens/admin/InvitationsAdmin';
 import DevicesAdmin from '../../screens/admin/DevicesAdmin';
 import LicensesAdmin from '../../screens/admin/LicensesAdmin';
 import SystemConfigurationAdmin from '../../screens/admin/SystemConfigurationAdmin';
+import LiveViewAdmin from '../../screens/admin/LiveViewAdmin';
 
 import { muteSound } from '../../redux/users/actions';
 
@@ -62,8 +64,8 @@ class AppRouter extends Component {
               toggleCollapsed={this.toggleCollapsed.bind(this)} />
             <NavigationMenu style={styles.menu} />
             <div style={styles.headerButton}>
-              <Button type="ghost" shape="circle" icon="sound" size={"large"} style={styles.muteButton} onClick={this.toggleMute}>
-                {this.state.mute == true ? <Icon type="close" style={styles.muteIcon} /> : ''}
+              <Button type="ghost" shape="circle" size={"large"} style={styles.muteButton} onClick={this.toggleMute}>
+                <SoundOutlined />{this.state.mute == true ? <CloseOutlined style={styles.muteIcon} /> : ''}
               </Button>
             </div>
           </Header>
@@ -89,6 +91,7 @@ class AppRouter extends Component {
                   <Route path='/Devices-admin' component={DevicesAdmin} />
                   <Route path='/licenses-admin' component={LicensesAdmin} />
                   <Route path='/system-configuration-admin' component={SystemConfigurationAdmin} />
+                  <Route path='/live-view-admin' component={LiveViewAdmin} />
                   <Redirect to='/cameras' />
                 </Switch>
                 :

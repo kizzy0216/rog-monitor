@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Icon } from 'antd';
+import { Card, Row, Col } from 'antd';
 import moment from 'moment-timezone';
 import axios from 'axios';
 

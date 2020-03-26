@@ -1,86 +1,50 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, Form, Input, Icon, message } from 'antd';
+import { Button, Modal, Form, Input, message } from 'antd';
 
 import { addCamera } from '../../redux/cameras/actions';
 
-const FormItem = Form.Item;
-
-const AddCameraForm = Form.create()(
-  (props) => {
-    const {visible, onCancel, onCreate, form} = props;
-    const {getFieldDecorator} = form;
-
-    return (
-      <Modal title='Add a Camera'
-        visible={visible}
-        onCancel={onCancel}
-        onOk={onCreate}
-        okText='Add'
-        cancelText='Cancel'
-        confirmLoading={props.addCameraInProcess}
-      >
-        <Form>
-          {/*}<FormItem style={styles.videoContainer}>
-            {props.fullRtspUrl ?
-              (<RtspStream rtspUrl={props.fullRtspUrl} />) :
-              (
-                <p style={styles.videoContainerText}>
-                  {props.addCameraInProcess ? 'Adding camera' : 'No Video Available'}
-                </p>
-              )
-            }
-          </FormItem>
-          <FormItem hasFeedback>
-            <Button key='submit' type='primary' size='large' onClick={props.testLiveView}>
-              <Icon type='reload'></Icon>Test Live View
-            </Button>
-            <div style={styles.error}>{props.addCameraError}</div>
-          </FormItem>*/}
-          <FormItem hasFeedback>
-            {getFieldDecorator('name', {rules: [
-                {required: true, message: 'Please input the camera name'}
-              ]
-            })(
-              <Input placeholder='Enter camera name'/>
-            )}
-          </FormItem>
-          <FormItem hasFeedback>
-            {getFieldDecorator('rtspUrl', {rules: [
-                {
-                  required: true,
-                  pattern: new RegExp("^(rtsp:\/\/)+(?!.+@+.+:)"),
-                  message: "Please enter an RTSP URL without embedded credentials."
-                }
-              ]
-            })(
-              <Input placeholder='Enter Camera URL'/>
-            )}
-
-          </FormItem>
-          <FormItem hasFeedback>
-            {getFieldDecorator('username', {
-              rules: [
-                {required: false, message: 'Please enter the camera username'}
-              ]
-            })(
-              <Input placeholder='Enter camera username'/>
-            )}
-          </FormItem>
-          <FormItem hasFeedback>
-            {getFieldDecorator('password', {
-              rules: [
-                {required: false, message: 'Please enter the camera password'}
-              ]
-            })(
-              <Input type='password' placeholder='Enter camera password'/>
-            )}
-          </FormItem>
-        </Form>
-      </Modal>
-    );
-  }
-);
+const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess}) =>{
+  const layout = {
+    wrapperCol: {
+      span: 16,
+      offset: 4
+    }
+  };
+  return (
+    <Modal title='Add a Camera'
+      visible={visible}
+      onCancel={onCancel}
+      onOk={onCreate}
+      okText='Add'
+      cancelText='Cancel'
+      confirmLoading={addCameraInProcess}
+    >
+      <Form ref={form} {...layout}>
+        <Form.Item name="name" rules={[{required: true, message: 'Please input the camera name'}]} hasFeedback>
+          <Input placeholder='Enter camera name'/>
+        </Form.Item>
+        <Form.Item
+          name="rtspUrl"
+          rules={[{
+            required: true,
+            pattern: new RegExp("^(rtsp:\/\/)+(?!.+@+.+:)"),
+            message: "Please enter an RTSP URL without embedded credentials."
+          }]}
+          hasFeedback
+        >
+          <Input placeholder='Enter Camera URL'/>
+        </Form.Item>
+        <Form.Item name="username" rules={[{required: false, message: 'Please enter the camera username'}]} hasFeedback>
+          <Input placeholder='Enter camera username'/>
+        </Form.Item>
+        <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
+          <Input type='password' placeholder='Enter camera password'/>
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+};
 
 class AddCameraModal extends Component {
   state = {
@@ -112,8 +76,7 @@ class AddCameraModal extends Component {
 
   handleCreate = () => {
     const form = this.form;
-    form.validateFields((err, values) => {
-      if (err) return;
+    form.validateFields().then(values => {
       this.setState({fullRtspUrl: null}, () => {
         this.props.addCamera(this.props.user,
                                      this.props.selectedCameraGroup,
@@ -145,8 +108,7 @@ class AddCameraModal extends Component {
       alert('Sorry, live video requires the desktop Chrome, Firefox, or Opera web browser.');
     } else {
       const form = this.form;
-      form.validateFields(['rtspUrl', 'username', 'password'], (err, values) => {
-        if (err) return;
+      form.validateFields(['rtspUrl', 'username', 'password']).then(values => {
         this.setState({fullRtspUrl: null}, () => {
           this.setState({fullRtspUrl: this.getFullRtspUrl(values.rtspUrl, values.username, values.password)});
         });
@@ -158,7 +120,7 @@ class AddCameraModal extends Component {
     return (
       <div>
         <AddCameraForm
-          ref={this.saveFormRef}
+          form={this.saveFormRef}
           visible={this.props.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}

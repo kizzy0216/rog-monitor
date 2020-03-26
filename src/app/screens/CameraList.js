@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Card, Select, Row, Col, Icon, Modal, Button, Input, Form, Tooltip, message, Popconfirm } from 'antd';
-const Option = Select.Option;
+import { Card, Select, Row, Col, Modal, Button, Input, Form, Tooltip, message, Popconfirm } from 'antd';
+import { EllipsisOutlined, CloseOutlined } from '@ant-design/icons';
 
 import CameraTiles from '../components/cameras/CameraTiles';
 import AddCameraGroupModal from '../components/modals/AddCameraGroupModal';
@@ -79,7 +79,7 @@ class CameraList extends Component {
               <Select style={styles.select} value={this.props.selectedCameraGroup.name}
                       onSelect={(value, option) => this.selectCameraGroup(this.props.user, option.props.cameragroup)}>
                 {this.props.cameraGroups.map(cameraGroup => (
-                  <Option key={`cameragroup-${cameraGroup.id}`} cameragroup={cameraGroup}>{cameraGroup.name}</Option>
+                  <Select.Option key={`cameragroup-${cameraGroup.id}`} cameragroup={cameraGroup}>{cameraGroup.name}</Select.Option>
                 ))}
               </Select>
             </Col>
@@ -87,13 +87,13 @@ class CameraList extends Component {
                 {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?          this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
                   userCameraGroupPrivilege.users_uuid == this.props.user.uuid && userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ?
                   <Tooltip key={userCameraGroupPrivilege.id} title='Toggle Camera Group Options' placement='bottom'>
-                    <Icon style={styles.toggleCameraGroupOptions} type='ellipsis' onClick={this.toggleCameraGroupButtonsVisability} />
+                    <EllipsisOutlined style={styles.toggleCameraGroupOptions}  onClick={this.toggleCameraGroupButtonsVisability} />
                   </Tooltip>
                   :
                   userCameraGroupPrivilege.users_uuid == this.props.user.uuid && !userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ?
                   <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
                     <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.props.removeUserCameraGroupPrivilege(this.props.user, userCameraGroupPrivilege.camera_groups_uuid, userCameraGroupPrivilege.uuid)} okText="Yes, remove camera group" cancelText="Nevermind">
-                      <Button type="danger" icon="close" className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
+                      <Button type="danger" icon={<CloseOutlined />} className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
                     </Popconfirm>
                   </Tooltip>
                   :
@@ -153,7 +153,8 @@ const styles = {
     width: '100%'
   },
   toggleCameraGroupOptionsContainer: {
-    width: 28
+    width: 28,
+    marginRight: '-3%'
   },
   toggleCameraGroupOptions: {
     transform: 'rotate(90deg)',

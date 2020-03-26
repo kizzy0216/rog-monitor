@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
-import cameraConnectError from '../../../assets/img/connectError.gif'
+import connectError from '../../../assets/img/connectError.gif'
 import VideoPlayer from 'react-video-js-player';
 
 class CameraCardImg extends Component {
@@ -23,7 +23,7 @@ class CameraCardImg extends Component {
         this.setState({live_view_url: this.props.data.live_view_url+'?auth='+ this.props.data.user.jwt});
       }
     } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
-      this.setState({image: cameraConnectError});
+      this.setState({image: connectError});
     }
   }
 
@@ -39,10 +39,10 @@ class CameraCardImg extends Component {
       }
       this.key = this.uuidv4;
     } else if (nextProps.refreshCameraError && nextProps.refreshCameraErrorUuid === nextProps.data.uuid) {
-      this.setState({image: cameraConnectError});
+      this.setState({image: connectError});
       this.key = this.uuidv4;
     } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
-      this.setState({image: cameraConnectError});
+      this.setState({image: connectError});
       this.setState({live_view_url: false});
       this.key = this.uuidv4;
     } else {

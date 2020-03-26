@@ -1,52 +1,50 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Modal, Form, Input, Button, Popconfirm, message } from 'antd';
+import { Modal, Form, Input, Button, Popconfirm, message } from 'antd';
+import { EnvironmentOutlined, CloseOutlined } from '@ant-design/icons';
 import CustomInput from '../../components/formitems/CustomInput';
 
 import { editCameraGroup } from '../../redux/cameraGroups/actions';
 import { removeCameraGroup } from '../../redux/cameraGroups/actions';
 
 const FormItem = Form.Item;
-const EditCameraGroupForm = Form.create()(
-  (props) => {
-    const {onCancel, visible, onCreate, removeCameraGroup, form, cameraGroup, editCameraGroupInProcess, editCameraGroupSuccess, removeCameraGroupInProcess, removeCameraGroupSuccess} = props;
-    const {getFieldDecorator} = form;
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 16 },
-      },
-    };
-    return (
-      <Modal title={`Edit ${props.cameraGroup.name}`}
-             visible={visible}
-             style={styles.modal}
-             onCancel={onCancel}
-             onOk={onCreate}
-             okText='Save'
-             cancelText='Cancel'
+const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, form, cameraGroup, cameraGroupName, editCameraGroupInProcess, editCameraGroupSuccess, removeCameraGroupInProcess, removeCameraGroupSuccess}) => {
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 6 },
+    },
+    wrapperCol: {
+      xs: { span: 16 },
+    },
+  };
+  return (
+    <Modal title={`Edit ${cameraGroupName}`}
+           visible={visible}
+           style={styles.modal}
+           onCancel={onCancel}
+           onOk={onCreate}
+           okText='Save'
+           cancelText='Cancel'
+    >
+      <Form
+        initialValues={{
+          name: cameraGroupName
+        }}
+        ref={form}
       >
-        <Form>
-          <FormItem label='Name' {...formItemLayout}>
-            {getFieldDecorator('name', {
-              'initialValue': props.cameraGroup.name
-            })(
-              <Input
-                style={styles.input}
-                placeholder="CameraGroup Name"
-              />
-            )}
-          </FormItem>
-          <Popconfirm title="Are you sure you want to remove this cameraGroup? This action cannot be undone." onConfirm={removeCameraGroup} okText="Yes, remove cameraGroup" cancelText="Nevermind">
-            <Button type="danger" icon="close" loading={removeCameraGroupInProcess} disabled={removeCameraGroupInProcess}>Remove CameraGroup</Button>
-          </Popconfirm>
-        </Form>
-      </Modal>
-    );
-  }
-);
+        <FormItem label='Name' name="name" {...formItemLayout}>
+          <Input
+            style={styles.input}
+            placeholder="CameraGroup Name"
+          />
+        </FormItem>
+        <Popconfirm title="Are you sure you want to remove this cameraGroup? This action cannot be undone." onConfirm={removeCameraGroup} okText="Yes, remove cameraGroup" cancelText="Nevermind">
+          <Button type="danger" icon={<CloseOutlined />} loading={removeCameraGroupInProcess} disabled={removeCameraGroupInProcess}>Remove CameraGroup</Button>
+        </Popconfirm>
+      </Form>
+    </Modal>
+  );
+};
 
 class EditCameraGroupModal extends Component {
   constructor(props) {
@@ -77,10 +75,7 @@ class EditCameraGroupModal extends Component {
 
   handleCreate = (e) => {
     const form = this.form;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
+    form.validateFields().then(values => {
       this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, values);
     });
   };
@@ -93,18 +88,19 @@ class EditCameraGroupModal extends Component {
     return (
       <div>
         <div onClick={this.showModal}>
-          <Icon type='environment-o' onClick={this.showModal} />
+          <EnvironmentOutlined onClick={this.showModal} />
           &nbsp;
           CameraGroup Settings
         </div>
         <EditCameraGroupForm
-          ref={(form) => this.form = form}
+          form={(form) => this.form = form}
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
           removeCameraGroup={this.handleDelete}
           error={this.state.error}
           cameraGroup={this.props.selectedCameraGroup}
+          cameraGroupName={this.props.selectedCameraGroup.name}
           editCameraGroupInProcess={this.props.editCameraGroupInProcess}
           editCameraGroupSuccess={this.props.editCameraGroupSuccess}
           removeCameraGroupInProcess={this.props.removeCameraGroupInProcess}

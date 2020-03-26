@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Icon, Row, Col, Popconfirm, Button, Switch } from 'antd';
+import { Card, Row, Col, Popconfirm, Button, Switch } from 'antd';
+import {DeleteOutlined} from '@ant-design/icons';
 import moment, { lang } from 'moment';
 import EditCamera from '../cameras/EditCamera';
 import { deleteCamera } from '../../redux/cameras/actions';
@@ -31,11 +32,6 @@ class CameraCard extends Component {
     this.props.deleteCamera(this.props.user, this.props.camera_groups_uuid, this.props.uuid);
   };
 
-  state = {
-  cachedSomeProp: null
-  // ... rest of initial state
-};
-
 static getDerivedStateFromProps(nextProps, prevState) {
   for (var i = 0; i < nextProps.cameraGroup.cameras.length; i++) {
     if (nextProps.cameraGroup.cameras[i].uuid == nextProps.uuid) {
@@ -58,30 +54,24 @@ static getDerivedStateFromProps(nextProps, prevState) {
           <Col style={styles.cameraCardTitle}>{this.props.name}</Col>
         </Row>
         <Row>
-          <div>
-            <Col span={8} style={styles.alertModal}>
-              <TriggerModal
+          <Col span={8} style={styles.alertModal}>
+            <TriggerModal
+              data={this.props}
+            />
+          </Col>
+          {!myRole.includes(0) ?
+            (<Col span={8} style={styles.cameraConnectionSwitch}></Col>) :
+            <Col span={8} style={styles.cameraConnectionSwitch}>
+              <ToggleCameraConnection
                 data={this.props}
               />
             </Col>
-            {!myRole.includes(0) ?
-              (<div></div>) :
-              <div>
-                <Col span={8} style={styles.cameraConnectionSwitch}>
-                  <ToggleCameraConnection
-                    data={this.props}
-                  />
-                </Col>
-              </div>
-            }
-            <div>
-              <Col span={8} style={styles.refreshImage}>
-                <RefreshPreviewImage
-                  data={this.props}
-                />
-              </Col>
-            </div>
-          </div>
+          }
+          <Col span={8} style={styles.refreshImage}>
+            <RefreshPreviewImage
+              data={this.props}
+            />
+          </Col>
         </Row>
         <Row>
           {
@@ -110,7 +100,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
             </Col>
             <Col span={2}>
               <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
-                <Icon type='delete' />
+                <DeleteOutlined />
               </Popconfirm>
             </Col>
           </Row>)

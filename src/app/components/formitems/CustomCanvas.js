@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {Icon} from 'antd';
+import { StepBackwardOutlined, StepForwardOutlined } from '@ant-design/icons';
 import {clearTriggerSpecificTimeWindows} from '../../redux/triggers/actions';
 require('fabric');
 
@@ -613,8 +613,8 @@ class CustomCanvas extends Component {
           <canvas id='canvas' style={styles.canvas}/>
         </div>
         <div style={styles.prevNext}>
-          <Icon id="prev_button" type="step-backward" />
-          <Icon id="next_button" type="step-forward" />
+          <StepBackwardOutlined id="prev_button" />
+          <StepForwardOutlined id="next_button" />
         </div>
       </div>
     )

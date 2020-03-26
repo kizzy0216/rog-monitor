@@ -6,7 +6,8 @@ import {
   Redirect,
   Switch
 } from 'react-router-dom';
-import { Layout, Row, Col, Icon, Button } from 'antd';
+import { Layout, Row, Col, Button } from 'antd';
+import { CloseOutlined, SoundOutlined } from '@ant-design/icons';
 const { Header, Sider, Content } = Layout;
 
 import Hamburger from './Hamburger';
@@ -62,8 +63,8 @@ class AppRouter extends Component {
               toggleCollapsed={this.toggleCollapsed.bind(this)} />
             <NavigationMenu style={styles.menu} />
             <div style={styles.headerButton}>
-              <Button type="ghost" shape="circle" icon="sound" size={"large"} style={styles.muteButton} onClick={this.toggleMute}>
-                {this.state.mute == true ? <Icon type="close" style={styles.muteIcon} /> : ''}
+              <Button type="ghost" shape="circle" size={"large"} style={styles.muteButton} onClick={this.toggleMute}>
+                <SoundOutlined />{this.state.mute == true ? <CloseOutlined style={styles.muteIcon} /> : ''}
               </Button>
             </div>
           </Header>

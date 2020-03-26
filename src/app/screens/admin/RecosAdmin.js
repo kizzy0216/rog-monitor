@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as recosActions from '../../redux/recos/actions';
-import { Table, Badge, Menu, Dropdown, Icon, Popconfirm, Form, InputNumber, Input, Button, message } from 'antd';
+import { Table, Badge, Menu, Dropdown, Popconfirm, Form, InputNumber, Input, Button, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { isEmpty } from '../../redux/helperFunctions';
 
-class RecosAdmin extends Component {
+class RecosAdmin extends React.Component {
   constructor(props){
     super(props);
 
@@ -80,18 +80,21 @@ class RecosAdmin extends Component {
     }
     const data = [];
     if (!isEmpty(nextProps.recos)) {
-      for (let i = 0; i < nextProps.recos.length; ++i) {
-        data.push({
-          key: nextProps.recos[i]['id'],
-          instance_name: nextProps.recos[i]['instance_name'],
-          instance_ip_address: nextProps.recos[i]['instance_ip_address'],
-          instance_cpu_usage: nextProps.recos[i]['instance_cpu_usage'],
-          instance_ram_usage: nextProps.recos[i]['instance_ram_usage'],
-          instance_gpu_name: nextProps.recos[i]['instance_gpu_name'],
-          instance_hd_usage: nextProps.recos[i]['instance_hd_usage'],
-          alive_vpn: nextProps.recos[i]['alive_vpn'].toString(),
+      const distinctRecosList = Array.from(new Set(nextProps.recos.map(s => s.reco_id)))
+        .map(reco_id => {
+          return {
+            key: nextProps.recos.find(s => s.reco_id === reco_id).id,
+            reco_id: reco_id,
+            instance_name: nextProps.recos.find(s => s.reco_id === reco_id).instance_name,
+            instance_ip_address: nextProps.recos.find(s => s.reco_id === reco_id).instance_ip_address,
+            instance_cpu_usage: nextProps.recos.find(s => s.reco_id === reco_id).instance_cpu_usage,
+            instance_ram_usage: nextProps.recos.find(s => s.reco_id === reco_id).instance_ram_usage,
+            instance_gpu_name: nextProps.recos.find(s => s.reco_id === reco_id).instance_gpu_name,
+            instance_hd_usage: nextProps.recos.find(s => s.reco_id === reco_id).instance_hd_usage,
+            alive_vpn: nextProps.recos.find(s => s.reco_id === reco_id).alive_vpn.toString(),
+          };
         });
-      }
+      distinctRecosList.forEach(distinctRecoData => data.push(distinctRecoData));
     }
     return {
       dataSource: data
@@ -264,7 +267,7 @@ class EditableTable extends React.Component {
     const { dataSource } = this.state;
     const components = {
       body: {
-        row: EditableFormRow,
+        row: EditableRow,
         cell: EditableCell,
       },
     };
@@ -299,88 +302,85 @@ class EditableTable extends React.Component {
 
 const EditableContext = React.createContext();
 
-const EditableRow = ({ form, index, ...props }) => (
-  <EditableContext.Provider value={form}>
-    <tr {...props} />
-  </EditableContext.Provider>
-);
+const EditableRow = ({ index, ...props }) => {
+  const [form] = Form.useForm();
+  return (
+    <Form form={form} component={false}>
+      <EditableContext.Provider value={form}>
+        <tr {...props} />
+      </EditableContext.Provider>
+    </Form>
+  );
+};
 
-const EditableFormRow = Form.create()(EditableRow);
+const EditableCell = ({
+  title,
+  editable,
+  children,
+  dataIndex,
+  record,
+  handleSave,
+  ...restProps
+}) => {
+  const [editing, setEditing] = useState(false);
+  const inputRef = useRef();
+  const form = useContext(EditableContext);
+  useEffect(() => {
+    if (editing) {
+      inputRef.current.focus();
+    }
+  }, [editing]);
 
-class EditableCell extends React.Component {
-  state = {
-    editing: false,
-  };
-
-  toggleEdit = () => {
-    const editing = !this.state.editing;
-    this.setState({ editing }, () => {
-      if (editing) {
-        this.input.focus();
-      }
+  const toggleEdit = () => {
+    setEditing(!editing);
+    form.setFieldsValue({
+      [dataIndex]: record[dataIndex],
     });
   };
 
-  save = e => {
-    const { record, handleSave } = this.props;
-    this.form.validateFields((error, values) => {
-      if (error && error[e.currentTarget.id]) {
-        return;
-      }
-      this.toggleEdit();
+  const save = async e => {
+    try {
+      const values = await form.validateFields();
+      toggleEdit();
       handleSave({ ...record, ...values });
-    });
+    } catch (errInfo) {
+      console.log('Save failed:', errInfo);
+    }
   };
 
-  renderCell = form => {
-    this.form = form;
-    const { children, dataIndex, record, title } = this.props;
-    const { editing } = this.state;
-    return editing ? (
-      <Form.Item style={{ margin: 0 }}>
-        {form.getFieldDecorator(dataIndex, {
-          rules: [
-            {
-              required: false,
-              message: `${title} is required.`,
-            },
-          ],
-          initialValue: record[dataIndex],
-        })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
+  let childNode = children;
+
+  if (editable) {
+    childNode = editing ? (
+      <Form.Item
+        style={{
+          margin: 0,
+        }}
+        name={dataIndex}
+        rules={[
+          {
+            required: true,
+            message: `${title} is required.`,
+          },
+        ]}
+      >
+        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
     ) : (
       <div
         className="editable-cell-value-wrap"
-        style={{ paddingRight: 24 }}
-        onClick={this.toggleEdit}
+        style={{
+          paddingRight: 24,
+        }}
+        onClick={toggleEdit}
       >
         {children}
       </div>
     );
-  };
-
-  render() {
-    const {
-      editable,
-      dataIndex,
-      title,
-      record,
-      index,
-      handleSave,
-      children,
-      ...restProps
-    } = this.props;
-    return (
-      <td {...restProps}>
-        {editable ? (
-          <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>
-        ) : (
-          children
-        )}
-      </td>
-    );
   }
-}
+
+  return <td {...restProps}>{childNode}</td>;
+};
 
 const styles={
   formstyles: {

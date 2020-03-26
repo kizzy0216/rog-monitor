@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as systemConfigurationActions from '../../redux/systemConfiguration/actions';
-import { Table, Input, InputNumber, Popconfirm, Form, Button, Icon } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Button } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
 class SystemConfigurationAdmin extends Component {
@@ -19,33 +20,20 @@ class SystemConfigurationAdmin extends Component {
     if (this.props.systemConfigurations !== null) {
       for (var i = 0; i < this.props.systemConfigurations.length; i++) {
         data[i] = {
-          key: this.props.systemConfigurations[i]['id'],
+          key: this.props.systemConfigurations[i]['uuid'],
           name: this.props.systemConfigurations[i]['key'],
           value: this.props.systemConfigurations[i]['value']
         }
       }
-      return(
-        <EditableFormTable data={data} actions={this.props.actions} />
-      )
-    } else {
-      return(
-        <EditableFormTable data={""} actions={this.props.actions} />
-      )
     }
+    return(<EditableTable data={data} actions={this.props.actions} />);
   }
 }
 
 const EditableContext = React.createContext();
 
 class EditableCell extends React.Component {
-  getInput = () => {
-    if (this.props.inputType === 'number') {
-      return <InputNumber />;
-    }
-    return <Input />;
-  };
-
-  renderCell = ({ getFieldDecorator }) => {
+  renderCell = () => {
     const {
       editing,
       dataIndex,
@@ -56,19 +44,23 @@ class EditableCell extends React.Component {
       children,
       ...restProps
     } = this.props;
+    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
     return (
       <td {...restProps}>
         {editing ? (
-          <Form.Item style={{ margin: 0 }}>
-            {getFieldDecorator(dataIndex, {
-              rules: [
-                {
-                  required: true,
-                  message: `Please Input ${title}!`,
-                },
-              ],
-              initialValue: record[dataIndex],
-            })(this.getInput())}
+          <Form.Item
+            name={dataIndex}
+            style={{
+              margin: 0
+            }}
+            rules={[
+              {
+                required: true,
+                message: `Please Input ${title}!`
+              }
+            ]}
+          >
+            {inputNode}
           </Form.Item>
         ) : (
           children
@@ -85,6 +77,7 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       data: props.data,
       editingKey: '',
@@ -117,8 +110,8 @@ class EditableTable extends React.Component {
           return editable ? (
             <span>
               <EditableContext.Consumer>
-                {form => (
-                  <Popconfirm title="Save changes?" onConfirm={() => this.save(form, record.key)}>
+                {() => (
+                  <Popconfirm title="Save changes?" onConfirm={() => this.save(record)}>
                     <Button type="secondary"
                       style={{ marginRight: 8 }}
                     >
@@ -130,13 +123,17 @@ class EditableTable extends React.Component {
               <Button type="secondary" onClick={() => this.cancel(record.key)}>Cancel</Button>
             </span>
           ) : (
-            <Button type="secondary" disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>
+            <Button type="secondary" disabled={editingKey !== ''} onClick={() => this.edit(record)}>
               Edit
             </Button>
           );
         },
       },
     ];
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return {data: nextProps.data}
   }
 
   getColumnSearchProps = dataIndex => ({
@@ -155,7 +152,7 @@ class EditableTable extends React.Component {
         <Button
           type="primary"
           onClick={() => this.handleSearch(selectedKeys, confirm)}
-          icon="search"
+          icon={<SearchOutlined />}
           size="small"
           style={{ width: 90, marginRight: 8 }}
         >
@@ -167,7 +164,7 @@ class EditableTable extends React.Component {
       </div>
     ),
     filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
     onFilter: (value, record) =>
       record[dataIndex]
@@ -205,11 +202,9 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: '' });
   };
 
-  save(form, key) {
-    form.validateFields((error, row) => {
-      if (error) {
-        return;
-      }
+  save(record) {
+    let key = record.key;
+    this.form.validateFields().then(row => {
       const newData = [...this.state.data];
       const index = newData.findIndex(item => key === item.key);
       if (index > -1) {
@@ -225,8 +220,13 @@ class EditableTable extends React.Component {
     });
   }
 
-  edit(key) {
-    this.setState({ editingKey: key });
+  edit(record) {
+    this.form.setFieldsValue({ ...record });
+    this.setState({ editingKey: record.key });
+  }
+
+  formRef = (form) => {
+    this.form = form;
   }
 
   render() {
@@ -253,7 +253,7 @@ class EditableTable extends React.Component {
     });
 
     return (
-      <EditableContext.Provider value={this.props.form}>
+      <Form ref={this.formRef} component={false}>
         <Table
           components={components}
           bordered
@@ -263,12 +263,10 @@ class EditableTable extends React.Component {
           pagination={false}
           scroll={{ y: '90vh' }}
         />
-      </EditableContext.Provider>
+      </Form>
     );
   }
 }
-
-const EditableFormTable = Form.create()(EditableTable);
 
 const styles={};
 

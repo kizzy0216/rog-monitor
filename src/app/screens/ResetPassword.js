@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Layout, Row, Col, Form, Icon, Button, Input, Checkbox, message } from 'antd';
+import { Layout, Row, Col, Form, Button, Input, Checkbox, message } from 'antd';
+import { LoadingOutlined, LockOutlined } from '@ant-design/icons';
 const { Header, Content } = Layout;
 
 import axios from 'axios';
@@ -46,14 +47,14 @@ class ResetPassword extends Component {
   }
 
   handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        this.props.resetPassword(values.password, values.confirmPassword, this.props.match.params.token);
-      }
-
+    this.props.form.validateFields().then(values => {
+      this.props.resetPassword(values.password, values.confirmPassword, this.props.match.params.token);
     });
   }
+
+  onFinishFailed = ({ errorFields }) => {
+    form.scrollToField(errorFields[0].name);
+  };
 
   checkPasswordLength = (rule, value, callback) => {
     const form = this.props.form;
@@ -79,7 +80,6 @@ class ResetPassword extends Component {
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
     return (
       <Layout>
         <Header style={styles.header}>
@@ -99,29 +99,27 @@ class ResetPassword extends Component {
                 <Row type='flex' justify='center' align='middle'>
                   <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}}>
                     <Form onSubmit={this.handleSubmit} className='resetPassword-form'>
-                      <FormItem label='New Password' hasFeedback>
-                        {getFieldDecorator('password', {
-                          rules: [
-                            {required: true, message: 'Please choose a password'},
-                            {validator: this.checkPasswordLength}
-                          ],
-                        })(
-                          <Input type='password' onBlur={this.validateStatus} />
-                        )}
+                      <FormItem label='New Password' name="password"
+                        rules={[
+                          {required: true, message: 'Please choose a password'},
+                          {validator: this.checkPasswordLength}
+                        ]}
+                        hasFeedback
+                      >
+                        <Input type='password' onBlur={this.validateStatus} />
                       </FormItem>
-                      <FormItem label="Confirm New Password" hasFeedback>
-                        {getFieldDecorator('confirmPassword', {
-                          rules: [
-                            {required: true, message: 'Please confirm your password'},
-                            {validator: this.checkConfirmPassword}
-                          ],
-                        })(
-                          <Input type="password" onBlur={this.handleConfirmBlur} />
-                        )}
+                      <FormItem label="Confirm New Password" name="confirmPassword"
+                        rules={[
+                          {required: true, message: 'Please confirm your password'},
+                          {validator: this.checkConfirmPassword}
+                        ]}
+                        hasFeedback
+                      >
+                        <Input type="password" onBlur={this.handleConfirmBlur} />
                       </FormItem>
                       <FormItem>
                         <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.resetPasswordInProcess}>
-                          <Icon type={this.props.resetPasswordInProcess ? 'loading' : 'lock'} style={styles.font13} />
+                          {this.props.resetPasswordInProcess ? <LoadingOutlined style={styles.font13} /> : <LockOutlined style={styles.font13} />}
                           &nbsp;Reset Password
                         </Button>
                       </FormItem>
@@ -229,5 +227,5 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const WrappedResetPasswordForm = Form.create()(ResetPassword);
+const WrappedResetPasswordForm = () => (ResetPassword);
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WrappedResetPasswordForm));

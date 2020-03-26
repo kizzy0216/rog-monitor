@@ -1,102 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Icon, Modal, Form, Input, Button, message, TimePicker, Select, Switch } from 'antd';
+import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch } from 'antd';
+import { SettingOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
 
 import { editCamera } from '../../redux/cameras/actions';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
 
-const Option = Select.Option;
-const FormItem = Form.Item;
-const CameraForm = Form.create()(
-  (props) => {
-    const {onCancel, visible, onCreate, form, cameraData, updateTimeZone, createSelectItems, toggleVacationMode, vacationMode} = props;
-    const {getFieldDecorator, fullRtspUrl} = form;
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 16 },
-      },
-    };
-    return (
-      <Modal title={`Edit ${cameraData.name}`}
-             visible={visible}
-             style={styles.modal}
-             onCancel={onCancel}
-             onOk={onCreate}
-             okText='Done'
-             cancelText='Cancel'
-      >
-        <Form>
-          <FormItem label='Camera Name' {...formItemLayout}>
-            {getFieldDecorator('name', {
-              'initialValue': cameraData.name
-            })(
-              <Input style={styles.input} type='text' placeholder="Camera Name" />
-            )}
-          </FormItem>
-          <FormItem label="Camera SKU" {...formItemLayout}>
-            {getFieldDecorator('camera_sku', {
-              'initialValue': cameraData.uuid.slice(-8)
-            })(
-              <Input style={styles.input} type='text' disabled />
-            )}
-          </FormItem>
-          <FormItem label='URL' {...formItemLayout}>
-            {getFieldDecorator('camera_url', {
-              'initialValue': cameraData.camera_url
-            })(
-              <Input style={styles.input} type='text' disabled />
-            )}
-          </FormItem>
-          <FormItem label='Username' {...formItemLayout}>
-            {getFieldDecorator('username', {
-              'initialValue': cameraData.username
-            })(
-              <Input style={styles.input} type='text' placeholder="Camera Username" />
-            )}
-          </FormItem>
-          <FormItem label='Password' {...formItemLayout}>
-            {getFieldDecorator('password')(
-              <Input style={styles.input} type='password' placeholder="********" />
-            )}
-          </FormItem>
-          <FormItem label="Vacation Mode" {...formItemLayout}>
-            {getFieldDecorator('vacation_mode', {
-              'initialValue': cameraData.vacation_mode
-            })(
-              <Switch
-                checkedChildren={<Icon type="check" />}
-                unCheckedChildren={<Icon type="close" />}
-                onChange={toggleVacationMode}
-                checked={vacationMode}
-              />
-            )}
-          </FormItem>
-          <FormItem label="Camera Time Zone">
-            {getFieldDecorator('time_zone', {
-              'initialValue': cameraData.time_zone
-            })(
-              <Select
-                style={styles.timeZone}
-                showSearch
-                placeholder="Enter Time Zone"
-                optionFilterProp="children"
-                default="UTC"
-                onChange={updateTimeZone}
-                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-              >
-                {props.createSelectItems()}
-              </Select>
-            )}
-          </FormItem>
-        </Form>
-      </Modal>
-    );
-  }
-);
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 14 },
+  },
+};
 
 class EditCamera extends Component {
   constructor(props) {
@@ -120,10 +38,7 @@ class EditCamera extends Component {
   };
   handleCreate = (e) => {
     const form = this.form;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
+    form.validateFields().then(values => {
       values.camera_group_uuid = this.props.data.cameraGroup.uuid;
       delete values.camera_url;
       this.props.editCamera(this.props.user, this.props.data.uuid, values);
@@ -140,7 +55,7 @@ class EditCamera extends Component {
       for (var i = 0; i < timezoneNames.length; i++) {
         if (!items.includes(timezoneNames[i])) {
           if (timezoneNames[i] !== "US/Pacific-New") {
-            items.push(<Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Option>);
+            items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
           }
         }
       }
@@ -166,7 +81,7 @@ class EditCamera extends Component {
         if (nextProps.editCameraSuccess === true) {
           // message.success("Camera Updated");
           this.setState({flag: false});
-          this.cameraData = nextProps.data;
+          this.this.props.data = nextProps.data;
         }
       }
     }
@@ -175,20 +90,63 @@ class EditCamera extends Component {
   render() {
     return (
       <div>
-        <Icon type='setting' onClick={this.showModal} style={styles.editCamera}/>
-        <CameraForm
-          ref={(form) => this.form = form}
-          visible={this.state.visible}
-          time_zone={this.state.time_zone}
-          onCancel={this.handleCancel}
-          onCreate={this.handleCreate}
-          updateTimeZone={this.handleUpdateTimeZone}
-          createSelectItems={this.handleCreateSelectItems}
-          error={this.state.error}
-          cameraData={this.props.data}
-          toggleVacationMode={this.handleToggleVacationMode}
-          vacationMode={this.state.vacation_mode}
-        />
+        <SettingOutlined onClick={this.showModal} style={styles.editCamera}/>
+        <Modal title={`Edit ${this.props.data.name}`}
+               visible={this.state.visible}
+               style={styles.modal}
+               onCancel={this.handleCancel}
+               onOk={this.handleCreate}
+               okText='Done'
+               cancelText='Cancel'
+        >
+          <Form
+            initialValues={{
+              name: this.props.data.name,
+              camera_sku: this.props.data.uuid.slice(-8),
+              camera_url: this.props.data.camera_url,
+              username: this.props.data.username,
+              vacation_mode: this.props.data.vacation_mode,
+              time_zone: this.props.data.time_zone
+            }}
+          >
+            <Form.Item label='Camera Name' name="name" {...formItemLayout}>
+              <Input style={styles.input} type='text' placeholder="Camera Name" />
+            </Form.Item>
+            <Form.Item label="Camera SKU" name="camera_sku" {...formItemLayout}>
+              <Input style={styles.input} type='text' disabled />
+            </Form.Item>
+            <Form.Item label='URL' name="camera_url" {...formItemLayout}>
+              <Input style={styles.input} type='text' disabled />
+            </Form.Item>
+            <Form.Item label='Username' name="username" {...formItemLayout}>
+              <Input style={styles.input} type='text' placeholder="Camera Username" />
+            </Form.Item>
+            <Form.Item label='Password' name="password" {...formItemLayout}>
+              <Input style={styles.input} type='password' placeholder="********" />
+            </Form.Item>
+            <Form.Item label="Vacation Mode" name="vacation_mode" {...formItemLayout}>
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                onChange={this.handleToggleVacationMode}
+                checked={this.state.vacation_mode}
+              />
+            </Form.Item>
+            <Form.Item label="Camera Time Zone" name="time_zone" {...formItemLayout}>
+              <Select
+                style={styles.timeZone}
+                showSearch
+                placeholder="Enter Time Zone"
+                optionFilterProp="children"
+                default="UTC"
+                onChange={this.handleUpdateTimeZone}
+                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
+                {this.handleCreateSelectItems()}
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
     );
   }

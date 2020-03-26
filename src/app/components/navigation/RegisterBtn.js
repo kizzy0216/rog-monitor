@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Button, Icon } from 'antd';
+import { Button } from 'antd';
+import ArrowRightOutlined from '@ant-design/icons';
 
 import { register } from '../../redux/auth/actions';
 
@@ -13,7 +14,7 @@ class RegisterBtn extends Component {
 
   render() {
     return (
-      <Button type='primary' size={'large'} style={styles.signUpBtn} onClick={() => this.goToPath('/register')}><Icon type='arrow-right' />Sign Up</Button>
+      <Button type='primary' size={'large'} style={styles.signUpBtn} onClick={() => this.goToPath('/register')}><ArrowRightOutlined />Sign Up</Button>
     )
   }
 }

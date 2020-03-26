@@ -1,35 +1,25 @@
-import React, { Component } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as cameraGroupsActions from '../../redux/cameraGroups/actions';
 import { Table, Input, Button, Popconfirm, Form, InputNumber, message } from 'antd';
 import { isEmpty } from '../../redux/helperFunctions';
 
-const UsersForm = Form.create()(
-  (props) => {
-    const {handleSubmit, form} = props;
-    const {getFieldDecorator} = props.form;
+const UsersForm = ({handleSubmit, form}) => {
 
-    return (
-      <Form layout={'inline'} onSubmit={handleSubmit} style={styles.formstyles}>
-        <Form.Item label="User uuid" hasFeedback>
-          {getFieldDecorator('user_uuid', {
-            rules: [
-              {type: 'string', message: 'Please enter a valid uuid'}
-            ]
-          })(
-            <Input placeholder="Enter uuid" />
-          )}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">Submit</Button>
-        </Form.Item>
-      </Form>
-    );
-  }
-);
+  return (
+    <Form layout={'inline'} onFinish={handleSubmit} style={styles.formstyles} ref={form}>
+      <Form.Item label="User uuid" name="user_uuid" rules={[{type: 'string', message: 'Please enter a valid uuid'}]} hasFeedback>
+        <Input placeholder="Enter uuid" />
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit">Submit</Button>
+      </Form.Item>
+    </Form>
+  );
+};
 
-class CameraGroupsAdmin extends Component {
+class CameraGroupsAdmin extends React.Component {
   constructor(props) {
     super(props);
 
@@ -44,11 +34,8 @@ class CameraGroupsAdmin extends Component {
   }
 
   handleSubmit = (e) => {
-    e.preventDefault();
-    this.form.validateFields((err, values) => {
-      if (!err) {
-        this.props.actions.readAllCameraGroupsForUser(values);
-      }
+    this.form.validateFields().then(values => {
+      this.props.actions.readAllCameraGroupsForUser(values);
     });
   }
 
@@ -70,7 +57,7 @@ class CameraGroupsAdmin extends Component {
       return(
         <div>
           <UsersForm
-            ref={this.saveFormRef}
+            form={this.saveFormRef}
             handleSubmit={this.handleSubmit}
           />
           <EditableTable
@@ -84,7 +71,7 @@ class CameraGroupsAdmin extends Component {
       return(
         <div>
           <UsersForm
-            ref={this.saveFormRef}
+            form={this.saveFormRef}
             handleSubmit={this.handleSubmit}
           />
         </div>
@@ -95,88 +82,85 @@ class CameraGroupsAdmin extends Component {
 
 const EditableContext = React.createContext();
 
-const EditableRow = ({ form, index, ...props }) => (
-  <EditableContext.Provider value={form}>
-    <tr {...props} />
-  </EditableContext.Provider>
-);
+const EditableRow = ({ index, ...props }) => {
+  const [form] = Form.useForm();
+  return (
+    <Form form={form} component={false}>
+      <EditableContext.Provider value={form}>
+        <tr {...props} />
+      </EditableContext.Provider>
+    </Form>
+  );
+};
 
-const EditableFormRow = Form.create()(EditableRow);
+const EditableCell = ({
+  title,
+  editable,
+  children,
+  dataIndex,
+  record,
+  handleSave,
+  ...restProps
+}) => {
+  const [editing, setEditing] = useState(false);
+  const inputRef = useRef();
+  const form = useContext(EditableContext);
+  useEffect(() => {
+    if (editing) {
+      inputRef.current.focus();
+    }
+  }, [editing]);
 
-class EditableCell extends React.Component {
-  state = {
-    editing: false,
-  };
-
-  toggleEdit = () => {
-    const editing = !this.state.editing;
-    this.setState({ editing }, () => {
-      if (editing) {
-        this.input.focus();
-      }
+  const toggleEdit = () => {
+    setEditing(!editing);
+    form.setFieldsValue({
+      [dataIndex]: record[dataIndex],
     });
   };
 
-  save = e => {
-    const { record, handleSave } = this.props;
-    this.form.validateFields((error, values) => {
-      if (error && error[e.currentTarget.uuid]) {
-        return;
-      }
-      this.toggleEdit();
+  const save = async e => {
+    try {
+      const values = await form.validateFields();
+      toggleEdit();
       handleSave({ ...record, ...values });
-    });
+    } catch (errInfo) {
+      console.log('Save failed:', errInfo);
+    }
   };
 
-  renderCell = form => {
-    this.form = form;
-    const { children, dataIndex, record, title } = this.props;
-    const { editing } = this.state;
-    return editing ? (
-      <Form.Item style={{ margin: 0 }}>
-        {form.getFieldDecorator(dataIndex, {
-          rules: [
-            {
-              required: false,
-              message: `${title} is required.`,
-            },
-          ],
-          initialValue: record[dataIndex],
-        })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
+  let childNode = children;
+
+  if (editable) {
+    childNode = editing ? (
+      <Form.Item
+        style={{
+          margin: 0,
+        }}
+        name={dataIndex}
+        rules={[
+          {
+            required: true,
+            message: `${title} is required.`,
+          },
+        ]}
+      >
+        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
     ) : (
       <div
         className="editable-cell-value-wrap"
-        style={{ paddingRight: 24 }}
-        onClick={this.toggleEdit}
+        style={{
+          paddingRight: 24,
+        }}
+        onClick={toggleEdit}
       >
         {children}
       </div>
     );
-  };
-
-  render() {
-    const {
-      editable,
-      dataIndex,
-      title,
-      record,
-      index,
-      handleSave,
-      children,
-      ...restProps
-    } = this.props;
-    return (
-      <td {...restProps}>
-        {editable ? (
-          <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>
-        ) : (
-          children
-        )}
-      </td>
-    );
   }
-}
+
+  return <td {...restProps}>{childNode}</td>;
+};
 
 class EditableTable extends React.Component {
   constructor(props) {
@@ -247,7 +231,7 @@ class EditableTable extends React.Component {
     const { dataSource } = this.state;
     const components = {
       body: {
-        row: EditableFormRow,
+        row: EditableRow,
         cell: EditableCell,
       },
     };
@@ -286,7 +270,8 @@ class EditableTable extends React.Component {
 
 const styles={
   formstyles: {
-    textAlign: 'center'
+    width: 400,
+    margin: '0 auto'
   }
 };
 

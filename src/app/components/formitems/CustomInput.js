@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Spin, Input, Icon } from 'antd';
+import { Button, Spin, Input } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 
 class CustomInput extends Component {
   constructor(props) {
@@ -65,7 +66,7 @@ class CustomInput extends Component {
         <div style={styles.inputContainer}>
           <Input value={this.state.value} type={this.props.inputType} onChange={this.handleChange}
                  disabled={!this.state.inEditMode} style={styles.input} className='formInput'/>
-          {!this.state.inEditMode && <Icon type='edit' onClick={this.toggleEditing} style={styles.edit}/>}
+          {!this.state.inEditMode && <EditOutlined type='edit' onClick={this.toggleEditing} style={styles.edit}/>}
           {this.state.inEditMode &&
           <span style={styles.cancelSaveBtn}>
             <Button

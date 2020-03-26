@@ -4,30 +4,24 @@ import {connect} from 'react-redux';
 import moment from 'moment';
 import {Modal, Row, Col, Form} from 'antd';
 
-const ExpandAlertForm = Form.create()(
-  (props) => {
-    const {
-      onCancel, visible, showAlert, alertImg, alertType, cameraName, cameraGroupName, timestamp, timezone, formatDatetime
-    } = props;
-
-    return (
-      <Modal
-        visible={visible}
-        style={styles.modal}
-        onCancel={onCancel}
-        footer={[null, null]}
-        width="90vw"
-      >
-        <Row type='flex' justify='space-between'>
-          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{alertType}</Col>
-          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{cameraName} at {cameraGroupName}</Col>
-          <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp, timezone)}</Col>
-        </Row>
-        <Row><img src={alertImg} style={styles.expandedImg} /></Row>
-      </Modal>
-    );
-  }
-);
+const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cameraName, cameraGroupName, timestamp, timezone, formatDatetime}) => {
+  return (
+    <Modal
+      visible={visible}
+      style={styles.modal}
+      onCancel={onCancel}
+      footer={[null, null]}
+      width="90vw"
+    >
+      <Row type='flex' justify='space-between'>
+        <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{alertType}</Col>
+        <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{cameraName} at {cameraGroupName}</Col>
+        <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp, timezone)}</Col>
+      </Row>
+      <Row><img src={alertImg} style={styles.expandedImg} /></Row>
+    </Modal>
+  );
+};
 
 class ExpandAlertModal extends Component {
   constructor(props) {
@@ -107,7 +101,8 @@ const styles = {
     paddingTop: 5
   },
   expandedImg: {
-    maxWidth: '80vw'
+    maxWidth: '80vw',
+    margin: '0 auto'
   }
 };
 

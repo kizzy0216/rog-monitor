@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Icon, Menu, Dropdown, Tooltip, message } from 'antd';
+import { Row, Col, Menu, Dropdown, Tooltip, message } from 'antd';
+import { SettingOutlined, VideoCameraAddOutlined, ShareAltOutlined } from '@ant-design/icons';
 
 import AddCameraModal from '../modals/AddCameraModal';
 import ShareCameraGroupModal from '../modals/ShareCameraGroupModal';
@@ -43,11 +44,10 @@ class CameraOptionButtons extends Component {
   render() {
     if (this.props.visible) {
       return (
-        <div>
-          <Col xs={{span: 8}}>
-            <Tooltip title='Add Camera' placement='bottom'>
-              <Icon type='video-camera' style={styles.addCamera} onClick={this.toggleAddCameraModalVisibility}/>
-              <Icon style={styles.addCameraPlus} type='plus' onClick={this.toggleAddCameraModalVisibility}/>
+        <Col xs={{span: 6}} sm={{span: 3}} md={{span: 2}} style={styles.optionsContainer}>
+          <Col xs={{span: 8}} style={styles.optionWrapper}>
+            <Tooltip title='Add Camera' placement="bottom">
+              <VideoCameraAddOutlined style={styles.addCamera} onClick={this.toggleAddCameraModalVisibility}/>
             </Tooltip>
             <AddCameraModal
               user={this.props.user}
@@ -55,16 +55,16 @@ class CameraOptionButtons extends Component {
               visible={this.state.addCameraModalVisible}
               toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)} />
           </Col>
-          <Col xs={{span: 8}}>
-            <Tooltip title='Share CameraGroup' placement='bottom'>
-              <Icon style={styles.share} type='share-alt' onClick={this.toggleShareCameraGroupModalVisibility}/>
+          <Col xs={{span: 8}} style={styles.optionWrapper}>
+            <Tooltip title='Share CameraGroup' placement="bottom">
+              <ShareAltOutlined style={styles.share} onClick={this.toggleShareCameraGroupModalVisibility}/>
             </Tooltip>
             <ShareCameraGroupModal
               selectedCameraGroup={this.props.selectedCameraGroup}
               visible={this.state.shareCameraGroupModalVisible}
               toggleShareCameraGroupModalVisibility={this.toggleShareCameraGroupModalVisibility.bind(this)} />
           </Col>
-          <Col xs={{span: 8}}>
+          <Col xs={{span: 8}} style={styles.optionWrapper}>
             <Dropdown
             placement='bottomCenter'
             overlay={
@@ -77,10 +77,10 @@ class CameraOptionButtons extends Component {
                 </Menu.Item>
               </Menu>
             }>
-              <Icon style={styles.edit} type='setting'/>
+              <SettingOutlined style={styles.edit} type='setting'/>
             </Dropdown>
           </Col>
-        </div>
+        </Col>
       )
     } else {
       return (
@@ -92,25 +92,23 @@ class CameraOptionButtons extends Component {
 
 const styles = {
   share: {
-    float: 'left',
-    fontSize: 18,
+    fontSize: 20,
     paddingLeft: 10
   },
   edit: {
-    float: 'left',
-    fontSize: 18,
+    fontSize: 20,
     paddingLeft: 10
   },
   addCamera: {
-    float: 'right',
-    fontSize: 18,
+    fontSize: 20,
     paddingLeft: 10
   },
-  addCameraPlus: {
-    float: 'right',
-    fontSize: 10,
-    marginRight: -22,
-    marginTop: 3.5
+  optionsContainer: {
+    marginTop: 5,
+    width: 60
+  },
+  optionWrapper: {
+    display: 'inline-block'
   }
 }
 

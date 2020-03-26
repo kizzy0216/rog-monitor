@@ -1,40 +1,37 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-import { Icon, Modal, Form, Input, Button, message } from 'antd';
-const FormItem = Form.Item;
+import { Modal, Form, Input, Button, message } from 'antd';
+import { EnvironmentOutlined } from '@ant-design/icons';
 import { fetchUserCameraLicenses } from '../../redux/users/actions';
 
 import { addNewCameraGroup } from '../../redux/cameraGroups/actions';
 
-const AddCameraGroupForm = Form.create()(
-  (props) => {
-    const {visible, onCancel, onCreate, form, addCameraGroupInProcess} = props;
-    const {getFieldDecorator} = form;
-
-    return (
-      <Modal title='Add a CameraGroup'
-        visible={visible}
-        style={styles.modal}
-        onCancel={onCancel}
-        onOk={onCreate}
-        okText='Submit'
-        cancelText='Cancel'
-        confirmLoading={addCameraGroupInProcess}
-      >
-        <div style={styles.error}>{props.addCameraGroupError}</div>
-        <Form style={styles.addCameraGroupForm}>
-          <FormItem hasFeedback>
-            {getFieldDecorator('name', {
-              rules: [{required: true, message: 'Please enter a name for the cameraGroup'}],
-            })(
-              <Input size='large' id='1' placeholder='Name' style={styles.input}/>
-            )}
-          </FormItem>
-        </Form>
-      </Modal>
-    );
-  }
-);
+const AddCameraGroupForm = ({visible, onCancel, onCreate, form, addCameraGroupInProcess, addCameraGroupError}) => {
+  const layout = {
+    wrapperCol: {
+      span: 16,
+      offset: 4
+    }
+  };
+  return (
+    <Modal title='Add a CameraGroup'
+      visible={visible}
+      style={styles.modal}
+      onCancel={onCancel}
+      onOk={onCreate}
+      okText='Submit'
+      cancelText='Cancel'
+      confirmLoading={addCameraGroupInProcess}
+    >
+      <div style={styles.error}>{addCameraGroupError}</div>
+      <Form ref={form} {...layout}>
+        <Form.Item name="name" rules={[{required: true, message: 'Please enter a name for the cameraGroup'}]} hasFeedback>
+          <Input size='large' id='1' placeholder='Name' style={styles.input}/>
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+};
 
 class AddCameraGroupModal extends Component {
   state = {
@@ -84,9 +81,7 @@ class AddCameraGroupModal extends Component {
 
   handleCreate = () => {
     const form = this.form;
-    form.validateFields((err, values) => {
-      if (err) return;
-
+    form.validateFields().then(values => {
       this.props.addNewCameraGroup(this.props.user, values);
     });
   };
@@ -99,12 +94,12 @@ class AddCameraGroupModal extends Component {
     return (
       <div>
         <div onClick={this.toggleAddCameraGroupModalVisibility}>
-          <Icon type='environment-o'/>
+          <EnvironmentOutlined />
           &nbsp;&nbsp;
           <span>{this.props.linkText}</span>
         </div>
         <AddCameraGroupForm
-          ref={this.saveFormRef}
+          form={this.saveFormRef}
           visible={this.state.visible}
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}

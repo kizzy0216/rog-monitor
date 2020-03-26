@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, Modal, Button, Row, Col, message } from 'antd';
+import { Modal, Button, Row, Col, message } from 'antd';
+import { TeamOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { rescindInvite, fetchSentCameraGroupInvites } from '../../redux/invites/actions';
 import { removeUserCameraGroupPrivilege } from '../../redux/cameraGroups/actions';
@@ -30,7 +31,7 @@ const UserCameraGroupSettings = (props) => {
               <Button style={styles.button}>Rescind</Button>
             </Col>
             <Col xs={{span: 24}}>
-              <Icon type='close' />
+              <CloseOutlined />
             </Col>
           </Col>
         </Row>
@@ -52,7 +53,7 @@ const UserCameraGroupSettings = (props) => {
               <Button style={styles.button}>Remove</Button>
             </Col>
             <Col xs={{span: 24}}>
-              <Icon type='close' />
+              <CloseOutlined />
             </Col>
           </Col>
         </Row>
@@ -96,7 +97,7 @@ class UserCameraGroupSettingsModal extends Component {
       return (
         <div>
           <div onClick={this.showModal}>
-            <Icon type='team'/>
+            <TeamOutlined />
             &nbsp;
             Camera Group Privileges
           </div>
@@ -117,7 +118,7 @@ class UserCameraGroupSettingsModal extends Component {
       return (
         <div>
           <div>
-            <Icon type='team'/>
+            <TeamOutlined />
             &nbsp;
             User Camera Group Privileges
           </div>

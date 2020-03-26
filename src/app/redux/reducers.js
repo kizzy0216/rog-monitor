@@ -8,6 +8,7 @@ import invites from './invites/reducer';
 import users from './users/reducer';
 import triggers from './triggers/reducer';
 import systemConfigurations from './systemConfiguration/reducer';
+import liveView from './liveView/reducer';
 import recos from './recos/reducer';
 
 export default combineReducers({
@@ -19,5 +20,6 @@ export default combineReducers({
   users,
   triggers,
   systemConfigurations,
+  liveView,
   recos
 });

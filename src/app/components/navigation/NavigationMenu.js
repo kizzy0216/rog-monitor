@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Menu, Badge, notification } from 'antd';
-import { VideoCameraOutlined, AlertOutlined, DatabaseOutlined, EllipsisOutlined, MailOutlined, UserOutlined, IdcardOutlined, TeamOutlined, RadiusUpleftOutlined, CloudServerOutlined, MobileOutlined } from '@ant-design/icons';
+import { VideoCameraOutlined, AlertOutlined, DatabaseOutlined, EllipsisOutlined, MailOutlined, UserOutlined, IdcardOutlined, TeamOutlined, RadiusUpleftOutlined, CloudServerOutlined, MobileOutlined, ClusterOutlined } from '@ant-design/icons';
 
 import { fetchAlerts, clearNewAlerts, markUserAlertsViewed } from '../../redux/alerts/actions';
 import { isEmpty } from '../../redux/helperFunctions';
@@ -60,6 +60,9 @@ class NavigationMenu extends Component {
           <Menu.SubMenu title={<EllipsisOutlined className='nav-icon' />}>
             <Menu.Item key='/system-configuration-admin'>
               <DatabaseOutlined className='nav-icon' /> System Configuration
+            </Menu.Item>
+            <Menu.Item key='/live-view-admin'>
+              <ClusterOutlined className='nav-icon' /> Live View Status
             </Menu.Item>
             <Menu.Item key='/invitations-admin'>
               <MailOutlined className='nav-icon' /> Invitations

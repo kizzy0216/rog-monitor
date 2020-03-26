@@ -28,6 +28,7 @@ import InvitationsAdmin from '../../screens/admin/InvitationsAdmin';
 import DevicesAdmin from '../../screens/admin/DevicesAdmin';
 import LicensesAdmin from '../../screens/admin/LicensesAdmin';
 import SystemConfigurationAdmin from '../../screens/admin/SystemConfigurationAdmin';
+import LiveViewAdmin from '../../screens/admin/LiveViewAdmin';
 
 import { muteSound } from '../../redux/users/actions';
 
@@ -90,6 +91,7 @@ class AppRouter extends Component {
                   <Route path='/Devices-admin' component={DevicesAdmin} />
                   <Route path='/licenses-admin' component={LicensesAdmin} />
                   <Route path='/system-configuration-admin' component={SystemConfigurationAdmin} />
+                  <Route path='/live-view-admin' component={LiveViewAdmin} />
                   <Redirect to='/cameras' />
                 </Switch>
                 :

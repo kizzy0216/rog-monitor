@@ -14,6 +14,22 @@ import SignInLink from '../components/navigation/SignInLink';
 
 const FormItem = Form.Item;
 
+const layout = {
+  labelCol: {
+    span: 10,
+  },
+  wrapperCol: {
+    span: 14,
+  },
+};
+
+const tailLayout = {
+  wrapperCol: {
+    offset: 6,
+    span: 16,
+  },
+};
+
 class ResetPassword extends Component {
   constructor(props) {
     super(props);
@@ -47,36 +63,36 @@ class ResetPassword extends Component {
   }
 
   handleSubmit = (e) => {
-    this.props.form.validateFields().then(values => {
+    this.form.validateFields().then(values => {
       this.props.resetPassword(values.password, values.confirmPassword, this.props.match.params.token);
     });
   }
 
   onFinishFailed = ({ errorFields }) => {
-    form.scrollToField(errorFields[0].name);
+    this.form.scrollToField(errorFields[0].name);
   };
 
-  checkPasswordLength = (rule, value, callback) => {
-    const form = this.props.form;
+  checkPasswordLength = async (rule, value) => {
+    const form = this.form;
     if (value && value.length < 8) {
-      callback('Password must be at least 8 characters long');
-    } else {
-      callback();
+      throw new Error('Password must be at least 8 characters long');
     }
   }
 
-  checkConfirmPassword = (rule, value, callback) => {
-    const form = this.props.form;
+  checkConfirmPassword = async (rule, value) => {
+    const form = this.form;
     if (value && value !== form.getFieldValue('password')) {
-      callback('The passwords must match');
-    } else {
-      callback();
+      throw new Error('The passwords must match');
     }
   }
 
   handleConfirmBlur = (e) => {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+  }
+
+  formRef = (form) => {
+    this.form = form
   }
 
   render() {
@@ -97,16 +113,17 @@ class ResetPassword extends Component {
                   </Col>
                 </Row>
                 <Row type='flex' justify='center' align='middle'>
-                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}}>
-                    <Form onSubmit={this.handleSubmit} className='resetPassword-form'>
+                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 16}} lg={{span: 12}}>
+                    <Form onFinish={this.handleSubmit} ref={this.formRef} className='resetPassword-form'>
                       <FormItem label='New Password' name="password"
                         rules={[
                           {required: true, message: 'Please choose a password'},
                           {validator: this.checkPasswordLength}
                         ]}
                         hasFeedback
+                        {...layout}
                       >
-                        <Input type='password' onBlur={this.validateStatus} />
+                        <Input.Password onBlur={this.validateStatus} />
                       </FormItem>
                       <FormItem label="Confirm New Password" name="confirmPassword"
                         rules={[
@@ -114,10 +131,11 @@ class ResetPassword extends Component {
                           {validator: this.checkConfirmPassword}
                         ]}
                         hasFeedback
+                        {...layout}
                       >
-                        <Input type="password" onBlur={this.handleConfirmBlur} />
+                        <Input.Password onBlur={this.handleConfirmBlur} />
                       </FormItem>
-                      <FormItem>
+                      <FormItem {...tailLayout}>
                         <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.resetPasswordInProcess}>
                           {this.props.resetPasswordInProcess ? <LoadingOutlined style={styles.font13} /> : <LockOutlined style={styles.font13} />}
                           &nbsp;Reset Password
@@ -227,5 +245,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const WrappedResetPasswordForm = () => (ResetPassword);
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WrappedResetPasswordForm));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ResetPassword));

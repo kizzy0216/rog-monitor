@@ -12,6 +12,22 @@ import logoFull from '../../assets/img/logo-full.png';
 import { getInvitation, register } from '../redux/auth/actions';
 import SignInLink from '../components/navigation/SignInLink';
 
+const layout = {
+  labelCol: {
+    span: 10,
+  },
+  wrapperCol: {
+    span: 14,
+  },
+};
+
+const tailLayout = {
+  wrapperCol: {
+    offset: 6,
+    span: 16,
+  },
+};
+
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -43,48 +59,50 @@ class Register extends Component {
       message.error(nextProps.getInvitationError);
       this.props.history.push('/login');
     }
+
+    if (typeof nextProps.invitation !== 'undefined') {
+      this.form.setFieldsValue({email: nextProps.invitation.email})
+    }
   }
 
   handleSubmit = (e) => {
-    this.props.form.validateFields().then(values => {
+    this.form.validateFields().then(values => {
       this.props.register(values.email, values.firstName, values.lastName, values.password, values.confirmPassword, this.props.match.params.token);
     });
   }
 
   onFinishFailed = ({ errorFields }) => {
-    form.scrollToField(errorFields[0].name);
+    this.form.scrollToField(errorFields[0].name);
   };
 
-  checkAgreement = (rule, value, callback) => {
-    const form = this.props.form;
+  checkAgreement = async (rule, value) => {
+    const form = this.form;
     if (!value) {
-      callback('Please agree to our terms of use.');
-    } else {
-      callback();
+      throw new Error('Please agree to our terms of use.');
     }
   }
 
-  checkPasswordLength = (rule, value, callback) => {
-    const form = this.props.form;
+  checkPasswordLength = async (rule, value) => {
+    const form = this.form;
     if (value && value.length < 8) {
-      callback('Password must be at least 8 characters long');
-    } else {
-      callback();
+      throw new Error('Password must be at least 8 characters long');
     }
   }
 
-  checkConfirmPassword = (rule, value, callback) => {
-    const form = this.props.form;
+  checkConfirmPassword = async (rule, value) => {
+    const form = this.form;
     if (value && value !== form.getFieldValue('password')) {
-      callback('The passwords must match');
-    } else {
-      callback();
+      throw new Error('The passwords must match');
     }
   }
 
   handleConfirmBlur = (e) => {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+  }
+
+  formRef = (form) => {
+    this.form = form;
   }
 
   render() {
@@ -106,14 +124,14 @@ class Register extends Component {
                 </Row>
                 <Row type='flex' justify='center' align='middle'>
                   <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}}>
-                    <Form onFinish={this.handleSubmit} initialValues={{email: this.props.invitation ? this.props.invitation.email : ''}} className='register-form'>
-                      <Form.Item label='Email Address' name="email" hasFeedback>
-                        <Input onBlur={this.validateStatus} readOnly />
+                    <Form onFinish={this.handleSubmit} ref={this.formRef} className='register-form'>
+                      <Form.Item label='Email Address' name="email" hasFeedback {...layout}>
+                        <Input onBlur={this.validateStatus} readOnly disabled />
                       </Form.Item>
-                      <Form.Item label='First Name' name="firstName" rules={[{required: true, message: 'Please enter your first name'}]} hasFeedback>
+                      <Form.Item label='First Name' name="firstName" rules={[{required: true, message: 'Please enter your first name'}]} hasFeedback {...layout}>
                         <Input onBlur={this.validateStatus} />
                       </Form.Item>
-                      <Form.Item label='Last Name' name="lastName" rules={[{required: true, message: 'Please enter your last name'}]} hasFeedback>
+                      <Form.Item label='Last Name' name="lastName" rules={[{required: true, message: 'Please enter your last name'}]} hasFeedback {...layout}>
                         <Input onBlur={this.validateStatus} />
                       </Form.Item>
                       <Form.Item label='Password' name="password"
@@ -122,8 +140,9 @@ class Register extends Component {
                           {validator: this.checkPasswordLength}
                         ]}
                         hasFeedback
+                         {...layout}
                       >
-                        <Input type='password' onBlur={this.validateStatus} />
+                        <Input.Password onBlur={this.validateStatus} />
                       </Form.Item>
                       <Form.Item label="Confirm Password" name="confirmPassword"
                         rules={[
@@ -131,13 +150,14 @@ class Register extends Component {
                           {validator: this.checkConfirmPassword}
                         ]}
                         hasFeedback
+                         {...layout}
                       >
-                        <Input type="password" onBlur={this.handleConfirmBlur} />
+                        <Input.Password onBlur={this.handleConfirmBlur} />
                       </Form.Item>
-                      <Form.Item name="termsOfUse" rules={[{validator: this.checkAgreement}]}>
+                      <Form.Item name="termsOfUse" valuePropName="checked" rules={[{validator: this.checkAgreement}]} {...tailLayout}>
                         <Checkbox>By clicking Sign Up, you acknowledge you have read and agree to the <a href='https://www.gorog.co/terms-of-use' target='_blank'>Terms of Use</a>.</Checkbox>
                       </Form.Item>
-                      <Form.Item>
+                      <Form.Item {...tailLayout}>
                         <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.registerInProcess}>
                           {this.props.registerInProcess ? <LoadingOutlined style={styles.font13} /> : <LockOutlined style={styles.font13} />}
                           &nbsp;Sign Up

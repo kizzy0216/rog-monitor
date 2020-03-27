@@ -60,7 +60,7 @@ class ShareCameraGroupModal extends Component {
   handleCreate = () => {
     const form = this.form;
     form.validateFields().then(values => {
-      this.props.shareCameraGroup(this.props.user, this.props.selectedCameraGroup.uuid, values.email);
+      this.props.shareCameraGroup(this.props.user, this.props.selectedCameraGroup.uuid, values.email.toLowerCase());
     });
   };
 

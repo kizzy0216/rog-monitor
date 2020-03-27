@@ -87,6 +87,7 @@ const styles = {
   cameraCardImgContainer: {
     backgroundColor: 'white',
     height: 170,
+    width: '100%',
     position: 'relative',
     margin: '0 auto',
     paddingLeft: 0,

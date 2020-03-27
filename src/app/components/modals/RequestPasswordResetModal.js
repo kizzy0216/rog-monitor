@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, Form, Input, message } from 'antd';
-import MailOutlined from '@ant-design/icons';
+import { MailOutlined } from '@ant-design/icons';
 const FormItem = Form.Item;
 
 import { sendPasswordResetRequestEmail } from '../../redux/auth/actions';
@@ -63,7 +63,7 @@ class RequestPasswordResetModal extends Component {
   handleCreate = () => {
     const form = this.form;
     form.validateFields().then(values => {
-      this.props.sendPasswordResetRequestEmail(values.email);
+      this.props.sendPasswordResetRequestEmail(values.email.toLowerCase());
     });
   };
 

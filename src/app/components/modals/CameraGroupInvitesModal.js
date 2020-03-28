@@ -134,6 +134,7 @@ const styles = {
     backgroundColor: 'grey',
     color: '#fff',
     fontSize: 24,
+    display: 'inherit'
   },
   button: {
     fontSize: 16,

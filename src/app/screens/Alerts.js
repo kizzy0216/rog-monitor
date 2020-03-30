@@ -56,15 +56,13 @@ class Alerts extends Component {
   constructor(props) {
     super(props);
 
+    props.actions.markUserAlertsViewed(props.user);
+
     this.state = {
       videoSource: null,
       open: true,
       selectedFilterType: 4
     }
-  }
-
-  UNSAFE_componentDidMount() {
-    this.props.actions.markUserAlertsViewed(this.props.user);
   }
 
   clearAlerts = () => {

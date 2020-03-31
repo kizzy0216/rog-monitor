@@ -15,7 +15,7 @@ class CameraCardImg extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
+    if (this.props.data.cameraConnectionVerified == false && this.props.cameraConnectionVerifiedUuid === this.props.data.uuid) {
       this.setState({image: connectError});
     } else if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url+'?auth='+ this.props.data.user.jwt});
@@ -29,10 +29,10 @@ class CameraCardImg extends Component {
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage+'?auth='+ this.props.data.user.jwt});
       this.key = this.uuidv4;
-    } else if (nextProps.refreshCameraError && nextProps.refreshCameraErrorUuid === nextProps.data.uuid) {
+    } else if (nextProps.data.refreshCameraError && nextProps.data.refreshCameraErrorUuid === nextProps.data.uuid) {
       this.setState({image: connectError});
       this.key = this.uuidv4;
-    } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
+    } else if (nextProps.data.cameraConnectionVerified == false && nextProps.data.cameraConnectionVerifiedUuid === nextProps.data.uuid) {
       this.setState({image: connectError});
       this.key = this.uuidv4;
     } else {
@@ -85,10 +85,7 @@ const styles = {
 }
 
 const mapStateToProps = (state) => {
-  return {
-    cameraConnectionFail: state.cameraGroups.cameraConnectionFail,
-    cameraConnectionFailUuid: state.cameraGroups.cameraConnectionFailUuid
-  }
+  return {}
 }
 
 const mapDispatchToProps = (dispatch) => {

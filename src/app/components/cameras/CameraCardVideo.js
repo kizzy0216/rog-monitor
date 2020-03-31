@@ -22,7 +22,7 @@ class CameraCardImg extends Component {
       if (this.props.data.live_view_url) {
         this.setState({live_view_url: this.props.data.live_view_url+'?auth='+ this.props.data.user.jwt});
       }
-    } else if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
+    } else if (this.props.data.cameraConnectionVerified == false && this.props.data.cameraConnectionVerifiedUuid === this.props.data.uuid) {
       this.setState({image: connectError});
     }
   }
@@ -41,7 +41,7 @@ class CameraCardImg extends Component {
     } else if (nextProps.refreshCameraError && nextProps.refreshCameraErrorUuid === nextProps.data.uuid) {
       this.setState({image: connectError});
       this.key = this.uuidv4;
-    } else if (nextProps.cameraConnectionFail && nextProps.cameraConnectionFailUuid === nextProps.data.uuid) {
+    } else if (nextProps.data.cameraConnectionVerified == false && nextProps.cameraConnectionVerifiedUuid === nextProps.data.uuid) {
       this.setState({image: connectError});
       this.setState({live_view_url: false});
       this.key = this.uuidv4;
@@ -108,10 +108,7 @@ const styles = {
 }
 
 const mapStateToProps = (state) => {
-  return {
-    cameraConnectionFail: state.cameraGroups.cameraConnectionFail,
-    cameraConnectionFailUuid: state.cameraGroups.cameraConnectionFailUuid
-  }
+  return {}
 }
 
 const mapDispatchToProps = (dispatch) => {

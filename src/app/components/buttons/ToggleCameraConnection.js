@@ -6,13 +6,9 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { toggleCameraEnabled, checkCameraEnabled } from '../../redux/cameras/actions';
 
 class ToggleCameraConnection extends Component {
-
-  toggleCameraEnabled = (enabled) => {
-    this.props.toggleCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid, enabled);
-  }
-
-  UNSAFE_componentWillMount() {
-    this.props.checkCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid);
+  constructor(props){
+    super(props);
+    props.checkCameraEnabled(props.data.user, props.data.cameraGroup, props.data.uuid);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -21,6 +17,10 @@ class ToggleCameraConnection extends Component {
     } else {
       return false;
     }
+  }
+
+  toggleCameraEnabled = (enabled) => {
+    this.props.toggleCameraEnabled(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid, enabled);
   }
 
   render() {

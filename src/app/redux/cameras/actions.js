@@ -159,11 +159,11 @@ function cameraConnectionEnabled(bool, cameraUuid) {
   }
 }
 
-function cameraConnectionFail(bool, cameraUuid) {
+function cameraConnectionVerified(bool, cameraUuid) {
   return {
-    type: types.CAMERA_CONNECTION_FAILED,
-    cameraConnectionFail: bool,
-    cameraConnectionFailUuid: cameraUuid
+    type: types.CAMERA_CONNECTION_VERIFIED,
+    cameraConnectionVerified: bool,
+    cameraConnectionVerifiedUuid: cameraUuid
   }
 }
 
@@ -330,15 +330,13 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
 
 export function checkCameraConnection(user, cameraUuid) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/recos/cameras/${cameraUuid}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/cameras/${cameraUuid}/verify`;
     const jwt = sessionStorage.getItem('jwt');
     let config = {headers: {Authorization:'Bearer' + ' ' + jwt}};
     axios.get(url, config)
     .then((response) => {
-      if (response.data.connection_fail !== null) {
-        dispatch(cameraConnectionFail(true, cameraUuid));
-      } else {
-        dispatch(cameraConnectionFail(false, cameraUuid));
+      if (!isEmpty(response.data)) {
+        dispatch(cameraConnectionVerified(response.data.verified, cameraUuid));
       }
     })
   }

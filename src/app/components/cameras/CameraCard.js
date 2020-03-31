@@ -144,8 +144,8 @@ const mapStateToProps = (state) => {
     imageUpdateSuccessUuid: state.cameras.imageUpdateSuccessUuid,
     cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
     cameraConnectionUuid: state.cameras.cameraConnectionUuid,
-    cameraConnectionFail: state.cameras.cameraConnectionFail,
-    cameraConnectionFailUuid: state.cameras.cameraConnectionFailUuid
+    cameraConnectionVerified: state.cameras.cameraConnectionVerified,
+    cameraConnectionVerifiedUuid: state.cameras.cameraConnectionVerifiedUuid
   }
 };
 const mapDispatchToProps = (dispatch) => {

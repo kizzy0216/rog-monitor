@@ -15,7 +15,7 @@ class CameraCardImg extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    if (this.props.cameraConnectionFail && this.props.cameraConnectionFailUuid === this.props.data.uuid) {
+    if (this.props.data.cameraConnectionVerified == false && this.props.cameraConnectionVerifiedUuid === this.props.data.uuid) {
       this.setState({image: connectError});
     } else if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url+'?auth='+ this.props.data.user.jwt});
@@ -32,7 +32,7 @@ class CameraCardImg extends Component {
     } else if (nextProps.data.refreshCameraError && nextProps.data.refreshCameraErrorUuid === nextProps.data.uuid) {
       this.setState({image: connectError});
       this.key = this.uuidv4;
-    } else if (nextProps.data.cameraConnectionFail && nextProps.data.cameraConnectionFailUuid === nextProps.data.uuid) {
+    } else if (nextProps.data.cameraConnectionVerified == false && nextProps.data.cameraConnectionVerifiedUuid === nextProps.data.uuid) {
       this.setState({image: connectError});
       this.key = this.uuidv4;
     } else {

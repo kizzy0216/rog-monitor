@@ -125,6 +125,13 @@ const cameras = (state = initialState, action) => {
           cameraConnectionUuid: action.cameraConnectionUuid
         }
 
+      case types.CAMERA_CONNECTION_FAILED:
+        return {
+          ...state,
+          cameraConnectionFail: action.cameraConnectionFail,
+          cameraConnectionFailUuid: action.cameraConnectionFailUuid
+        }
+
       case types.UPDATE_ALERT_TIME_WINDOWS_DATA:
         return {
           ...state,

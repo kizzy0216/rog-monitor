@@ -159,6 +159,14 @@ function cameraConnectionEnabled(bool, cameraUuid) {
   }
 }
 
+function cameraConnectionFail(bool, cameraUuid) {
+  return {
+    type: types.CAMERA_CONNECTION_FAILED,
+    cameraConnectionFail: bool,
+    cameraConnectionFailUuid: cameraUuid
+  }
+}
+
 function fetchSuccessAdmin(camerasAdmin) {
   return {
     type: types.FETCH_SUCCESS_ADMIN,
@@ -327,12 +335,10 @@ export function checkCameraConnection(user, cameraUuid) {
     let config = {headers: {Authorization:'Bearer' + ' ' + jwt}};
     axios.get(url, config)
     .then((response) => {
-      console.log(response.data);
-      dispatch(cameraConnection(response.data.value));
-      if (response.data.value == true) {
-        dispatch(cameraConnectionFail(false, cameraUuid));
-      } else {
+      if (response.data.connection_fail !== null) {
         dispatch(cameraConnectionFail(true, cameraUuid));
+      } else {
+        dispatch(cameraConnectionFail(false, cameraUuid));
       }
     })
   }

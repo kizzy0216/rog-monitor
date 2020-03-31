@@ -5,7 +5,7 @@ import { Card, Row, Col, Popconfirm, Button, Switch } from 'antd';
 import {DeleteOutlined} from '@ant-design/icons';
 import moment, { lang } from 'moment';
 import EditCamera from '../cameras/EditCamera';
-import { deleteCamera } from '../../redux/cameras/actions';
+import { deleteCamera, checkCameraConnection } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import TriggerModal from '../modals/TriggerModal';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
@@ -17,6 +17,9 @@ import {isEmpty} from '../../redux/helperFunctions';
 class CameraCard extends Component {
   constructor(props) {
     super(props);
+
+    props.checkCameraConnection(props.user, props.uuid);
+
     this.state = {
       flag: false,
       live_view_url: props.live_view_url
@@ -140,12 +143,15 @@ const mapStateToProps = (state) => {
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
     imageUpdateSuccessUuid: state.cameras.imageUpdateSuccessUuid,
     cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
-    cameraConnectionUuid: state.cameras.cameraConnectionUuid
+    cameraConnectionUuid: state.cameras.cameraConnectionUuid,
+    cameraConnectionFail: state.cameras.cameraConnectionFail,
+    cameraConnectionFailUuid: state.cameras.cameraConnectionFailUuid
   }
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     deleteCamera: (user, cameraGroupUuid, cameraUuid) => dispatch(deleteCamera(user, cameraGroupUuid, cameraUuid)),
+    checkCameraConnection: (user, cameraUuid) => dispatch(checkCameraConnection(user, cameraUuid)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data))
   }
 }

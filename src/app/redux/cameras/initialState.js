@@ -18,6 +18,8 @@ export default {
   editCameraSuccess: false,
   editCameraError: '',
   cameraConnectionEnabled: false,
+  cameraConnectionFail: false,
+  cameraConnectionFailUuid: '',
   cameraConnectionId: '',
   time_zone: null,
   addCameraInProcess: false,

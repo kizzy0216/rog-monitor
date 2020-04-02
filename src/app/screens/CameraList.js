@@ -63,11 +63,16 @@ class CameraList extends Component {
   }
 
   toggleCameraGroupButtonsVisability = () => {
-    this.setState({cameraGroupButtonsVisible: !this.state.cameraGroupButtonsVisible})
+    this.setState({cameraGroupButtonsVisible: !this.state.cameraGroupButtonsVisible});
   }
 
   toggleAddCameraGroupModalVisibility = () => {
-    this.setState({addCameraGroupModalVisible: !this.state.addCameraGroupModalVisible})
+    this.setState({addCameraGroupModalVisible: !this.state.addCameraGroupModalVisible});
+  }
+
+  deleteCameraGroup = (userCameraGroupPrivilege) => {
+    sessionStorage.removeItem('selectedCameraGroupUuid');
+    this.props.removeUserCameraGroupPrivilege(this.props.user, userCameraGroupPrivilege.camera_groups_uuid, userCameraGroupPrivilege.uuid, userCameraGroupPrivilege);
   }
 
   render() {
@@ -92,7 +97,7 @@ class CameraList extends Component {
                   :
                   userCameraGroupPrivilege.users_uuid == this.props.user.uuid && !userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ?
                   <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
-                    <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.props.removeUserCameraGroupPrivilege(this.props.user, userCameraGroupPrivilege.camera_groups_uuid, userCameraGroupPrivilege.uuid)} okText="Yes, remove camera group" cancelText="Nevermind">
+                    <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.deleteCameraGroup(userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
                       <Button type="primary" danger icon={<CloseOutlined />} className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
                     </Popconfirm>
                   </Tooltip>

@@ -514,7 +514,7 @@ export function fetchTriggersAdmin(user, values) {
 
 export function deleteTriggerAdmin(user, values, camerasUuid, cameraGroupUuid) {
   return (dispatch) => {
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${camerasUuid}/triggers/${values.base_triggers_uuid}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroupUuid}/cameras/${camerasUuid}/base-triggers/${values.base_triggers_uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.delete(url, config)

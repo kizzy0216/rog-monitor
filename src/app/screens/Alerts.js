@@ -52,6 +52,8 @@ const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentPropert
   );
 };
 
+// TODO: get existing camera group and camera information and use it to populate a dropdown for the user to select
+
 class Alerts extends Component {
   constructor(props) {
     super(props);
@@ -73,11 +75,11 @@ class Alerts extends Component {
   }
 
   handlePaginationChange = (page, pageSize) => {
-    this.props.actions.fetchAlertsWithPagination(this.props.user, page, pageSize);
+    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, page, pageSize, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
   }
 
   handleOnPageSizeChange = (current, size) => {
-    this.props.actions.fetchAlertsWithPagination(this.props.user, current, size);
+    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current, size, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
   }
 
   handleFilterTypeChange = (e) => {

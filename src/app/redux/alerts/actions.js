@@ -277,27 +277,18 @@ export function fetchAlertsWithPaginationAndFilters(user, page, pageSize, filter
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
-    let itemsPerPage = 20;
-    let currentPage = 1;
-
-    if (!isEmpty(page) && !isEmpty(pageSize)) {
-      itemsPerPage = pageSize;
-      currentPage = page;
-    }
-
-
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${currentPage}&per_page=${itemsPerPage}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${page}&per_page=${pageSize}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {
         if (!isEmpty(response.data)) {
           let pagination = {
             total: response.data[0]['total_alerts'],
-            per_page: itemsPerPage,
-            current_page: currentPage,
-            last_page: Math.ceil(response.data[0]['total_alerts'] / itemsPerPage),
-            from: ((currentPage - 1) * itemsPerPage) + 1,
-            to: currentPage  * itemsPerPage
+            per_page: pageSize,
+            current_page: page,
+            last_page: Math.ceil(response.data[0]['total_alerts'] / pageSize),
+            from: ((page - 1) * pageSize) + 1,
+            to: page  * pageSize
           };
           dispatch(fetchSuccessWithPagination(response.data, pagination));
         } else {

@@ -44,7 +44,6 @@ class NavigationMenu extends Component {
       <Menu
         theme='dark'
         mode='horizontal'
-        style={this.props.style}
         selectedKeys={[this.props.location.pathname]}
         defaultSelectedKeys={[this.props.location.pathname]}
         onClick={({key}) => this.goToPath(key)}>

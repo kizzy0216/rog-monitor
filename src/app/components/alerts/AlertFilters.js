@@ -36,7 +36,14 @@ class AlertFilters extends Component {
               {required: true, message: "This field is required"}
             ]}
           >
-            <Input placeholder="Camera Name" />
+            <Select style={{width: 250}} placeholder="select a camera group">
+              {this.props.cameraGroups.map(cameraGroup => (
+                cameraGroup.hasOwnProperty('cameras') ?
+                cameraGroup.cameras.map(camera => (
+                  <Select.Option key={`cameragroup-${camera.id}`} value={camera.name}>{camera.name}</Select.Option>
+                )) : ''
+              ))}
+            </Select>
           </Form.Item>
         )
         break;
@@ -49,7 +56,11 @@ class AlertFilters extends Component {
               {required: true, message: "This field is required"}
             ]}
           >
-            <Input placeholder="Camera Group Name" />
+            <Select style={{width: 250}} placeholder="select a camera group">
+              {this.props.cameraGroups.map(cameraGroup => (
+                <Select.Option key={`cameragroup-${cameraGroup.id}`} value={cameraGroup.name}>{cameraGroup.name}</Select.Option>
+              ))}
+            </Select>
           </Form.Item>
         )
         break;
@@ -104,7 +115,9 @@ class AlertFilters extends Component {
 const styles = {};
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    cameraGroups: state.cameraGroups.cameraGroups
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {

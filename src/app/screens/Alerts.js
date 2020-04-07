@@ -8,6 +8,7 @@ import moment from 'moment-timezone';
 import AlertCard from '../components/alerts/AlertCard';
 import AlertFilters from '../components/alerts/AlertFilters';
 import * as alertActions from '../redux/alerts/actions';
+import { fetchCameraGroups } from '../redux/cameraGroups/actions';
 
 const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentProperties, selectedFilterType, form}) => {
   return (
@@ -52,11 +53,14 @@ const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentPropert
   );
 };
 
+// TODO: get existing camera group and camera information and use it to populate a dropdown for the user to select
+
 class Alerts extends Component {
   constructor(props) {
     super(props);
 
     props.actions.markUserAlertsViewed(props.user);
+    this.props.fetchCameraGroups(props.user);
 
     this.state = {
       videoSource: null,
@@ -73,11 +77,11 @@ class Alerts extends Component {
   }
 
   handlePaginationChange = (page, pageSize) => {
-    this.props.actions.fetchAlertsWithPagination(this.props.user, page, pageSize);
+    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, page, pageSize, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
   }
 
   handleOnPageSizeChange = (current, size) => {
-    this.props.actions.fetchAlertsWithPagination(this.props.user, current, size);
+    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current, size, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
   }
 
   handleFilterTypeChange = (e) => {
@@ -109,7 +113,7 @@ class Alerts extends Component {
           form={this.alertSortingFormRef}
           AlertFilterChange={this.handleAlertFilterChange}
           FilterTypeChange={this.handleFilterTypeChange}
-          ComponentProperties={this.props}
+          cameraGroups={this.props.cameraGroups}
           selectedFilterType={this.state.selectedFilterType}
         />
         </Row>
@@ -143,7 +147,7 @@ class Alerts extends Component {
             form={this.alertSortingFormRef}
             AlertFilterChange={this.handleAlertFilterChange}
             FilterTypeChange={this.handleFilterTypeChange}
-            ComponentProperties={this.props}
+            cameraGroups={this.props.cameraGroups}
             selectedFilterType={this.state.selectedFilterType}
           />
           </Row>
@@ -177,6 +181,7 @@ const styles = {
 
 const mapStateToProps = (state) => {
   return {
+    cameraGroups: state.cameraGroups.cameraGroups,
     user: state.auth.user,
     alerts: state.alerts.alerts,
     fetchError: state.alerts.fetchError,
@@ -188,7 +193,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(alertActions, dispatch)
+    actions: bindActionCreators(alertActions, dispatch),
+    fetchCameraGroups: (user) => dispatch(fetchCameraGroups(user))
   }
 }
 

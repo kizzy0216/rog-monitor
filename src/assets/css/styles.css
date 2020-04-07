@@ -14,6 +14,9 @@ body{
   background: #fff !important;
   height: calc(100vh - 50px);
 }
+.ant-menu-submenu-popup > .ant-menu{
+  background-color: #404040 !important;
+}
 
 /* GLOBAL ANT STYLE OVERRIDES */
 .ant-btn{

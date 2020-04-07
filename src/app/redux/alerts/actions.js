@@ -272,7 +272,7 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
   }
 }
 
-export function fetchAlertsWithPaginationAndFilters(user, page, pageSize, filter_type, filter_parameter) {
+export function fetchAlertsWithPaginationAndFilters(user, page=1, pageSize=20, filter_type, filter_parameter) {
   return (dispatch) => {
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));

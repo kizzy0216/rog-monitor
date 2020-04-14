@@ -522,7 +522,8 @@ class AddTriggerModal extends Component {
       this.setState({triggers: false});
       this.setState({deleteButton: false});
       this.setState({currentTriggerShared: null});
-      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
+      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week']);
+      this.setState({cameraWide: false});
       this.triggerDetails.currentBaseTriggerType = '';
     } else {
       this.triggerDetails.currentBaseTriggerUuid = null;
@@ -534,7 +535,8 @@ class AddTriggerModal extends Component {
       this.setState({cameraWideDisabled: false});
       this.setState({cameraWide: false});
       this.setState({currentTriggerShared: null});
-      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
+      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week']);
+      this.setState({cameraWide: false});
       this.triggerDetails.currentBaseTriggerType = '';
     }
   };
@@ -549,7 +551,8 @@ class AddTriggerModal extends Component {
         this.triggerDetails.currentBaseTriggerType = 'RA';
         this.triggerDetails.currentTriggerShared = null;
         this.setState({currentTriggerShared: null});
-        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
+        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week']);
+        this.setState({cameraWide: false});
         break;
 
       case 'LD':
@@ -562,7 +565,8 @@ class AddTriggerModal extends Component {
         this.setState({loiteringSeconds: 0});
         this.triggerDetails.currentTriggerShared = null;
         this.setState({currentTriggerShared: null});
-        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
+        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at']);
+        this.setState({cameraWide: false});
         break;
 
       case 'VW':
@@ -573,7 +577,8 @@ class AddTriggerModal extends Component {
         this.setState({triggerType: 'VW'});
         this.triggerDetails.currentTriggerShared = null;
         this.setState({currentTriggerShared: null});
-        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
+        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week']);
+        this.setState({cameraWide: false});
         break;
 
     }
@@ -652,7 +657,8 @@ class AddTriggerModal extends Component {
       this.triggerDetails.currentBaseTriggerType = '';
       this.triggerDetails.currentTriggerShared = null;
       this.setState({currentTriggerShared: null});
-      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
+      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week']);
+      this.setState({cameraWide: false});
     }
   };
 
@@ -707,7 +713,6 @@ class AddTriggerModal extends Component {
 
   handleAddNewTimeWindow = () => {
     this.form.resetFields(['time_window_select', 'days_of_week', 'sharedTriggerSilenceWindow']);
-    this.form.setFieldsValue({'camera_wide': false});
     this.form.setFieldsValue({start_at: null});
     this.form.setFieldsValue({end_at: null});
     this.props.addNewTriggerTimeWindow(this.props.triggerTimeWindows);
@@ -763,9 +768,18 @@ class AddTriggerModal extends Component {
     }
   }
 
+  handleToggleCameraWide = (fieldValue) => {
+    let timeWindowSelect = this.form.getFieldValue('time_window_select');
+    if (typeof timeWindowSelect !== 'undefined') {
+      this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, fieldValue.target.checked, 'camera_wide');
+      this.setState({ cameraWide: fieldValue.target.checked });
+    } else {
+      message.error('Please select a time window first.');
+    }
+  }
+
   handleResetData = () => {
     this.form.resetFields(['days_of_week', 'start_at', 'end_at', 'sharedTriggerSilenceWindow']);
-    this.form.setFieldsValue({'camera_wide': false});
     this.setState({cameraWideDisabled: false});
     this.setState({cameraWide: false});
     let timeWindowSelect = this.form.getFieldValue('time_window_select');
@@ -778,7 +792,6 @@ class AddTriggerModal extends Component {
     for (var i = 0; i < polygonData.length; i++) {
       if (polygonData[i].uuid == selectedPolygonUuid) {
         this.form.resetFields(['time_window_select', 'days_of_week', 'start_at', 'end_at', 'sharedTriggerSilenceWindow']);
-        this.form.setFieldsValue({'camera_wide': false});
         this.setState({cameraWideDisabled: false});
         this.setState({cameraWide: false});
         this.props.setTriggerSpecificTimeWindows(polygonData[i].time_windows);
@@ -808,7 +821,6 @@ class AddTriggerModal extends Component {
             }
             this.props.createTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentBaseTriggerUuid, trigger_windows, this.props.data.polygonData);
             this.form.resetFields(['time_window_select', 'days_of_week', 'sharedTriggerSilenceWindow']);
-            this.form.setFieldsValue({'camera_wide': false});
             this.form.setFieldsValue({start_at: null});
             this.form.setFieldsValue({end_at: null});
             this.setState({cameraWideDisabled: false});
@@ -818,7 +830,6 @@ class AddTriggerModal extends Component {
             trigger_windows.uuid = this.props.triggerTimeWindows[values.time_window_select].uuid;
             this.props.updateTriggerTimeWindow(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails.uuid, this.triggerDetails.currentBaseTriggerUuid, trigger_windows, this.props.data.polygonData);
             this.form.resetFields(['time_window_select', 'days_of_week', 'sharedTriggerSilenceWindow']);
-            this.form.setFieldsValue({'camera_wide': false});
             this.form.setFieldsValue({start_at: null});
             this.form.setFieldsValue({end_at: null});
             this.setState({cameraWideDisabled: false});
@@ -860,10 +871,6 @@ class AddTriggerModal extends Component {
       message.error('Please select the days you would like the trigger time to be active. Your changes will not be saved!');
       this.handleResetData();
     }
-  }
-
-  handleToggleCameraWide = () => {
-    this.setState({ cameraWide: !this.state.cameraWide });
   }
 
   handleCheckShared = (shared) => {

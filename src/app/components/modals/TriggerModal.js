@@ -11,7 +11,7 @@ import moment from 'moment';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
 
 const AddTriggerForm = ({
-  onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow, cameraWideDisabled, cameraWide, toggleCameraWide, canvasKey, sharedTriggerSilenceWindowDisabled
+  onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow, cameraWideDisabled, cameraWide, toggleCameraWide, canvasKey, sharedTriggerSilenceWindowDisabled, checkShared
 }) => {
   const formItemLayout = {
     labelCol: {
@@ -86,6 +86,7 @@ const AddTriggerForm = ({
                       style={styles.triggerTimeWindowSelect}
                       defaultValue={selectedTriggerShared}
                       disabled={selectedTriggerShared}
+                      onChange={checkShared}
                     >
                       <Select.Option key={0} value={false}>Private</Select.Option>
                       <Select.Option key={1} value={true}>Shared</Select.Option>
@@ -228,6 +229,7 @@ const AddTriggerForm = ({
                       <Select
                         placeholder="Shared or Private"
                         style={styles.triggerTimeWindowSelect}
+                        onChange={checkShared}
                       >
                         <Select.Option key={0} value={false}>Private</Select.Option>
                         <Select.Option key={1} value={true}>Shared</Select.Option>
@@ -360,7 +362,8 @@ class AddTriggerModal extends Component {
       cameraWide: false,
       cameraWideDisabled: false,
       image: null,
-      sharedTriggerSilenceWindowDisabled: false
+      sharedTriggerSilenceWindowDisabled: false,
+      currentTriggerShared: false
     }
 
     this.onImgLoad = this.onImgLoad.bind(this);
@@ -456,6 +459,7 @@ class AddTriggerModal extends Component {
     this.triggerDetails.currentTriggerUsersUuid = trigger.users_uuid;
     this.triggerDetails.currentTriggerCamerasUuid = trigger.cameras_uuid;
     this.form.setFieldsValue({sharedTrigger: trigger.shared});
+    this.setState({currentTriggerShared: trigger.shared});
     this.setState({loiteringSeconds: trigger.base_trigger.trigger_duration});
     this.setState({deleteButton: true});
   }
@@ -517,6 +521,7 @@ class AddTriggerModal extends Component {
       this.setState({canvasMode: false});
       this.setState({triggers: false});
       this.setState({deleteButton: false});
+      this.setState({selectedTriggerShared: false});
       this.triggerDetails.currentBaseTriggerType = '';
     } else {
       this.triggerDetails.currentBaseTriggerUuid = null;
@@ -527,6 +532,7 @@ class AddTriggerModal extends Component {
       this.setState({cameraGroupOwner: false});
       this.setState({cameraWideDisabled: false});
       this.setState({cameraWide: false});
+      this.setState({selectedTriggerShared: false});
       this.triggerDetails.currentBaseTriggerType = '';
     }
   };
@@ -851,6 +857,11 @@ class AddTriggerModal extends Component {
     this.setState({ cameraWide: !this.state.cameraWide });
   }
 
+  handleCheckShared = (shared) => {
+    this.triggerDetails.currentTriggerShared = shared;
+    this.setState({currentTriggerShared: shared});
+  }
+
   formRef = (form) => {
     this.form = form;
   }
@@ -899,7 +910,7 @@ class AddTriggerModal extends Component {
           saveData={this.handleSaveData}
           timeWindows={this.props.triggerTimeWindows}
           cameraGroupOwner={this.state.cameraGroupOwner}
-          selectedTriggerShared={this.triggerDetails.currentTriggerShared}
+          selectedTriggerShared={this.state.currentTriggerShared}
           addNewTimeWindow={this.handleAddNewTimeWindow}
           getTriggerSpecificTimeWindows={this.getTriggerSpecificTimeWindows}
           setTriggerTimeWindows={this.setTriggerTimeWindows}
@@ -909,6 +920,7 @@ class AddTriggerModal extends Component {
           toggleCameraWide={this.handleToggleCameraWide}
           canvasKey={this.canvasKey}
           sharedTriggerSilenceWindowDisabled={this.state.sharedTriggerSilenceWindowDisabled}
+          checkShared={this.handleCheckShared}
         />
       </div>
     );

@@ -167,7 +167,7 @@ export function clearTriggerSpecificTimeWindows() {
   }
 }
 
-export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup, cameraUuid, triggerDuration, direction, timeWindows, shared) {
+export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup, cameraUuid, triggerDuration, direction, timeWindows, sharedTrigger) {
   return (dispatch) => {
     dispatch(createTriggerInProcess(true));
     dispatch(createTriggerError(false));
@@ -192,7 +192,7 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
       time_windows: timeWindows,
       trigger_duration: triggerDuration,
       direction: direction,
-      shared: shared
+      shared: sharedTrigger
     };
 
     axios.post(url, triggerData, config)
@@ -401,7 +401,8 @@ export function updateTriggerTimeWindow(user, cameraGroupUuid, cameraUuid, trigg
       days_of_week: timeWindow.days_of_week,
       start_at: timeWindow.start_at,
       end_at: timeWindow.end_at,
-      camera_wide: timeWindow.camera_wide
+      camera_wide: timeWindow.camera_wide,
+      shared: timeWindow.shared
     };
 
     axios.patch(url, data, config)

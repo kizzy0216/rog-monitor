@@ -521,7 +521,7 @@ class AddTriggerModal extends Component {
       this.setState({triggers: false});
       this.setState({deleteButton: false});
       this.setState({currentTriggerShared: null});
-      this.form.resetFields(['sharedTrigger']);
+      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
       this.triggerDetails.currentBaseTriggerType = '';
     } else {
       this.triggerDetails.currentBaseTriggerUuid = null;
@@ -533,7 +533,7 @@ class AddTriggerModal extends Component {
       this.setState({cameraWideDisabled: false});
       this.setState({cameraWide: false});
       this.setState({currentTriggerShared: null});
-      this.form.resetFields(['sharedTrigger']);
+      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
       this.triggerDetails.currentBaseTriggerType = '';
     }
   };
@@ -548,7 +548,7 @@ class AddTriggerModal extends Component {
         this.triggerDetails.currentBaseTriggerType = 'RA';
         this.triggerDetails.currentTriggerShared = null;
         this.setState({currentTriggerShared: null});
-        this.form.resetFields(['sharedTrigger']);
+        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
         break;
 
       case 'LD':
@@ -561,7 +561,7 @@ class AddTriggerModal extends Component {
         this.setState({loiteringSeconds: 0});
         this.triggerDetails.currentTriggerShared = null;
         this.setState({currentTriggerShared: null});
-        this.form.resetFields(['sharedTrigger']);
+        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
         break;
 
       case 'VW':
@@ -572,7 +572,7 @@ class AddTriggerModal extends Component {
         this.setState({triggerType: 'VW'});
         this.triggerDetails.currentTriggerShared = null;
         this.setState({currentTriggerShared: null});
-        this.form.resetFields(['sharedTrigger']);
+        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
         break;
 
     }
@@ -663,7 +663,7 @@ class AddTriggerModal extends Component {
       this.triggerDetails.currentBaseTriggerType = '';
       this.triggerDetails.currentTriggerShared = null;
       this.setState({currentTriggerShared: null});
-      this.form.resetFields(['sharedTrigger']);
+      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
     }
   };
 

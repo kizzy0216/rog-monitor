@@ -57,9 +57,9 @@ class CustomCanvas extends Component {
           });
 
           fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.triggerExtras(fabricCanvas.getActiveObject().uuid, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           for (var i = 0; i < nThis.props.polygonData.length; i++) {
             if (fabricCanvas.getActiveObject().uuid == nThis.props.polygonData[i].base_trigger.uuid) {
+              nThis.props.triggerExtras(nThis.props.polygonData[i]);
               nThis.props.setTriggerTimeWindows(nThis.props.polygonData, nThis.props.polygonData[i].uuid);
               break;
             }
@@ -83,10 +83,10 @@ class CustomCanvas extends Component {
             }
           });
           fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.triggerExtras(fabricCanvas.getActiveObject().uuid, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           fabricCanvas.renderAll();
           for (var i = 0; i < nThis.props.polygonData.length; i++) {
             if (fabricCanvas.getActiveObject().uuid == nThis.props.polygonData[i].base_trigger.uuid) {
+              nThis.props.triggerExtras(nThis.props.polygonData[i]);
               nThis.props.setTriggerTimeWindows(nThis.props.polygonData, nThis.props.polygonData[i].uuid);
               break;
             }
@@ -112,10 +112,10 @@ class CustomCanvas extends Component {
             }
           });
           fabricCanvas.getActiveObject().setColor('#36d850');
-          nThis.props.triggerExtras(fabricCanvas.getActiveObject().uuid, fabricCanvas.getActiveObject().type, fabricCanvas.getActiveObject().duration);
           fabricCanvas.renderAll();
           for (var i = 0; i < nThis.props.polygonData.length; i++) {
             if (fabricCanvas.getActiveObject().uuid == nThis.props.polygonData[i].base_trigger.uuid) {
+              nThis.props.triggerExtras(nThis.props.polygonData[i]);
               nThis.props.setTriggerTimeWindows(nThis.props.polygonData, nThis.props.polygonData[i].uuid);
               break;
             }

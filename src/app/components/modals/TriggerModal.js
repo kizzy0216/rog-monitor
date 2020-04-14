@@ -11,7 +11,7 @@ import moment from 'moment';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
 
 const AddTriggerForm = ({
-  onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow, cameraWideDisabled, cameraWide, toggleCameraWide, canvasKey, sharedTriggerSilenceWindowDisabled, checkShared
+  onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow, cameraWideDisabled, cameraWide, toggleCameraWide, canvasKey, sharedTriggerSilenceWindowDisabled, checkShared, updateTriggerSilenceWindowPermissionsChange
 }) => {
   const formItemLayout = {
     labelCol: {
@@ -259,6 +259,7 @@ const AddTriggerForm = ({
                       <Select
                         placeholder="Shared or Private"
                         style={styles.triggerTimeWindowSelect}
+                        onChange={updateTriggerSilenceWindowPermissionsChange}
                       >
                         <Select.Option key={0} value={false}>Private</Select.Option>
                         <Select.Option key={1} value={true}>Shared</Select.Option>
@@ -521,7 +522,7 @@ class AddTriggerModal extends Component {
       this.setState({triggers: false});
       this.setState({deleteButton: false});
       this.setState({currentTriggerShared: null});
-      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
+      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
       this.triggerDetails.currentBaseTriggerType = '';
     } else {
       this.triggerDetails.currentBaseTriggerUuid = null;
@@ -533,7 +534,7 @@ class AddTriggerModal extends Component {
       this.setState({cameraWideDisabled: false});
       this.setState({cameraWide: false});
       this.setState({currentTriggerShared: null});
-      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
+      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
       this.triggerDetails.currentBaseTriggerType = '';
     }
   };
@@ -548,7 +549,7 @@ class AddTriggerModal extends Component {
         this.triggerDetails.currentBaseTriggerType = 'RA';
         this.triggerDetails.currentTriggerShared = null;
         this.setState({currentTriggerShared: null});
-        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
+        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
         break;
 
       case 'LD':
@@ -561,7 +562,7 @@ class AddTriggerModal extends Component {
         this.setState({loiteringSeconds: 0});
         this.triggerDetails.currentTriggerShared = null;
         this.setState({currentTriggerShared: null});
-        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
+        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
         break;
 
       case 'VW':
@@ -572,7 +573,7 @@ class AddTriggerModal extends Component {
         this.setState({triggerType: 'VW'});
         this.triggerDetails.currentTriggerShared = null;
         this.setState({currentTriggerShared: null});
-        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
+        this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
         break;
 
     }
@@ -588,29 +589,17 @@ class AddTriggerModal extends Component {
           delete values.days_of_week;
           delete values.time_window_select;
           delete values.camera_wide;
+          delete values.sharedTriggerSilenceWindow;
           values.trigger_windows = [];
           this.props.triggerTimeWindows.forEach(function(trigger_window, index) {
             if (trigger_window.hasOwnProperty('start_at') && trigger_window.hasOwnProperty('end_at') && trigger_window.hasOwnProperty('days_of_week')) {
               if (!isEmpty(trigger_window.start_at) && !isEmpty(trigger_window.end_at) && !isEmpty(trigger_window.days_of_week)) {
-                if (isEmpty(values.sharedTriggerSilenceWindow)) {
-                  trigger_window.shared = false;
-                } else {
-                  trigger_window.shared = values.sharedTriggerSilenceWindow;
-                  delete values.sharedTriggerSilenceWindow;
-                }
                 values.trigger_windows.push(trigger_window);
               } else {
                 message.error("There can be no blank fields in a trigger silence window. Trigger added without silence window: "+(index + 1));
               }
             }
           });
-          if (this.state.cameraGroupOwner == false || typeof values.sharedTrigger == 'undefined') {
-            values.sharedTrigger = false;
-          } else if (values.sharedTrigger == 0) {
-            values.sharedTrigger = false;
-          } else if (values.sharedTrigger == 1) {
-            values.sharedTrigger = true;
-          }
           switch (this.state.triggerType) {
             case 'RA':
               this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], null, null, values.trigger_windows, values.sharedTrigger);
@@ -663,7 +652,7 @@ class AddTriggerModal extends Component {
       this.triggerDetails.currentBaseTriggerType = '';
       this.triggerDetails.currentTriggerShared = null;
       this.setState({currentTriggerShared: null});
-      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow']);
+      this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week', 'camera_wide']);
     }
   };
 
@@ -764,6 +753,13 @@ class AddTriggerModal extends Component {
     let timeWindowSelect = this.form.getFieldValue('time_window_select');
     if (typeof timeWindowSelect !== 'undefined') {
       this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, fieldValue, 'days_of_week');
+    }
+  }
+
+  handleUpdateTriggerSilenceWindowPermissionsChange = (fieldValue) => {
+    let timeWindowSelect = this.form.getFieldValue('time_window_select');
+    if (typeof timeWindowSelect !== 'undefined') {
+      this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, fieldValue, 'sharedTriggerSilenceWindow');
     }
   }
 
@@ -934,6 +930,7 @@ class AddTriggerModal extends Component {
           canvasKey={this.canvasKey}
           sharedTriggerSilenceWindowDisabled={this.state.sharedTriggerSilenceWindowDisabled}
           checkShared={this.handleCheckShared}
+          updateTriggerSilenceWindowPermissionsChange={this.handleUpdateTriggerSilenceWindowPermissionsChange}
         />
       </div>
     );

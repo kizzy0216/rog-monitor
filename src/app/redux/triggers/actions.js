@@ -135,7 +135,7 @@ function updateTriggerTimeWindowData(values) {
 
 export function addNewTriggerTimeWindow(values) {
   return (dispatch) => {
-    values.push({'start_at': null, 'end_at': null, 'days_of_week': []});
+    values.push({'start_at': null, 'end_at': null, 'days_of_week': [], 'camera_wide': false});
     dispatch(updateTriggerTimeWindowData(values));
   }
 }
@@ -171,11 +171,7 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
   return (dispatch) => {
     dispatch(createTriggerInProcess(true));
     dispatch(createTriggerError(false));
-
     for (var i = 0; i < timeWindows.length; i++) {
-      if (isEmpty(timeWindows[i].camera_wide)) {
-        timeWindows[i].camera_wide = false;
-      }
       if (isEmpty(timeWindows[i].days_of_week) || isEmpty(timeWindows[i].start_at) || isEmpty(timeWindows[i].end_at)) {
         dispatch(createTriggerError(true));
         console.log("One of the fields is null in an added trigger silence window");

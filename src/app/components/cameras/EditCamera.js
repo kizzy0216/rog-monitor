@@ -124,14 +124,6 @@ class EditCamera extends Component {
             <Form.Item label='Password' name="password" {...formItemLayout}>
               <Input style={styles.input} type='password' placeholder="********" />
             </Form.Item>
-            <Form.Item label="Vacation Mode" name="vacation_mode" {...formItemLayout}>
-              <Switch
-                checkedChildren={<CheckOutlined />}
-                unCheckedChildren={<CloseOutlined />}
-                onChange={this.handleToggleVacationMode}
-                checked={this.state.vacation_mode}
-              />
-            </Form.Item>
             <Form.Item label="Camera Time Zone" name="time_zone" {...formItemLayout}>
               <Select
                 style={styles.timeZone}
@@ -144,6 +136,14 @@ class EditCamera extends Component {
               >
                 {this.handleCreateSelectItems()}
               </Select>
+            </Form.Item>
+            <Form.Item label="Vacation Mode" name="vacation_mode" {...formItemLayout}>
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                onChange={this.handleToggleVacationMode}
+                checked={this.state.vacation_mode}
+              />
             </Form.Item>
           </Form>
         </Modal>

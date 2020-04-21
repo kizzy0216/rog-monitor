@@ -36,7 +36,7 @@ class ExpandAlertModal extends Component {
 
   formatDatetime = (timestamp, timezone) => {
     const dt = moment.tz(timestamp, timezone);
-    return `${dt.format('L')} ${dt.format('LT')}`;
+    return `${dt.format('L')} ${dt.format('LTS')}`;
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {}

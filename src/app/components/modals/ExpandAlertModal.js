@@ -16,12 +16,9 @@ const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cam
       <Row type='flex' justify='space-between'>
         <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{alertType}</Col>
         <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{cameraName} at {cameraGroupName}</Col>
-        <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp, timezone)}</Col>
+        <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp, timezone)} {timezone}</Col>
       </Row>
       <Row><img src={alertImg} style={styles.expandedImg} /></Row>
-      <Row>
-        <Col style={styles.alertTimeZone} xs={24}>Time Zone: {timezone}</Col>
-      </Row>
     </Modal>
   );
 };

@@ -19,6 +19,9 @@ const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cam
         <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp, timezone)}</Col>
       </Row>
       <Row><img src={alertImg} style={styles.expandedImg} /></Row>
+      <Row>
+        <Col style={styles.alertTimeZone} xs={24}>Time Zone: {timezone}</Col>
+      </Row>
     </Modal>
   );
 };
@@ -97,6 +100,10 @@ const styles = {
     paddingTop: 5
   },
   alertDateTime: {
+    fontSize: 14,
+    paddingTop: 5
+  },
+  alertTimeZone: {
     fontSize: 14,
     paddingTop: 5
   },

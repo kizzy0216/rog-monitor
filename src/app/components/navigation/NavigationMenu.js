@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Menu, Badge, notification } from 'antd';
+import { Menu, Badge, notification, Tooltip } from 'antd';
 import { VideoCameraOutlined, AlertOutlined, DatabaseOutlined, EllipsisOutlined, MailOutlined, UserOutlined, IdcardOutlined, TeamOutlined, RadiusUpleftOutlined, CloudServerOutlined, MobileOutlined, ClusterOutlined } from '@ant-design/icons';
 
 import { fetchAlerts, clearNewAlerts, markUserAlertsViewed } from '../../redux/alerts/actions';
@@ -48,50 +48,56 @@ class NavigationMenu extends Component {
         selectedKeys={[this.props.location.pathname]}
         defaultSelectedKeys={[this.props.location.pathname]}
         onClick={({key}) => this.goToPath(key)}>
-        <Menu.Item key='/cameras'>
-          <VideoCameraOutlined className='nav-icon' />
-        </Menu.Item>
-        <Menu.Item key='/alerts'>
-          <Badge count={!isEmpty(this.props.alerts) ? this.props.alerts[0].new_alerts: 0}>
-            <AlertOutlined className='nav-icon' />
-          </Badge>
-        </Menu.Item>
+        <Tooltip title="Cameras">
+          <Menu.Item key='/cameras'>
+            <VideoCameraOutlined className='nav-icon' />
+          </Menu.Item>
+        </Tooltip>
+        <Tooltip title="Alert Snapshots">
+          <Menu.Item key='/alerts'>
+            <Badge count={!isEmpty(this.props.alerts) ? this.props.alerts[0].new_alerts: 0}>
+              <AlertOutlined className='nav-icon' />
+            </Badge>
+          </Menu.Item>
+        </Tooltip>
         {this.props.user.user_privileges_id == 0 ?
-          <Menu.SubMenu title={<EllipsisOutlined className='nav-icon' />}>
-            <Menu.Item key='/system-configuration-admin'>
-              <DatabaseOutlined className='nav-icon' /> System Configuration
-            </Menu.Item>
-            <Menu.Item key='/live-view-admin'>
-              <ClusterOutlined className='nav-icon' /> Live View Status
-            </Menu.Item>
-            <Menu.Item key='/invitations-admin'>
-              <MailOutlined className='nav-icon' /> Invitations
-            </Menu.Item>
-            <Menu.Item key='/users-admin'>
-              <UserOutlined className='nav-icon' /> Users
-            </Menu.Item>
-            <Menu.Item key='/licenses-admin'>
-              <IdcardOutlined className='nav-icon' /> Licenses
-            </Menu.Item>
-            <Menu.Item key='/camera-groups-admin'>
-              <TeamOutlined className='nav-icon' /> Camera Groups
-            </Menu.Item>
-            <Menu.Item key='/cameras-admin'>
-              <VideoCameraOutlined className='nav-icon' /> Cameras
-            </Menu.Item>
-            <Menu.Item key='/triggers-admin'>
-              <RadiusUpleftOutlined className='nav-icon' /> Triggers
-            </Menu.Item>
-            <Menu.Item key='/recos-admin'>
-              <CloudServerOutlined className='nav-icon' /> Recos
-            </Menu.Item>
-            <Menu.Item key='/devices-admin'>
-              <MobileOutlined className='nav-icon' /> Devices
-            </Menu.Item>
-            <Menu.Item key='/alerts-admin'>
-              <AlertOutlined className='nav-icon' /> Alerts
-            </Menu.Item>
-          </Menu.SubMenu>
+          <Tooltip title="Admin Pannel">
+            <Menu.SubMenu title={<EllipsisOutlined className='nav-icon' />}>
+              <Menu.Item key='/system-configuration-admin'>
+                <DatabaseOutlined className='nav-icon' /> System Configuration
+              </Menu.Item>
+              <Menu.Item key='/live-view-admin'>
+                <ClusterOutlined className='nav-icon' /> Live View Status
+              </Menu.Item>
+              <Menu.Item key='/invitations-admin'>
+                <MailOutlined className='nav-icon' /> Invitations
+              </Menu.Item>
+              <Menu.Item key='/users-admin'>
+                <UserOutlined className='nav-icon' /> Users
+              </Menu.Item>
+              <Menu.Item key='/licenses-admin'>
+                <IdcardOutlined className='nav-icon' /> Licenses
+              </Menu.Item>
+              <Menu.Item key='/camera-groups-admin'>
+                <TeamOutlined className='nav-icon' /> Camera Groups
+              </Menu.Item>
+              <Menu.Item key='/cameras-admin'>
+                <VideoCameraOutlined className='nav-icon' /> Cameras
+              </Menu.Item>
+              <Menu.Item key='/triggers-admin'>
+                <RadiusUpleftOutlined className='nav-icon' /> Triggers
+              </Menu.Item>
+              <Menu.Item key='/recos-admin'>
+                <CloudServerOutlined className='nav-icon' /> Recos
+              </Menu.Item>
+              <Menu.Item key='/devices-admin'>
+                <MobileOutlined className='nav-icon' /> Devices
+              </Menu.Item>
+              <Menu.Item key='/alerts-admin'>
+                <AlertOutlined className='nav-icon' /> Alerts
+              </Menu.Item>
+            </Menu.SubMenu>
+          </Tooltip>
           :
           null
         }

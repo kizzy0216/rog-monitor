@@ -6,7 +6,7 @@ import {
   Redirect,
   Switch
 } from 'react-router-dom';
-import { Layout, Row, Col, Button } from 'antd';
+import { Layout, Row, Col, Button, Tooltip } from 'antd';
 import { CloseOutlined, SoundOutlined } from '@ant-design/icons';
 const { Header, Sider, Content } = Layout;
 
@@ -58,10 +58,12 @@ class AppRouter extends Component {
       <Router>
         <Layout>
           <Header style={styles.header}>
-            <Hamburger
-              style={{...styles.hamburger, ...styles.menu}}
-              collapsed={this.state.collapsed}
-              toggleCollapsed={this.toggleCollapsed.bind(this)} />
+            <Tooltip title="Menu">
+              <Hamburger
+                style={{...styles.hamburger, ...styles.menu}}
+                collapsed={this.state.collapsed}
+                toggleCollapsed={this.toggleCollapsed.bind(this)} />
+            </Tooltip>
             <NavigationMenu style={styles.menu} />
             <div style={styles.headerButton}>
               <Button type="ghost" shape="circle" size={"large"} style={styles.muteButton} onClick={this.toggleMute}>

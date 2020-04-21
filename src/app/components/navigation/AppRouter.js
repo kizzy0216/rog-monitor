@@ -58,12 +58,11 @@ class AppRouter extends Component {
       <Router>
         <Layout>
           <Header style={styles.header}>
-            <Tooltip title="Menu">
-              <Hamburger
-                style={{...styles.hamburger, ...styles.menu}}
-                collapsed={this.state.collapsed}
-                toggleCollapsed={this.toggleCollapsed.bind(this)} />
-            </Tooltip>
+            <Hamburger
+              style={{...styles.hamburger, ...styles.menu}}
+              collapsed={this.state.collapsed}
+              toggleCollapsed={this.toggleCollapsed.bind(this)}
+            />
             <NavigationMenu style={styles.menu} />
             <div style={styles.headerButton}>
               <Button type="ghost" shape="circle" size={"large"} style={styles.muteButton} onClick={this.toggleMute}>

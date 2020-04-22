@@ -11,6 +11,7 @@ const { Header, Sider, Content } = Layout;
 import Register from '../../screens/Register';
 import ResetPassword from '../../screens/ResetPassword';
 import Login from '../../screens/Login';
+import StagesLinkView from '../../screens/StagesLinkView';
 
 export default class LoginRouter extends Component {
   constructor(props) {
@@ -26,6 +27,7 @@ export default class LoginRouter extends Component {
               <Route exact path='/login' component={Login} />
               <Route exact path='/register/:token' component={Register} />
               <Route exact path='/forgot_password/:token' component={ResetPassword} />
+              <Route exact path='/stages_link_view/:image_url/:live_view_url' component={StagesLinkView} />
 
               <Redirect to='/login' />
             </Switch>

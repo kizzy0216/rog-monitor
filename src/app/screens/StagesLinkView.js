@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import VideoPlayer from 'react-video-js-player';
+import queryString from 'query-string';
 
 class StagesLinkView extends Component {
 
@@ -18,29 +19,38 @@ class StagesLinkView extends Component {
   }
 
   render() {
-    return (
-      <div style={styles.cameraCardImgContainer} key={this.key}>
-      <img src={this.props.match.params.image_url} style={styles.cameraCardImg} />
-        <VideoPlayer
-          controls={true}
-          hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
-          preload='auto'
-          bigPlayButton={true}
-          autoPlay={true}
-          height='300'
-          poster={this.props.match.params.image_url}
-          src={this.props.match.params.live_view_url}
-          className="cameraCardImg">
-        </VideoPlayer>
-      </div>
-    );
+    let search = queryString.parse(this.props.location.search);
+    let image_url = search.image_url;
+    let live_view_url = search.live_view_url;
+    if (typeof image_url !== 'undefined' && typeof live_view_url !== 'undefined') {
+      return (
+        <div style={styles.cameraCardImgContainer} key={this.key}>
+          <VideoPlayer
+            controls={true}
+            hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
+            preload='auto'
+            bigPlayButton={true}
+            autoPlay={true}
+            height='300'
+            poster={image_url}
+            src={live_view_url}
+            style={styles.cameraCardImg}
+          >
+          </VideoPlayer>
+          <img src={image_url} style={styles.cameraCardImg} />
+        </div>
+      );
+    } else {
+      this.props.history.push('/login');
+      return(<div></div>);
+    }
   }
 }
 
 const styles = {
   cameraCardImgContainer: {
     backgroundColor: 'white',
-    height: 300,
+    height: '100%',
     width: '100%',
     position: 'relative',
     margin: '0 auto',
@@ -53,6 +63,7 @@ const styles = {
     maxHeight: '100%',
     width: 'auto',
     height: 'auto',
+    float: 'right',
     top: 0,
     bottom: 0,
     left: 0,

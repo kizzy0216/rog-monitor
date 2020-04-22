@@ -25,6 +25,7 @@ class StagesLinkView extends Component {
     if (typeof image_url !== 'undefined' && typeof live_view_url !== 'undefined') {
       return (
         <div style={styles.cameraCardImgContainer} key={this.key}>
+          <img src={image_url} style={styles.cameraCardImg} />
           <VideoPlayer
             controls={true}
             hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
@@ -34,10 +35,9 @@ class StagesLinkView extends Component {
             height='300'
             poster={image_url}
             src={live_view_url}
-            style={styles.cameraCardImg}
+            className="cameraCardVideo"
           >
           </VideoPlayer>
-          <img src={image_url} style={styles.cameraCardImg} />
         </div>
       );
     } else {
@@ -50,7 +50,7 @@ class StagesLinkView extends Component {
 const styles = {
   cameraCardImgContainer: {
     backgroundColor: 'white',
-    height: '100%',
+    height: 300,
     width: '100%',
     position: 'relative',
     margin: '0 auto',
@@ -58,17 +58,10 @@ const styles = {
     paddingRight: 0
   },
   cameraCardImg: {
-    position: 'absolute',
-    maxWidth: '100%',
     maxHeight: '100%',
-    width: 'auto',
-    height: 'auto',
     float: 'right',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    margin: 'auto'
+    marginRight: '10%',
+    marginLeft: '10%'
   }
 }
 

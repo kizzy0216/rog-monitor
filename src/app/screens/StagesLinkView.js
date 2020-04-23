@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import VideoPlayer from 'react-video-js-player';
 import queryString from 'query-string';
+import {Row, Col} from 'antd';
 
 class StagesLinkView extends Component {
 
@@ -24,21 +25,25 @@ class StagesLinkView extends Component {
     let live_view_url = search.live_view_url;
     if (typeof image_url !== 'undefined' && typeof live_view_url !== 'undefined') {
       return (
-        <div style={styles.cameraCardImgContainer} key={this.key}>
-          <img src={image_url} style={styles.cameraCardImg} />
-          <VideoPlayer
-            controls={true}
-            hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
-            preload='auto'
-            bigPlayButton={true}
-            autoPlay={true}
-            height='300'
-            poster={image_url}
-            src={live_view_url}
-            className="cameraCardVideo"
-          >
-          </VideoPlayer>
-        </div>
+        <Row style={styles.cameraCardImgContainer} key={this.key}>
+          <Col xs={24} sm={24} md={24} lg={12}>
+            <img src={image_url} style={styles.cameraCardImg} />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12}>
+            <VideoPlayer
+              controls={true}
+              hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
+              preload='auto'
+              bigPlayButton={true}
+              autoPlay={true}
+              height='275'
+              poster={image_url}
+              src={live_view_url}
+              className="cameraCardVideo"
+            >
+            </VideoPlayer>
+          </Col>
+        </Row>
       );
     } else {
       this.props.history.push('/login');
@@ -50,7 +55,7 @@ class StagesLinkView extends Component {
 const styles = {
   cameraCardImgContainer: {
     backgroundColor: 'white',
-    height: 300,
+    height: 275,
     width: '100%',
     position: 'relative',
     margin: '0 auto',
@@ -58,10 +63,9 @@ const styles = {
     paddingRight: 0
   },
   cameraCardImg: {
-    maxHeight: '100%',
+    maxHeight: 275,
     float: 'right',
-    marginRight: '5%',
-    marginLeft: '5%'
+    paddingRight: 5
   }
 }
 

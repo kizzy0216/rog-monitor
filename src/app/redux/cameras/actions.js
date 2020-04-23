@@ -609,7 +609,7 @@ export function updateCameraAdmin(user, values) {
     delete data.thumbnail_url;
     delete data.magic_camera_box;
     delete data.tags;
-    data.vacation_mode = values.vacation_mode == "true" ? 1 : 0;
+    data.away_mode = values.away_mode == "true" ? 1 : 0;
     data.enabled = values.enabled == "true" ? 1 : 0;
 
     axios.patch(url, data, config)

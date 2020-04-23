@@ -51,7 +51,7 @@ class CameraGroupsAdmin extends React.Component {
           key: this.props.cameraGroups[i]['uuid'],
           uuid: this.props.cameraGroups[i]['uuid'],
           name: this.props.cameraGroups[i]['name'],
-          vacation_mode: this.props.cameraGroups[i]['vacation_mode'].toString()
+          away_mode: this.props.cameraGroups[i]['away_mode'].toString()
         }
       }
       return(
@@ -182,8 +182,8 @@ class EditableTable extends React.Component {
         editable: true
       },
       {
-        title: 'Vacation Mode',
-        dataIndex: 'vacation_mode',
+        title: 'Away Mode',
+        dataIndex: 'away_mode',
         width: 300,
         editable: true
       },

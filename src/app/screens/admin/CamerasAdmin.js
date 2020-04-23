@@ -162,7 +162,7 @@ class CamerasAdmin extends React.Component {
           zip: this.props.cameras[i]['zip'],
           longitude: this.props.cameras[i]['longitude'],
           latitude: this.props.cameras[i]['latitude'],
-          vacation_mode: this.props.cameras[i]['vacation_mode'].toString(),
+          away_mode: this.props.cameras[i]['away_mode'].toString(),
           enabled: this.props.cameras[i]['enabled'].toString(),
           magic_camera_box: this.props.cameras[i]['magic_camera_box'].toString()
         }
@@ -411,8 +411,8 @@ class EditableTable extends React.Component {
         editable: true
       },
       {
-        title: 'Vacation Mode',
-        dataIndex: 'vacation_mode',
+        title: 'Away Mode',
+        dataIndex: 'away_mode',
         width: 300,
         editable: true
       },

@@ -194,32 +194,36 @@ const AddTriggerForm = ({
             </div>
           }
         </Form.Item>
-        <Form.Item>
-          <Popover
-            title='Select Trigger Type to Add'
-            content={
-              <div style={styles.triggerType}>
-                <Button type="secondary" onClick={() => showTrigger('RA')}>Restricted Area</Button>
-                <br/>
-                <Button type="secondary" onClick={() => showTrigger('VW')}>Virtual Wall</Button>
-                <br/>
-                <Button type="secondary" onClick={() => showTrigger('LD')}>Loitering</Button>
-                <br/>
-              </div>
-            }
-            trigger="click"
-            visible={visibility}
-            onVisibleChange={handleVisibility}
-          >
-            {!saveCancel &&
-              <div type="secondary">
-                <CustomInput trigger={true} visibility={visibility} handleSaveCancel={handleSaveCancel} fetchTriggerInProcess={fetchTriggerInProcess}/>
-              </div>
-            }
-          </Popover>
-        </Form.Item>
-        <Form.Item>
-          {saveCancel &&
+        {!deleteButton ?
+          <Form.Item>
+            <Popover
+              title='Select Trigger Type to Add'
+              content={
+                <div style={styles.triggerType}>
+                  <Button type="secondary" onClick={() => showTrigger('RA')}>Restricted Area</Button>
+                  <br/>
+                  <Button type="secondary" onClick={() => showTrigger('VW')}>Virtual Wall</Button>
+                  <br/>
+                  <Button type="secondary" onClick={() => showTrigger('LD')}>Loitering</Button>
+                  <br/>
+                </div>
+              }
+              trigger="click"
+              visible={visibility}
+              onVisibleChange={handleVisibility}
+            >
+              {!saveCancel &&
+                <div type="secondary">
+                  <CustomInput trigger={true} visibility={visibility} handleSaveCancel={handleSaveCancel} fetchTriggerInProcess={fetchTriggerInProcess}/>
+                </div>
+              }
+            </Popover>
+          </Form.Item>
+        :
+          <Button key='secondary' onClick={() => handleSaveCancel('cancel')} style={styles.cancelBtn} size='small'>Cancel</Button>
+        }
+        {saveCancel &&
+          <Form.Item style={{marginTop: -50}}>
             <div>
               <div>
                 <div style={styles.borderBox}>
@@ -335,8 +339,8 @@ const AddTriggerForm = ({
                 Cancel
               </Button>
             </div>
-          }
-        </Form.Item>
+          </Form.Item>
+        }
       </Form>
     </Modal>
   );

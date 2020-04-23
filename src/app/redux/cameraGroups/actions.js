@@ -426,13 +426,13 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
 
     let data = {
       name: cameraGroupData.name,
-      vacation_mode: 0 //for now hard code this until we build the UI for this edit option
+      away_mode: 0 //for now hard code this until we build the UI for this edit option
     };
 
     axios.patch(url, data, config)
       .then((response) => {
         cameraGroup.name = cameraGroupData.name;
-        cameraGroup.vacation_mode = cameraGroupData.vacation_mode;
+        cameraGroup.away_mode = cameraGroupData.away_mode;
         dispatch(fetchCameraGroups(user));
         dispatch(selectCameraGroup(user, cameraGroup));
         dispatch(editCameraGroupSuccess(true));
@@ -536,13 +536,13 @@ export function updateCameraGroup(user, values) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/camera-groups/${values.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-    let vacation_mode = 0;
-    if (values.vacation_mode == "true" || values.vacation_mode == true) {
-      vacation_mode = 1;
+    let away_mode = 0;
+    if (values.away_mode == "true" || values.away_mode == true) {
+      away_mode = 1;
     }
     let data = {
       name: values.name,
-      vacation_mode: vacation_mode
+      away_mode: away_mode
     };
 
     axios.patch(url, data, config)

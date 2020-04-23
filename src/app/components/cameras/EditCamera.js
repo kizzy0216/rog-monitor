@@ -25,7 +25,7 @@ class EditCamera extends Component {
       flag: false,
       time_zone: this.props.data.time_zone,
       fullRtspUrl: null,
-      vacation_mode: this.props.data.vacation_mode
+      away_mode: this.props.data.away_mode
     }
   }
 
@@ -67,8 +67,8 @@ class EditCamera extends Component {
     this.setState({time_zone: fieldValue});
   }
 
-  handleToggleVacationMode = (fieldValue) => {
-    this.setState({vacation_mode: fieldValue});
+  handleToggleAwayMode = (fieldValue) => {
+    this.setState({away_mode: fieldValue});
   }
 
   UNSAFE_componentWillReceiveProps(nextProps){
@@ -105,7 +105,7 @@ class EditCamera extends Component {
               camera_sku: this.props.data.uuid.slice(-8),
               camera_url: this.props.data.camera_url,
               username: this.props.data.username,
-              vacation_mode: this.props.data.vacation_mode,
+              away_mode: this.props.data.away_mode,
               time_zone: this.props.data.time_zone
             }}
           >
@@ -137,12 +137,12 @@ class EditCamera extends Component {
                 {this.handleCreateSelectItems()}
               </Select>
             </Form.Item>
-            <Form.Item label="Vacation Mode" name="vacation_mode" {...formItemLayout}>
+            <Form.Item label="Away Mode" name="away_mode" {...formItemLayout}>
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
-                onChange={this.handleToggleVacationMode}
-                checked={this.state.vacation_mode}
+                onChange={this.handleToggleAwayMode}
+                checked={this.state.away_mode}
               />
             </Form.Item>
           </Form>

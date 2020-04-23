@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import VideoPlayer from 'react-video-js-player';
 import queryString from 'query-string';
-import {Row, Col} from 'antd';
+import {Layout, Row, Col} from 'antd';
+const { Header } = Layout;
+
+import logoFull from '../../assets/img/logo-full.png';
 
 class StagesLinkView extends Component {
 
@@ -25,25 +28,32 @@ class StagesLinkView extends Component {
     let live_view_url = search.live_view_url;
     if (typeof image_url !== 'undefined' && typeof live_view_url !== 'undefined') {
       return (
-        <Row style={styles.cameraCardImgContainer} key={this.key}>
-          <Col xs={24} sm={24} md={24} lg={12}>
-            <img src={image_url} style={styles.cameraCardImg} />
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={12}>
-            <VideoPlayer
-              controls={true}
-              hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
-              preload='auto'
-              bigPlayButton={true}
-              autoPlay={true}
-              height='275'
-              poster={image_url}
-              src={live_view_url}
-              className="cameraCardVideo"
-            >
-            </VideoPlayer>
-          </Col>
-        </Row>
+        <div>
+          <Row>
+            <Header style={styles.header}>
+              <img style={styles.headerLogo} src={logoFull} height='50px'/>
+            </Header>
+          </Row>
+          <Row style={styles.cameraCardImgContainer} key={this.key}>
+            <Col xs={24} sm={24} md={24} lg={12}>
+              <img src={image_url} style={styles.cameraCardImg} />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12}>
+              <VideoPlayer
+                controls={true}
+                hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
+                preload='auto'
+                bigPlayButton={true}
+                autoPlay={true}
+                height='275'
+                poster={image_url}
+                src={live_view_url}
+                className="cameraCardVideo"
+              >
+              </VideoPlayer>
+            </Col>
+          </Row>
+        </div>
       );
     } else {
       this.props.history.push('/login');
@@ -53,7 +63,20 @@ class StagesLinkView extends Component {
 }
 
 const styles = {
+  header: {
+    position: 'fixed',
+    width: '100%',
+    height: '65px',
+    color: 'white',
+    backgroundColor: 'black',
+    zIndex: 1 // Required for Content to scroll under Header
+  },
+  headerLogo: {
+    float: 'right',
+    marginTop: 8
+  },
   cameraCardImgContainer: {
+    top: 65,
     backgroundColor: 'white',
     height: 275,
     width: '100%',

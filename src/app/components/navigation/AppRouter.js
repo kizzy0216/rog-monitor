@@ -29,6 +29,7 @@ import DevicesAdmin from '../../screens/admin/DevicesAdmin';
 import LicensesAdmin from '../../screens/admin/LicensesAdmin';
 import SystemConfigurationAdmin from '../../screens/admin/SystemConfigurationAdmin';
 import LiveViewAdmin from '../../screens/admin/LiveViewAdmin';
+import StagesLinkView from '../../screens/StagesLinkView';
 
 import { muteSound } from '../../redux/users/actions';
 
@@ -93,6 +94,7 @@ class AppRouter extends Component {
                   <Route path='/licenses-admin' component={LicensesAdmin} />
                   <Route path='/system-configuration-admin' component={SystemConfigurationAdmin} />
                   <Route path='/live-view-admin' component={LiveViewAdmin} />
+                  <Route exact path='/stages_link_view' component={StagesLinkView} />
                   <Redirect to='/cameras' />
                 </Switch>
                 :
@@ -101,6 +103,7 @@ class AppRouter extends Component {
                   <Route path='/cameras/:uuid' component={CameraDetails} />
                   <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
                   <Route path='/alerts' component={Alerts} />
+                  <Route exact path='/stages_link_view' component={StagesLinkView} />
                   <Redirect to='/cameras' />
                 </Switch>
               }

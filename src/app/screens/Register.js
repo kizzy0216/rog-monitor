@@ -114,17 +114,15 @@ class Register extends Component {
         <Layout>
           <Content style={styles.content}>
             <Row type='flex' justify='center' align='middle'>
-              <Col xs={{span: 24}} sm={{span: 12}} style={styles.leftContainer}>
+              <Col xs={{span: 24}} style={styles.leftContainer}>
                 <Row type='flex' justify='center' align='top'>
-                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}} style={styles.registerFormHeadText}>
-                    <h1>Sign Up</h1>
-                    {/* <p style={styles.signInLinkCaption}>Already have an account?&nbsp;<SignInLink /></p> */}
-                    <p style={{color: 'red'}}>{this.props.registerError}</p>
+                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}} style={styles.rightHeadTitle}>
+                    <h2 style={styles.headTitleText}>Welcome to ROG</h2>
                   </Col>
                 </Row>
                 <Row type='flex' justify='center' align='middle'>
                   <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}}>
-                    <Form onFinish={this.handleSubmit} ref={this.formRef} className='register-form'>
+                    <Form onFinish={this.handleSubmit} ref={this.formRef} className='register-form' style={styles.registerForm}>
                       <Form.Item label='Email Address' name="email" hasFeedback {...layout}>
                         <Input onBlur={this.validateStatus} readOnly disabled />
                       </Form.Item>
@@ -154,38 +152,16 @@ class Register extends Component {
                       >
                         <Input.Password onBlur={this.handleConfirmBlur} />
                       </Form.Item>
-                      <Form.Item name="termsOfUse" valuePropName="checked" rules={[{validator: this.checkAgreement}]} {...tailLayout}>
+                      <Form.Item name="termsOfUse" valuePropName="checked" rules={[{validator: this.checkAgreement}]} style={styles.checkBox} {...layout}>
                         <Checkbox>By clicking Sign Up, you acknowledge you have read and agree to the <a href='https://www.gorog.co/terms-of-use' target='_blank'>Terms of Use</a>.</Checkbox>
                       </Form.Item>
-                      <Form.Item {...tailLayout}>
+                      <Form.Item style={{justifyContent: 'center'}} {...layout}>
                         <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.registerInProcess}>
                           {this.props.registerInProcess ? <LoadingOutlined style={styles.font13} /> : <LockOutlined style={styles.font13} />}
                           &nbsp;Sign Up
                         </Button>
                       </Form.Item>
                     </Form>
-                  </Col>
-                </Row>
-              </Col>
-              <Col xs={{span: 0}} sm={{span: 12}} style={styles.rightContainer}>
-                <Row type='flex' justify='center' align='top'>
-                  <Col sm={{span: 18}} style={styles.rightHeadTitle}>
-                    <h2>Welcome to ROG</h2>
-                  </Col>
-                </Row>
-                <Row type='flex' justify='center' align='top'>
-                  <Col sm={{span: 18}} style={styles.rightHeadCaption}>
-                    <h3>Where guards are alerted to potential threats.</h3>
-                  </Col>
-                </Row>
-                <Row type='flex' justify='center' align='middle'>
-                  <Col sm={{span: 18}}>
-                    {/* IMAGES GO HERE */}
-                  </Col>
-                </Row>
-                <Row type='flex' justify='center' align='middle'>
-                  <Col sm={{span: 18}} style={styles.promotionText}>
-                    <h3>Just for you: Setup your first camera on us for the first 30 days.</h3>
                   </Col>
                 </Row>
               </Col>
@@ -215,7 +191,8 @@ const styles = {
     zIndex: 0, // Required for Content to scroll under Header
   },
   leftContainer: {
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    height: 'calc(100vh - 65px)'
   },
   signUpBtn: {
     backgroundColor: 'green'
@@ -234,7 +211,15 @@ const styles = {
     textAlign: 'center'
   },
   rightHeadTitle: {
-    fontSize: 16
+    fontSize: 16,
+    textAlign: 'center',
+    float: 'left'
+  },
+  headTitleText: {
+    width: 300,
+    margin: '0 auto',
+    paddingTop: 20,
+    paddingBottom: 20
   },
   rightHeadCaption: {
     fontSize: 16
@@ -245,6 +230,13 @@ const styles = {
   },
   termsOfServiceText: {
     marginBottom: 20
+  },
+  registerForm: {
+    textAlign: 'center',
+    float: 'left'
+  },
+  checkBox: {
+    justifyContent: 'center'
   }
 }
 

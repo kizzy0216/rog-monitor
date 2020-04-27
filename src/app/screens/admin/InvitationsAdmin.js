@@ -26,6 +26,7 @@ const InvitationsForm = ({handleSubmit, form}) => {
           style={{ width: 150 }}
         >
           <Select.Option value="share_group">Share Group</Select.Option>
+          <Select.Option value="share_group_register">Share Group Register</Select.Option>
           <Select.Option value="forgot_password">Forgot Password</Select.Option>
           <Select.Option value="register">Register</Select.Option>
         </Select>

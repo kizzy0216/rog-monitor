@@ -59,7 +59,7 @@ class AddCameraGroupModal extends Component {
     } else if (this.state.addCameraModalVisible === true) {
       this.setState({visible: false});
     } else {
-      message.error("You have reached your license limit. Please send an email requesting additional licenses to help@gorog.co");
+      message.error("You have reached your license limit. Please send an email requesting additional licenses to hello@gorog.co");
     }
   }
 

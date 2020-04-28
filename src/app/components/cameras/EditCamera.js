@@ -39,7 +39,7 @@ class EditCamera extends Component {
   handleCreate = (e) => {
     const form = this.form;
     form.validateFields().then(values => {
-      values.camera_group_uuid = this.props.data.cameraGroup.uuid;
+      values.camera_groups_uuid = this.props.data.cameraGroup.uuid;
       delete values.camera_url;
       this.props.editCamera(this.props.user, this.props.data.uuid, values);
       this.setState({visible: false});

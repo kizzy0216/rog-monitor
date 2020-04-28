@@ -47,8 +47,7 @@ class CustomInput extends Component {
               <Spin tip="Fetching Triggers..." />
             </div>
             }
-            {
-             !this.props.visibility &&
+            {!this.props.visibility && this.props.triggerImg !== null &&
               <Button key='add_trigger' type='primary' size='large'>
                 Add Trigger
               </Button>

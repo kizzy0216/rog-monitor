@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Modal, Form, Spin, Button, Popover, message, Slider, Row, Col, TimePicker, Select, Checkbox} from 'antd';
+import {Modal, Form, Spin, Button, Popover, message, Slider, Row, Col, TimePicker, Select, Checkbox, Alert} from 'antd';
 import { EyeOutlined, SaveOutlined, CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import CustomCanvas from '../../components/formitems/CustomCanvas';
 import CustomInput from "../formitems/CustomInput";
@@ -9,9 +9,10 @@ import {connect} from 'react-redux';
 import {isEmpty} from '../../redux/helperFunctions';
 import moment from 'moment';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
+import noImage from '../../../assets/img/no-image.jpg';
 
 const AddTriggerForm = ({
-  onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow, cameraWideDisabled, cameraWide, toggleCameraWide, canvasKey, sharedTriggerSilenceWindowDisabled, checkShared, updateTriggerSilenceWindowPermissionsChange, selectedTriggerSharedDisabled
+  onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow, cameraWideDisabled, cameraWide, toggleCameraWide, canvasKey, sharedTriggerSilenceWindowDisabled, checkShared, updateTriggerSilenceWindowPermissionsChange, selectedTriggerSharedDisabled, imgLoadFail
 }) => {
   const formItemLayout = {
     labelCol: {
@@ -31,9 +32,14 @@ const AddTriggerForm = ({
     >
       <Form ref={form}>
         <Form.Item style={styles.triggersHideShow} key={canvasKey}>
-          {triggerImg === null ?
-            <img src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />:
-            <img src={triggerImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
+          {triggerImg === null &&
+            <img src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
+          }
+          {triggerImg && triggerImg === noImage &&
+            <img src={noImage} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
+          }
+          {triggerImg && triggerImg !== noImage &&
+            <img src={triggerImg} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} onError={imgLoadFail} />
           }
           {canvasMode && imageDimensions &&
             <CustomCanvas
@@ -196,28 +202,32 @@ const AddTriggerForm = ({
         </Form.Item>
         {!deleteButton ?
           <Form.Item>
-            <Popover
-              title='Select Trigger Type to Add'
-              content={
-                <div style={styles.triggerType}>
-                  <Button type="secondary" onClick={() => showTrigger('RA')}>Restricted Area</Button>
-                  <br/>
-                  <Button type="secondary" onClick={() => showTrigger('VW')}>Virtual Wall</Button>
-                  <br/>
-                  <Button type="secondary" onClick={() => showTrigger('LD')}>Loitering</Button>
-                  <br/>
-                </div>
-              }
-              trigger="click"
-              visible={visibility}
-              onVisibleChange={handleVisibility}
-            >
-              {!saveCancel &&
-                <div type="secondary">
-                  <CustomInput trigger={true} visibility={visibility} handleSaveCancel={handleSaveCancel} fetchTriggerInProcess={fetchTriggerInProcess}/>
-                </div>
-              }
-            </Popover>
+            {triggerImg !== null && triggerImg !== noImage ?
+              <Popover
+                title='Select Trigger Type to Add'
+                content={
+                  <div style={styles.triggerType}>
+                    <Button type="secondary" onClick={() => showTrigger('RA')}>Restricted Area</Button>
+                    <br/>
+                    <Button type="secondary" onClick={() => showTrigger('VW')}>Virtual Wall</Button>
+                    <br/>
+                    <Button type="secondary" onClick={() => showTrigger('LD')}>Loitering</Button>
+                    <br/>
+                  </div>
+                }
+                trigger="click"
+                visible={visibility}
+                onVisibleChange={handleVisibility}
+              >
+                {!saveCancel &&
+                  <div type="secondary">
+                    <CustomInput trigger={true} visibility={visibility} handleSaveCancel={handleSaveCancel} fetchTriggerInProcess={fetchTriggerInProcess} />
+                  </div>
+                }
+              </Popover>
+            :
+              <Alert message="Cannot Load Preview Image" type="error" />
+            }
           </Form.Item>
         :
           <Button key='secondary' onClick={() => handleSaveCancel('cancel')} style={styles.cancelBtn} size='small'>Cancel</Button>
@@ -494,6 +504,10 @@ class AddTriggerModal extends Component {
         width: img.offsetWidth
       }
     });
+  }
+
+  handleImgLoadFail = () => {
+    this.setState({image: noImage});
   }
 
   showModal = () => {
@@ -958,6 +972,7 @@ class AddTriggerModal extends Component {
           sharedTriggerSilenceWindowDisabled={this.state.sharedTriggerSilenceWindowDisabled}
           checkShared={this.handleCheckShared}
           updateTriggerSilenceWindowPermissionsChange={this.handleUpdateTriggerSilenceWindowPermissionsChange}
+          imgLoadFail={this.handleImgLoadFail}
         />
       </div>
     );

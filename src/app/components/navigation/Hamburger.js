@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Badge } from 'antd';
+import { Badge, Tooltip } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
 const Hamburger = (props) => (
@@ -8,9 +8,13 @@ const Hamburger = (props) => (
     <li className='ant-menu-item-active ant-menu-item'>
       <Badge count={props.cameraGroupInvites.length} dot={true}>
         {props.collapsed ?
-          <MenuUnfoldOutlined className='nav-icon' onClick={props.toggleCollapsed} />
+          <Tooltip title="Menu">
+            <MenuUnfoldOutlined className='nav-icon' onClick={props.toggleCollapsed} />
+          </Tooltip>
           :
-          <MenuFoldOutlined className='nav-icon' onClick={props.toggleCollapsed} />
+          <Tooltip title="Menu">
+            <MenuFoldOutlined className='nav-icon' onClick={props.toggleCollapsed} />
+          </Tooltip>
         }
       </Badge>
     </li>

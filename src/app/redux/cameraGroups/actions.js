@@ -253,10 +253,11 @@ export function addNewCameraGroup(user, cameraGroup) {
 
     axios.post(url, data, config)
       .then((response) => {
+        sessionStorage.setItem('selectedCameraGroupUuid', response.data.camera_groups_uuid);
         dispatch(fetchCameraGroups(user));
         dispatch(addCameraGroupSuccess(true));
-        response.data.uuid = response.data.camera_group_uuid;
-        delete response.data.camera_group_uuid;
+        response.data.uuid = response.data.camera_groups_uuid;
+        delete response.data.camera_groups_uuid;
         dispatch(selectCameraGroup(user, response.data));
       })
       .catch((error) => {
@@ -463,7 +464,7 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
   }
 }
 
-export function createCameraGroup(user) {
+export function createCameraGroupAdmin(user) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.user_uuid}/camera-groups`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};

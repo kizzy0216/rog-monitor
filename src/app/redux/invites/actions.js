@@ -227,13 +227,13 @@ export function deleteInvitation(invitation_uuid) {
   }
 }
 
-export function fetchSentCameraGroupInvites(user, camera_group_uuid) {
+export function fetchSentCameraGroupInvites(user, camera_groups_uuid) {
   return (dispatch) => {
     dispatch(fetchSentCameraGroupInvitesSuccess(''));
     dispatch(fetchReceivedInProcess(true));
     dispatch(fetchReceivedError(''));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group&action=${camera_group_uuid}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/invitations?type=share_group&action=${camera_groups_uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     axios.get(url, config)

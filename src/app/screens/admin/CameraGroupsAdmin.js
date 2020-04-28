@@ -212,7 +212,7 @@ class EditableTable extends React.Component {
   };
 
   handleAdd = () => {
-    this.props.actions.createCameraGroup(this.props.userData);
+    this.props.actions.createCameraGroupAdmin(this.props.userData);
   };
 
   handleSave = row => {

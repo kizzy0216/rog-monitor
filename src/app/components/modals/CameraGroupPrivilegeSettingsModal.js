@@ -179,7 +179,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     removeUserCameraGroupPrivilege: (user, cameraGroupUuid, cameraGroupPrivilegeUuid, cameraGroupPrivilege) => dispatch(removeUserCameraGroupPrivilege(user, cameraGroupUuid, cameraGroupPrivilegeUuid, cameraGroupPrivilege)),
     rescindInvite: (user, invite) => dispatch(rescindInvite(user, invite)),
-    fetchSentCameraGroupInvites: (user, camera_group_uuid) => dispatch(fetchSentCameraGroupInvites(user, camera_group_uuid))
+    fetchSentCameraGroupInvites: (user, camera_groups_uuid) => dispatch(fetchSentCameraGroupInvites(user, camera_groups_uuid))
   }
 }
 

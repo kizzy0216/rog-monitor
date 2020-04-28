@@ -344,8 +344,8 @@ export function checkCameraConnection(user, cameraUuid) {
 
 export function editCamera(user, cameraUuid, cameraData) {
   return (dispatch) => {
-    let cameraGroup = {uuid: cameraData.camera_group_uuid};
-    delete cameraData.camera_group_uuid;
+    let cameraGroup = {uuid: cameraData.camera_groups_uuid};
+    delete cameraData.camera_groups_uuid;
     delete cameraData.camera_sku;
     if (typeof cameraData.password == 'undefined') {
       delete cameraData.password;

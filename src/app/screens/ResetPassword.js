@@ -104,17 +104,15 @@ class ResetPassword extends Component {
         <Layout>
           <Content style={styles.content}>
             <Row type='flex' justify='center' align='middle'>
-              <Col xs={{span: 24}} sm={{span: 12}} style={styles.leftContainer}>
+              <Col xs={{span: 24}} style={styles.leftContainer}>
                 <Row type='flex' justify='center' align='top'>
-                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}} style={styles.resetPasswordFormHeadText}>
-                    <h1>Reset Your Password</h1>
-                    {/* <p style={styles.signInLinkCaption}>Already have an account?&nbsp;<SignInLink /></p> */}
-                    <p style={{color: 'red'}}>{this.props.resetPasswordError}</p>
+                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}} style={styles.rightHeadTitle}>
+                    <h2 style={styles.headTitleText}>Welcome to ROG</h2>
                   </Col>
                 </Row>
                 <Row type='flex' justify='center' align='middle'>
-                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 16}} lg={{span: 12}}>
-                    <Form onFinish={this.handleSubmit} ref={this.formRef} className='resetPassword-form'>
+                  <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}}>
+                    <Form onFinish={this.handleSubmit} ref={this.formRef} style={styles.forgotPasswordForm} className='resetPassword-form'>
                       <FormItem label='New Password' name="password"
                         rules={[
                           {required: true, message: 'Please choose a password'},
@@ -135,35 +133,13 @@ class ResetPassword extends Component {
                       >
                         <Input.Password onBlur={this.handleConfirmBlur} />
                       </FormItem>
-                      <FormItem {...tailLayout}>
+                      <FormItem style={{justifyContent: 'center'}} {...layout}>
                         <Button style={styles.signUpBtn} type='primary' htmlType='submit' disabled={this.props.resetPasswordInProcess}>
                           {this.props.resetPasswordInProcess ? <LoadingOutlined style={styles.font13} /> : <LockOutlined style={styles.font13} />}
                           &nbsp;Reset Password
                         </Button>
                       </FormItem>
                     </Form>
-                  </Col>
-                </Row>
-              </Col>
-              <Col xs={{span: 0}} sm={{span: 12}} style={styles.rightContainer}>
-                <Row type='flex' justify='center' align='top'>
-                  <Col sm={{span: 18}} style={styles.rightHeadTitle}>
-                    <h2>Welcome to ROG</h2>
-                  </Col>
-                </Row>
-                <Row type='flex' justify='center' align='top'>
-                  <Col sm={{span: 18}} style={styles.rightHeadCaption}>
-                    <h3>Where guards are alerted to potential threats.</h3>
-                  </Col>
-                </Row>
-                <Row type='flex' justify='center' align='middle'>
-                  <Col sm={{span: 18}}>
-                    {/* IMAGES GO HERE */}
-                  </Col>
-                </Row>
-                <Row type='flex' justify='center' align='middle'>
-                  <Col sm={{span: 18}} style={styles.promotionText}>
-                    <h3>Just for you: Setup your first camera on us for the first 30 days.</h3>
                   </Col>
                 </Row>
               </Col>
@@ -193,19 +169,19 @@ const styles = {
     zIndex: 0, // Required for Content to scroll under Header
   },
   leftContainer: {
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    height: 'calc(100vh - 65px)'
   },
   signUpBtn: {
     backgroundColor: 'green'
   },
-  resetPasswordFormHeadText: {
+  registerFormHeadText: {
     marginTop: 30,
     marginBottom: 10
   },
-  phoneCaption: {
-    fontSize: 10,
-    marginTop: -10
-  },
+  // phoneCaption: {
+  //   marginTop: -20,
+  // },
   signInLinkCaption: {
     fontSize: 16
   },
@@ -213,7 +189,15 @@ const styles = {
     textAlign: 'center'
   },
   rightHeadTitle: {
-    fontSize: 16
+    fontSize: 16,
+    textAlign: 'center',
+    float: 'left'
+  },
+  headTitleText: {
+    width: 300,
+    margin: '0 auto',
+    paddingTop: 20,
+    paddingBottom: 20
   },
   rightHeadCaption: {
     fontSize: 16
@@ -224,6 +208,11 @@ const styles = {
   },
   termsOfServiceText: {
     marginBottom: 20
+  },
+  forgotPasswordForm: {
+    textAlign: 'center',
+    maxWidth: 500,
+    margin: '0 auto'
   }
 }
 

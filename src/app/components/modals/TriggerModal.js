@@ -1,4 +1,4 @@
-Silence Window Permissionsimport React, {Component} from 'react';
+import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {Modal, Form, Spin, Button, Popover, message, Slider, Row, Col, TimePicker, Select, Checkbox} from 'antd';
 import { EyeOutlined, SaveOutlined, CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
@@ -259,7 +259,7 @@ const AddTriggerForm = ({
                   </div>
                   </Form.Item>
                   {cameraGroupOwner && selectedTriggerShared &&
-                    <Form.Item label="Trigger Silence Window Permissions" name="sharedTriggerSilenceWindow" {...formItemLayout}>
+                    <Form.Item label="Silence Window Permissions" name="sharedTriggerSilenceWindow" {...formItemLayout}>
                       <Select
                         placeholder="Shared or Private"
                         style={styles.triggerTimeWindowSelect}

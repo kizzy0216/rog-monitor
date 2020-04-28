@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import loading from '../../../assets/img/TempCameraImage.jpeg'
+import noImage from '../../../assets/img/no-image.jpg'
 import connectError from '../../../assets/img/connectError.gif'
 
 class CameraCardImg extends Component {
@@ -51,10 +52,14 @@ class CameraCardImg extends Component {
     );
   }
 
+  handleError = () => {
+    this.setState({image: noImage});
+  }
+
   render() {
     return (
       <div style={styles.cameraCardImgContainer} key={this.key}>
-        <img src={this.state.image} style={styles.cameraCardImg} />
+        <img src={this.state.image} onError={this.handleError} style={styles.cameraCardImg} />
       </div>
     );
   }

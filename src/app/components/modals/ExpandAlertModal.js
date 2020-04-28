@@ -3,8 +3,9 @@ import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import {Modal, Row, Col, Form} from 'antd';
+import noImage from '../../../assets/img/no-image.jpg';
 
-const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cameraName, cameraGroupName, timestamp, timezone, formatDatetime}) => {
+const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cameraName, cameraGroupName, timestamp, timezone, formatDatetime, loadError, imgLoadError}) => {
   return (
     <Modal
       visible={visible}
@@ -18,7 +19,13 @@ const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cam
         <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{cameraName} at {cameraGroupName}</Col>
         <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp, timezone)} {timezone}</Col>
       </Row>
-      <Row><img src={alertImg} style={styles.expandedImg} /></Row>
+      <Row>
+        {imgLoadError ?
+          <img src={noImage} style={styles.expandedImg} />
+        :
+          <img src={alertImg} onError={loadError} style={styles.expandedImg} />
+        }
+      </Row>
     </Modal>
   );
 };
@@ -28,6 +35,7 @@ class ExpandAlertModal extends Component {
     super(props);
     this.state = {
       visable: false,
+      imgLoadError: false
     }
   }
 
@@ -46,6 +54,10 @@ class ExpandAlertModal extends Component {
     this.setState({visible: false});
   };
 
+  handleLoadError = () => {
+    this.setState({imgLoadError: true});
+  }
+
   render() {
     let trigger_type = this.props.data.trigger_type;
     if (this.props.data.trigger_type == 'RA') {
@@ -57,7 +69,11 @@ class ExpandAlertModal extends Component {
     }
     return (
       <div>
-        <img src={this.props.data.alert_image_url +'?auth='+ this.props.data.user.jwt} style={styles.alertCardImg} onClick={this.showModal} />
+        {this.state.imgLoadError ?
+          <img src={noImage} style={styles.alertCardImg} />
+        :
+          <img src={this.props.data.alert_image_url +'?auth='+ this.props.data.user.jwt} onError={this.handleLoadError} style={styles.alertCardImg} onClick={this.showModal} />
+        }
         <ExpandAlertForm
           onCancel={this.handleCancel}
           alertImg={this.props.data.alert_image_url +'?auth='+ this.props.data.user.jwt}
@@ -68,6 +84,8 @@ class ExpandAlertModal extends Component {
           timestamp={this.props.data.time}
           timezone={this.props.data.cameras_time_zone}
           formatDatetime={this.formatDatetime}
+          loadError={this.handleLoadError}
+          imgLoadError={this.state.imgLoadError}
         />
       </div>
     );

@@ -10,6 +10,7 @@ import triggers from './triggers/reducer';
 import systemConfigurations from './systemConfiguration/reducer';
 import liveView from './liveView/reducer';
 import recos from './recos/reducer';
+import recoConnectivityLogs from './recoConnectivityLogs/reducer';
 
 export default combineReducers({
   auth,
@@ -21,5 +22,6 @@ export default combineReducers({
   triggers,
   systemConfigurations,
   liveView,
-  recos
+  recos,
+  recoConnectivityLogs
 });

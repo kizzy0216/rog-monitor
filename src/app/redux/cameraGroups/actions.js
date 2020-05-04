@@ -386,11 +386,8 @@ export function removeUserCameraGroupPrivilege(user, cameraGroupUuid, cameraGrou
 
     axios.delete(url, config)
     .then(response => {
-      if (cameraGroupPrivilege !== null) {
-        dispatch(selectCameraGroup(user, cameraGroup));
-      } else {
-        dispatch(fetchCameraGroups(user));
-      }
+      dispatch(fetchCameraGroups(user));
+      dispatch(selectCameraGroup(user, cameraGroup));
     })
     .catch((error) => {
       let errMessage = 'Error removing user';

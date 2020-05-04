@@ -41,7 +41,7 @@ class RecoConnectivityLogsAdmin extends React.Component {
 
   handleSubmit = (e) => {
     this.form.validateFields().then(values => {
-      this.props.actions.readAllRecoConnectivityLogsForUser(values);
+      this.props.actions.readAllRecoConnectivityLogs(values);
     });
   }
 

@@ -273,7 +273,7 @@ class EditableTable extends React.Component {
 
 const styles={
   formstyles: {
-    width: 400,
+    width: 1000,
     margin: '0 auto'
   }
 };

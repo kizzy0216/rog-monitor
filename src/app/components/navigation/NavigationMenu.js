@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Menu, Badge, notification, Tooltip } from 'antd';
-import { VideoCameraOutlined, AlertOutlined, DatabaseOutlined, EllipsisOutlined, MailOutlined, UserOutlined, IdcardOutlined, TeamOutlined, RadiusUpleftOutlined, CloudServerOutlined, MobileOutlined, ClusterOutlined } from '@ant-design/icons';
+import { VideoCameraOutlined, AlertOutlined, DatabaseOutlined, EllipsisOutlined, MailOutlined, UserOutlined, IdcardOutlined, TeamOutlined, RadiusUpleftOutlined, CloudServerOutlined, MobileOutlined, ClusterOutlined, CloudSyncOutlined } from '@ant-design/icons';
 
 import { fetchAlerts, clearNewAlerts, markUserAlertsViewed } from '../../redux/alerts/actions';
 import { isEmpty } from '../../redux/helperFunctions';
@@ -66,6 +66,9 @@ class NavigationMenu extends Component {
               <EllipsisOutlined className='nav-icon' />
             </Tooltip>
           }>
+            <Menu.Item key='/reco-connectivity-logs-admin'>
+              <CloudSyncOutlined className='nav-icon' /> Reco Connectivity Logs
+            </Menu.Item>
             <Menu.Item key='/system-configuration-admin'>
               <DatabaseOutlined className='nav-icon' /> System Configuration
             </Menu.Item>

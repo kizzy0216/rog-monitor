@@ -630,6 +630,9 @@ class AddTriggerModal extends Component {
           this.props.triggerTimeWindows.forEach(function(trigger_window, index) {
             if (trigger_window.hasOwnProperty('start_at') && trigger_window.hasOwnProperty('end_at') && trigger_window.hasOwnProperty('days_of_week')) {
               if (!isEmpty(trigger_window.start_at) && !isEmpty(trigger_window.end_at) && !isEmpty(trigger_window.days_of_week)) {
+                if (typeof trigger_window.shared === 'undefined') {
+                  trigger_window.shared = false;
+                }
                 values.trigger_windows.push(trigger_window);
               } else {
                 message.error("There can be no blank fields in a trigger silence window. Trigger added without silence window: "+(index + 1));
@@ -838,7 +841,7 @@ class AddTriggerModal extends Component {
         trigger_windows.start_at = values.start_at.format('HH:mmZ').toString();
         trigger_windows.end_at = values.end_at.format('HH:mmZ').toString();
         trigger_windows.days_of_week = values.days_of_week;
-        trigger_windows.shared = values.sharedTriggerSilenceWindow;
+        trigger_windows.shared = (typeof values.sharedTriggerSilenceWindow === 'undefined') ? false : values.sharedTriggerSilenceWindow;
         trigger_windows.camera_wide = this.state.cameraWide;
         if (values.start_at.isBefore(values.end_at)) {
           if (typeof this.props.triggerTimeWindows[values.time_window_select].uuid === 'undefined') {

@@ -201,7 +201,7 @@ const AddTriggerForm = ({
           }
         </Form.Item>
         {!deleteButton ?
-          <Form.Item>
+          <Form.Item style={{maxWidth: 113, margin: '0 auto'}}>
             {triggerImg !== null && triggerImg !== noImage ?
               <Popover
                 title='Select Trigger Type to Add'
@@ -561,6 +561,7 @@ class AddTriggerModal extends Component {
       this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week']);
       this.setState({cameraWide: false});
       this.triggerDetails.currentBaseTriggerType = '';
+      this.handleSaveCancel('cancel');
     }
   };
 

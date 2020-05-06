@@ -36,7 +36,7 @@ class AlertFilters extends Component {
               {required: true, message: "This field is required"}
             ]}
           >
-            <Select style={{width: 250}} placeholder="select a camera group">
+            <Select style={{width: 250}} placeholder="select a camera">
               {this.props.cameraGroups.map(cameraGroup => (
                 cameraGroup.hasOwnProperty('cameras') ?
                 cameraGroup.cameras.map(camera => (

@@ -40,7 +40,7 @@ class AlertFilters extends Component {
               {this.props.cameraGroups.map(cameraGroup => (
                 cameraGroup.hasOwnProperty('cameras') ?
                 cameraGroup.cameras.map(camera => (
-                  <Select.Option key={`cameragroup-${camera.id}`} value={camera.name}>{camera.name}</Select.Option>
+                  <Select.Option key={`camera-${camera.id}`} value={camera.name}>{camera.name}</Select.Option>
                 )) : ''
               ))}
             </Select>

@@ -87,6 +87,10 @@ class EditCamera extends Component {
     }
   }
 
+  saveFormRef = (form) => {
+    this.form = form;
+  };
+
   render() {
     return (
       <div>
@@ -100,6 +104,7 @@ class EditCamera extends Component {
                cancelText='Cancel'
         >
           <Form
+            ref={this.saveFormRef}
             initialValues={{
               name: this.props.data.name,
               camera_sku: this.props.data.uuid.slice(-8),

@@ -59,7 +59,7 @@ class CameraCardImg extends Component {
   render() {
     return (
       <div style={styles.cameraCardImgContainer} key={this.key}>
-        <img src={this.state.image} onError={this.handleError} style={styles.cameraCardImg} />
+        <img src={this.state.image} onError={this.handleError} loading="lazy" style={styles.cameraCardImg} />
       </div>
     );
   }

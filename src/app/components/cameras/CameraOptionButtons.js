@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Menu, Dropdown, Tooltip, message } from 'antd';
-import { SettingOutlined, VideoCameraAddOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { Row, Col, Menu, Dropdown, Tooltip, Button, message } from 'antd';
+import { SettingOutlined, VideoCameraAddOutlined, ShareAltOutlined, LinkOutlined, DisconnectOutlined } from '@ant-design/icons';
 
 import AddCameraModal from '../modals/AddCameraModal';
 import ShareCameraGroupModal from '../modals/ShareCameraGroupModal';
 import EditCameraGroupModal from '../modals/EditCameraGroupModal';
 import CameraGroupPrivilegeSettingsModal from '../modals/CameraGroupPrivilegeSettingsModal';
 import { fetchUserCameraLicenses } from '../../redux/users/actions';
+import { enableCameraGroup, disableCameraGroup } from '../../redux/cameraGroups/actions';
 
 class CameraOptionButtons extends Component {
   constructor(props) {
@@ -44,8 +45,8 @@ class CameraOptionButtons extends Component {
   render() {
     if (this.props.visible) {
       return (
-        <Col xs={{span: 6}} sm={{span: 3}} md={{span: 2}} style={styles.optionsContainer}>
-          <Col xs={{span: 8}} style={styles.optionWrapper}>
+        <Col xs={{span: 8}} sm={{span: 6}} md={{span: 4}} style={styles.optionsContainer}>
+          <Col xs={{span: 4}} style={styles.optionWrapper}>
             <Tooltip title='Add Camera' placement="bottom">
               <VideoCameraAddOutlined style={styles.addCamera} onClick={this.toggleAddCameraModalVisibility}/>
             </Tooltip>
@@ -55,7 +56,7 @@ class CameraOptionButtons extends Component {
               visible={this.state.addCameraModalVisible}
               toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)} />
           </Col>
-          <Col xs={{span: 8}} style={styles.optionWrapper}>
+          <Col xs={{span: 4}} style={styles.optionWrapper}>
             <Tooltip title='Share CameraGroup' placement="bottom">
               <ShareAltOutlined style={styles.share} onClick={this.toggleShareCameraGroupModalVisibility}/>
             </Tooltip>
@@ -64,7 +65,17 @@ class CameraOptionButtons extends Component {
               visible={this.state.shareCameraGroupModalVisible}
               toggleShareCameraGroupModalVisibility={this.toggleShareCameraGroupModalVisibility.bind(this)} />
           </Col>
-          <Col xs={{span: 8}} style={styles.optionWrapper}>
+          <Col xs={{span: 4}} style={styles.optionWrapper}>
+            <Tooltip title='Enable CameraGroup' placement="bottom">
+              <Button type="link" style={styles.enableDisableCameraGroup} onClick={() => this.props.enableCameraGroup(this.props.user, this.props.selectedCameraGroup)}><LinkOutlined /></Button>
+            </Tooltip>
+          </Col>
+          <Col xs={{span: 4}} style={styles.optionWrapper}>
+            <Tooltip title='Disable CameraGroup' placement="bottom">
+              <Button type="link" style={styles.enableDisableCameraGroup} onClick={() => this.props.disableCameraGroup(this.props.user, this.props.selectedCameraGroup)}><DisconnectOutlined /></Button>
+            </Tooltip>
+          </Col>
+          <Col xs={{span: 4}} style={styles.optionWrapper}>
             <Dropdown
             placement='bottomCenter'
             overlay={
@@ -104,11 +115,17 @@ const styles = {
     paddingLeft: 10
   },
   optionsContainer: {
-    marginTop: 5,
+    marginTop: -5,
     width: 60
   },
   optionWrapper: {
     display: 'inline-block'
+  },
+  enableDisableCameraGroup: {
+    color: 'inherit',
+    fontSize: 20,
+    paddingLeft: 10,
+    paddingRight: 0
   }
 }
 
@@ -118,7 +135,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchUserCameraLicenses: (user) => dispatch(fetchUserCameraLicenses(user))
+    fetchUserCameraLicenses: (user) => dispatch(fetchUserCameraLicenses(user)),
+    enableCameraGroup: (user, cameraGroup) => dispatch(enableCameraGroup(user, cameraGroup)),
+    disableCameraGroup: (user, cameraGroup) => dispatch(disableCameraGroup(user, cameraGroup))
   }
 };
 

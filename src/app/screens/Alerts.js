@@ -9,6 +9,7 @@ import AlertCard from '../components/alerts/AlertCard';
 import AlertFilters from '../components/alerts/AlertFilters';
 import * as alertActions from '../redux/alerts/actions';
 import { fetchCameraGroups } from '../redux/cameraGroups/actions';
+import {isEmpty} from '../redux/helperFunctions';
 
 const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentProperties, selectedFilterType, form}) => {
   return (
@@ -77,11 +78,16 @@ class Alerts extends Component {
   }
 
   handlePaginationChange = (page, pageSize) => {
-    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, page, pageSize, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
+    if (page > this.props.pagination.current_page) {
+      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.alerts[0].next_page, page, pageSize, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
+    } else {
+      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.alerts[0].previous_page, page, pageSize, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
+    }
   }
 
   handleOnPageSizeChange = (current, size) => {
-    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current, size, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
+    var current_page = (isEmpty(this.props.alerts[0])) ? ">" : this.props.alerts[0].current_page;
+    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current_page, current, size, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
   }
 
   handleFilterTypeChange = (e) => {
@@ -92,8 +98,9 @@ class Alerts extends Component {
   }
 
   handleAlertFilterChange = (e) => {
+    var current_page = (isEmpty(this.props.alerts[0])) ? ">" : this.props.alerts[0].current_page;
     this.form.validateFields().then(values => {
-      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.pagination.current_page, this.props.pagination.per_page, this.state.selectedFilterType, values.filter_parameter);
+      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current_page, this.props.pagination.current_page, this.props.pagination.per_page, this.state.selectedFilterType, values.filter_parameter);
     });
   }
 

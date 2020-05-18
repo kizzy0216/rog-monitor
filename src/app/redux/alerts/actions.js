@@ -180,7 +180,7 @@ export function fetchAlerts(user) {
     let itemsPerPage = 20;
     let currentPage = 1;
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}}
     axios.get(url, config)
       .then((response) => {
@@ -188,7 +188,7 @@ export function fetchAlerts(user) {
           let pagination = {
             total: response.data[0]['total_alerts'],
             per_page: itemsPerPage,
-            current_page: currentPage,
+            current_page: 1,
             last_page: Math.ceil(response.data[0]['total_alerts'] / itemsPerPage),
             from: ((currentPage - 1) * itemsPerPage) + 1,
             to: currentPage  * itemsPerPage
@@ -223,7 +223,7 @@ export function fetchAlerts(user) {
   }
 }
 
-export function fetchAlertsWithPagination(user, page, pageSize) {
+export function fetchAlertsWithPagination(user, nextPage, page, pageSize) {
   return (dispatch) => {
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
@@ -231,7 +231,7 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
     let itemsPerPage = pageSize;
     let currentPage = page;
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${currentPage}&per_page=${itemsPerPage}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${nextPage}&per_page=${itemsPerPage}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {
@@ -272,12 +272,12 @@ export function fetchAlertsWithPagination(user, page, pageSize) {
   }
 }
 
-export function fetchAlertsWithPaginationAndFilters(user, page=1, pageSize=20, filter_type, filter_parameter) {
+export function fetchAlertsWithPaginationAndFilters(user, nextPage, page=1, pageSize=20, filter_type, filter_parameter) {
   return (dispatch) => {
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${page}&per_page=${pageSize}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${nextPage}&per_page=${pageSize}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {

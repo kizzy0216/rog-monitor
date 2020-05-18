@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Menu, Dropdown, Tooltip, Button, message } from 'antd';
+import { Row, Col, Menu, Dropdown, Tooltip, Button, message, Popconfirm } from 'antd';
 import { SettingOutlined, VideoCameraAddOutlined, ShareAltOutlined, LinkOutlined, DisconnectOutlined } from '@ant-design/icons';
 
 import AddCameraModal from '../modals/AddCameraModal';
@@ -47,7 +47,7 @@ class CameraOptionButtons extends Component {
       return (
         <Col xs={{span: 8}} sm={{span: 6}} md={{span: 4}} style={styles.optionsContainer}>
           <Col xs={{span: 4}} style={styles.optionWrapper}>
-            <Tooltip title='Add Camera' placement="bottom">
+            <Tooltip title='Add Camera' placement="top">
               <VideoCameraAddOutlined style={styles.addCamera} onClick={this.toggleAddCameraModalVisibility}/>
             </Tooltip>
             <AddCameraModal
@@ -57,7 +57,7 @@ class CameraOptionButtons extends Component {
               toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)} />
           </Col>
           <Col xs={{span: 4}} style={styles.optionWrapper}>
-            <Tooltip title='Share CameraGroup' placement="bottom">
+            <Tooltip title='Share CameraGroup' placement="top">
               <ShareAltOutlined style={styles.share} onClick={this.toggleShareCameraGroupModalVisibility}/>
             </Tooltip>
             <ShareCameraGroupModal
@@ -66,13 +66,17 @@ class CameraOptionButtons extends Component {
               toggleShareCameraGroupModalVisibility={this.toggleShareCameraGroupModalVisibility.bind(this)} />
           </Col>
           <Col xs={{span: 4}} style={styles.optionWrapper}>
-            <Tooltip title='Enable CameraGroup' placement="bottom">
-              <Button type="link" style={styles.enableDisableCameraGroup} onClick={() => this.props.enableCameraGroup(this.props.user, this.props.selectedCameraGroup)}><LinkOutlined /></Button>
+            <Tooltip title='Enable CameraGroup' placement="top">
+              <Popconfirm title="Are you sure you want to enable this camera group?" onConfirm={() => this.props.enableCameraGroup(this.props.user, this.props.selectedCameraGroup)} okText="Enable" cancelText="Nevermind">
+                <Button type="link" style={styles.enableDisableCameraGroup}><LinkOutlined /></Button>
+              </Popconfirm>
             </Tooltip>
           </Col>
           <Col xs={{span: 4}} style={styles.optionWrapper}>
-            <Tooltip title='Disable CameraGroup' placement="bottom">
-              <Button type="link" style={styles.enableDisableCameraGroup} onClick={() => this.props.disableCameraGroup(this.props.user, this.props.selectedCameraGroup)}><DisconnectOutlined /></Button>
+            <Tooltip title='Disable CameraGroup' placement="top">
+              <Popconfirm title="Are you sure you want to disable this camera group?" onConfirm={() => this.props.disableCameraGroup(this.props.user, this.props.selectedCameraGroup)} okText="Disable" cancelText="Nevermind">
+                <Button type="link" style={styles.enableDisableCameraGroup}><DisconnectOutlined /></Button>
+              </Popconfirm>
             </Tooltip>
           </Col>
           <Col xs={{span: 4}} style={styles.optionWrapper}>

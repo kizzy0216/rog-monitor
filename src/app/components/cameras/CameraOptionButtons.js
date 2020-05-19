@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Menu, Dropdown, Tooltip, Button, message, Popconfirm } from 'antd';
-import { SettingOutlined, VideoCameraAddOutlined, ShareAltOutlined, LinkOutlined, DisconnectOutlined } from '@ant-design/icons';
+import { SettingOutlined, VideoCameraAddOutlined, ShareAltOutlined } from '@ant-design/icons';
 
 import AddCameraModal from '../modals/AddCameraModal';
 import ShareCameraGroupModal from '../modals/ShareCameraGroupModal';
 import EditCameraGroupModal from '../modals/EditCameraGroupModal';
 import CameraGroupPrivilegeSettingsModal from '../modals/CameraGroupPrivilegeSettingsModal';
 import { fetchUserCameraLicenses } from '../../redux/users/actions';
-import { enableCameraGroup, disableCameraGroup } from '../../redux/cameraGroups/actions';
 
 class CameraOptionButtons extends Component {
   constructor(props) {
@@ -66,20 +65,6 @@ class CameraOptionButtons extends Component {
               toggleShareCameraGroupModalVisibility={this.toggleShareCameraGroupModalVisibility.bind(this)} />
           </Col>
           <Col xs={{span: 4}} style={styles.optionWrapper}>
-            <Tooltip title='Enable CameraGroup' placement="top">
-              <Popconfirm title="Are you sure you want to enable this camera group?" onConfirm={() => this.props.enableCameraGroup(this.props.user, this.props.selectedCameraGroup)} okText="Enable" cancelText="Nevermind">
-                <Button type="link" style={styles.enableDisableCameraGroup}><LinkOutlined /></Button>
-              </Popconfirm>
-            </Tooltip>
-          </Col>
-          <Col xs={{span: 4}} style={styles.optionWrapper}>
-            <Tooltip title='Disable CameraGroup' placement="top">
-              <Popconfirm title="Are you sure you want to disable this camera group?" onConfirm={() => this.props.disableCameraGroup(this.props.user, this.props.selectedCameraGroup)} okText="Disable" cancelText="Nevermind">
-                <Button type="link" style={styles.enableDisableCameraGroup}><DisconnectOutlined /></Button>
-              </Popconfirm>
-            </Tooltip>
-          </Col>
-          <Col xs={{span: 4}} style={styles.optionWrapper}>
             <Dropdown
             placement='bottomCenter'
             overlay={
@@ -124,12 +109,6 @@ const styles = {
   },
   optionWrapper: {
     display: 'inline-block'
-  },
-  enableDisableCameraGroup: {
-    color: 'inherit',
-    fontSize: 20,
-    paddingLeft: 10,
-    paddingRight: 0
   }
 }
 

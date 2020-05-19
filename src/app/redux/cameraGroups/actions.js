@@ -130,6 +130,20 @@ function editCameraGroupError(error) {
   }
 }
 
+function enableCameraGroupInProcess(bool) {
+  return {
+    type: types.ENABLE_CAMERA_GROUP_IN_PROGRESS,
+    enableCameraGroupInProcess: bool
+  }
+}
+
+function disableCameraGroupInProcess(bool) {
+  return {
+    type: types.DISABLE_CAMERA_GROUP_IN_PROGRESS,
+    disableCameraGroupInProcess: bool
+  }
+}
+
 function removeGuardInProcess(bool) {
   return {
     type: types.REMOVE_GUARD_IN_PROCESS,
@@ -371,6 +385,7 @@ export function shareCameraGroup(user, cameraGroupUuid, inviteeEmail) {
 
 export function enableCameraGroup(user, cameraGroup) {
   return (dispatch) => {
+    dispatch(enableCameraGroupInProcess(true));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/enable`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
@@ -397,11 +412,15 @@ export function enableCameraGroup(user, cameraGroup) {
       }
       console.log(errMessage);
     })
+    .finally(()=>{
+      dispatch(enableCameraGroupInProcess(false));
+    })
   }
 }
 
 export function disableCameraGroup(user, cameraGroup) {
   return (dispatch) => {
+    dispatch(disableCameraGroupInProcess(true));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/disable`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
@@ -427,6 +446,9 @@ export function disableCameraGroup(user, cameraGroup) {
         }
       }
       console.log(errMessage);
+    })
+    .finally(()=>{
+      dispatch(disableCameraGroupInProcess(false));
     })
   }
 }

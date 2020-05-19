@@ -151,7 +151,7 @@ function updateCamera(cameraData) {
   }
 }
 
-function cameraConnectionEnabled(bool, cameraUuid) {
+export function cameraConnectionEnabled(bool, cameraUuid) {
   return {
     type: types.CAMERA_CONNECTION_ENABLED,
     cameraConnectionEnabled: bool,

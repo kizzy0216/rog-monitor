@@ -21,5 +21,7 @@ export default {
   addedCameraData: '',
   cameraConnection: false,
   cameraConnectionFail: false,
-  cameraConnectionFailId: ''
+  cameraConnectionFailId: '',
+  enableCameraGroupInProcess: false,
+  disableCameraGroupInProcess: false
 }

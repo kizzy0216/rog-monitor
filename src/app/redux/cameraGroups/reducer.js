@@ -114,6 +114,18 @@ const cameraGroups = (state = initialState, action) => {
           editCameraGroupError: action.editCameraGroupError
         }
 
+      case types.ENABLE_CAMERA_GROUP_IN_PROGRESS:
+        return {
+          ...state,
+          enableCameraGroupInProcess: action.enableCameraGroupInProcess
+        }
+
+      case types.DISABLE_CAMERA_GROUP_IN_PROGRESS:
+        return {
+          ...state,
+          disableCameraGroupInProcess: action.disableCameraGroupInProcess
+        }
+
       case types.REMOVE_GUARD_IN_PROCESS:
         return {
           ...state,

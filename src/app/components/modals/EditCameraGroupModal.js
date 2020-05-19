@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Input, Button, Popconfirm, message } from 'antd';
-import { EnvironmentOutlined, CloseOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined, CloseOutlined, DisconnectOutlined, LinkOutlined } from '@ant-design/icons';
 import CustomInput from '../../components/formitems/CustomInput';
-
-import { editCameraGroup } from '../../redux/cameraGroups/actions';
-import { removeCameraGroup } from '../../redux/cameraGroups/actions';
+import { enableCameraGroup, disableCameraGroup, removeCameraGroup, editCameraGroup } from '../../redux/cameraGroups/actions';
 
 const FormItem = Form.Item;
-const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, form, cameraGroup, cameraGroupName, editCameraGroupInProcess, editCameraGroupSuccess, removeCameraGroupInProcess, removeCameraGroupSuccess}) => {
+const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, form, cameraGroup, cameraGroupName, editCameraGroupInProcess, editCameraGroupSuccess, removeCameraGroupInProcess, removeCameraGroupSuccess, user, enableCameraGroup, disableCameraGroup, enableCameraGroupInProcess, disableCameraGroupInProcess}) => {
   const formItemLayout = {
     labelCol: {
       xs: { span: 6 },
@@ -38,9 +36,21 @@ const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, fo
             placeholder="CameraGroup Name"
           />
         </FormItem>
-        <Popconfirm title="Are you sure you want to remove this cameraGroup? This action cannot be undone." onConfirm={removeCameraGroup} okText="Yes, remove cameraGroup" cancelText="Nevermind">
-          <Button type="danger" icon={<CloseOutlined />} loading={removeCameraGroupInProcess} disabled={removeCameraGroupInProcess}>Remove CameraGroup</Button>
-        </Popconfirm>
+        <FormItem label="Connect" name="connect" {...formItemLayout}>
+          <Popconfirm title="Are you sure you want to connect this camera group?" onConfirm={()=>enableCameraGroup(user, cameraGroup)} okText="Connect" cancelText="Nevermind">
+            <Button type="primary" icon={<LinkOutlined />} loading={enableCameraGroupInProcess}>Connect Camera Group</Button>
+          </Popconfirm>
+        </FormItem>
+        <FormItem label="Disconnect" name="disconnect" {...formItemLayout}>
+          <Popconfirm title="Are you sure you want to disconnect this camera group?" onConfirm={()=>disableCameraGroup(user, cameraGroup)} okText="Disconnect" cancelText="Nevermind">
+            <Button type="ghost" icon={<DisconnectOutlined />} loading={disableCameraGroupInProcess}>Disconnect Camera Group</Button>
+          </Popconfirm>
+        </FormItem>
+        <FormItem label="Remove" name="remove" {...formItemLayout}>
+          <Popconfirm title="Are you sure you want to remove this cameraGroup? This action cannot be undone." onConfirm={removeCameraGroup} okText="Yes, remove cameraGroup" cancelText="Nevermind">
+            <Button type="danger" icon={<CloseOutlined />} loading={removeCameraGroupInProcess} disabled={removeCameraGroupInProcess}>Remove Camera Group</Button>
+          </Popconfirm>
+        </FormItem>
       </Form>
     </Modal>
   );
@@ -76,7 +86,7 @@ class EditCameraGroupModal extends Component {
   handleCreate = (e) => {
     const form = this.form;
     form.validateFields().then(values => {
-      this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, values);
+      this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, {name: values.name});
     });
   };
 
@@ -99,12 +109,17 @@ class EditCameraGroupModal extends Component {
           onCreate={this.handleCreate}
           removeCameraGroup={this.handleDelete}
           error={this.state.error}
+          user={this.props.user}
           cameraGroup={this.props.selectedCameraGroup}
           cameraGroupName={this.props.selectedCameraGroup.name}
           editCameraGroupInProcess={this.props.editCameraGroupInProcess}
           editCameraGroupSuccess={this.props.editCameraGroupSuccess}
           removeCameraGroupInProcess={this.props.removeCameraGroupInProcess}
           removeCameraGroupSuccess={this.props.removeCameraGroupSuccess}
+          enableCameraGroup={this.props.enableCameraGroup}
+          disableCameraGroup={this.props.disableCameraGroup}
+          enableCameraGroupInProcess={this.props.enableCameraGroupInProcess}
+          disableCameraGroupInProcess={this.props.disableCameraGroupInProcess}
         />
       </div>
     );
@@ -133,13 +148,17 @@ const mapStateToProps = (state) => {
     removeCameraGroupInProcess: state.cameraGroups.removeCameraGroupInProcess,
     removeCameraGroupError: state.cameraGroups.removeCameraGroupError,
     removeCameraGroupSuccess: state.cameraGroups.removeCameraGroupSuccess,
+    enableCameraGroupInProcess: state.cameraGroups.enableCameraGroupInProcess,
+    disableCameraGroupInProcess: state.cameraGroups.disableCameraGroupInProcess
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     editCameraGroup: (user, cameraGroup, cameraGroupData) => dispatch(editCameraGroup(user, cameraGroup, cameraGroupData)),
-    removeCameraGroup: (user, cameraGroup) => dispatch(removeCameraGroup(user, cameraGroup))
+    removeCameraGroup: (user, cameraGroup) => dispatch(removeCameraGroup(user, cameraGroup)),
+    enableCameraGroup: (user, cameraGroup) => dispatch(enableCameraGroup(user, cameraGroup)),
+    disableCameraGroup: (user, cameraGroup) => dispatch(disableCameraGroup(user, cameraGroup))
   }
 }
 

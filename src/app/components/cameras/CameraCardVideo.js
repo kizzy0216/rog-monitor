@@ -70,7 +70,7 @@ class CameraCardImg extends Component {
         <VideoPlayer
           controls={true}
           hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
-          preload='auto'
+          preload='none'
           bigPlayButton={true}
           autoPlay={true}
           height='170'

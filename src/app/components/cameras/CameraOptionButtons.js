@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Menu, Dropdown, Tooltip, message } from 'antd';
+import { Row, Col, Menu, Dropdown, Tooltip, Button, message, Popconfirm } from 'antd';
 import { SettingOutlined, VideoCameraAddOutlined, ShareAltOutlined } from '@ant-design/icons';
 
 import AddCameraModal from '../modals/AddCameraModal';
@@ -44,9 +44,9 @@ class CameraOptionButtons extends Component {
   render() {
     if (this.props.visible) {
       return (
-        <Col xs={{span: 6}} sm={{span: 3}} md={{span: 2}} style={styles.optionsContainer}>
-          <Col xs={{span: 8}} style={styles.optionWrapper}>
-            <Tooltip title='Add Camera' placement="bottom">
+        <Col xs={{span: 8}} sm={{span: 6}} md={{span: 4}} style={styles.optionsContainer}>
+          <Col xs={{span: 4}} style={styles.optionWrapper}>
+            <Tooltip title='Add Camera' placement="top">
               <VideoCameraAddOutlined style={styles.addCamera} onClick={this.toggleAddCameraModalVisibility}/>
             </Tooltip>
             <AddCameraModal
@@ -55,8 +55,8 @@ class CameraOptionButtons extends Component {
               visible={this.state.addCameraModalVisible}
               toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)} />
           </Col>
-          <Col xs={{span: 8}} style={styles.optionWrapper}>
-            <Tooltip title='Share CameraGroup' placement="bottom">
+          <Col xs={{span: 4}} style={styles.optionWrapper}>
+            <Tooltip title='Share CameraGroup' placement="top">
               <ShareAltOutlined style={styles.share} onClick={this.toggleShareCameraGroupModalVisibility}/>
             </Tooltip>
             <ShareCameraGroupModal
@@ -64,7 +64,7 @@ class CameraOptionButtons extends Component {
               visible={this.state.shareCameraGroupModalVisible}
               toggleShareCameraGroupModalVisibility={this.toggleShareCameraGroupModalVisibility.bind(this)} />
           </Col>
-          <Col xs={{span: 8}} style={styles.optionWrapper}>
+          <Col xs={{span: 4}} style={styles.optionWrapper}>
             <Dropdown
             placement='bottomCenter'
             overlay={
@@ -104,7 +104,7 @@ const styles = {
     paddingLeft: 10
   },
   optionsContainer: {
-    marginTop: 5,
+    marginTop: -5,
     width: 60
   },
   optionWrapper: {
@@ -118,7 +118,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchUserCameraLicenses: (user) => dispatch(fetchUserCameraLicenses(user))
+    fetchUserCameraLicenses: (user) => dispatch(fetchUserCameraLicenses(user)),
+    enableCameraGroup: (user, cameraGroup) => dispatch(enableCameraGroup(user, cameraGroup)),
+    disableCameraGroup: (user, cameraGroup) => dispatch(disableCameraGroup(user, cameraGroup))
   }
 };
 

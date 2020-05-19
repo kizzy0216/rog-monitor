@@ -6,7 +6,7 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { trackEventAnalytics } from "../auth/actions";
-import {updatePreviewImage, fetchCameraGroupCameras} from "../cameras/actions";
+import {updatePreviewImage, fetchCameraGroupCameras, cameraConnectionEnabled} from "../cameras/actions";
 import { updateUserData } from "../users/actions";
 import { locale } from 'moment';
 import {isEmpty} from '../helperFunctions';
@@ -127,6 +127,20 @@ function editCameraGroupError(error) {
   return {
     type: types.EDIT_CAMERA_GROUP_ERROR,
     editCameraGroupError: error
+  }
+}
+
+function enableCameraGroupInProcess(bool) {
+  return {
+    type: types.ENABLE_CAMERA_GROUP_IN_PROGRESS,
+    enableCameraGroupInProcess: bool
+  }
+}
+
+function disableCameraGroupInProcess(bool) {
+  return {
+    type: types.DISABLE_CAMERA_GROUP_IN_PROGRESS,
+    disableCameraGroupInProcess: bool
   }
 }
 
@@ -366,6 +380,76 @@ export function shareCameraGroup(user, cameraGroupUuid, inviteeEmail) {
         dispatch(shareCameraGroupInProcess(false));
         dispatch(shareCameraGroupSuccess(false));
       });
+  }
+}
+
+export function enableCameraGroup(user, cameraGroup) {
+  return (dispatch) => {
+    dispatch(enableCameraGroupInProcess(true));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/enable`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+    .then(response => {
+      for (var i = 0; i < cameraGroup.cameras.length; i++) {
+        dispatch(cameraConnectionEnabled(true, cameraGroup.cameras[i].uuid));
+      }
+    })
+    .catch(error => {
+      let errMessage = 'Error disabling camera group';
+      if (error.response != undefined) {
+        errMessage = error.response;
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
+            }
+          }
+        }
+      }
+      console.log(errMessage);
+    })
+    .finally(()=>{
+      dispatch(enableCameraGroupInProcess(false));
+    })
+  }
+}
+
+export function disableCameraGroup(user, cameraGroup) {
+  return (dispatch) => {
+    dispatch(disableCameraGroupInProcess(true));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/disable`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+    .then(response => {
+      for (var i = 0; i < cameraGroup.cameras.length; i++) {
+        dispatch(cameraConnectionEnabled(false, cameraGroup.cameras[i].uuid));
+      }
+    })
+    .catch(error => {
+      let errMessage = 'Error disabling camera group';
+      if (error.response != undefined) {
+        errMessage = error.response;
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
+            }
+          }
+        }
+      }
+      console.log(errMessage);
+    })
+    .finally(()=>{
+      dispatch(disableCameraGroupInProcess(false));
+    })
   }
 }
 

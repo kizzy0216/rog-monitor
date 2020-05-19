@@ -10,7 +10,8 @@ class CameraCardImg extends Component {
   constructor() {
     super();
     this.state = {
-      image: loading
+      image: loading,
+      enabled: false
     };
     this.key = this.uuidv4;
   }
@@ -36,6 +37,9 @@ class CameraCardImg extends Component {
     } else if (!nextProps.data.cameraConnectionVerified && nextProps.data.cameraConnectionVerifiedUuid === nextProps.data.uuid) {
       this.setState({image: connectError});
       this.key = this.uuidv4;
+    } else if (nextProps.data.uuid === nextProps.data.cameraConnectionUuid) {
+      this.setState({enabled: nextProps.data.cameraConnectionEnabled});
+      this.key = this.uuidv4;
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
@@ -57,11 +61,19 @@ class CameraCardImg extends Component {
   }
 
   render() {
-    return (
-      <div style={styles.cameraCardImgContainer} key={this.key}>
-        <img src={this.state.image} onError={this.handleError} style={styles.cameraCardImg} />
-      </div>
-    );
+    if (this.state.enabled) {
+      return (
+        <div style={styles.cameraCardImgContainer} key={this.key}>
+          <img src={this.state.image} onError={this.handleError} loading="lazy" style={styles.cameraCardImg} />
+        </div>
+      );
+    } else {
+      return (
+        <div style={styles.cameraCardImgContainerDisabled} key={this.key}>
+          <img src={this.state.image} onError={this.handleError} loading="lazy" style={styles.cameraCardImg} />
+        </div>
+      );
+    }
   }
 }
 
@@ -74,6 +86,16 @@ const styles = {
     margin: '0 auto',
     paddingLeft: 0,
     paddingRight: 0
+  },
+  cameraCardImgContainerDisabled: {
+    backgroundColor: 'white',
+    height: 170,
+    width: '100%',
+    position: 'relative',
+    margin: '0 auto',
+    paddingLeft: 0,
+    paddingRight: 0,
+    opacity: 0.4
   },
   cameraCardImg: {
     position: 'absolute',

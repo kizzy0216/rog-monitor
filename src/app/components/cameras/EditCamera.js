@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch } from 'antd';
+import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch, Popconfirm } from 'antd';
 import { SettingOutlined, CheckOutlined, CloseOutlined, LinkOutlined, DisconnectOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
 
@@ -69,7 +69,12 @@ class EditCamera extends Component {
   }
 
   handleToggleAwayMode = (fieldValue) => {
-    this.setState({away_mode: fieldValue});
+    if (this.props.cameraArmed) {
+      this.setState({away_mode: fieldValue});
+    } else {
+      this.setState({away_mode: false});
+      message.error('Camera triggers must be armed in order to turn on away mode.');
+    }
   }
 
   handleToggleEnabled = (fieldValue) => {
@@ -96,6 +101,7 @@ class EditCamera extends Component {
   };
 
   render() {
+    let away_mode = this.props.cameraArmed ? this.props.data.away_mode : false;
     return (
       <div>
         <SettingOutlined onClick={this.showModal} style={styles.editCamera}/>
@@ -114,7 +120,7 @@ class EditCamera extends Component {
               camera_sku: this.props.data.uuid.slice(-8),
               camera_url: this.props.data.camera_url,
               username: this.props.data.username,
-              away_mode: this.props.data.away_mode,
+              away_mode: away_mode,
               time_zone: this.props.data.time_zone
             }}
           >
@@ -155,12 +161,13 @@ class EditCamera extends Component {
               />
             </Form.Item>
             <Form.Item label="Camera Connection" name="enabled" {...formItemLayout}>
-              <Switch
-                checkedChildren={<LinkOutlined />}
-                unCheckedChildren={<DisconnectOutlined />}
-                onChange={this.handleToggleEnabled}
-                checked={this.state.enabled}
-              />
+              <Popconfirm title={<p>Are you sure you want to toggle the camera connection? <br /> <font color='orange'>WARNING: This determines if the camera is connected to the ROG Security system</font></p>} onConfirm={() => this.handleToggleEnabled(!this.state.enabled)} okText="Confirm" cancelText="Nevermind">
+                <Switch
+                  checkedChildren={<LinkOutlined />}
+                  unCheckedChildren={<DisconnectOutlined />}
+                  checked={this.state.enabled}
+                />
+              </Popconfirm>
             </Form.Item>
           </Form>
         </Modal>
@@ -206,7 +213,8 @@ const mapStateToProps = (state) => {
     editCameraInProcess: state.cameras.editCameraInProcess,
     editCameraError: state.cameras.editCameraError,
     editCameraSuccess: state.cameras.editCameraSuccess,
-    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled
+    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
+    cameraArmed: state.cameras.cameraArmed
   }
 }
 

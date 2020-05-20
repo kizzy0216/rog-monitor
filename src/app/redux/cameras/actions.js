@@ -151,6 +151,14 @@ function updateCamera(cameraData) {
   }
 }
 
+export function cameraArmed(bool, cameraUuid) {
+  return {
+    type: types.CAMERA_ARMED,
+    cameraArmed: bool,
+    cameraArmedUuid: cameraUuid
+  }
+}
+
 export function cameraConnectionEnabled(bool, cameraUuid) {
   return {
     type: types.CAMERA_CONNECTION_ENABLED,
@@ -355,9 +363,8 @@ export function editCamera(user, cameraUuid, cameraData) {
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-    let data = cameraData;
 
-    axios.patch(url, data, config)
+    axios.patch(url, cameraData, config)
       .then((response) => {
         dispatch(updateCamera(response.data));
         dispatch(fetchCameraGroups(user));
@@ -434,17 +441,17 @@ export function deleteCamera(user, cameraGroupsUuid, cameraUuid) {
   }
 }
 
-export function toggleCameraEnabled(user, cameraGroup, cameraUuid, flag) {
+export function toggleCameraArmed(user, cameraGroup, cameraUuid, flag) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-    let data = {enabled: flag}
+    let data = {armed: flag}
     axios.patch(url, data, config)
       .then((response) => {
-        dispatch(checkCameraEnabled(user, cameraGroup, cameraUuid));
+        dispatch(checkCameraArmed(user, cameraGroup, cameraUuid));
       })
       .catch((error)=>{
-        let errMessage = 'Error toggling camera connection';
+        let errMessage = 'Error arming/disarming camera';
         if (error.response != undefined) {
           errMessage = error.response;
           if (typeof error === 'object') {
@@ -464,13 +471,13 @@ export function toggleCameraEnabled(user, cameraGroup, cameraUuid, flag) {
   }
 }
 
-export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
+export function checkCameraArmed(user, cameraGroup, cameraUuid) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.get(url, config)
       .then((response) => {
-        dispatch(cameraConnectionEnabled(response.data.enabled, cameraUuid));
+        dispatch(cameraArmed(response.data.armed, cameraUuid));
         for (var i = 0; i < cameraGroup.cameras.length; i++) {
           if (cameraUuid == cameraGroup.cameras[i].uuid) {
             cameraGroup.cameras[i] = response.data;
@@ -480,7 +487,7 @@ export function checkCameraEnabled(user, cameraGroup, cameraUuid) {
         }
       })
       .catch((error)=>{
-        let errMessage = 'Error checking camera connection';
+        let errMessage = 'Error checking camera armed status';
         if (error.response != undefined) {
           errMessage = error.response;
           if (typeof error === 'object') {

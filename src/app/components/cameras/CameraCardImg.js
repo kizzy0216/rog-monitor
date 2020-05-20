@@ -37,9 +37,6 @@ class CameraCardImg extends Component {
     } else if (!nextProps.data.cameraConnectionVerified && nextProps.data.cameraConnectionVerifiedUuid === nextProps.data.uuid) {
       this.setState({image: connectError});
       this.key = this.uuidv4;
-    } else if (nextProps.data.uuid === nextProps.data.cameraConnectionUuid) {
-      this.setState({enabled: nextProps.data.cameraConnectionEnabled});
-      this.key = this.uuidv4;
     } else {
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid && this.props.data.cameraGroup.cameras[i].thumbnail_url !== nextProps.data.cameraGroup.cameras[i].thumbnail_url) {
@@ -61,7 +58,7 @@ class CameraCardImg extends Component {
   }
 
   render() {
-    if (this.state.enabled) {
+    if (this.props.data.enabled) {
       return (
         <div style={styles.cameraCardImgContainer} key={this.key}>
           <img src={this.state.image} onError={this.handleError} loading="lazy" style={styles.cameraCardImg} />

@@ -21,6 +21,7 @@ class EditCamera extends Component {
     super(props);
     this.state = {
       visible: false,
+      popconfirmvisible: false,
       error: false,
       flag: false,
       time_zone: this.props.data.time_zone,
@@ -69,16 +70,30 @@ class EditCamera extends Component {
   }
 
   handleToggleAwayMode = (fieldValue) => {
-    if (this.props.cameraArmed) {
+    if (this.props.cameraArmed && this.state.enabled) {
       this.setState({away_mode: fieldValue});
     } else {
       this.setState({away_mode: false});
-      message.error('Camera triggers must be armed in order to turn on away mode.');
+      message.error('Camera connection must be enabled and triggers must be armed in order to turn on away mode.');
+    }
+  }
+
+  handleVisibleChange = (popconfirmvisible) => {
+    if (!popconfirmvisible) {
+      this.setState({ popconfirmvisible });
+    }
+    if (!this.state.enabled) {
+      this.handleToggleEnabled(!this.state.enabled);
+    } else {
+      this.setState({ popconfirmvisible });
     }
   }
 
   handleToggleEnabled = (fieldValue) => {
     this.setState({enabled: fieldValue});
+    if (!this.state.enabled == false) {
+      this.setState({away_mode: false});
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps){
@@ -160,8 +175,16 @@ class EditCamera extends Component {
                 checked={this.state.away_mode}
               />
             </Form.Item>
-            <Form.Item label="Camera Connection" name="enabled" {...formItemLayout}>
-              <Popconfirm title={<p>Are you sure you want to toggle the camera connection? <br /> <font color='orange'>WARNING: This determines if the camera is connected to the ROG Security system</font></p>} onConfirm={() => this.handleToggleEnabled(!this.state.enabled)} okText="Confirm" cancelText="Nevermind">
+            <Form.Item
+              label="Camera Connection"
+              name="enabled" {...formItemLayout}>
+              <Popconfirm
+                title={<p>Are you sure you want to disconnect this camera? <br /> <font color='orange'>WARNING: This will disconnect the ROG Security system</font></p>}
+                visible={this.state.popconfirmvisible}
+                onVisibleChange={this.handleVisibleChange}
+                onConfirm={() => this.handleToggleEnabled(!this.state.enabled)}
+                okText="Confirm"
+                cancelText="Nevermind">
                 <Switch
                   checkedChildren={<LinkOutlined />}
                   unCheckedChildren={<DisconnectOutlined />}

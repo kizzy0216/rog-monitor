@@ -38,12 +38,12 @@ const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, fo
         </FormItem>
         <FormItem label="Connect" name="connect" {...formItemLayout}>
           <Popconfirm title="Are you sure you want to connect this camera group?" onConfirm={()=>enableCameraGroup(user, cameraGroup)} okText="Connect" cancelText="Nevermind">
-            <Button type="primary" icon={<LinkOutlined />} loading={enableCameraGroupInProcess}>Connect Camera Group</Button>
+            <Button type="primary" icon={<LinkOutlined />} loading={enableCameraGroupInProcess} disabled={enableCameraGroupInProcess}>Connect Camera Group</Button>
           </Popconfirm>
         </FormItem>
         <FormItem label="Disconnect" name="disconnect" {...formItemLayout}>
           <Popconfirm title="Are you sure you want to disconnect this camera group?" onConfirm={()=>disableCameraGroup(user, cameraGroup)} okText="Disconnect" cancelText="Nevermind">
-            <Button type="ghost" icon={<DisconnectOutlined />} loading={disableCameraGroupInProcess}>Disconnect Camera Group</Button>
+            <Button type="ghost" icon={<DisconnectOutlined />} loading={disableCameraGroupInProcess} disabled={disableCameraGroupInProcess}>Disconnect Camera Group</Button>
           </Popconfirm>
         </FormItem>
         <FormItem label="Remove" name="remove" {...formItemLayout}>

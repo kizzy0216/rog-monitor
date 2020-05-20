@@ -88,7 +88,7 @@ body{
   left: 22% !important;
 }
 .ant-modal-body .ant-btn-primary{
-  background-color: orange !important;
+  background-color: orange;
 }
 .ant-modal-body .cameraLicensesFormInput:disabled{
   border: none;

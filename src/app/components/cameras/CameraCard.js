@@ -11,7 +11,7 @@ import TriggerModal from '../modals/TriggerModal';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import CameraCardImg from './CameraCardImg';
 import CameraCardVideo from './CameraCardVideo';
-import ToggleCameraConnection from '../buttons/ToggleCameraConnection';
+import ToggleCameraArmed from '../buttons/ToggleCameraArmed';
 import {isEmpty} from '../../redux/helperFunctions';
 
 class CameraCard extends Component {
@@ -65,7 +65,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
           {!myRole.includes(0) ?
             (<Col span={8} style={styles.cameraConnectionSwitch}></Col>) :
             <Col span={8} style={styles.cameraConnectionSwitch}>
-              <ToggleCameraConnection
+              <ToggleCameraArmed
                 data={this.props}
               />
             </Col>
@@ -79,7 +79,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
         <Row>
           {
             isEmpty(this.state.live_view_url) ||
-            (!this.props.cameraConnectionEnabled && this.props.uuid == this.props.cameraConnectionUuid) ||
+            (!this.props.cameraArmed && this.props.uuid == this.props.cameraConnectionUuid) ||
             (this.props.imageUpdateInProgress && this.props.imageUpdateInProgressUuid == this.props.uuid)
             ?
             <CameraCardImg data={this.props} />
@@ -142,6 +142,8 @@ const mapStateToProps = (state) => {
     refreshCameraErrorUuid: state.cameras.refreshCameraErrorUuid,
     imageUpdateSuccess: state.cameras.imageUpdateSuccess,
     imageUpdateSuccessUuid: state.cameras.imageUpdateSuccessUuid,
+    cameraArmed: state.cameras.cameraArmed,
+    cameraArmedUuid: state.cameras.cameraArmedUuid,
     cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
     cameraConnectionUuid: state.cameras.cameraConnectionUuid,
     cameraConnectionVerified: state.cameras.cameraConnectionVerified,

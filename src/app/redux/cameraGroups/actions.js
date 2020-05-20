@@ -6,7 +6,7 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { trackEventAnalytics } from "../auth/actions";
-import {updatePreviewImage, fetchCameraGroupCameras, cameraConnectionEnabled} from "../cameras/actions";
+import {updatePreviewImage, fetchCameraGroupCameras, cameraArmed, cameraConnectionEnabled} from "../cameras/actions";
 import { updateUserData } from "../users/actions";
 import { locale } from 'moment';
 import {isEmpty} from '../helperFunctions';
@@ -392,10 +392,11 @@ export function enableCameraGroup(user, cameraGroup) {
     .then(response => {
       for (var i = 0; i < cameraGroup.cameras.length; i++) {
         dispatch(cameraConnectionEnabled(true, cameraGroup.cameras[i].uuid));
+
       }
     })
     .catch(error => {
-      let errMessage = 'Error disabling camera group';
+      let errMessage = 'Error connecting camera group';
       if (error.response != undefined) {
         errMessage = error.response;
         if (typeof error === 'object') {
@@ -414,6 +415,8 @@ export function enableCameraGroup(user, cameraGroup) {
     })
     .finally(()=>{
       dispatch(enableCameraGroupInProcess(false));
+      dispatch(fetchCameraGroups(user));
+      dispatch(selectCameraGroup(user, cameraGroup));
     })
   }
 }
@@ -430,7 +433,7 @@ export function disableCameraGroup(user, cameraGroup) {
       }
     })
     .catch(error => {
-      let errMessage = 'Error disabling camera group';
+      let errMessage = 'Error disconnecting camera group';
       if (error.response != undefined) {
         errMessage = error.response;
         if (typeof error === 'object') {
@@ -449,6 +452,8 @@ export function disableCameraGroup(user, cameraGroup) {
     })
     .finally(()=>{
       dispatch(disableCameraGroupInProcess(false));
+      dispatch(fetchCameraGroups(user));
+      dispatch(selectCameraGroup(user, cameraGroup));
     })
   }
 }

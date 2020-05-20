@@ -156,7 +156,7 @@ const mapStateToProps = (state) => {
     addCameraSuccess: state.cameras.addCameraSuccess,
     addCameraInProcess: state.cameras.addCameraInProcess,
     addedCameraData: state.cameras.addedCameraData,
-    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
+    cameraArmed: state.cameras.cameraArmed,
     cameraConnectionUuid: state.cameras.cameraConnectionUuid,
     cameraConnectionFail: state.cameras.cameraConnectionFail
   }

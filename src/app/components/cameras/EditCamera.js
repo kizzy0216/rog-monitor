@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch } from 'antd';
-import { SettingOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { SettingOutlined, CheckOutlined, CloseOutlined, LinkOutlined, DisconnectOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
 
 import { editCamera } from '../../redux/cameras/actions';
@@ -25,7 +25,8 @@ class EditCamera extends Component {
       flag: false,
       time_zone: this.props.data.time_zone,
       fullRtspUrl: null,
-      away_mode: this.props.data.away_mode
+      away_mode: this.props.data.away_mode,
+      enabled: this.props.data.enabled
     }
   }
 
@@ -71,6 +72,10 @@ class EditCamera extends Component {
     this.setState({away_mode: fieldValue});
   }
 
+  handleToggleEnabled = (fieldValue) => {
+    this.setState({enabled: fieldValue});
+  }
+
   UNSAFE_componentWillReceiveProps(nextProps){
     if (this.props.data.uuid === nextProps.data.uuid) {
       if (this.state.flag == true) {
@@ -81,7 +86,6 @@ class EditCamera extends Component {
         if (nextProps.editCameraSuccess === true) {
           // message.success("Camera Updated");
           this.setState({flag: false});
-          this.this.props.data = nextProps.data;
         }
       }
     }
@@ -150,6 +154,14 @@ class EditCamera extends Component {
                 checked={this.state.away_mode}
               />
             </Form.Item>
+            <Form.Item label="Camera Connection" name="enabled" {...formItemLayout}>
+              <Switch
+                checkedChildren={<LinkOutlined />}
+                unCheckedChildren={<DisconnectOutlined />}
+                onChange={this.handleToggleEnabled}
+                checked={this.state.enabled}
+              />
+            </Form.Item>
           </Form>
         </Modal>
       </div>
@@ -193,7 +205,8 @@ const mapStateToProps = (state) => {
     user: state.auth.user,
     editCameraInProcess: state.cameras.editCameraInProcess,
     editCameraError: state.cameras.editCameraError,
-    editCameraSuccess: state.cameras.editCameraSuccess
+    editCameraSuccess: state.cameras.editCameraSuccess,
+    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled
   }
 }
 

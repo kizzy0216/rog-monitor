@@ -125,6 +125,13 @@ const cameras = (state = initialState, action) => {
           cameraConnectionUuid: action.cameraConnectionUuid
         }
 
+      case types.CAMERA_ARMED:
+        return {
+          ...state,
+          cameraArmed: action.cameraArmed,
+          cameraArmedUuid: action.cameraArmedUuid
+        }
+
       case types.CAMERA_CONNECTION_VERIFIED:
         return {
           ...state,

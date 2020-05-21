@@ -79,7 +79,7 @@ class CameraList extends Component {
     if (this.props.cameraGroups.length > 0 && !isEmpty(this.props.selectedCameraGroup.name)) {
       return (
         <div>
-          <Row type='flex' justify='center' align='middle' style={styles.cameraOptions}>
+          <Row type='flex' style={styles.cameraOptions}>
             <Col xs={{span: 14}} sm={{span: 6}}>
               <Select style={styles.select} defaultValue={this.props.selectedCameraGroup.name}
                       onSelect={(value, option) => this.selectCameraGroup(this.props.user, option.props.cameraGroup)}>
@@ -88,36 +88,34 @@ class CameraList extends Component {
                 ))}
               </Select>
             </Col>
-            <Col xs={{span: 2}} sm={{span: 1}} style={styles.toggleCameraGroupOptionsContainer}>
-                {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?          this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
-                  userCameraGroupPrivilege.users_uuid == this.props.user.uuid && userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ?
-                  <Tooltip key={userCameraGroupPrivilege.id} title='Toggle Camera Group Options' placement='bottom'>
-                    <EllipsisOutlined style={styles.toggleCameraGroupOptions}  onClick={this.toggleCameraGroupButtonsVisability} />
-                  </Tooltip>
-                  :
-                  userCameraGroupPrivilege.users_uuid == this.props.user.uuid && !userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ?
+            {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?
+              this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
+                userCameraGroupPrivilege.users_uuid == this.props.user.uuid && !userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) &&
+                  <Col xs={{span: 2}} sm={{span: 1}} style={styles.toggleCameraGroupOptionsContainer}>
                   <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
                     <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.deleteCameraGroup(userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
                       <Button type="primary" danger icon={<DeleteOutlined />} className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
                     </Popconfirm>
                   </Tooltip>
-                  :
-                  ''
-                )) : ''}
-            </Col>
-            {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ? this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
-              userCameraGroupPrivilege.users_uuid == this.props.user.uuid && 0 in userCameraGroupPrivilege.user_camera_group_privilege_ids ?
-              (<CameraOptionButtons
-                key={userCameraGroupPrivilege.id}
-                user={this.props.user}
-                selectedCameraGroup={this.props.selectedCameraGroup}
-                visible={this.state.cameraGroupButtonsVisible}
-                cameraGroup={this.props.selectedCameraGroup}/>) :
-              (
-                <span key={userCameraGroupPrivilege.id}></span>
-              )
-            )) : ''}
-          </Row>
+                  </Col>
+                ))
+              :
+              ''
+            }
+            {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?
+              this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
+                userCameraGroupPrivilege.users_uuid == this.props.user.uuid && 0 in userCameraGroupPrivilege.user_camera_group_privilege_ids &&
+                <CameraOptionButtons
+                  key={userCameraGroupPrivilege.id}
+                  user={this.props.user}
+                  selectedCameraGroup={this.props.selectedCameraGroup}
+                  cameraGroup={this.props.selectedCameraGroup}
+                />
+              ))
+            :
+            ''
+          }
+        </Row>
           {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?
             <CameraTiles user={this.props.user} cameraGroup={this.props.selectedCameraGroup} />
           :
@@ -153,7 +151,9 @@ class CameraList extends Component {
 const styles = {
   cameraOptions: {
     marginBottom: 10,
-    marginTop: 10
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10
   },
   select: {
     width: '100%'
@@ -161,11 +161,6 @@ const styles = {
   toggleCameraGroupOptionsContainer: {
     width: 28,
     marginRight: '-3%'
-  },
-  toggleCameraGroupOptions: {
-    transform: 'rotate(90deg)',
-    fontSize: 18,
-    paddingBottom: 10
   },
   cameraGroupContainer: {
     height: 'calc(100vh - 65px)'

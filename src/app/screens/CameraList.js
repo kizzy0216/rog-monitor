@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Card, Select, Row, Col, Modal, Button, Input, Form, Tooltip, message, Popconfirm } from 'antd';
-import { EllipsisOutlined, CloseOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import CameraTiles from '../components/cameras/CameraTiles';
 import AddCameraGroupModal from '../components/modals/AddCameraGroupModal';
@@ -98,7 +98,7 @@ class CameraList extends Component {
                   userCameraGroupPrivilege.users_uuid == this.props.user.uuid && !userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ?
                   <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
                     <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.deleteCameraGroup(userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
-                      <Button type="primary" danger icon={<CloseOutlined />} className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
+                      <Button type="primary" danger icon={<DeleteOutlined />} className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
                     </Popconfirm>
                   </Tooltip>
                   :
@@ -152,7 +152,8 @@ class CameraList extends Component {
 
 const styles = {
   cameraOptions: {
-    marginBottom: 10
+    marginBottom: 10,
+    marginTop: 10
   },
   select: {
     width: '100%'

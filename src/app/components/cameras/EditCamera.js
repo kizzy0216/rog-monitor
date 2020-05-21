@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch } from 'antd';
-import { SettingOutlined, CheckOutlined, CloseOutlined, LinkOutlined, DisconnectOutlined } from '@ant-design/icons';
+import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch, Popconfirm } from 'antd';
+import { SettingOutlined, CheckOutlined, CloseOutlined, LinkOutlined, DisconnectOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
-
-import { editCamera } from '../../redux/cameras/actions';
+import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
+import { editCamera, deleteCamera } from '../../redux/cameras/actions';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
 
 const formItemLayout = {
@@ -21,6 +21,7 @@ class EditCamera extends Component {
     super(props);
     this.state = {
       visible: false,
+      popconfirmvisible: false,
       error: false,
       flag: false,
       time_zone: this.props.data.time_zone,
@@ -29,6 +30,10 @@ class EditCamera extends Component {
       enabled: this.props.data.enabled
     }
   }
+
+  deleteCamera = () => {
+    this.props.deleteCamera(this.props.data.user, this.props.data.camera_groups_uuid, this.props.data.uuid);
+  };
 
   showModal = () => {
     this.setState({visible: true});
@@ -69,11 +74,30 @@ class EditCamera extends Component {
   }
 
   handleToggleAwayMode = (fieldValue) => {
-    this.setState({away_mode: fieldValue});
+    if (this.props.cameraArmed && this.state.enabled) {
+      this.setState({away_mode: fieldValue});
+    } else {
+      this.setState({away_mode: false});
+      message.error('Camera connection must be enabled and triggers must be armed in order to turn on away mode.');
+    }
+  }
+
+  handleVisibleChange = (popconfirmvisible) => {
+    if (!popconfirmvisible) {
+      this.setState({ popconfirmvisible });
+    }
+    if (!this.state.enabled) {
+      this.handleToggleEnabled(!this.state.enabled);
+    } else {
+      this.setState({ popconfirmvisible });
+    }
   }
 
   handleToggleEnabled = (fieldValue) => {
     this.setState({enabled: fieldValue});
+    if (!this.state.enabled == false) {
+      this.setState({away_mode: false});
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps){
@@ -96,6 +120,7 @@ class EditCamera extends Component {
   };
 
   render() {
+    let away_mode = this.props.cameraArmed ? this.props.data.away_mode : false;
     return (
       <div>
         <SettingOutlined onClick={this.showModal} style={styles.editCamera}/>
@@ -107,6 +132,11 @@ class EditCamera extends Component {
                okText='Done'
                cancelText='Cancel'
         >
+          <Row type="flex" justify="center">
+            <RefreshPreviewImage
+              data={this.props.data}
+            />
+          </Row>
           <Form
             ref={this.saveFormRef}
             initialValues={{
@@ -114,7 +144,7 @@ class EditCamera extends Component {
               camera_sku: this.props.data.uuid.slice(-8),
               camera_url: this.props.data.camera_url,
               username: this.props.data.username,
-              away_mode: this.props.data.away_mode,
+              away_mode: away_mode,
               time_zone: this.props.data.time_zone
             }}
           >
@@ -154,15 +184,29 @@ class EditCamera extends Component {
                 checked={this.state.away_mode}
               />
             </Form.Item>
-            <Form.Item label="Camera Connection" name="enabled" {...formItemLayout}>
-              <Switch
-                checkedChildren={<LinkOutlined />}
-                unCheckedChildren={<DisconnectOutlined />}
-                onChange={this.handleToggleEnabled}
-                checked={this.state.enabled}
-              />
+            <Form.Item
+              label="Camera Connection"
+              name="enabled" {...formItemLayout}>
+              <Popconfirm
+                title={<p>Are you sure you want to disconnect this camera? <br /> <font color='orange'>WARNING: This will disconnect the ROG Security system</font></p>}
+                visible={this.state.popconfirmvisible}
+                onVisibleChange={this.handleVisibleChange}
+                onConfirm={() => this.handleToggleEnabled(!this.state.enabled)}
+                okText="Confirm"
+                cancelText="Nevermind">
+                <Switch
+                  checkedChildren={<LinkOutlined />}
+                  unCheckedChildren={<DisconnectOutlined />}
+                  checked={this.state.enabled}
+                />
+              </Popconfirm>
             </Form.Item>
           </Form>
+          {this.props.myRole.includes(0) &&
+            <Popconfirm title={<p>Are you sure delete this camera? <br /><font color='orange'>WARNING: this action cannot be undone!</font></p>} onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
+              <Button type="danger" icon={<DeleteOutlined />}>Delete Camera</Button>
+            </Popconfirm>
+          }
         </Modal>
       </div>
     );
@@ -179,7 +223,6 @@ const styles = {
     textAlign: 'center'
   },
   editCamera: {
-    float: 'right',
     fontSize: 18
   },
   image: {
@@ -206,13 +249,15 @@ const mapStateToProps = (state) => {
     editCameraInProcess: state.cameras.editCameraInProcess,
     editCameraError: state.cameras.editCameraError,
     editCameraSuccess: state.cameras.editCameraSuccess,
-    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled
+    cameraConnectionEnabled: state.cameras.cameraConnectionEnabled,
+    cameraArmed: state.cameras.cameraArmed
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    editCamera: (user, camera, cameraData) => dispatch(editCamera(user, camera, cameraData))
+    editCamera: (user, camera, cameraData) => dispatch(editCamera(user, camera, cameraData)),
+    deleteCamera: (user, cameraGroupUuid, cameraUuid) => dispatch(deleteCamera(user, cameraGroupUuid, cameraUuid)),
   }
 }
 

@@ -5,10 +5,9 @@ import { Card, Row, Col, Popconfirm, Button, Switch } from 'antd';
 import {DeleteOutlined} from '@ant-design/icons';
 import moment, { lang } from 'moment';
 import EditCamera from '../cameras/EditCamera';
-import { deleteCamera, checkCameraConnection } from '../../redux/cameras/actions';
+import { checkCameraConnection } from '../../redux/cameras/actions';
 import { trackEventAnalytics } from '../../redux/auth/actions';
 import TriggerModal from '../modals/TriggerModal';
-import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import CameraCardImg from './CameraCardImg';
 import CameraCardVideo from './CameraCardVideo';
 import ToggleCameraArmed from '../buttons/ToggleCameraArmed';
@@ -31,10 +30,6 @@ class CameraCard extends Component {
     return `${dt.format('L')} ${dt.format('LT')}`;
   }
 
-  deleteCamera = () => {
-    this.props.deleteCamera(this.props.user, this.props.camera_groups_uuid, this.props.uuid);
-  };
-
 static getDerivedStateFromProps(nextProps, prevState) {
   for (var i = 0; i < nextProps.cameraGroup.cameras.length; i++) {
     if (nextProps.cameraGroup.cameras[i].uuid == nextProps.uuid) {
@@ -52,30 +47,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
     }
 
     return (
-      <Card>
-        <Row type='flex' justify='center'>
-          <Col style={styles.cameraCardTitle}>{this.props.name}</Col>
-        </Row>
-        <Row>
-          <Col span={8} style={styles.alertModal}>
-            <TriggerModal
-              data={this.props}
-            />
-          </Col>
-          {!myRole.includes(0) ?
-            (<Col span={8} style={styles.cameraConnectionSwitch}></Col>) :
-            <Col span={8} style={styles.cameraConnectionSwitch}>
-              <ToggleCameraArmed
-                data={this.props}
-              />
-            </Col>
-          }
-          <Col span={8} style={styles.refreshImage}>
-            <RefreshPreviewImage
-              data={this.props}
-            />
-          </Col>
-        </Row>
+      <Card style={styles.cameraCard}>
         <Row>
           {
             isEmpty(this.state.live_view_url) ||
@@ -88,46 +60,57 @@ static getDerivedStateFromProps(nextProps, prevState) {
           }
 
         </Row>
-        {!myRole.includes(0) ?
-          (<Row type='flex' style={styles.cameraCardButtons}>
-            <Col span={20} offset={2}>
-              <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
+        <Row type='flex' justify='left' style={{paddingLeft: 10, paddingRight: 10}}>
+          <Col style={styles.cameraCardTitle}>{this.props.name}</Col>
+        </Row>
+        <Row type="flex" style={{paddingLeft: 10, paddingRight: 10}}>
+          {!myRole.includes(0) ?
+            (<Col span={12} style={styles.cameraConnectionSwitch}></Col>) :
+            <Col span={12} style={styles.cameraConnectionSwitch}>
+              <ToggleCameraArmed
+                data={this.props}
+              />
             </Col>
-          </Row>) :
-          (<Row type='flex' style={styles.cameraCardButtons}>
-            <Col span={2}>
-              <EditCamera data={this.props} />
+          }
+          <Col span={12}>
+            {myRole.includes(0) &&
+              <Col span={2} style={styles.cameraSettingsButton}>
+                <EditCamera data={this.props} myRole={myRole} />
+              </Col>
+            }
+            <Col span={2} style={styles.triggermodalButton}>
+              <TriggerModal
+                data={this.props}
+              />
             </Col>
-            <Col span={20}>
-              <p style={{textAlign: 'center'}}>{/*{this.formatDatetime(this.props.updatedAt)}<br/>GMT*/}</p>
-            </Col>
-            <Col span={2}>
-              <Popconfirm title='Are you sure delete this camera?' onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
-                <DeleteOutlined />
-              </Popconfirm>
-            </Col>
-          </Row>)
-        }
+          </Col>
+        </Row>
       </Card>
     )
   }
 }
 
 const styles = {
+  cameraCard: {
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight:10,
+    marginBottom: 0
+  },
   cameraCardTitle: {
-    wordBreak: 'break-word'
+    wordBreak: 'break-word',
+    marginTop: 5
   },
-  cameraCardButtons: {
-    marginTop: 10
+  triggermodalButton: {
+    float: 'right',
+    marginRight: 10
   },
-  refreshImage: {
-    float: 'right'
-  },
-  alertModal: {
-    marginTop: 6.5
+  cameraSettingsButton: {
+    float: 'right',
+    marginTop: 2
   },
   cameraConnectionSwitch: {
-    textAlign: 'center',
+    textAlign: 'left',
     marginTop: 5
   }
 }
@@ -152,7 +135,6 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteCamera: (user, cameraGroupUuid, cameraUuid) => dispatch(deleteCamera(user, cameraGroupUuid, cameraUuid)),
     checkCameraConnection: (user, cameraUuid) => dispatch(checkCameraConnection(user, cameraUuid)),
     trackEventAnalytics: (event, data) => dispatch(trackEventAnalytics(event, data))
   }

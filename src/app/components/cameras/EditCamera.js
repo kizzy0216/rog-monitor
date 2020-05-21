@@ -45,7 +45,10 @@ class EditCamera extends Component {
   handleCreate = (e) => {
     const form = this.form;
     form.validateFields().then(values => {
+      console.log(values);
       values.camera_groups_uuid = this.props.data.cameraGroup.uuid;
+      values.away_mode = this.state.away_mode;
+      values.enabled = this.state.enabled;
       delete values.camera_url;
       this.props.editCamera(this.props.user, this.props.data.uuid, values);
       this.setState({visible: false});
@@ -182,6 +185,7 @@ class EditCamera extends Component {
                 unCheckedChildren={<CloseOutlined />}
                 onChange={this.handleToggleAwayMode}
                 checked={this.state.away_mode}
+                value={this.state.away_mode}
               />
             </Form.Item>
             <Form.Item
@@ -198,6 +202,7 @@ class EditCamera extends Component {
                   checkedChildren={<LinkOutlined />}
                   unCheckedChildren={<DisconnectOutlined />}
                   checked={this.state.enabled}
+                  value={this.state.enabled}
                 />
               </Popconfirm>
             </Form.Item>

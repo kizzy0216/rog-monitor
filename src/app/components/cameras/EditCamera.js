@@ -45,7 +45,6 @@ class EditCamera extends Component {
   handleCreate = (e) => {
     const form = this.form;
     form.validateFields().then(values => {
-      console.log(values);
       values.camera_groups_uuid = this.props.data.cameraGroup.uuid;
       values.away_mode = this.state.away_mode;
       values.enabled = this.state.enabled;

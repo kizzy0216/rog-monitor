@@ -76,7 +76,7 @@ class CameraCardImg extends Component {
 
 const styles = {
   cameraCardImgContainer: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     height: 170,
     width: '100%',
     position: 'relative',
@@ -85,7 +85,7 @@ const styles = {
     paddingRight: 0
   },
   cameraCardImgContainerDisabled: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     height: 170,
     width: '100%',
     position: 'relative',

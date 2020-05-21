@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Input, Button, Popconfirm, message } from 'antd';
-import { EnvironmentOutlined, CloseOutlined, DisconnectOutlined, LinkOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined, DeleteOutlined, DisconnectOutlined, LinkOutlined } from '@ant-design/icons';
 import CustomInput from '../../components/formitems/CustomInput';
 import { enableCameraGroup, disableCameraGroup, removeCameraGroup, editCameraGroup } from '../../redux/cameraGroups/actions';
 
@@ -37,18 +37,16 @@ const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, fo
           />
         </FormItem>
         <FormItem label="Connect" name="connect" {...formItemLayout}>
-          <Popconfirm title="Are you sure you want to connect this camera group?" onConfirm={()=>enableCameraGroup(user, cameraGroup)} okText="Connect" cancelText="Nevermind">
-            <Button type="primary" icon={<LinkOutlined />} loading={enableCameraGroupInProcess} disabled={enableCameraGroupInProcess}>Connect Camera Group</Button>
-          </Popconfirm>
+          <Button type="primary" icon={<LinkOutlined />} loading={enableCameraGroupInProcess} disabled={enableCameraGroupInProcess} style={{backgroundColor: "#1890ff", width: 197}} onClick={()=>enableCameraGroup(user, cameraGroup)}>Connect Camera Group</Button>
         </FormItem>
         <FormItem label="Disconnect" name="disconnect" {...formItemLayout}>
-          <Popconfirm title="Are you sure you want to disconnect this camera group?" onConfirm={()=>disableCameraGroup(user, cameraGroup)} okText="Disconnect" cancelText="Nevermind">
-            <Button type="ghost" icon={<DisconnectOutlined />} loading={disableCameraGroupInProcess} disabled={disableCameraGroupInProcess}>Disconnect Camera Group</Button>
+          <Popconfirm title={<p>Are you sure you want to disconnect this camera group? <br /> <font color='orange'>WARNING: This will disconnect the ROG Security system</font></p>} onConfirm={()=>disableCameraGroup(user, cameraGroup)} okText="Disconnect" cancelText="Nevermind">
+            <Button type="primary" icon={<DisconnectOutlined />} loading={disableCameraGroupInProcess} disabled={disableCameraGroupInProcess}>Disconnect Camera Group</Button>
           </Popconfirm>
         </FormItem>
         <FormItem label="Remove" name="remove" {...formItemLayout}>
           <Popconfirm title="Are you sure you want to remove this cameraGroup? This action cannot be undone." onConfirm={removeCameraGroup} okText="Yes, remove cameraGroup" cancelText="Nevermind">
-            <Button type="danger" icon={<CloseOutlined />} loading={removeCameraGroupInProcess} disabled={removeCameraGroupInProcess}>Remove Camera Group</Button>
+            <Button type="danger" icon={<DeleteOutlined />} loading={removeCameraGroupInProcess} disabled={removeCameraGroupInProcess}>Remove Camera Group</Button>
           </Popconfirm>
         </FormItem>
       </Form>

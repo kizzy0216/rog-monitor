@@ -42,66 +42,59 @@ class CameraOptionButtons extends Component {
   }
 
   render() {
-    if (this.props.visible) {
-      return (
-        <Col xs={{span: 8}} sm={{span: 6}} md={{span: 4}} style={styles.optionsContainer}>
-          <Col xs={{span: 4}} style={styles.optionWrapper}>
-            <Tooltip title='Add Camera' placement="top">
-              <VideoCameraAddOutlined style={styles.addCamera} onClick={this.toggleAddCameraModalVisibility}/>
-            </Tooltip>
-            <AddCameraModal
-              user={this.props.user}
-              selectedCameraGroup={this.props.selectedCameraGroup}
-              visible={this.state.addCameraModalVisible}
-              toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)} />
-          </Col>
-          <Col xs={{span: 4}} style={styles.optionWrapper}>
-            <Tooltip title='Share CameraGroup' placement="top">
-              <ShareAltOutlined style={styles.share} onClick={this.toggleShareCameraGroupModalVisibility}/>
-            </Tooltip>
-            <ShareCameraGroupModal
-              selectedCameraGroup={this.props.selectedCameraGroup}
-              visible={this.state.shareCameraGroupModalVisible}
-              toggleShareCameraGroupModalVisibility={this.toggleShareCameraGroupModalVisibility.bind(this)} />
-          </Col>
-          <Col xs={{span: 4}} style={styles.optionWrapper}>
-            <Dropdown
-            placement='bottomCenter'
-            overlay={
-              <Menu>
-                <Menu.Item>
-                  <EditCameraGroupModal selectedCameraGroup={this.props.selectedCameraGroup} />
-                </Menu.Item>
-                <Menu.Item>
-                  <CameraGroupPrivilegeSettingsModal selectedCameraGroup={this.props.selectedCameraGroup} />
-                </Menu.Item>
-              </Menu>
-            }>
-              <SettingOutlined style={styles.edit} type='setting'/>
-            </Dropdown>
-          </Col>
+    return (
+      <Col xs={{span: 10}} sm={{span: 6, offset: 12}} type="flex" align="right" justify="right" style={styles.optionsContainer}>
+        <Col xs={{span: 4}} style={styles.optionWrapper}>
+          <Tooltip title='Add Camera' placement="topRight">
+            <VideoCameraAddOutlined style={styles.addCamera} onClick={this.toggleAddCameraModalVisibility}/>
+          </Tooltip>
+          <AddCameraModal
+            user={this.props.user}
+            selectedCameraGroup={this.props.selectedCameraGroup}
+            visible={this.state.addCameraModalVisible}
+            toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)} />
         </Col>
-      )
-    } else {
-      return (
-        <div></div>
-      )
-    }
+        <Col xs={{span: 4}} style={styles.optionWrapper}>
+          <Tooltip title='Share CameraGroup' placement="topRight">
+            <ShareAltOutlined style={styles.share} onClick={this.toggleShareCameraGroupModalVisibility}/>
+          </Tooltip>
+          <ShareCameraGroupModal
+            selectedCameraGroup={this.props.selectedCameraGroup}
+            visible={this.state.shareCameraGroupModalVisible}
+            toggleShareCameraGroupModalVisibility={this.toggleShareCameraGroupModalVisibility.bind(this)} />
+        </Col>
+        <Col xs={{span: 4}} style={styles.optionWrapper}>
+          <Dropdown
+          placement='bottomCenter'
+          overlay={
+            <Menu>
+              <Menu.Item>
+                <EditCameraGroupModal selectedCameraGroup={this.props.selectedCameraGroup} />
+              </Menu.Item>
+              <Menu.Item>
+                <CameraGroupPrivilegeSettingsModal selectedCameraGroup={this.props.selectedCameraGroup} />
+              </Menu.Item>
+            </Menu>
+          }>
+            <SettingOutlined style={styles.edit} type='setting'/>
+          </Dropdown>
+        </Col>
+      </Col>
+    )
   }
 }
 
 const styles = {
   share: {
     fontSize: 20,
-    paddingLeft: 10
+    paddingRight: 10
   },
   edit: {
-    fontSize: 20,
-    paddingLeft: 10
+    fontSize: 20
   },
   addCamera: {
     fontSize: 20,
-    paddingLeft: 10
+    paddingRight: 10
   },
   optionsContainer: {
     marginTop: 5,

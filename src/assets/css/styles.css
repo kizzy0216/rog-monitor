@@ -14,7 +14,12 @@ body{
 /* GLOBAL ANT STYLE OVERRIDES */
 .ant-layout-sider{
   background: #fff !important;
-  height: calc(100vh - 50px);
+}
+.ant-card-body{
+  padding-top: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 10px;
 }
 .ant-menu-submenu-popup > .ant-menu{
   background-color: #404040 !important;

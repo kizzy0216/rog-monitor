@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch, Popconfirm } from 'antd';
-import { SettingOutlined, CheckOutlined, CloseOutlined, LinkOutlined, DisconnectOutlined } from '@ant-design/icons';
+import { SettingOutlined, CheckOutlined, CloseOutlined, LinkOutlined, DisconnectOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
-
-import { editCamera } from '../../redux/cameras/actions';
+import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
+import { editCamera, deleteCamera } from '../../redux/cameras/actions';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
 
 const formItemLayout = {
@@ -30,6 +30,10 @@ class EditCamera extends Component {
       enabled: this.props.data.enabled
     }
   }
+
+  deleteCamera = () => {
+    this.props.deleteCamera(this.props.data.user, this.props.data.camera_groups_uuid, this.props.data.uuid);
+  };
 
   showModal = () => {
     this.setState({visible: true});
@@ -128,6 +132,11 @@ class EditCamera extends Component {
                okText='Done'
                cancelText='Cancel'
         >
+          <Row type="flex" justify="center">
+            <RefreshPreviewImage
+              data={this.props.data}
+            />
+          </Row>
           <Form
             ref={this.saveFormRef}
             initialValues={{
@@ -193,6 +202,11 @@ class EditCamera extends Component {
               </Popconfirm>
             </Form.Item>
           </Form>
+          {this.props.myRole.includes(0) &&
+            <Popconfirm title={<p>Are you sure delete this camera? <br /><font color='orange'>WARNING: this action cannot be undone!</font></p>} onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>
+              <Button type="danger" icon={<DeleteOutlined />}>Delete Camera</Button>
+            </Popconfirm>
+          }
         </Modal>
       </div>
     );
@@ -209,7 +223,6 @@ const styles = {
     textAlign: 'center'
   },
   editCamera: {
-    float: 'right',
     fontSize: 18
   },
   image: {
@@ -243,7 +256,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    editCamera: (user, camera, cameraData) => dispatch(editCamera(user, camera, cameraData))
+    editCamera: (user, camera, cameraData) => dispatch(editCamera(user, camera, cameraData)),
+    deleteCamera: (user, cameraGroupUuid, cameraUuid) => dispatch(deleteCamera(user, cameraGroupUuid, cameraUuid)),
   }
 }
 

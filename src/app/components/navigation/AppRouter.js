@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import { Layout, Row, Col, Button, Tooltip } from 'antd';
 import { CloseOutlined, SoundOutlined } from '@ant-design/icons';
-const { Header, Sider, Content } = Layout;
+const { Header, Footer, Sider, Content } = Layout;
 
 import Hamburger from './Hamburger';
 import NavigationMenu from './NavigationMenu';
@@ -72,44 +72,46 @@ class AppRouter extends Component {
               </Button>
             </div>
           </Header>
+          <Layout>
+            <Sider collapsed={this.state.collapsed} collapsedWidth={0} style={styles.sider}>
+              <SideMenu />
+            </Sider>
 
-          <Sider collapsed={this.state.collapsed} collapsedWidth={0} style={styles.sider}>
-            <SideMenu />
-          </Sider>
-
-          <Content style={styles.content}>
-              {this.props.user.user_privileges_id == 0 ?
-                <Switch>
-                  <Route path='/cameras' component={CameraList} />
-                  <Route path='/cameras/:uuid' component={CameraDetails} />
-                  <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
-                  <Route path='/alerts' component={Alerts} />
-                  <Route path='/recos-admin' component={RecosAdmin} />
-                  <Route path='/reco-connectivity-logs-admin' component={RecoConnectivityLogsAdmin} />
-                  <Route path='/users-admin' component={UsersAdmin} />
-                  <Route path='/camera-groups-admin' component={CameraGroupsAdmin} />
-                  <Route path='/cameras-admin' component={CamerasAdmin} />
-                  <Route path='/triggers-admin' component={TriggersAdmin} />
-                  <Route path='/alerts-admin' component={AlertsAdmin} />
-                  <Route path='/invitations-admin' component={InvitationsAdmin} />
-                  <Route path='/Devices-admin' component={DevicesAdmin} />
-                  <Route path='/licenses-admin' component={LicensesAdmin} />
-                  <Route path='/system-configuration-admin' component={SystemConfigurationAdmin} />
-                  <Route path='/live-view-admin' component={LiveViewAdmin} />
-                  <Route exact path='/stages_link_view' component={StagesLinkView} />
-                  <Redirect to='/cameras' />
-                </Switch>
-                :
-                <Switch>
-                  <Route path='/cameras' component={CameraList} />
-                  <Route path='/cameras/:uuid' component={CameraDetails} />
-                  <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
-                  <Route path='/alerts' component={Alerts} />
-                  <Route exact path='/stages_link_view' component={StagesLinkView} />
-                  <Redirect to='/cameras' />
-                </Switch>
-              }
-          </Content>
+            <Content style={styles.content}>
+                {this.props.user.user_privileges_id == 0 ?
+                  <Switch>
+                    <Route path='/cameras' component={CameraList} />
+                    <Route path='/cameras/:uuid' component={CameraDetails} />
+                    <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
+                    <Route path='/alerts' component={Alerts} />
+                    <Route path='/recos-admin' component={RecosAdmin} />
+                    <Route path='/reco-connectivity-logs-admin' component={RecoConnectivityLogsAdmin} />
+                    <Route path='/users-admin' component={UsersAdmin} />
+                    <Route path='/camera-groups-admin' component={CameraGroupsAdmin} />
+                    <Route path='/cameras-admin' component={CamerasAdmin} />
+                    <Route path='/triggers-admin' component={TriggersAdmin} />
+                    <Route path='/alerts-admin' component={AlertsAdmin} />
+                    <Route path='/invitations-admin' component={InvitationsAdmin} />
+                    <Route path='/Devices-admin' component={DevicesAdmin} />
+                    <Route path='/licenses-admin' component={LicensesAdmin} />
+                    <Route path='/system-configuration-admin' component={SystemConfigurationAdmin} />
+                    <Route path='/live-view-admin' component={LiveViewAdmin} />
+                    <Route exact path='/stages_link_view' component={StagesLinkView} />
+                    <Redirect to='/cameras' />
+                  </Switch>
+                  :
+                  <Switch>
+                    <Route path='/cameras' component={CameraList} />
+                    <Route path='/cameras/:uuid' component={CameraDetails} />
+                    <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
+                    <Route path='/alerts' component={Alerts} />
+                    <Route exact path='/stages_link_view' component={StagesLinkView} />
+                    <Redirect to='/cameras' />
+                  </Switch>
+                }
+            </Content>
+          </Layout>
+          <Footer style={styles.footer}></Footer>
         </Layout>
       </Router>
     )
@@ -123,6 +125,9 @@ const styles = {
     position: 'fixed',
     width: '100%',
     zIndex: 1 // Required for Content to scroll under Header
+  },
+  footer: {
+    padding: 35
   },
   headerButton: {
     color: 'white',

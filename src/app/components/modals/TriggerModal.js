@@ -1000,10 +1000,7 @@ const styles = {
     width: '100%',
     float: 'left'
   },
-  form: {
-    position: 'relative',
-    float: 'left'
-  },
+  form: {},
   triggerType: {
     textAlign: 'center'
   },

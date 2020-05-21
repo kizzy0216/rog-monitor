@@ -104,7 +104,7 @@ const styles = {
     paddingLeft: 10
   },
   optionsContainer: {
-    marginTop: -5,
+    marginTop: 5,
     width: 60
   },
   optionWrapper: {

@@ -44,8 +44,8 @@ class RefreshPreviewImage extends Component {
 
   render() {
     return (
-        <Button style={styles.getThumbnailBtn} onClick={this.updatePreviewImage} disabled={this.state.disabledFlag}>
-          {this.state.disabledFlag ? <LoadingOutlined /> : <SyncOutlined />}
+        <Button type="primary" style={styles.getThumbnailBtn} onClick={this.updatePreviewImage} disabled={this.state.disabledFlag} icon={this.state.disabledFlag ? <LoadingOutlined /> : <SyncOutlined />}>
+          Refresh Camera Thumbnail
         </Button>
     );
   }
@@ -53,9 +53,9 @@ class RefreshPreviewImage extends Component {
 
 const styles = {
   getThumbnailBtn: {
-    backgroundColor: 'white',
-    float: 'right'
-  },
+    backgroundColor: "#1890ff",
+    marginBottom: 20
+  }
 }
 
 const mapStateToProps = (state) => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Input, Button, Popconfirm, message } from 'antd';
-import { EnvironmentOutlined, CloseOutlined, DisconnectOutlined, LinkOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined, DeleteOutlined, DisconnectOutlined, LinkOutlined } from '@ant-design/icons';
 import CustomInput from '../../components/formitems/CustomInput';
 import { enableCameraGroup, disableCameraGroup, removeCameraGroup, editCameraGroup } from '../../redux/cameraGroups/actions';
 
@@ -46,7 +46,7 @@ const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, fo
         </FormItem>
         <FormItem label="Remove" name="remove" {...formItemLayout}>
           <Popconfirm title="Are you sure you want to remove this cameraGroup? This action cannot be undone." onConfirm={removeCameraGroup} okText="Yes, remove cameraGroup" cancelText="Nevermind">
-            <Button type="danger" icon={<CloseOutlined />} loading={removeCameraGroupInProcess} disabled={removeCameraGroupInProcess}>Remove Camera Group</Button>
+            <Button type="danger" icon={<DeleteOutlined />} loading={removeCameraGroupInProcess} disabled={removeCameraGroupInProcess}>Remove Camera Group</Button>
           </Popconfirm>
         </FormItem>
       </Form>

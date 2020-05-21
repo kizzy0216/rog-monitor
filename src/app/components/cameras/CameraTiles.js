@@ -41,9 +41,7 @@ const styles = {
     marginTop: 100,
     fontSize: 24
   },
-  cameraListContainer: {
-    height: 'calc(100vh - 105px)'
-  },
+  cameraListContainer: {},
   cameraCard: {
     minWidth: 320,
     maxHeight: 304

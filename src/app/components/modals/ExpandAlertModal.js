@@ -14,17 +14,17 @@ const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cam
       footer={[null, null]}
       width="90vw"
     >
-      <Row type='flex' justify='space-between'>
-        <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{alertType}</Col>
-        <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{cameraName} at {cameraGroupName}</Col>
-        <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp, timezone)} {timezone}</Col>
-      </Row>
       <Row>
         {imgLoadError ?
           <img src={noImage} style={styles.expandedImg} />
         :
           <img src={alertImg} onError={loadError} style={styles.expandedImg} />
         }
+      </Row>
+      <Row type='flex' justify='space-between'>
+        <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{alertType}</Col>
+        <Col style={styles.alertType} xs={24} sm={24} md={12} lg={8} xl={8}>{cameraName} at {cameraGroupName}</Col>
+        <Col style={styles.alertDateTime} xs={24} sm={24} md={24} lg={8} xl={8}>{formatDatetime(timestamp, timezone)} {timezone}</Col>
       </Row>
     </Modal>
   );
@@ -124,6 +124,7 @@ const styles = {
   },
   expandedImg: {
     maxWidth: '80vw',
+    width: '100%',
     margin: '0 auto'
   }
 };

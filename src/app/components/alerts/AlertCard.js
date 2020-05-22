@@ -44,8 +44,8 @@ class _AlertCard extends Component {
         </div>
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={8} sm={8} md={8}>{trigger_type}</Col>
-          <Col style={styles.cameraNameCameraGroup} xs={14} sm={14} md={14}>{this.props.cameras_name} at {this.props.camera_groups_name}</Col>
-          <Col style={styles.alertDateTime} xs={24}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)} { this.props.cameras_time_zone}</Col>
+          <Col style={styles.cameraNameCameraGroup} xs={14} sm={14} md={14}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)} { this.props.cameras_time_zone}</Col>
+          <Col style={styles.alertDateTime} xs={24}>{this.props.cameras_name} at {this.props.camera_groups_name}</Col>
         </Row>
       </Card>
     )
@@ -70,7 +70,7 @@ const styles = {
     textAlign: 'right'
   },
   alertDateTime: {
-    paddingTop: 10,
+    paddingTop: 7,
     textAlign: 'center'
   },
   alertTimeZone: {

@@ -145,7 +145,7 @@ const styles = {
     marginTop: 50
   },
   content: {
-    marginTop: 60,
+    marginTop: 50,
     zIndex: 0 // Required for Content to scroll under Header
   },
   muteButton: {

@@ -70,7 +70,7 @@ const styles = {
     textAlign: 'right'
   },
   alertDateTime: {
-    paddingTop: 10,
+    paddingTop: 7,
     textAlign: 'center'
   },
   alertTimeZone: {

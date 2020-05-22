@@ -38,15 +38,14 @@ class _AlertCard extends Component {
       trigger_type = "Loitering";
     }
     return (
-      <Card>
+      <Card style={styles.alertCard}>
         <div style={styles.alertCardImgContainer}>
           <ExpandAlertModal data={this.props} />
         </div>
         <Row type='flex' justify='space-between'>
-          <Col style={styles.alertType} xs={24} sm={24} md={12} lg={12} xl={12}>{trigger_type}</Col>
-          <Col style={styles.cameraNameCameraGroup} xs={24} sm={24} md={12} lg={12} xl={12}>{this.props.cameras_name} at {this.props.camera_groups_name}</Col>
-          <Col style={styles.alertDateTime} xs={24}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)}</Col>
-          <Col style={styles.alertTimeZone} xs={24}>{ this.props.cameras_time_zone}</Col>
+          <Col style={styles.alertType} xs={8} sm={8} md={8}>{trigger_type}</Col>
+          <Col style={styles.cameraNameCameraGroup} xs={14} sm={14} md={14}>{this.props.cameras_name} at {this.props.camera_groups_name}</Col>
+          <Col style={styles.alertDateTime} xs={24}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)} { this.props.cameras_time_zone}</Col>
         </Row>
       </Card>
     )
@@ -54,18 +53,23 @@ class _AlertCard extends Component {
 }
 
 const styles = {
+  alertCard: {
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight:10,
+    marginBottom: 0
+  },
   alertType: {
-    fontSize: 10,
     paddingTop: 5,
+    marginLeft: 10,
     textAlign: 'left'
   },
   cameraNameCameraGroup: {
-    fontSize: 10,
     paddingTop: 5,
+    marginRight: 10,
     textAlign: 'right'
   },
   alertDateTime: {
-    fontSize: 10,
     paddingTop: 10,
     textAlign: 'center'
   },
@@ -78,7 +82,7 @@ const styles = {
     paddingTop: 5
   },
   alertCardImgContainer: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     height: 170,
     position: 'relative',
     margin: '0 auto',

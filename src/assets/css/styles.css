@@ -46,9 +46,6 @@ body{
   background-color: #ff4d4f;
   border-color: #ff4d4f;
 }
-.ant-form-item{
-  margin-bottom: 17.4px !important;
-}
 .ant-select-selection{
   border-radius: 0;
 }

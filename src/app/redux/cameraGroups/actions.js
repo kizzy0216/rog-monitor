@@ -513,7 +513,7 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
 
     let data = {
       name: cameraGroupData.name,
-      away_mode: 0 //for now hard code this until we build the UI for this edit option
+      away_mode: cameraGroupData.away_mode
     };
 
     axios.patch(url, data, config)

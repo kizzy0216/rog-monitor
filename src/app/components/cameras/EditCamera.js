@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch, Popconfirm } from 'antd';
-import { SettingOutlined, CheckOutlined, CloseOutlined, LinkOutlined, DisconnectOutlined, DeleteOutlined } from '@ant-design/icons';
+import { SettingOutlined, SafetyOutlined, HomeOutlined, LinkOutlined, DisconnectOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
 import { editCamera, deleteCamera } from '../../redux/cameras/actions';
@@ -178,15 +178,14 @@ class EditCamera extends Component {
                 {this.handleCreateSelectItems()}
               </Select>
             </Form.Item>
-            <Form.Item label="Away Mode" name="away_mode" {...formItemLayout}>
+            {/*<Form.Item label="Away Mode" name="away_mode" {...formItemLayout}>
               <Switch
-                checkedChildren={<CheckOutlined />}
-                unCheckedChildren={<CloseOutlined />}
+                checkedChildren={<SafetyOutlined />}
+                unCheckedChildren={<HomeOutlined />}
                 onChange={this.handleToggleAwayMode}
                 checked={this.state.away_mode}
-                value={this.state.away_mode}
               />
-            </Form.Item>
+            </Form.Item>*/}
             <Form.Item
               label="Camera Connection"
               name="enabled" {...formItemLayout}>

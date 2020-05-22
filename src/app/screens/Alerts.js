@@ -116,26 +116,29 @@ class Alerts extends Component {
       return (
         <div>
         <Row type='flex' justify='center'>
-        <AlertSortingForm
-          form={this.alertSortingFormRef}
-          AlertFilterChange={this.handleAlertFilterChange}
-          FilterTypeChange={this.handleFilterTypeChange}
-          cameraGroups={this.props.cameraGroups}
-          selectedFilterType={this.state.selectedFilterType}
-        />
+        <Col xs={{span: 12}}>
+          <AlertSortingForm
+            form={this.alertSortingFormRef}
+            AlertFilterChange={this.handleAlertFilterChange}
+            FilterTypeChange={this.handleFilterTypeChange}
+            cameraGroups={this.props.cameraGroups}
+            selectedFilterType={this.state.selectedFilterType}
+          />
+        </Col>
+        <Col xs={{span: 12}}>
+          <Pagination
+            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+            hideOnSinglePage={true}
+            showSizeChanger={true}
+            onShowSizeChange={this.handleOnPageSizeChange}
+            pageSize={this.props.pagination.per_page}
+            defaultCurrent={this.props.pagination.current_page}
+            total={this.props.pagination.total}
+            onChange={this.handlePaginationChange}
+            style={styles.pagination}
+          />
+        </Col>
         </Row>
-          <Row type='flex' justify='center'>
-            <Pagination
-              showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-              hideOnSinglePage={true}
-              showSizeChanger={true}
-              onShowSizeChange={this.handleOnPageSizeChange}
-              pageSize={this.props.pagination.per_page}
-              defaultCurrent={this.props.pagination.current_page}
-              total={this.props.pagination.total}
-              onChange={this.handlePaginationChange}
-            />
-          </Row>
           <Row><Col>&nbsp;</Col></Row>
           <Row type='flex' justify='start'>
             {alerts.map(alert=> (
@@ -182,7 +185,13 @@ const styles = {
     height: 'calc(100vh - 65px)'
   },
   formstyles: {
-    textAlign: 'center'
+    textAlign: 'center',
+    float: 'left',
+    marginLeft: 10
+  },
+  pagination: {
+    float: 'right',
+    marginRight: 2
   }
 };
 

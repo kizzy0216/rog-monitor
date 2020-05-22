@@ -43,12 +43,10 @@ const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentPropert
         data = {ComponentProperties}
         selectedFilterType = {selectedFilterType}
       />
-      {selectedFilterType !== 4 ?
+      {selectedFilterType !== 4 &&
         <Form.Item>
           <Button type="primary" htmlType="submit">Submit</Button>
         </Form.Item>
-      :
-        <div></div>
       }
     </Form>
   );
@@ -115,31 +113,30 @@ class Alerts extends Component {
       }).reverse();
       return (
         <div>
-        <Row type='flex' justify='center'>
-        <Col xs={{span: 12}}>
-          <AlertSortingForm
-            form={this.alertSortingFormRef}
-            AlertFilterChange={this.handleAlertFilterChange}
-            FilterTypeChange={this.handleFilterTypeChange}
-            cameraGroups={this.props.cameraGroups}
-            selectedFilterType={this.state.selectedFilterType}
-          />
-        </Col>
-        <Col xs={{span: 12}}>
-          <Pagination
-            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-            hideOnSinglePage={true}
-            showSizeChanger={true}
-            onShowSizeChange={this.handleOnPageSizeChange}
-            pageSize={this.props.pagination.per_page}
-            defaultCurrent={this.props.pagination.current_page}
-            total={this.props.pagination.total}
-            onChange={this.handlePaginationChange}
-            style={styles.pagination}
-          />
-        </Col>
-        </Row>
-          <Row><Col>&nbsp;</Col></Row>
+          <Row type='flex' justify='center' style={styles.alertOptions}>
+            <Col xs={{span: 12}}>
+              <AlertSortingForm
+                form={this.alertSortingFormRef}
+                AlertFilterChange={this.handleAlertFilterChange}
+                FilterTypeChange={this.handleFilterTypeChange}
+                cameraGroups={this.props.cameraGroups}
+                selectedFilterType={this.state.selectedFilterType}
+              />
+            </Col>
+            <Col xs={{span: 12}}>
+              <Pagination
+                showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+                hideOnSinglePage={true}
+                showSizeChanger={true}
+                onShowSizeChange={this.handleOnPageSizeChange}
+                pageSize={this.props.pagination.per_page}
+                defaultCurrent={this.props.pagination.current_page}
+                total={this.props.pagination.total}
+                onChange={this.handlePaginationChange}
+                style={styles.pagination}
+              />
+            </Col>
+          </Row>
           <Row type='flex' justify='start'>
             {alerts.map(alert=> (
               <Col key={`alert-${alert.id}`} xs={24} sm={12} md={8} lg={6}>
@@ -175,6 +172,10 @@ class Alerts extends Component {
 }
 
 const styles = {
+  alertOptions: {
+    marginTop: 20,
+    marginBottom: 10
+  },
   noAlertsText: {
     margin: '0 auto',
     textAlign: 'center',

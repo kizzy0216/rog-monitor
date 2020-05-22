@@ -151,7 +151,7 @@ class CameraList extends Component {
 const styles = {
   cameraOptions: {
     marginBottom: 10,
-    marginTop: 10,
+    marginTop: 20,
     marginLeft: 10,
     marginRight: 10
   },

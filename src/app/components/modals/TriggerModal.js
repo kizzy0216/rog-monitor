@@ -201,34 +201,38 @@ const AddTriggerForm = ({
           }
         </Form.Item>
         {!deleteButton ?
-          <Form.Item style={{maxWidth: 113, margin: '0 auto'}}>
+          <div>
             {triggerImg !== null && triggerImg !== noImage ?
-              <Popover
-                title='Select Trigger Type to Add'
-                content={
-                  <div style={styles.triggerType}>
-                    <Button type="secondary" onClick={() => showTrigger('RA')}>Restricted Area</Button>
-                    <br/>
-                    <Button type="secondary" onClick={() => showTrigger('VW')}>Virtual Wall</Button>
-                    <br/>
-                    <Button type="secondary" onClick={() => showTrigger('LD')}>Loitering</Button>
-                    <br/>
-                  </div>
-                }
-                trigger="click"
-                visible={visibility}
-                onVisibleChange={handleVisibility}
-              >
-                {!saveCancel &&
-                  <div type="secondary">
-                    <CustomInput trigger={true} visibility={visibility} handleSaveCancel={handleSaveCancel} fetchTriggerInProcess={fetchTriggerInProcess} />
-                  </div>
-                }
-              </Popover>
+              <Form.Item style={{maxWidth: 113, margin: '0 auto'}}>
+                <Popover
+                  title='Select Trigger Type to Add'
+                  content={
+                    <div style={styles.triggerType}>
+                      <Button type="secondary" onClick={() => showTrigger('RA')}>Restricted Area</Button>
+                      <br/>
+                      <Button type="secondary" onClick={() => showTrigger('VW')}>Virtual Wall</Button>
+                      <br/>
+                      <Button type="secondary" onClick={() => showTrigger('LD')}>Loitering</Button>
+                      <br/>
+                    </div>
+                  }
+                  trigger="click"
+                  visible={visibility}
+                  onVisibleChange={handleVisibility}
+                >
+                  {!saveCancel &&
+                    <div type="secondary">
+                      <CustomInput trigger={true} visibility={visibility} handleSaveCancel={handleSaveCancel} fetchTriggerInProcess={fetchTriggerInProcess} />
+                    </div>
+                  }
+                </Popover>
+              </Form.Item>
             :
-              <Alert message="Cannot Load Preview Image" type="error" />
+              <Form.Item style={{maxWidth: 250, margin: '0 auto'}}>
+                <Alert message="Cannot Load Preview Image" type="error" />
+              </Form.Item>
             }
-          </Form.Item>
+          </div>
         :
           <Button key='secondary' onClick={() => handleSaveCancel('cancel')} style={styles.cancelBtn} size='small'>Cancel</Button>
         }

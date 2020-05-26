@@ -186,24 +186,26 @@ class EditCamera extends Component {
                 checked={this.state.away_mode}
               />
             </Form.Item>*/}
-            <Form.Item
-              label="Camera Connection"
-              name="enabled" {...formItemLayout}>
-              <Popconfirm
-                title={<p>Are you sure you want to disconnect this camera? <br /> <font color='orange'>WARNING: This will disconnect the ROG Security system</font></p>}
-                visible={this.state.popconfirmvisible}
-                onVisibleChange={this.handleVisibleChange}
-                onConfirm={() => this.handleToggleEnabled(!this.state.enabled)}
-                okText="Confirm"
-                cancelText="Nevermind">
-                <Switch
-                  checkedChildren={<LinkOutlined />}
-                  unCheckedChildren={<DisconnectOutlined />}
-                  checked={this.state.enabled}
-                  value={this.state.enabled}
-                />
-              </Popconfirm>
-            </Form.Item>
+            {this.props.myRole.includes(0) &&
+              <Form.Item
+                label="Camera Connection"
+                name="enabled" {...formItemLayout}>
+                <Popconfirm
+                  title={<p>Are you sure you want to disconnect this camera? <br /> <font color='orange'>WARNING: This will disconnect the ROG Security system</font></p>}
+                  visible={this.state.popconfirmvisible}
+                  onVisibleChange={this.handleVisibleChange}
+                  onConfirm={() => this.handleToggleEnabled(!this.state.enabled)}
+                  okText="Confirm"
+                  cancelText="Nevermind">
+                  <Switch
+                    checkedChildren={<LinkOutlined />}
+                    unCheckedChildren={<DisconnectOutlined />}
+                    checked={this.state.enabled}
+                    value={this.state.enabled}
+                  />
+                </Popconfirm>
+              </Form.Item>
+            }
           </Form>
           {this.props.myRole.includes(0) &&
             <Popconfirm title={<p>Are you sure delete this camera? <br /><font color='orange'>WARNING: this action cannot be undone!</font></p>} onConfirm={this.deleteCamera} okText='Yes' cancelText='No'>

@@ -88,23 +88,17 @@ class CameraList extends Component {
                 ))}
               </Select>
             </Col>
-            {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?
+            {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' &&
               this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
-                userCameraGroupPrivilege.users_uuid == this.props.user.uuid && !userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) &&
-                  <Col xs={{span: 2}} sm={{span: 1}} style={styles.toggleCameraGroupOptionsContainer}>
-                  <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
-                    <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.deleteCameraGroup(userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
-                      <Button type="primary" danger icon={<DeleteOutlined />} className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
-                    </Popconfirm>
-                  </Tooltip>
-                  </Col>
-                ))
+              userCameraGroupPrivilege.users_uuid == this.props.user.uuid && !userCameraGroupPrivilege.user_camera_group_privilege_ids.includes(0) ?
+                <Col xs={{span: 2}} sm={{span: 1}} style={styles.toggleCameraGroupOptionsContainer}>
+                <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
+                  <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.deleteCameraGroup(userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
+                    <Button type="primary" danger icon={<DeleteOutlined />} className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
+                  </Popconfirm>
+                </Tooltip>
+                </Col>
               :
-              ''
-            }
-            {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?
-              this.props.selectedCameraGroup.userCameraGroupPrivileges.map(userCameraGroupPrivilege => (
-                userCameraGroupPrivilege.users_uuid == this.props.user.uuid && 0 in userCameraGroupPrivilege.user_camera_group_privilege_ids &&
                 <CameraOptionButtons
                   key={userCameraGroupPrivilege.id}
                   user={this.props.user}
@@ -112,9 +106,7 @@ class CameraList extends Component {
                   cameraGroup={this.props.selectedCameraGroup}
                 />
               ))
-            :
-            ''
-          }
+            }
         </Row>
           {typeof this.props.selectedCameraGroup.userCameraGroupPrivileges !== 'undefined' ?
             <CameraTiles user={this.props.user} cameraGroup={this.props.selectedCameraGroup} />

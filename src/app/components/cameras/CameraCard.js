@@ -65,7 +65,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
         </Row>
         <Row type="flex" style={{paddingLeft: 10, paddingRight: 10}}>
           {!myRole.includes(0) ?
-            (<Col span={12} style={styles.cameraConnectionSwitch}></Col>) :
+            (<Col span={12} style={styles.cameraConnectionSwitch}><div style={{height: 24}}></div></Col>) :
             <Col span={12} style={styles.cameraConnectionSwitch}>
               <ToggleCameraArmed
                 data={this.props}
@@ -95,7 +95,8 @@ const styles = {
     marginTop: 10,
     marginLeft: 10,
     marginRight:10,
-    marginBottom: 0
+    marginBottom: 0,
+    maxWidth: 405
   },
   cameraCardTitle: {
     wordBreak: 'break-word',
@@ -103,11 +104,12 @@ const styles = {
   },
   triggermodalButton: {
     float: 'right',
-    marginRight: 10
+    marginTop: 3
   },
   cameraSettingsButton: {
     float: 'right',
-    marginTop: 2
+    marginLeft: 10,
+    marginTop: 5
   },
   cameraConnectionSwitch: {
     textAlign: 'left',

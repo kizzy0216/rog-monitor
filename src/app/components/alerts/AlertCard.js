@@ -57,7 +57,8 @@ const styles = {
     marginTop: 10,
     marginLeft: 10,
     marginRight:10,
-    marginBottom: 0
+    marginBottom: 0,
+    maxWidth: 405
   },
   alertType: {
     paddingTop: 5,

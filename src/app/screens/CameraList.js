@@ -98,7 +98,7 @@ class CameraList extends Component {
                   cameraGroup={this.props.selectedCameraGroup}
                 />
               : userCameraGroupPrivilege.users_uuid == this.props.user.uuid &&
-                <Col xs={{span: 10}} sm={{span: 6, offset: 12}} type="flex" align="right" justify="right" style={styles.toggleCameraGroupOptionsContainer}>
+                <Col xs={{span: 10}} sm={{span: 6, offset: 12}} type="flex" align="right" justify="right" style={styles.toggleCameraGroupOptionsContainer} key={`cameragroup-${this.props.selectedCameraGroup.id}`}>
                   <Tooltip key={userCameraGroupPrivilege.id} title='Remove Camera Group' placement='bottom'>
                     <Popconfirm title="Are you sure you want to stop viewing this camera group? This action cannot be undone." onConfirm={() => this.props.removeUserCameraGroupPrivilegeInProcess ? '' : this.deleteCameraGroup(userCameraGroupPrivilege)} okText="Yes, remove camera group" cancelText="Nevermind">
                       <Button type="primary" danger icon={<DeleteOutlined />} className="removeCameraGroupButton" style={styles.removeCameraGroupButton} loading={this.props.removeUserCameraGroupPrivilegeInProcess} disabled={this.props.removeUserCameraGroupPrivilegeInProcess}></Button>
@@ -150,10 +150,7 @@ const styles = {
   select: {
     width: '100%'
   },
-  toggleCameraGroupOptionsContainer: {
-    width: 28,
-    marginRight: '-3%'
-  },
+  toggleCameraGroupOptionsContainer: {},
   cameraGroupContainer: {
     height: 'calc(100vh - 65px)'
   },

@@ -100,15 +100,15 @@ const AddTriggerForm = ({
                   </Form.Item>
                 }
                 <div className="ant-form-item-label">
-                  <label>Trigger Silence Windows</label>
+                  <label>Trigger Disarm Windows</label>
                 </div>
-                <Form.Item label="Select Silence Window" name="time_window_select" {...formItemLayout}>
+                <Form.Item label="Select Disarm Window" name="time_window_select" {...formItemLayout}>
                   <div>
                     <Select
-                      placeholder="Select Silence Window"
+                      placeholder="Select Disarm Window"
                       style={styles.triggerTimeWindowSelect}
                       onChange={changeTimeWindow}
-                      notFoundContent="Click/Tap the plus button to add a silence window."
+                      notFoundContent="Click/Tap the plus button to add a disarm window."
                     >
                     {timeWindows.map((timeWindow, key) => {
                       return <Select.Option key={key} value={key}>Time Window: {key + 1}</Select.Option>;
@@ -118,7 +118,7 @@ const AddTriggerForm = ({
                   </div>
                 </Form.Item>
                 {cameraGroupOwner && selectedTriggerShared &&
-                  <Form.Item label="Silence Window Permissions" name="sharedTriggerSilenceWindow" {...formItemLayout}>
+                  <Form.Item label="Disarm Window Permissions" name="sharedTriggerSilenceWindow" {...formItemLayout}>
                     <Select
                       placeholder="Shared or Private"
                       style={styles.triggerTimeWindowSelect}
@@ -129,7 +129,7 @@ const AddTriggerForm = ({
                     </Select>
                   </Form.Item>
                 }
-                <Form.Item label="Select Silence Window Days" name="days_of_week" {...formItemLayout}>
+                <Form.Item label="Select Disarm Window Days" name="days_of_week" {...formItemLayout}>
                   <Select
                     mode="multiple"
                     onChange={updateDataDaysOfWeek}
@@ -147,7 +147,7 @@ const AddTriggerForm = ({
                   </Select>
                 </Form.Item>
                 <div span={24} className="ant-form-item-label">
-                  <label>Set Silence Window Time {time_zone ? "("+time_zone+")" : ''}</label>
+                  <label>Set Disarm Window Time {time_zone ? "("+time_zone+")" : ''}</label>
                 </div>
                 <Row>
                   <Form.Item span={12} name="start_at" style={{float: 'left', width: '50%'}}>
@@ -180,19 +180,19 @@ const AddTriggerForm = ({
                       disabled={cameraWideDisabled}
                       onChange={toggleCameraWide}
                     >
-                      Add Silence Window to All Existing Triggers in This Camera
+                      Add Disarm Window to All Existing Triggers in This Camera
                     </Checkbox>
                   </Form.Item>
                 </Row>
                 <Row>
                 <Col span={8}>
-                  <Button type="danger" icon={<DeleteOutlined />} onClick={deleteTriggerTimeWindow}>Delete Silence Window</Button>
+                  <Button type="danger" icon={<DeleteOutlined />} onClick={deleteTriggerTimeWindow}>Delete Disarm Window</Button>
                 </Col>
                   <Col span={8}>
                     <Button type="danger" icon={<CloseOutlined />} onClick={resetData}>Clear Form</Button>
                   </Col>
                   <Col span={8}>
-                    <Button type="primary" icon=<SaveOutlined /> onClick={saveData}>Save Silence Window</Button>
+                    <Button type="primary" icon=<SaveOutlined /> onClick={saveData}>Save Disarm Window</Button>
                   </Col>
                 </Row>
                 <div>&nbsp;</div>
@@ -255,15 +255,15 @@ const AddTriggerForm = ({
                     </Form.Item>
                   }
                   <div className="ant-form-item-label">
-                    <label>Trigger Silence Windows</label>
+                    <label>Trigger Disarm Windows</label>
                   </div>
-                  <Form.Item label="Select Silence Window" name="time_window_select" {...formItemLayout}>
+                  <Form.Item label="Select Disarm Window" name="time_window_select" {...formItemLayout}>
                   <div>
                     <Select
-                      placeholder="Select Silence Window"
+                      placeholder="Select Disarm Window"
                       style={styles.triggerTimeWindowSelect}
                       onChange={changeTimeWindow}
-                      notFoundContent="Click/Tap the plus button to add a silence window."
+                      notFoundContent="Click/Tap the plus button to add a disarm window."
                     >
                     {timeWindows.map((timeWindow, key) => {
                       return <Select.Option key={key} value={key}>Time Window: {key + 1}</Select.Option>;
@@ -273,7 +273,7 @@ const AddTriggerForm = ({
                   </div>
                   </Form.Item>
                   {cameraGroupOwner && selectedTriggerShared &&
-                    <Form.Item label="Silence Window Permissions" name="sharedTriggerSilenceWindow" {...formItemLayout}>
+                    <Form.Item label="Disarm Window Permissions" name="sharedTriggerSilenceWindow" {...formItemLayout}>
                       <Select
                         placeholder="Shared or Private"
                         style={styles.triggerTimeWindowSelect}
@@ -284,7 +284,7 @@ const AddTriggerForm = ({
                       </Select>
                     </Form.Item>
                   }
-                  <Form.Item label="Select Silence Window Days" name="days_of_week" {...formItemLayout}>
+                  <Form.Item label="Select Disarm Window Days" name="days_of_week" {...formItemLayout}>
                     <Select
                       mode="multiple"
                       onChange={updateDataDaysOfWeek}
@@ -302,7 +302,7 @@ const AddTriggerForm = ({
                     </Select>
                   </Form.Item>
                   <div span={24} className="ant-form-item-label">
-                    <label>Set Silence Window Time {time_zone ? "("+time_zone+")" : ''}</label>
+                    <label>Set Disarm Window Time {time_zone ? "("+time_zone+")" : ''}</label>
                   </div>
                   <Row>
                     <Form.Item span={12} name="start_at" style={{float: 'left', width: '50%'}}>
@@ -335,12 +335,12 @@ const AddTriggerForm = ({
                         disabled={cameraWideDisabled}
                         onChange={toggleCameraWide}
                       >
-                        Add Silence Window to All Existing Triggers in This Camera
+                        Add Disarm Window to All Existing Triggers in This Camera
                       </Checkbox>
                     </Form.Item>
                   </Row>
                   <Row>
-                    <Button type="danger" icon={<CloseOutlined />} onClick={resetData} style={{margin: '0 auto'}}>Clear Silence Window</Button>
+                    <Button type="danger" icon={<CloseOutlined />} onClick={resetData} style={{margin: '0 auto'}}>Clear Disarm Window</Button>
                   </Row>
                   <div>&nbsp;</div>
                 </div>
@@ -419,13 +419,13 @@ class AddTriggerModal extends Component {
       }
       if (this.triggerDetails['uuid'] !== undefined) {
         if (nextProps.createTriggerTimeWindowSuccess && nextProps.createTriggerTimeWindowSuccess !== this.props.createTriggerTimeWindowSuccess) {
-          message.success('Trigger silence window created');
+          message.success('Trigger disarm window created');
         }
         if (nextProps.updateTriggerTimeWindowSuccess && nextProps.updateTriggerTimeWindowSuccess !== this.props.updateTriggerTimeWindowSuccess) {
-          message.success('Trigger silence window updated');
+          message.success('Trigger disarm window updated');
         }
         if (nextProps.deleteTriggerTimeWindowSuccess && nextProps.deleteTriggerTimeWindowSuccess !== this.props.deleteTriggerTimeWindowSuccess) {
-          message.success('Trigger silence window deleted');
+          message.success('Trigger disarm window deleted');
         }
       }
     }
@@ -640,7 +640,7 @@ class AddTriggerModal extends Component {
                 }
                 values.trigger_windows.push(trigger_window);
               } else {
-                message.error("There can be no blank fields in a trigger silence window. Trigger added without silence window: "+(index + 1));
+                message.error("There can be no blank fields in a trigger disarm window. Trigger added without disarm window: "+(index + 1));
               }
             }
           });
@@ -881,7 +881,7 @@ class AddTriggerModal extends Component {
           this.form.resetFields(['start_at', 'end_at']);
         }
       } else {
-        message.error('Please select the days of week and time period for your silence window.');
+        message.error('Please select the days of week and time period for your disarm window.');
       }
     });
   }
@@ -905,7 +905,7 @@ class AddTriggerModal extends Component {
     let timeWindowSelect = this.form.getFieldValue('time_window_select');
     let days_of_week = this.form.getFieldValue('days_of_week');
     if (typeof timeWindowSelect == 'undefined') {
-      message.error('Please select which Trigger Silence Window you want to store this in. Your changes will not be saved!');
+      message.error('Please select which Trigger Disarm Window you want to store this in. Your changes will not be saved!');
       this.handleResetData();
     } else if (days_of_week === undefined || days_of_week.length == 0) {
       message.error('Please select the days you would like the trigger time to be active. Your changes will not be saved!');

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Form, Input, Button, Popconfirm, message, Switch } from 'antd';
-import { EnvironmentOutlined, DeleteOutlined, DisconnectOutlined, LinkOutlined, SafetyOutlined, HomeOutlined } from '@ant-design/icons';
+import { EnvironmentOutlined, DeleteOutlined, DisconnectOutlined, LinkOutlined, SafetyOutlined, HomeOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import CustomInput from '../../components/formitems/CustomInput';
 import { enableCameraGroup, disableCameraGroup, removeCameraGroup, editCameraGroup } from '../../redux/cameraGroups/actions';
 
 const FormItem = Form.Item;
-const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, form, cameraGroup, cameraGroupName, editCameraGroupInProcess, editCameraGroupSuccess, removeCameraGroupInProcess, removeCameraGroupSuccess, user, enableCameraGroup, disableCameraGroup, enableCameraGroupInProcess, disableCameraGroupInProcess, cameraGroupAwayMode, toggleCameraGroupAwayMode}) => {
+const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, form, cameraGroup, cameraGroupName, editCameraGroupInProcess, editCameraGroupSuccess, removeCameraGroupInProcess, removeCameraGroupSuccess, user, enableCameraGroup, disableCameraGroup, enableCameraGroupInProcess, disableCameraGroupInProcess, cameraGroupAwayMode, toggleCameraGroupAwayMode, cameraGroupArmed, toggleCameraGroupArmed}) => {
   const formItemLayout = {
     labelCol: {
       xs: { span: 6 },
@@ -36,6 +36,15 @@ const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, fo
             unCheckedChildren={<HomeOutlined />}
             onChange={toggleCameraGroupAwayMode}
             checked={cameraGroupAwayMode}
+            disabled={!cameraGroupArmed}
+          />
+        </Form.Item>
+        <Form.Item label="Armed" name="armed" {...formItemLayout}>
+          <Switch
+            checkedChildren={<LockOutlined />}
+            unCheckedChildren={<UnlockOutlined />}
+            onChange={toggleCameraGroupArmed}
+            checked={cameraGroupArmed}
           />
         </Form.Item>
         <FormItem label='Name' name="name" {...formItemLayout}>
@@ -68,7 +77,8 @@ class EditCameraGroupModal extends Component {
     this.state = {
       visible: false,
       error: false,
-      away_mode: this.props.selectedCameraGroup.away_mode
+      away_mode: this.props.selectedCameraGroup.away_mode,
+      armed: this.props.selectedCameraGroup.armed
     }
   }
 
@@ -93,8 +103,7 @@ class EditCameraGroupModal extends Component {
   handleCreate = (e) => {
     const form = this.form;
     form.validateFields().then(values => {
-      values.away_mode = this.state.away_mode;
-      this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, {name: values.name, away_mode: values.away_mode});
+      this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, {name: values.name, away_mode: this.state.away_mode, armed: this.state.armed});
     });
   };
 
@@ -104,6 +113,10 @@ class EditCameraGroupModal extends Component {
 
   handleToggleCameraGroupAwayMode = (fieldValue) => {
     this.setState({away_mode: fieldValue});
+  }
+
+  handleToggleCameraGroupArmed = (fieldValue) => {
+    this.setState({armed: fieldValue});
   }
 
   render() {
@@ -125,6 +138,8 @@ class EditCameraGroupModal extends Component {
           cameraGroup={this.props.selectedCameraGroup}
           cameraGroupName={this.props.selectedCameraGroup.name}
           cameraGroupAwayMode={this.state.away_mode}
+          cameraGroupArmed={this.state.armed}
+          toggleCameraGroupArmed={this.handleToggleCameraGroupArmed}
           toggleCameraGroupAwayMode={this.handleToggleCameraGroupAwayMode}
           editCameraGroupInProcess={this.props.editCameraGroupInProcess}
           editCameraGroupSuccess={this.props.editCameraGroupSuccess}

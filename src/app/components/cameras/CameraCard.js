@@ -65,11 +65,12 @@ static getDerivedStateFromProps(nextProps, prevState) {
         </Row>
         <Row type="flex" style={{paddingLeft: 10, paddingRight: 10}}>
           {!myRole.includes(0) ?
-            (<Col span={12} style={styles.cameraConnectionSwitch}><div style={{height: 24}}></div></Col>) :
+            (<Col span={12} style={styles.cameraConnectionSwitch}><div style={{height: 24}}>{!this.props.enabled ? <span style={{color: 'rgba(0, 0, 0, 0.25)', verticalAlign: 'middle'}}> (Disabled)</span> : <span style={{color: '#1890ff', verticalAlign: 'middle'}}> (Enabled)</span>}</div></Col>) :
             <Col span={12} style={styles.cameraConnectionSwitch}>
               <ToggleCameraArmed
                 data={this.props}
               />
+              {!this.props.enabled ? <span style={{color: 'rgba(0, 0, 0, 0.25)', verticalAlign: 'middle'}}> (Disabled)</span> : ''}
             </Col>
           }
           <Col span={12}>

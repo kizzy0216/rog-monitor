@@ -20,7 +20,7 @@ const alerts = (state = initialState, action) => {
       case types.FETCH_ALERTS_IN_PROCESS:
         return {
           ...state,
-          fetchInProcess: action.bool
+          fetchInProcess: action.fetchInProcess
         }
 
       case types.FETCH_ALERTS_ERROR:

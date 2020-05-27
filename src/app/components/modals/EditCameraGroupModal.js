@@ -116,6 +116,9 @@ class EditCameraGroupModal extends Component {
   }
 
   handleToggleCameraGroupArmed = (fieldValue) => {
+    if (fieldValue == false) {
+      this.setState({away_mode: false});
+    }
     this.setState({armed: fieldValue});
   }
 

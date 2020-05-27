@@ -513,13 +513,15 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
 
     let data = {
       name: cameraGroupData.name,
-      away_mode: cameraGroupData.away_mode
+      away_mode: cameraGroupData.away_mode,
+      armed: cameraGroupData.armed
     };
 
     axios.patch(url, data, config)
       .then((response) => {
         cameraGroup.name = cameraGroupData.name;
         cameraGroup.away_mode = cameraGroupData.away_mode;
+        cameraGroup.armed = cameraGroupData.armed;
         dispatch(fetchCameraGroups(user));
         dispatch(selectCameraGroup(user, cameraGroup));
         dispatch(editCameraGroupSuccess(true));

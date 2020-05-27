@@ -134,6 +134,7 @@ class Alerts extends Component {
                 total={this.props.pagination.total}
                 onChange={this.handlePaginationChange}
                 style={styles.pagination}
+                disabled={this.props.fetchInProcess}
               />
             </Col>
           </Row>

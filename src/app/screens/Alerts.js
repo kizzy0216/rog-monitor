@@ -150,14 +150,17 @@ class Alerts extends Component {
     } else {
       return (
         <div>
-          <Row type='flex' justify='center'>
-          <AlertSortingForm
-            form={this.alertSortingFormRef}
-            AlertFilterChange={this.handleAlertFilterChange}
-            FilterTypeChange={this.handleFilterTypeChange}
-            cameraGroups={this.props.cameraGroups}
-            selectedFilterType={this.state.selectedFilterType}
-          />
+          <Row type='flex' justify='center' style={styles.alertOptions}>
+            <Col xs={{span: 12}}>
+              <AlertSortingForm
+                form={this.alertSortingFormRef}
+                AlertFilterChange={this.handleAlertFilterChange}
+                FilterTypeChange={this.handleFilterTypeChange}
+                cameraGroups={this.props.cameraGroups}
+                selectedFilterType={this.state.selectedFilterType}
+              />
+            </Col>
+            <Col xs={{span: 12}}></Col>
           </Row>
           <Row type='flex' justify='start' style={styles.alertListContainer}>
             <p style={styles.noAlertsText}>

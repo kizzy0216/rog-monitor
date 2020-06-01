@@ -180,7 +180,7 @@ export function fetchAlerts(user) {
     let itemsPerPage = 20;
     let currentPage = 1;
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts/new-functionality`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts-new`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}}
     axios.get(url, config)
       .then((response) => {
@@ -228,7 +228,7 @@ export function fetchAlertsWithPagination(user, nextPage, page, pageSize) {
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts/new-functionality?page=${nextPage}&per_page=${pageSize}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts-new?page=${nextPage}&per_page=${pageSize}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {
@@ -274,7 +274,7 @@ export function fetchAlertsWithPaginationAndFilters(user, nextPage, page=1, page
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts/new-functionality?page=${nextPage}&per_page=${pageSize}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts-new?page=${nextPage}&per_page=${pageSize}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {

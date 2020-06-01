@@ -180,7 +180,7 @@ export function fetchAlerts(user) {
     let itemsPerPage = 20;
     let currentPage = 1;
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts/new-functionality`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}}
     axios.get(url, config)
       .then((response) => {
@@ -188,7 +188,7 @@ export function fetchAlerts(user) {
           let pagination = {
             total: response.data[0]['total_alerts'],
             per_page: itemsPerPage,
-            current_page: 1,
+            current_page: currentPage,
             last_page: Math.ceil(response.data[0]['total_alerts'] / itemsPerPage),
             from: ((currentPage - 1) * itemsPerPage) + 1,
             to: currentPage  * itemsPerPage
@@ -228,21 +228,18 @@ export function fetchAlertsWithPagination(user, nextPage, page, pageSize) {
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
-    let itemsPerPage = pageSize;
-    let currentPage = page;
-
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${nextPage}&per_page=${itemsPerPage}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts/new-functionality?page=${nextPage}&per_page=${pageSize}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {
         if (!isEmpty(response.data)) {
           let pagination = {
             total: response.data[0]['total_alerts'],
-            per_page: itemsPerPage,
-            current_page: currentPage,
-            last_page: Math.ceil(response.data[0]['total_alerts'] / itemsPerPage),
-            from: ((currentPage - 1) * itemsPerPage) + 1,
-            to: currentPage  * itemsPerPage
+            per_page: pageSize,
+            current_page: page,
+            last_page: Math.ceil(response.data[0]['total_alerts'] / pageSize),
+            from: ((page - 1) * pageSize) + 1,
+            to: page  * pageSize
           };
           dispatch(fetchSuccessWithPagination(response.data, pagination));
         }
@@ -277,7 +274,7 @@ export function fetchAlertsWithPaginationAndFilters(user, nextPage, page=1, page
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts?page=${nextPage}&per_page=${pageSize}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts/new-functionality?page=${nextPage}&per_page=${pageSize}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {

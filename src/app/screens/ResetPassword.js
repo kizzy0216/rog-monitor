@@ -50,14 +50,14 @@ class ResetPassword extends Component {
     }
 
     if (nextProps.resetPasswordError && this.props.resetPasswordError !== nextProps.resetPasswordError) {
-      message.error(nextProps.resetPasswordError);
+      message.error(nextProps.resetPasswordError, 10);
       if (nextProps.resetPasswordError === 'Invalid request') {
         this.props.history.push('/login');
       }
     }
 
     if (nextProps.getPasswordResetRequestError && this.props.getPasswordResetRequestError !== nextProps.getPasswordResetRequestError) {
-      message.error(nextProps.getPasswordResetRequestError);
+      message.error(nextProps.getPasswordResetRequestError, 10);
       this.props.history.push('/login');
     }
   }

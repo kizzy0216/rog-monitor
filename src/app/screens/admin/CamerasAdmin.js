@@ -65,10 +65,10 @@ class CamerasAdmin extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if (nextProps.editCameraError !== '') {
-      message.error(nextProps.editCameraError);
+      message.error(nextProps.editCameraError, 10);
     }
     if (nextProps.addCameraError !== '') {
-      message.error(nextProps.addCameraError);
+      message.error(nextProps.addCameraError, 10);
     }
     return null;
   }

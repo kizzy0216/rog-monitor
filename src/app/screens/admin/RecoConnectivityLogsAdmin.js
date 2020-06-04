@@ -34,7 +34,7 @@ class RecoConnectivityLogsAdmin extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if (nextProps.fetchRecoConnectivityLogsError !== '') {
-      message.error(nextProps.fetchRecoConnectivityLogsError);
+      message.error(nextProps.fetchRecoConnectivityLogsError, 10);
     }
     return null;
   }

@@ -44,7 +44,7 @@ const ShareCameraGroupForm = ({visible, onCancel, onCreate, form, selectedCamera
 class ShareCameraGroupModal extends Component {
   UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.shareCameraGroupError && this.props.shareCameraGroupError !== nextProps.shareCameraGroupError) {
-      message.error(nextProps.shareCameraGroupError);
+      message.error(nextProps.shareCameraGroupError, 10);
     }
     else if (nextProps.shareCameraGroupSuccess && this.props.shareCameraGroupSuccess !== nextProps.shareCameraGroupSuccess) {
       message.success('Invitation sent.');

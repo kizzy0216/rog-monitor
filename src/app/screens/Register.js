@@ -49,14 +49,14 @@ class Register extends Component {
     }
 
     if (nextProps.registerError && this.props.registerError !== nextProps.registerError) {
-      message.error(nextProps.registerError);
+      message.error(nextProps.registerError, 10);
       if (nextProps.registerError === 'Invalid invitation') {
         this.props.history.push('/login');
       }
     }
 
     if (nextProps.getInvitationError && this.props.getInvitationError !== nextProps.getInvitationError) {
-      message.error(nextProps.getInvitationError);
+      message.error(nextProps.getInvitationError, 10);
       this.props.history.push('/login');
     }
 

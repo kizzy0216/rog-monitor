@@ -51,7 +51,7 @@ class RequestInviteModal extends Component {
     }
 
     if (nextProps.sendInvitationError && this.props.sendInvitationError !== nextProps.sendInvitationError) {
-      message.error(nextProps.sendInvitationError);
+      message.error(nextProps.sendInvitationError, 10);
     }
   }
 

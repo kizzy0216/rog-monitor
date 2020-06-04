@@ -47,13 +47,13 @@ class InvitationsAdmin extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if (nextProps.fetchReceivedError !== '') {
-      message.error(nextProps.fetchReceivedError);
+      message.error(nextProps.fetchReceivedError, 10);
     }
     if (nextProps.updateInvitationError !== '') {
-      message.error(nextProps.updateInvitationError);
+      message.error(nextProps.updateInvitationError, 10);
     }
     if (nextProps.deleteInvitationError !== '') {
-      message.error(nextProps.deleteInvitationError);
+      message.error(nextProps.deleteInvitationError, 10);
     }
     return null;
   }

@@ -51,7 +51,7 @@ class RequestPasswordResetModal extends Component {
     }
 
     if (nextProps.sendPasswordResetRequestError && this.props.sendPasswordResetRequestError !== nextProps.sendPasswordResetRequestError) {
-      message.error(nextProps.sendPasswordResetRequestError);
+      message.error(nextProps.sendPasswordResetRequestError, 10);
     }
   }
 

@@ -19,7 +19,7 @@ class RefreshPreviewImage extends Component {
   flagTimeout = () => {
     timeout[this.props.data.uuid] = setTimeout(() => {
       this.setState({disabledFlag: false});
-      message.error('Timeout for fetching image.');
+      message.error('Timeout for fetching image.', 10);
     }, 90000);
   }
 

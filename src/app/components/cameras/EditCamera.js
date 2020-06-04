@@ -80,7 +80,7 @@ class EditCamera extends Component {
       this.setState({away_mode: fieldValue});
     } else {
       this.setState({away_mode: false});
-      message.error('Camera connection must be enabled and triggers must be armed in order to turn on away mode.');
+      message.error('Camera connection must be enabled and triggers must be armed in order to turn on away mode.', 10);
     }
   }
 
@@ -106,7 +106,7 @@ class EditCamera extends Component {
     if (this.props.data.uuid === nextProps.data.uuid) {
       if (this.state.flag == true) {
         if (nextProps.editCameraError !== '' && this.props.editCameraError !== nextProps.editCameraError) {
-          message.error(nextProps.editCameraError);
+          message.error(nextProps.editCameraError, 10);
           this.setState({flag: false});
         }
         if (nextProps.editCameraSuccess === true) {

@@ -76,7 +76,7 @@ class RecosAdmin extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if (nextProps.getRecosError) {
-      message.error(nextProps.getRecosError);
+      message.error(nextProps.getRecosError, 10);
     }
     const data = [];
     if (!isEmpty(nextProps.recos)) {

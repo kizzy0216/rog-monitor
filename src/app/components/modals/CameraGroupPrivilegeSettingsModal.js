@@ -75,11 +75,11 @@ class UserCameraGroupSettingsModal extends Component {
 
   UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.rescindInviteError && nextProps.rescindInviteError !== this.props.rescindInviteError) {
-      message.error(nextProps.rescindInviteError);
+      message.error(nextProps.rescindInviteError, 10);
     }
 
     if (nextProps.removeUserCameraGroupPrivilegeError && nextProps.removeUserCameraGroupPrivilegeError !== this.props.removeUserCameraGroupPrivilegeError) {
-      message.error(nextProps.removeUserCameraGroupPrivilegeError);
+      message.error(nextProps.removeUserCameraGroupPrivilegeError, 10);
     }
   };
 

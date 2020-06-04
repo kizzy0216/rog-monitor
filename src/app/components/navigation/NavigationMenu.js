@@ -54,7 +54,7 @@ class NavigationMenu extends Component {
           </Tooltip>
         </Menu.Item>
         <Menu.Item key='/alerts'>
-          <Badge count={!isEmpty(this.props.alerts) ? this.props.alerts[0].new_alerts: 0}>
+          <Badge count={!isEmpty(this.props.alerts) ? this.props.alerts[0].total_alerts: 0}>
             <Tooltip title="Alert Snapshots">
               <AlertOutlined className='nav-icon' />
             </Tooltip>

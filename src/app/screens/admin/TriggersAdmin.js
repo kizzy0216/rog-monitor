@@ -103,7 +103,7 @@ class TriggersAdmin extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if (nextProps.fetchTriggerErrorAdmin) {
-      message.error(nextProps.fetchTriggerErrorAdmin);
+      message.error(nextProps.fetchTriggerErrorAdmin, 10);
     }
     const data = [];
     if (!isEmpty(nextProps.triggers)) {

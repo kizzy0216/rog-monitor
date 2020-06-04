@@ -40,19 +40,19 @@ class CameraList extends Component {
     }
 
     if (nextProps.createCameraError && nextProps.createCameraError !== this.props.createCameraError) {
-      message.error(nextProps.createCameraError);
+      message.error(nextProps.createCameraError, 10);
     }
 
     if (nextProps.deleteCameraError && nextProps.deleteCameraError !== this.props.deleteCameraError) {
-      message.error(nextProps.deleteCameraError);
+      message.error(nextProps.deleteCameraError, 10);
     }
 
     if (nextProps.rescindInviteError && nextProps.rescindInviteError !== this.props.rescindInviteError) {
-      message.error(nextProps.rescindInviteError);
+      message.error(nextProps.rescindInviteError, 10);
     }
 
     if (nextProps.removeUserCameraGroupPrivilegeError && nextProps.removeUserCameraGroupPrivilegeError !== this.props.removeUserCameraGroupPrivilegeError) {
-      message.error(nextProps.removeUserCameraGroupPrivilegeError);
+      message.error(nextProps.removeUserCameraGroupPrivilegeError, 10);
     }
   }
 

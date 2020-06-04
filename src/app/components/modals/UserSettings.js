@@ -81,7 +81,7 @@ class UserSettings extends Component {
 
   UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.updateUserError && this.props.updateUserError !== nextProps.updateUserError) {
-      message.error(nextProps.updateUserError);
+      message.error(nextProps.updateUserError, 10);
     }
     if (nextProps.updateUserSuccess && this.props.updateUserSuccess !== nextProps.updateUserSuccess) {
       message.success('Settings Saved.');

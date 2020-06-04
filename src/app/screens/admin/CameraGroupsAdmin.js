@@ -28,7 +28,7 @@ class CameraGroupsAdmin extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if (nextProps.editCameraGroupError !== '') {
-      message.error(nextProps.editCameraGroupError);
+      message.error(nextProps.editCameraGroupError, 10);
     }
     return null;
   }

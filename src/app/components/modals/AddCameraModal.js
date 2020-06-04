@@ -57,10 +57,10 @@ class AddCameraModal extends Component {
       this.props.toggleAddCameraModalVisibility();
     }
     if (nextProps.addCameraError !== '' && this.props.addCameraError !== nextProps.addCameraError) {
-      message.error(nextProps.addCameraError);
+      message.error(nextProps.addCameraError, 10);
     }
     if(nextProps.cameraConnectionFail && nextProps.cameraConnectionFail !== this.props.cameraConnectionFail){
-      message.error('Camera stream could not connect.');
+      message.error('Camera stream could not connect.', 10);
     }
   };
 

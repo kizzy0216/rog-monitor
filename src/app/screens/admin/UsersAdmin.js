@@ -32,7 +32,7 @@ class UsersAdmin extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState){
     if (nextProps.updateUserError !== '') {
-      message.error(nextProps.updateUserError);
+      message.error(nextProps.updateUserError, 10);
     }
     return null;
   }

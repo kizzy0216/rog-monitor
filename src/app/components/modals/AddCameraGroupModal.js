@@ -48,7 +48,7 @@ class AddCameraGroupModal extends Component {
     }
 
     if (nextProps.addCameraGroupError && this.props.addCameraGroupError !== nextProps.addCameraGroupError) {
-      message.error(nextProps.addCameraGroupError);
+      message.error(nextProps.addCameraGroupError, 10);
     }
   };
 
@@ -59,7 +59,7 @@ class AddCameraGroupModal extends Component {
     } else if (this.state.addCameraModalVisible === true) {
       this.setState({visible: false});
     } else {
-      message.error("You have reached your license limit. Please send an email requesting additional licenses to hello@gorog.co");
+      message.error("You have reached your license limit. Please send an email requesting additional licenses to hello@gorog.co", 10);
     }
   }
 

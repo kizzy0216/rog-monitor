@@ -26,7 +26,7 @@ class CameraOptionButtons extends Component {
     } else if (this.state.addCameraModalVisible === true) {
       this.setState({addCameraModalVisible: false})
     } else {
-      message.error("You have reached your license limit. Please send an email requesting additional licenses to hello@gorog.co");
+      message.error("You have reached your license limit. Please send an email requesting additional licenses to hello@gorog.co", 10);
     }
   }
 

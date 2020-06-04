@@ -640,7 +640,7 @@ class AddTriggerModal extends Component {
                 }
                 values.trigger_windows.push(trigger_window);
               } else {
-                message.error("There can be no blank fields in a trigger disarm window. Trigger added without disarm window: "+(index + 1));
+                message.error("There can be no blank fields in a trigger disarm window. Trigger added without disarm window: "+(index + 1), 10);
               }
             }
           });
@@ -659,7 +659,7 @@ class AddTriggerModal extends Component {
               break;
           }
         }).catch(err => {
-          return message.error(err);
+          return message.error(err, 10);
         }).finally(() => {
           this.triggerDetails.polygonPoints.length = 0;
           this.triggerDetails.currentBaseTriggerType = '';
@@ -669,7 +669,7 @@ class AddTriggerModal extends Component {
           this.setState({newLoiteringTrigger: false});
         });
       } else {
-        message.error('please draw a trigger to save');
+        message.error('please draw a trigger to save', 10);
       }
     }
     this.triggerDetails.currentBaseTriggerUuid = null;
@@ -767,7 +767,7 @@ class AddTriggerModal extends Component {
         if (moment(endTime, 'HH:mm').isAfter(fieldValue, 'minute')) {
           this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'start_at');
         } else {
-          message.error('Please select a time that is before the end time.');
+          message.error('Please select a time that is before the end time.', 10);
           this.form.resetFields(['start_at']);
         }
       } else {
@@ -784,11 +784,11 @@ class AddTriggerModal extends Component {
         if (moment(startTime, 'HH:mm').isBefore(fieldValue, 'minute')) {
           this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, moment(fieldValue).format('HH:mm'), 'end_at');
         } else {
-          message.error('Please select a time that is after the start time.');
+          message.error('Please select a time that is after the start time.', 10);
           this.form.resetFields(['end_at']);
         }
       } else {
-        message.error('Please select a start time before selecting a stop time.');
+        message.error('Please select a start time before selecting a stop time.', 10);
         this.form.resetFields(['end_at']);
       }
     }
@@ -814,7 +814,7 @@ class AddTriggerModal extends Component {
       this.props.updateTimeWindowData(timeWindowSelect, this.props.triggerTimeWindows, fieldValue.target.checked, 'camera_wide');
       this.setState({ cameraWide: fieldValue.target.checked });
     } else {
-      message.error('Please select a time window first.');
+      message.error('Please select a time window first.', 10);
     }
   }
 
@@ -877,11 +877,11 @@ class AddTriggerModal extends Component {
             this.setState({deleteButton: false});
           }
         } else {
-          message.error('Please select a stop time that is after the start time.');
+          message.error('Please select a stop time that is after the start time.', 10);
           this.form.resetFields(['start_at', 'end_at']);
         }
       } else {
-        message.error('Please select the days of week and time period for your disarm window.');
+        message.error('Please select the days of week and time period for your disarm window.', 10);
       }
     });
   }
@@ -905,10 +905,10 @@ class AddTriggerModal extends Component {
     let timeWindowSelect = this.form.getFieldValue('time_window_select');
     let days_of_week = this.form.getFieldValue('days_of_week');
     if (typeof timeWindowSelect == 'undefined') {
-      message.error('Please select which Trigger Disarm Window you want to store this in. Your changes will not be saved!');
+      message.error('Please select which Trigger Disarm Window you want to store this in. Your changes will not be saved!', 10);
       this.handleResetData();
     } else if (days_of_week === undefined || days_of_week.length == 0) {
-      message.error('Please select the days you would like the trigger time to be active. Your changes will not be saved!');
+      message.error('Please select the days you would like the trigger time to be active. Your changes will not be saved!', 10);
       this.handleResetData();
     }
   }

@@ -20,8 +20,10 @@ class ToggleCameraArmed extends Component {
   }
 
   toggleCameraArmed = (armed) => {
-    if (this.props.data.enabled) {
+    if (this.props.data.enabled && this.props.data.cameraGroup.armed) {
       this.props.toggleCameraArmed(this.props.data.user, this.props.data.cameraGroup, this.props.data.uuid, armed);
+    } else if (!this.props.data.cameraGroup.armed) {
+      message.error('Camera Group disarmed. Please go to settings and arm camera group.', 10);
     } else {
       message.error('Camera disconnected. Please go to settings and enable camera connection.', 10);
     }

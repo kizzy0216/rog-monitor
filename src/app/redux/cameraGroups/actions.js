@@ -511,13 +511,7 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
-    let data = {
-      name: cameraGroupData.name,
-      away_mode: cameraGroupData.away_mode,
-      armed: cameraGroupData.armed
-    };
-
-    axios.patch(url, data, config)
+    axios.patch(url, cameraGroupData, config)
       .then((response) => {
         cameraGroup.name = cameraGroupData.name;
         cameraGroup.away_mode = cameraGroupData.away_mode;

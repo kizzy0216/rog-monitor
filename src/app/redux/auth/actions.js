@@ -370,6 +370,8 @@ export function logout(user) {
     sessionStorage.removeItem('password');
     sessionStorage.removeItem('fcm_token_id');
     sessionStorage.removeItem('fcm_token');
+    localStorage.removeItem('fcm_token_id');
+    localStorage.removeItem('fcm_token');
     window.clearInterval(window.jwtTokenRefresh);
     window.jwtTokenRefresh = null;
     dispatch(clearAssociatedData());

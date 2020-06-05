@@ -121,7 +121,7 @@ class EditCameraGroupModal extends Component {
       this.setState({away_mode: false});
     }
     this.setState({armed: fieldValue});
-    this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, {armed: fieldValue});
+    this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, {armed: fieldValue, away_mode: this.state.away_mode});
   }
 
   render() {

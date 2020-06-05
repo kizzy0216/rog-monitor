@@ -103,7 +103,14 @@ class EditCameraGroupModal extends Component {
   handleCreate = (e) => {
     const form = this.form;
     form.validateFields().then(values => {
-      this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, {name: values.name});
+      let settings = {name: values.name};
+      if (this.state.armed !== this.props.selectedCameraGroup.armed) {
+        settings.armed = this.state.armed;
+      }
+      if (this.state.away_mode !== this.props.selectedCameraGroup.away_mode) {
+        settings.away_mode = this.state.away_mode;
+      }
+      this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, settings);
     });
   };
 
@@ -113,7 +120,6 @@ class EditCameraGroupModal extends Component {
 
   handleToggleCameraGroupAwayMode = (fieldValue) => {
     this.setState({away_mode: fieldValue});
-    this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, {away_mode: fieldValue});
   }
 
   handleToggleCameraGroupArmed = (fieldValue) => {
@@ -121,7 +127,6 @@ class EditCameraGroupModal extends Component {
       this.setState({away_mode: false});
     }
     this.setState({armed: fieldValue});
-    this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, {armed: fieldValue, away_mode: this.state.away_mode});
   }
 
   render() {

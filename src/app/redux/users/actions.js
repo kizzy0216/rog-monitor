@@ -243,6 +243,13 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
         for (var i = 0; i < user.devices.length; i++) {
           let stored_device_token = user.devices[i].device_token;
           if (token === stored_device_token) {
+            if (isEmpty(localStorage.getItem('fcm_token'))) {
+              localStorage.setItem('fcm_token_id', user.devices[i].uuid)
+              localStorage.setItem('fcm_token', token)
+            }
+            if (localStorage.getItem('fcm_token') != token) {
+              dispatch(deleteUserDevice(user.uuid, localStorage.getItem('fcm_token_id'), localStorage.getItem('fcm_token')));
+            }
             device_token_exists = true;
             sessionStorage.setItem('fcm_token_id', user.devices[i].uuid)
             sessionStorage.setItem('fcm_token', token)
@@ -252,7 +259,12 @@ function checkForStoredUserDeviceToken(user, token, messaging) {
           }
         }
         if (device_token_exists === false) {
-          dispatch(storeUserDevice(user, token, messaging));
+          if (isEmpty(localStorage.getItem('fcm_token'))) {
+            dispatch(storeUserDevice(user, token, messaging));
+          } else {
+            dispatch(deleteUserDevice(user.uuid, localStorage.getItem('fcm_token_id'), localStorage.getItem('fcm_token')));
+            dispatch(storeUserDevice(user, token, messaging));
+          }
         }
       })
       .catch(error => {
@@ -288,8 +300,10 @@ export function storeUserDevice(user, token, messaging) {
     axios.post(url, data, config)
       .then((response) => {
         user.devices.push(response.data.user_device);
-        sessionStorage.setItem('fcm_token_id', response.data.user_device.uuid)
-        sessionStorage.setItem('fcm_token', token)
+        sessionStorage.setItem('fcm_token_id', response.data.user_device.uuid);
+        sessionStorage.setItem('fcm_token', token);
+        localStorage.setItem('fcm_token_id', response.data.user_device.uuid);
+        localStorage.setItem('fcm_token', token);
         dispatch(listenForNewAlerts(user, messaging));
         dispatch(loginSuccess(user));
         dispatch(loginInProcess(false));

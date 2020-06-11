@@ -4,6 +4,16 @@ import * as types from './actionTypes';
 const users = (state = initialState, action) => {
   if (typeof action !== 'undefined') {
     switch (action.type) {
+      case types.ADD_USER_ERROR:
+        return {
+          ...state,
+          addUserError: action.addUserError
+        }
+      case types.ADD_USER_IN_PROCESS:
+        return {
+          ...state,
+          addUserInProcess: action.addUserInProcess
+        }
       case types.UPDATE_USER_IN_PROGRESS:
         return {
           ...state,

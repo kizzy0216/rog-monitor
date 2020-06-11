@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as usersActions from '../../redux/users/actions';
 import { isEmpty } from '../../redux/helperFunctions';
-import { Form, Input, Button, Table, InputNumber, Popconfirm, Select, message } from 'antd';
+import { Form, Input, Button, Table, InputNumber, Popconfirm, Select, message, Modal } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 
@@ -23,11 +23,51 @@ const UsersForm = ({handleSubmit, form}) => {
   );
 };
 
+const AddUserForm = ({visible, onCancel, onCreate, form, addUserInProcess}) => {
+  const layout = {
+    wrapperCol: {
+      span: 16,
+      offset: 4
+    }
+  };
+  return (
+    <Modal title='Add a User'
+      visible={visible}
+      onCancel={onCancel}
+      onOk={onCreate}
+      okText='Add'
+      cancelText='Cancel'
+      confirmLoading={addUserInProcess}
+    >
+      <Form ref={form} {...layout}>
+        <Form.Item name="email" rules={[{required: true, pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"), message: "Please enter a valid email address."}]} hasFeedback>
+          <Input placeholder='Email'/>
+        </Form.Item>
+        <Form.Item name="password" rules={[{required: true, message: 'Please enter the user password'}]} hasFeedback>
+          <Input type='password' placeholder='Password'/>
+        </Form.Item>
+        <Form.Item name="first_name" rules={[{required: false, message: 'Please enter the user first name'}]} hasFeedback>
+          <Input placeholder='First Name'/>
+        </Form.Item>
+        <Form.Item name="last_name" rules={[{required: false, message: 'Please enter the user last name'}]} hasFeedback>
+          <Input placeholder='Last Name'/>
+        </Form.Item>
+        <p>Number of Licenses to Add:</p>
+        <Form.Item name="number_to_add" rules={[{type: 'number', message: 'Please enter a valid integer'}]} hasFeedback>
+          <InputNumber placeholder="0" min={0} />
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+};
+
 class UsersAdmin extends Component {
   constructor(props) {
     super(props);
 
-    this.state={}
+    this.state={
+      visible: false
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
@@ -49,8 +89,30 @@ class UsersAdmin extends Component {
     });
   };
 
+  showModal = () => {
+    this.setState({ visible: true });
+  };
+
+  handleCreate = () => {
+    const form = this.formRef;
+    form.validateFields().then(values => {
+      this.props.actions.createUserAdmin(values);
+      this.setState({ visible: false });
+      form.resetFields();
+    });
+  };
+
+  handleCancel = () => {
+    this.formRef.resetFields();
+    this.setState({ visible: false });
+  };
+
   saveFormRef = (form) => {
     this.form = form;
+  };
+
+  addUserFormRef = formRef => {
+    this.formRef = formRef;
   };
 
   render(){
@@ -69,10 +131,21 @@ class UsersAdmin extends Component {
         }
       }
       return(
-        <div>
+        <div style={{marginTop: 10}}>
           <UsersForm
             form={this.saveFormRef}
             handleSubmit={this.handleSubmit}
+          />
+          <Button onClick={this.showModal} type="primary" style={{ marginBottom: 16 }}>
+            Add a User
+          </Button>
+          <AddUserForm
+            form={this.addUserFormRef}
+            visible={this.state.visible}
+            onCancel={this.handleCancel}
+            onCreate={this.handleCreate}
+            addUserError={this.props.addUserError}
+            addUserInProcess={this.props.addUserInProcess}
           />
           <EditableTable
             data={data}
@@ -83,10 +156,21 @@ class UsersAdmin extends Component {
       )
     } else {
       return(
-        <div>
+        <div style={{marginTop: 10}}>
           <UsersForm
             form={this.saveFormRef}
             handleSubmit={this.handleSubmit}
+          />
+          <Button onClick={this.showModal} type="primary" style={{ marginBottom: 16 }}>
+            Add a User
+          </Button>
+          <AddUserForm
+            form={this.addUserFormRef}
+            visible={this.state.visible}
+            onCancel={this.handleCancel}
+            onCreate={this.handleCreate}
+            addUserError={this.props.addUserError}
+            addUserInProcess={this.props.addUserInProcess}
           />
         </div>
       )
@@ -391,7 +475,9 @@ const mapStateToProps = (state) => {
     userData: state.users.userData,
     updateUserError: state.users.updateUserError,
     updateUserInProgress: state.users.updateUserInProgress,
-    updateUserSuccess: state.users.updateUserSuccess
+    updateUserSuccess: state.users.updateUserSuccess,
+    addUserInProcess: state.users.addUserInProcess,
+    addUserError: state.users.addUserError
   }
 };
 

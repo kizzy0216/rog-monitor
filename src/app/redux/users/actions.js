@@ -10,6 +10,20 @@ import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login, to
 import {listenForNewAlerts} from '../alerts/actions';
 import {isEmpty} from '../helperFunctions';
 
+export function addUserError(error) {
+  return {
+    type: types.ADD_USER_ERROR,
+    addUserError: error
+  }
+}
+
+export function addUserInProcess(bool) {
+  return {
+    type: types.ADD_USER_IN_PROCESS,
+    addUserInProcess: bool
+  }
+}
+
 export function updateUserData(userData) {
   return{
     type: types.UPDATE_USER_DATA,
@@ -398,6 +412,43 @@ export function deleteUserDevice(userUuid, deviceUuid, token) {
         }
         throw(errMessage);
       });
+  }
+}
+
+export function createUserAdmin(values) {
+  return (dispatch) => {
+    dispatch(addUserInProcess(true));
+    dispatch(addUserError(''));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users-admin`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.post(url, values, config)
+      .then((response) => {
+        if (response.hasOwnProperty('data')) {
+          dispatch(readUserByUuidAdmin(response.data));
+        }
+      })
+      .catch((error) => {
+        let errMessage = 'Error fetching user';
+        if (error.response != undefined) {
+          errMessage = error.response;
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
+              }
+            }
+          }
+        }
+        dispatch(addUserError(errMessage));
+      })
+      .finally(() => {
+        dispatch(addUserInProcess(false));
+        dispatch(addUserError(''));
+      })
   }
 }
 

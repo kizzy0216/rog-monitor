@@ -105,10 +105,10 @@ class UsersAdmin extends Component {
         values.number_to_add = 0;
       }
       if (typeof values.first_name === 'undefined') {
-        values.first_name = '';
+        values.first_name = null;
       }
       if (typeof values.last_name === 'undefined') {
-        values.last_name = '';
+        values.last_name = null;
       }
       this.props.actions.createUserAdmin(values);
       this.setState({ visible: false });

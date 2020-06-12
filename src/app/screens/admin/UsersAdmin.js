@@ -54,7 +54,7 @@ const AddUserForm = ({visible, onCancel, onCreate, form, addUserInProcess}) => {
         </Form.Item>
         <p>Number of Licenses to Add:</p>
         <Form.Item name="number_to_add" rules={[{type: 'number', message: 'Please enter a valid integer'}]} hasFeedback>
-          <InputNumber placeholder="0" min={0} />
+          <InputNumber placeholder="0" min={0} defaultValue={0} />
         </Form.Item>
       </Form>
     </Modal>
@@ -66,13 +66,18 @@ class UsersAdmin extends Component {
     super(props);
 
     this.state={
-      visible: false
+      visible: false,
+      addUserError: ''
     }
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
     if (nextProps.updateUserError !== '') {
       message.error(nextProps.updateUserError, 10);
+    }
+    if (nextProps.addUserError !== '' && nextProps.addUserError !== prevState.addUserError) {
+      message.error(nextProps.addUserError, 10);
+      return {visible: prevState.visible, addUserError: nextProps.addUserError}
     }
     return null;
   }
@@ -96,6 +101,9 @@ class UsersAdmin extends Component {
   handleCreate = () => {
     const form = this.formRef;
     form.validateFields().then(values => {
+      if (typeof values.number_to_add === 'undefined') {
+        values.number_to_add = 0;
+      }
       this.props.actions.createUserAdmin(values);
       this.setState({ visible: false });
       form.resetFields();

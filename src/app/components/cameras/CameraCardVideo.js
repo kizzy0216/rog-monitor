@@ -65,21 +65,29 @@ class CameraCardImg extends Component {
   }
 
   render() {
-    return (
-      <div style={styles.cameraCardImgContainer} key={this.key}>
-        <VideoPlayer
-          controls={true}
-          hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
-          preload='none'
-          bigPlayButton={true}
-          autoPlay={true}
-          height='170'
-          poster={this.state.image}
-          src={this.state.live_view_url}
-          className="cameraCardImg">
-        </VideoPlayer>
-      </div>
-    );
+    if (this.props.data.enabled) {
+      return (
+        <div style={styles.cameraCardImgContainer} key={this.key}>
+          <VideoPlayer
+            controls={true}
+            hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
+            preload='none'
+            bigPlayButton={true}
+            autoPlay={true}
+            height='170'
+            poster={this.state.image}
+            src={this.state.live_view_url}
+            className="cameraCardImg">
+          </VideoPlayer>
+        </div>
+      );
+    } else {
+      return (
+        <div style={styles.cameraCardImgContainerDisabled} key={this.key}>
+          <img src={this.state.image} onError={this.handleError} loading="lazy" style={styles.cameraCardImg} />
+        </div>
+      );
+    }
   }
 }
 

@@ -428,7 +428,7 @@ export function createUserAdmin(values) {
         }
       })
       .catch((error) => {
-        let errMessage = 'Error fetching user';
+        let errMessage = 'Error creating user';
         if (error.response != undefined) {
           errMessage = error.response;
           if (typeof error === 'object') {

@@ -32,7 +32,7 @@ function fetchSuccessWithPagination(alerts, pagination) {
   return {
     type: types.FETCH_ALERTS_SUCCESS_WITH_PAGINATION,
     alerts,
-    pagination: pagination
+    pagination: pagination,
   }
 }
 
@@ -67,6 +67,13 @@ function updateNewAlertCount(count) {
   return {
     type: types.UPDATE_NEW_ALERT_COUNT,
     newAlertCount: count
+  }
+}
+
+export function updateSelectedFilterType(int) {
+  return {
+    type: types.UPDATE_SELECTED_FILTER_TYPE,
+    selectedFilterType: int
   }
 }
 
@@ -201,6 +208,7 @@ export function fetchAlerts(user) {
             to: currentPage  * itemsPerPage
           };
           dispatch(fetchSuccessWithPagination(response.data, pagination));
+          dispatch(updateSelectedFilterType(4));
         } else {
           dispatch(fetchError('No Alerts Found'));
         }

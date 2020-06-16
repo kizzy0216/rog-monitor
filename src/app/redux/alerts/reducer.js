@@ -17,6 +17,12 @@ const alerts = (state = initialState, action) => {
           pagination: action.pagination
         }
 
+      case types.UPDATE_SELECTED_FILTER_TYPE:
+        return {
+          ...state,
+          selectedFilterType: action.selectedFilterType
+        }
+
       case types.FETCH_ALERTS_IN_PROCESS:
         return {
           ...state,

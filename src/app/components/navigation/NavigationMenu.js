@@ -11,7 +11,6 @@ class NavigationMenu extends Component {
   constructor(props) {
     super(props);
 
-    props.fetchAlerts(props.user);
     props.countNewAlerts(props.user);
   }
   UNSAFE_componentWillMount = () => {
@@ -34,6 +33,12 @@ class NavigationMenu extends Component {
   // }
 
   goToPath = (path) => {
+    if (path === '/alerts') {
+      this.props.fetchAlerts(this.props.user);
+      this.props.markUserAlertsViewed(this.props.user);
+      this.props.countNewAlerts(this.props.user);
+    }
+
     if (path == this.props.location.pathname) {
       window.window.scrollTo(0, 0);
     } else {

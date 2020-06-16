@@ -17,7 +17,7 @@ const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentPropert
       layout="inline"
       onFinish={AlertFilterChange}
       style={styles.formstyles}
-      initialValues={{filter_type: 4}}
+      initialValues={{filter_type: selectedFilterType}}
       ref={form}
     >
       <Form.Item
@@ -41,7 +41,6 @@ const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentPropert
       </Form.Item>
       <AlertFilters
         data = {ComponentProperties}
-        selectedFilterType = {selectedFilterType}
       />
       {selectedFilterType !== 4 &&
         <Form.Item>
@@ -65,8 +64,7 @@ class Alerts extends Component {
 
     this.state = {
       videoSource: null,
-      open: true,
-      selectedFilterType: 4
+      open: true
     }
   }
 
@@ -80,29 +78,29 @@ class Alerts extends Component {
 
   handlePaginationChange = (page, pageSize) => {
     if (page > this.props.pagination.current_page) {
-      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.alerts[0].next_page, page, pageSize, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
+      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.alerts[0].next_page, page, pageSize, this.props.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
     } else {
-      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.alerts[0].previous_page, page, pageSize, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
+      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.alerts[0].previous_page, page, pageSize, this.props.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
     }
   }
 
   handleOnPageSizeChange = (current, size) => {
     var current_page = (isEmpty(this.props.alerts[0])) ? ">" : this.props.alerts[0].current_page;
-    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current_page, current, size, this.state.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
+    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current_page, current, size, this.props.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
   }
 
   handleFilterTypeChange = (e) => {
     if (this.form.getFieldsValue().hasOwnProperty('filter_parameter') && typeof this.form.getFieldsValue()['filter_parameter'] !== 'undefined') {
       this.form.resetFields(['filter_parameter']);
     }
-    this.setState({selectedFilterType: parseInt(e)})
+    this.props.actions.updateSelectedFilterType(parseInt(e));
   }
 
   handleAlertFilterChange = (e) => {
     var current_page = (isEmpty(this.props.alerts[0])) ? ">" : this.props.alerts[0].current_page;
     this.form.validateFields().then(values => {
-      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current_page, this.props.pagination.current_page, this.props.pagination.per_page, this.state.selectedFilterType, values.filter_parameter);
-      if (this.state.selectedFilterType === 4) {
+      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current_page, this.props.pagination.current_page, this.props.pagination.per_page, this.props.selectedFilterType, values.filter_parameter);
+      if (this.props.selectedFilterType === 4) {
         this.props.actions.markUserAlertsViewed(this.props.user);
       }
       this.props.actions.countNewAlerts(this.props.user);
@@ -118,6 +116,9 @@ class Alerts extends Component {
       var alerts = this.props.alerts.sort((a,b)=>{
         return moment(a.time) - moment(b.time)
       }).reverse();
+      if (this.props.selectedFilterType === 4) {
+        this.form.setFieldsValue({filter_type: 4});
+      }
       return (
         <div>
           <Row type='flex' justify='center' style={styles.alertOptions}>
@@ -127,7 +128,7 @@ class Alerts extends Component {
                 AlertFilterChange={this.handleAlertFilterChange}
                 FilterTypeChange={this.handleFilterTypeChange}
                 cameraGroups={this.props.cameraGroups}
-                selectedFilterType={this.state.selectedFilterType}
+                selectedFilterType={this.props.selectedFilterType}
               />
             </Col>
             <Col xs={{span: 12}}>
@@ -164,7 +165,7 @@ class Alerts extends Component {
                 AlertFilterChange={this.handleAlertFilterChange}
                 FilterTypeChange={this.handleFilterTypeChange}
                 cameraGroups={this.props.cameraGroups}
-                selectedFilterType={this.state.selectedFilterType}
+                selectedFilterType={this.props.selectedFilterType}
               />
             </Col>
             <Col xs={{span: 12}}></Col>
@@ -215,7 +216,8 @@ const mapStateToProps = (state) => {
     fetchError: state.alerts.fetchError,
     fetchInProcess: state.alerts.fetchInProcess,
     deleteInProcess: state.alerts.deleteInProcess,
-    pagination: state.alerts.pagination
+    pagination: state.alerts.pagination,
+    selectedFilterType: state.alerts.selectedFilterType
   }
 }
 

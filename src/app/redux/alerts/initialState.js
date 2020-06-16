@@ -11,5 +11,6 @@ export default {
   deleteAlertInProcess: false,
   fetchPolygonAlertInProcess: false,
   fetchAlertSuccess: false,
-  newAlertCount: 0
+  newAlertCount: 0,
+  selectedFilterType: 4
 }

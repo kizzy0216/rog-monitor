@@ -116,7 +116,8 @@ const styles = {};
 
 const mapStateToProps = (state) => {
   return {
-    cameraGroups: state.cameraGroups.cameraGroups
+    cameraGroups: state.cameraGroups.cameraGroups,
+    selectedFilterType: state.alerts.selectedFilterType
   }
 }
 

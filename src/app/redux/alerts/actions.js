@@ -63,6 +63,13 @@ function clearAllAlerts() {
   }
 }
 
+function updateNewAlertCount(count) {
+  return {
+    type: types.UPDATE_NEW_ALERT_COUNT,
+    newAlertCount: count
+  }
+}
+
 export function mergeNewAlerts() {
   return {
     type: types.MERGE_NEW_ALERTS
@@ -147,7 +154,7 @@ export function listenForNewAlerts(user, messaging) {
         if (previousAlert !== payload.data.uuid) {
           previousAlert = payload.data.uuid;
           dispatch(handleNewAlert(user, payload));
-          dispatch(fetchAlerts(user));
+          dispatch(countNewAlerts(user));
         }
       } else {
         if (typeof user.mute == 'undefined') {
@@ -157,7 +164,7 @@ export function listenForNewAlerts(user, messaging) {
           var audio = new Audio(newAlertSound);
           audio.play();
         }
-        dispatch(fetchAlerts(user));
+        dispatch(countNewAlerts(user));
       }
     });
 
@@ -324,7 +331,19 @@ export function markUserAlertsViewed(user) {
     let data = '';
     axios.patch(url, data, config)
       .then((response) => {
-        dispatch(fetchAlerts(user));
+        dispatch(countNewAlerts(user));
+      });
+  }
+}
+
+export function countNewAlerts(user) {
+  return(dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts-count`;
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}}
+    axios.get(url, config)
+      .then((response) => {
+        // call action-reducer function to push new count data to the components
+        dispatch(updateNewAlertCount(response.data['Count']));
       });
   }
 }

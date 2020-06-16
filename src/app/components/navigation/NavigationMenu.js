@@ -4,12 +4,18 @@ import { withRouter } from 'react-router-dom';
 import { Menu, Badge, notification, Tooltip } from 'antd';
 import { VideoCameraOutlined, AlertOutlined, DatabaseOutlined, EllipsisOutlined, MailOutlined, UserOutlined, IdcardOutlined, TeamOutlined, RadiusUpleftOutlined, CloudServerOutlined, MobileOutlined, ClusterOutlined, CloudSyncOutlined } from '@ant-design/icons';
 
-import { fetchAlerts, clearNewAlerts, markUserAlertsViewed } from '../../redux/alerts/actions';
+import { fetchAlerts, clearNewAlerts, markUserAlertsViewed, countNewAlerts } from '../../redux/alerts/actions';
 import { isEmpty } from '../../redux/helperFunctions';
 
 class NavigationMenu extends Component {
+  constructor(props) {
+    super(props);
+
+    props.fetchAlerts(props.user);
+    props.countNewAlerts(props.user);
+  }
   UNSAFE_componentWillMount = () => {
-    this.props.fetchAlerts(this.props.user);
+
   }
   // UNSAFE_componentWillReceiveProps = (nextProps) => {
   //   if (nextProps.newAlerts.length) {
@@ -28,10 +34,6 @@ class NavigationMenu extends Component {
   // }
 
   goToPath = (path) => {
-    if (path === '/alerts') {
-      this.props.markUserAlertsViewed(this.props.user);
-    }
-
     if (path == this.props.location.pathname) {
       window.window.scrollTo(0, 0);
     } else {
@@ -54,7 +56,7 @@ class NavigationMenu extends Component {
           </Tooltip>
         </Menu.Item>
         <Menu.Item key='/alerts'>
-          <Badge count={!isEmpty(this.props.alerts) ? this.props.alerts[0].new_alerts: 0}>
+          <Badge count={this.props.newAlertCount}>
             <Tooltip title="Alert Snapshots">
               <AlertOutlined className='nav-icon' />
             </Tooltip>
@@ -114,6 +116,7 @@ class NavigationMenu extends Component {
 const mapStateToProps = (state) => {
   return {
     newAlerts: state.alerts.newAlerts,
+    newAlertCount: state.alerts.newAlertCount,
     alerts: state.alerts.alerts,
     user: state.auth.user
   }
@@ -123,7 +126,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     clearNewAlerts: () => dispatch(clearNewAlerts()),
     fetchAlerts: (user) => dispatch(fetchAlerts(user)),
-    markUserAlertsViewed: (user) => dispatch(markUserAlertsViewed(user))
+    markUserAlertsViewed: (user) => dispatch(markUserAlertsViewed(user)),
+    countNewAlerts: (user) => dispatch(countNewAlerts(user))
   }
 }
 

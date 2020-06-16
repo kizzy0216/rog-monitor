@@ -58,7 +58,9 @@ class Alerts extends Component {
   constructor(props) {
     super(props);
 
+    props.actions.fetchAlerts(props.user);
     props.actions.markUserAlertsViewed(props.user);
+    props.actions.countNewAlerts(props.user);
     this.props.fetchCameraGroups(props.user);
 
     this.state = {
@@ -73,6 +75,7 @@ class Alerts extends Component {
     this.props.alerts.forEach(alert => {
       this.props.actions.deleteAlert(this.props.user, alert.id);
     });
+    this.props.actions.countNewAlerts(this.props.user);
   }
 
   handlePaginationChange = (page, pageSize) => {
@@ -99,6 +102,10 @@ class Alerts extends Component {
     var current_page = (isEmpty(this.props.alerts[0])) ? ">" : this.props.alerts[0].current_page;
     this.form.validateFields().then(values => {
       this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current_page, this.props.pagination.current_page, this.props.pagination.per_page, this.state.selectedFilterType, values.filter_parameter);
+      if (this.state.selectedFilterType === 4) {
+        this.props.actions.markUserAlertsViewed(this.props.user);
+      }
+      this.props.actions.countNewAlerts(this.props.user);
     });
   }
 

@@ -10,5 +10,6 @@ export default {
   createAlertInProcess: false,
   deleteAlertInProcess: false,
   fetchPolygonAlertInProcess: false,
-  fetchAlertSuccess: false
+  fetchAlertSuccess: false,
+  newAlertCount: 0
 }

@@ -85,6 +85,12 @@ const alerts = (state = initialState, action) => {
           newAlerts: []
         }
 
+      case types.UPDATE_NEW_ALERT_COUNT:
+        return {
+          ...state,
+          newAlertCount: action.newAlertCount
+        }
+
       case types.CREATE_ALERT_ERROR:
         return {
           ...state,

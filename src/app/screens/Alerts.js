@@ -116,7 +116,7 @@ class Alerts extends Component {
       var alerts = this.props.alerts.sort((a,b)=>{
         return moment(a.time) - moment(b.time)
       }).reverse();
-      if (this.props.selectedFilterType === 4) {
+      if (this.props.selectedFilterType === 4 && typeof this.form !== 'undefined') {
         this.form.setFieldsValue({filter_type: 4});
       }
       return (

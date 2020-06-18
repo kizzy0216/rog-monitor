@@ -101,6 +101,16 @@ const styles = {
     paddingLeft: 0,
     paddingRight: 0
   },
+  cameraCardImgContainerDisabled: {
+    backgroundColor: 'black',
+    height: 170,
+    width: '100%',
+    position: 'relative',
+    margin: '0 auto',
+    paddingLeft: 0,
+    paddingRight: 0,
+    opacity: 0.4
+  },
   cameraCardImg: {
     position: 'absolute',
     maxWidth: '100%',

@@ -9,9 +9,18 @@
 }
 body{
   background-color: #ececec !important;
+  background: #ececec !important;
 }
 
 /* GLOBAL ANT STYLE OVERRIDES */
+.ant-layout {
+  background-color: #ececec !important;
+  background: #ececec !important;
+}
+.ant-layout-footer {
+  background-color: #ececec !important;
+  background: #ececec !important;
+}
 .ant-layout-sider{
   background: #fff !important;
 }

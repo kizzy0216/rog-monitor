@@ -35,9 +35,11 @@ const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess}) 
         >
           <Input placeholder='Enter Camera URL'/>
         </Form.Item>
+        <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>Username:</p>
         <Form.Item name="username" rules={[{required: false, message: 'Please enter the camera username'}]} hasFeedback>
           <Input placeholder='Enter camera username'/>
         </Form.Item>
+        <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>Password:</p>
         <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
           <Input type='password' placeholder='Enter camera password'/>
         </Form.Item>

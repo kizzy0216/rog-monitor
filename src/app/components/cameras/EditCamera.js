@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch, Popconfirm } from 'antd';
+import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch, Popconfirm, Tooltip } from 'antd';
 import { SettingOutlined, SafetyOutlined, HomeOutlined, LinkOutlined, DisconnectOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
@@ -125,7 +125,9 @@ class EditCamera extends Component {
     let away_mode = this.props.cameraArmed ? this.props.data.away_mode : false;
     return (
       <div>
-        <SettingOutlined onClick={this.showModal} style={styles.editCamera}/>
+        <Tooltip title='Camera Settings' placement='bottom'>
+          <SettingOutlined onClick={this.showModal} style={styles.editCamera}/>
+          </Tooltip>
         <Modal title={`Edit ${this.props.data.name}`}
                visible={this.state.visible}
                style={styles.modal}

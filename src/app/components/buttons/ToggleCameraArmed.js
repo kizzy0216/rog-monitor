@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Switch, message } from 'antd';
+import { Switch, message, Tooltip } from 'antd';
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { toggleCameraArmed, checkCameraArmed } from '../../redux/cameras/actions';
 
@@ -32,12 +32,14 @@ class ToggleCameraArmed extends Component {
   render() {
     let armed = this.props.data.enabled ? this.props.cameraArmed : false;
     return (
-      <Switch
-        checkedChildren={<LockOutlined />}
-        unCheckedChildren={<UnlockOutlined />}
-        onChange={() => this.toggleCameraArmed(!armed)}
-        checked={armed}
-      />
+      <Tooltip title='Camera Armed' placement="bottom">
+        <Switch
+          checkedChildren={<LockOutlined />}
+          unCheckedChildren={<UnlockOutlined />}
+          onChange={() => this.toggleCameraArmed(!armed)}
+          checked={armed}
+        />
+      </Tooltip>
     );
   }
 }

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Modal, Form, Spin, Button, Popover, message, Slider, Row, Col, TimePicker, Select, Checkbox, Alert} from 'antd';
+import {Modal, Form, Spin, Button, Popover, message, Slider, Row, Col, TimePicker, Select, Checkbox, Alert, Tooltip} from 'antd';
 import { EyeOutlined, SaveOutlined, CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import CustomCanvas from '../../components/formitems/CustomCanvas';
 import CustomInput from "../formitems/CustomInput";
@@ -927,7 +927,9 @@ class AddTriggerModal extends Component {
   render() {
     return (
       <div style={styles.form}>
-        <EyeOutlined onClick={this.showModal}/>
+        <Tooltip title='Trigger Settings' placement='bottom'>
+          <EyeOutlined onClick={this.showModal}/>
+        </Tooltip>
         <AddTriggerForm
           form={this.formRef}
           visible={this.state.visible}

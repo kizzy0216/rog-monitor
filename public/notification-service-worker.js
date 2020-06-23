@@ -29,11 +29,10 @@ messaging.setBackgroundMessageHandler(function(payload) {
           client.postMessage({
             msg: "fetchAlerts"
           });
+          return self.registration.showNotification(title, options);
         }
     }
   })
-
-  return self.registration.showNotification(title, options);
 });
 
 self.addEventListener('notificationclick', function(event) {

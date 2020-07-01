@@ -12,5 +12,11 @@ export default {
   fetchPolygonAlertInProcess: false,
   fetchAlertSuccess: false,
   newAlertCount: 0,
-  selectedFilterType: 4
+  selectedFilterType: 4,
+  shareAlertError: '',
+  shareAlertSuccess: false,
+  shareAlertInProcess: false,
+  shareAlertErrorUuid: null,
+  shareAlertInProcessUuid: null,
+  shareAlertSuccessUuid: null
 }

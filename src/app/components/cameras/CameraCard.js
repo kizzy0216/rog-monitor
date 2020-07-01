@@ -68,11 +68,11 @@ static getDerivedStateFromProps(nextProps, prevState) {
               (<Col span={12} style={styles.cameraConnectionSwitch}>
                 <div style={{height: 24}}>
                 {this.props.enabled ?
-                  <span style={{color: '#1890ff', verticalAlign: 'middle'}}> (Connected)</span>
+                  <span style={{color: 'rgba(0, 0, 0)', verticalAlign: 'middle'}}> (Connected)</span>
                 :
                   <span style={{color: 'rgba(0, 0, 0, 0.25)', verticalAlign: 'middle'}}> (Disconnected)</span>}
                 {this.props.armed ?
-                  <span style={{color: '#1890ff', verticalAlign: 'middle'}}> (Armed)</span>
+                  <span style={{color: 'rgba(0, 0, 0)', verticalAlign: 'middle'}}> (Armed)</span>
                 :
                   <span style={{color: 'rgba(0, 0, 0, 0.25)', verticalAlign: 'middle'}}> (Disarmed)</span>}
                 </div>

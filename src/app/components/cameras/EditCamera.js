@@ -145,7 +145,7 @@ class EditCamera extends Component {
             ref={this.saveFormRef}
             initialValues={{
               name: this.props.data.name,
-              camera_sku: this.props.data.uuid.slice(-8),
+              camera_uuid: this.props.data.uuid,
               camera_url: this.props.data.camera_url,
               username: this.props.data.username,
               away_mode: away_mode,
@@ -155,7 +155,7 @@ class EditCamera extends Component {
             <Form.Item label='Camera Name' name="name" {...formItemLayout}>
               <Input style={styles.input} type='text' placeholder="Camera Name" />
             </Form.Item>
-            <Form.Item label="Camera SKU" name="camera_sku" {...formItemLayout}>
+            <Form.Item label="Camera UUID" name="camera_uuid" {...formItemLayout}>
               <Input style={styles.input} type='text' disabled />
             </Form.Item>
             <Form.Item label='URL' name="camera_url" {...formItemLayout}>

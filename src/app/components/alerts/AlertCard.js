@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col } from 'antd';
+import { Card, Row, Col, Tooltip } from 'antd';
+import { ShareAltOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
 import axios from 'axios';
 
 import { deleteAlert } from '../../redux/alerts/actions';
 import ExpandAlertModal from '../modals/ExpandAlertModal';
+import ShareUserAlertModal from '../modals/ShareUserAlertModal';
 
 class _AlertCard extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      shareUserAlertModalVisible: false
+    }
   }
 
   formatDatetime = (timestamp, timezone) => {
@@ -26,6 +32,10 @@ class _AlertCard extends Component {
     if (!this.props.deleteInProcess) {
       this.props.deleteAlert(this.props.user, this.props.uuid);
     }
+  }
+
+  toggleShareUserAlertModalVisibility = () => {
+    this.setState({shareUserAlertModalVisible: !this.state.shareUserAlertModalVisible})
   }
 
   render() {
@@ -44,8 +54,17 @@ class _AlertCard extends Component {
         </div>
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={8} sm={8} md={8}>{trigger_type}</Col>
-          <Col style={styles.cameraNameCameraGroup} xs={14} sm={14} md={14}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)} { this.props.cameras_time_zone}</Col>
-          <Col style={styles.alertDateTime} xs={24}>{this.props.cameras_name} at {this.props.camera_groups_name}</Col>
+          <Col style={styles.alertDateTime} xs={14} sm={14} md={14}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)} { this.props.cameras_time_zone}</Col>
+          <Col style={styles.cameraNameCameraGroup} xs={18}>{this.props.cameras_name} at {this.props.camera_groups_name}</Col>
+          <Col style={styles.shareAlertButton} xs={4}>
+            <Tooltip title='Share CameraGroup' placement="topRight">
+              <ShareAltOutlined style={styles.share} onClick={this.toggleShareUserAlertModalVisibility}/>
+            </Tooltip>
+            <ShareUserAlertModal
+              visible={this.state.shareUserAlertModalVisible}
+              alert={this.props}
+              toggleShareUserAlertModalVisibility={this.toggleShareUserAlertModalVisibility.bind(this)} />
+          </Col>
         </Row>
       </Card>
     )
@@ -65,18 +84,20 @@ const styles = {
     marginLeft: 10,
     textAlign: 'left'
   },
-  cameraNameCameraGroup: {
+  alertDateTime: {
     paddingTop: 5,
     marginRight: 10,
     textAlign: 'right'
   },
-  alertDateTime: {
+  shareAlertButton: {
     paddingTop: 7,
-    textAlign: 'center'
+    marginRight: 10,
+    textAlign: 'right'
   },
-  alertTimeZone: {
-    fontSize: 10,
-    textAlign: 'center'
+  cameraNameCameraGroup: {
+    paddingTop: 7,
+    marginLeft: 10,
+    textAlign: 'left'
   },
   alertDelete: {
     fontSize: 12,

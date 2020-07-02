@@ -138,6 +138,24 @@ const alerts = (state = initialState, action) => {
           ...state,
           fetchPolygonAlertInProcess: action.bool
         }
+      case types.SHARE_ALERT_ERROR:
+        return {
+          ...state,
+          shareAlertError: action.shareAlertError,
+          shareAlertErrorUuid: action.shareAlertErrorUuid
+        }
+      case types.SHARE_ALERT_SUCCESS:
+        return {
+          ...state,
+          shareAlertSuccess: action.shareAlertSuccess,
+          shareAlertSuccessUuid: action.shareAlertSuccessUuid
+        }
+      case types.SHARE_ALERT_IN_PROCESS:
+        return {
+          ...state,
+          shareAlertInProcess: action.shareAlertInProcess,
+          shareAlertInProcessUuid: action.shareAlertInProcessUuid
+        }
       default:
         return state;
     }

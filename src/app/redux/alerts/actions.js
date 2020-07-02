@@ -70,6 +70,30 @@ function updateNewAlertCount(count) {
   }
 }
 
+function shareAlertError(message, alertUuid) {
+  return {
+    type: types.SHARE_ALERT_ERROR,
+    shareAlertError: message,
+    shareAlertErrorUuid: alertUuid
+  }
+}
+
+function shareAlertSuccess(bool, alertUuid) {
+  return {
+    type: types.SHARE_ALERT_SUCCESS,
+    shareAlertSuccess: bool,
+    shareAlertSuccessUuid: alertUuid
+  }
+}
+
+function shareAlertInProcess(bool, alertUuid) {
+  return {
+    type: types.SHARE_ALERT_IN_PROCESS,
+    shareAlertInProcess: bool,
+    shareAlertInProcessUuid: alertUuid
+  }
+}
+
 export function updateSelectedFilterType(int) {
   return {
     type: types.UPDATE_SELECTED_FILTER_TYPE,
@@ -388,6 +412,45 @@ export function deleteAlert(user, alertUuid) {
       .finally(() => {
         dispatch(deleteInProcess(false));
       })
+  }
+}
+
+export function shareUserAlert(user, alertUuid, data) {
+  return (dispatch) => {
+    if (isEmpty(data)) {
+      dispatch(shareAlertError('Please enter an email or phone number', alertUuid));
+    } else {
+      dispatch(shareAlertInProcess(true, alertUuid));
+      let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts/${alertUuid}/share`;
+      let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+      axios.post(url, data, config)
+      .then(response => {
+        dispatch(shareAlertSuccess(true, alertUuid));
+      })
+      .catch(error => {
+        let errMessage = 'Error sharing alert';
+        if (error.response != undefined) {
+          errMessage = error.response;
+          if (typeof error === 'object') {
+            if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+              if (typeof error.response.data === 'object') {
+                if ('Error' in error.response.data) {
+                  errMessage = error.response.data['Error'];
+                }
+              } else {
+                errMessage = error.response.data;
+              }
+            }
+          }
+        }
+        dispatch(shareAlertError(errMessage, alertUuid));
+      })
+      .finally(() => {
+        dispatch(shareAlertInProcess(false, null));
+        dispatch(shareAlertSuccess(false, null));
+        dispatch(shareAlertError('', null));
+      })
+    }
   }
 }
 

@@ -278,7 +278,7 @@ export function updatePreviewImage(user, cameraGroup, cameraUuid) {
   }
 }
 
-export function addCamera(user, cameraGroup, name, rtspUrl, username, password) {
+export function addCamera(user, cameraGroup, name, rtspUrl, time_zone, username, password) {
   return (dispatch) => {
     dispatch(addCameraError(''));
     dispatch(addCameraInProcess(true));
@@ -292,7 +292,8 @@ export function addCamera(user, cameraGroup, name, rtspUrl, username, password) 
     let data = {
       camera_groups_name: cameraGroup.name,
       camera_url: lowerCaseUrl,
-      camera_name: name
+      camera_name: name,
+      time_zone
     };
 
     if (username !== null && typeof username !== 'undefined' && password !== null && typeof password !== 'undefined') {

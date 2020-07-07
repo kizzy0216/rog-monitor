@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Layout, Row, Col, Form, Button, Input, Checkbox, message } from 'antd';
+import { Layout, Row, Col, Form, Button, Input, Checkbox, Select, message } from 'antd';
 import { LoadingOutlined, LockOutlined } from '@ant-design/icons';
+import moment from 'moment-timezone';
 const { Header, Content } = Layout;
 
 import axios from 'axios';
@@ -34,6 +35,7 @@ class Register extends Component {
 
     this.state = {
       confirmDirty: false,
+      time_zone: moment.tz.guess()
       // phoneError: false
     }
   }
@@ -67,7 +69,7 @@ class Register extends Component {
 
   handleSubmit = (e) => {
     this.form.validateFields().then(values => {
-      this.props.register(values.email, values.firstName, values.lastName, values.password, values.confirmPassword, this.props.match.params.token);
+      this.props.register(values.email, values.firstName, values.lastName, this.state.time_zone, values.password, values.confirmPassword, this.props.match.params.token);
     });
   }
 
@@ -105,6 +107,23 @@ class Register extends Component {
     this.form = form;
   }
 
+  handleCreateSelectItems = () => {
+    let timezoneNames = moment.tz.names();
+    let items = [];
+    for (var i = 0; i < timezoneNames.length; i++) {
+      if (!items.includes(timezoneNames[i])) {
+        if (timezoneNames[i] !== "US/Pacific-New") {
+          items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
+        }
+      }
+    }
+    return items;
+  }
+
+  handleUpdateTimeZone = (fieldValue) => {
+    this.setState({time_zone: fieldValue});
+  }
+
   render() {
     return (
       <Layout>
@@ -122,7 +141,13 @@ class Register extends Component {
                 </Row>
                 <Row type='flex' justify='center' align='middle'>
                   <Col xs={{span: 22}} sm={{span: 18}} md={{span: 14}} lg={{span: 10}}>
-                    <Form onFinish={this.handleSubmit} ref={this.formRef} className='register-form' style={styles.registerForm}>
+                    <Form
+                      onFinish={this.handleSubmit}
+                      ref={this.formRef}
+                      className='register-form'
+                      style={styles.registerForm}
+                      initialValues={{time_zone: this.state.time_zone}}
+                    >
                       <Form.Item label='Email Address' name="email" hasFeedback {...layout}>
                         <Input onBlur={this.validateStatus} readOnly disabled />
                       </Form.Item>
@@ -131,6 +156,18 @@ class Register extends Component {
                       </Form.Item>
                       <Form.Item label='Last Name' name="lastName" rules={[{required: true, message: 'Please enter your last name'}]} hasFeedback {...layout}>
                         <Input onBlur={this.validateStatus} />
+                      </Form.Item>
+                      <Form.Item label="Time Zone" name="time_zone" align='middle' rules={[{required: true, message: 'Please enter your time zone'}]} hasFeedback {...layout}>
+                        <Select
+                          showSearch
+                          placeholder="Enter Time Zone"
+                          optionFilterProp="children"
+                          default="UTC"
+                          onChange={this.handleUpdateTimeZone}
+                          filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                        >
+                          {this.handleCreateSelectItems()}
+                        </Select>
                       </Form.Item>
                       <Form.Item label='Password' name="password"
                         rules={[
@@ -237,7 +274,10 @@ const styles = {
   },
   checkBox: {
     justifyContent: 'center'
-  }
+  },
+  timeZone: {
+    width: '80%'
+  },
 }
 
 const mapStateToProps = (state) => {
@@ -254,7 +294,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getInvitation: (token) => dispatch(getInvitation(token)),
-    register: (email, firstName, lastName, password, passwordConfirm, token) => dispatch(register(email, firstName, lastName, password, passwordConfirm, token))
+    register: (email, firstName, lastName, time_zone, password, confirmPassword, token) => dispatch(register(email, firstName, lastName, time_zone, password, confirmPassword, token))
   }
 }
 

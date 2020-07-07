@@ -226,7 +226,7 @@ export function checkLogin() {
   }
 }
 
-export function register(email, firstName, lastName, password, confirmPassword, token) {
+export function register(email, firstName, lastName, time_zone, password, confirmPassword, token) {
   return (dispatch) => {
     dispatch(registerError(''));
     dispatch(registerInProcess(true));
@@ -237,6 +237,7 @@ export function register(email, firstName, lastName, password, confirmPassword, 
       email,
       first_name: firstName,
       last_name: lastName,
+      time_zone,
       password
     };
 

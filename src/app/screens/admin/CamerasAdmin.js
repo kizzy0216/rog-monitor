@@ -2,10 +2,11 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as camerasActions from '../../redux/cameras/actions';
-import { Table, Input, Button, Popconfirm, Form, InputNumber, message, Radio, Modal } from 'antd';
+import { Table, Input, Button, Popconfirm, Form, InputNumber, message, Radio, Modal, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { isEmpty } from '../../redux/helperFunctions';
 import Highlighter from 'react-highlight-words';
+import moment from 'moment-timezone';
 
 const UsersForm = ({handleSubmit, form}) => {
   return (
@@ -20,7 +21,7 @@ const UsersForm = ({handleSubmit, form}) => {
   );
 };
 
-const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess}) => {
+const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess, createSelectItems, updateTimeZone, currentTimeZone}) => {
   const layout = {
     wrapperCol: {
       span: 16,
@@ -36,12 +37,23 @@ const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess}) 
       cancelText='Cancel'
       confirmLoading={addCameraInProcess}
     >
-      <Form ref={form} {...layout}>
+      <Form ref={form} initialValues={{time_zone: currentTimeZone}} {...layout}>
         <Form.Item name="camera_name" rules={[{required: true, message: 'Please input the camera name'}]} hasFeedback>
           <Input placeholder='Enter camera name'/>
         </Form.Item>
         <Form.Item name="camera_url" rules={[{required: true, message: 'Please enter the camera URL'}]} hasFeedback>
           <Input placeholder='Enter Camera URL'/>
+        </Form.Item>
+        <Form.Item name="time_zone" rules={[{required: true, message: 'Please enter your time zone'}]} hasFeedback>
+          <Select
+            showSearch
+            placeholder="Enter Time Zone"
+            optionFilterProp="children"
+            onChange={updateTimeZone}
+            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+          >
+            {createSelectItems()}
+          </Select>
         </Form.Item>
         <Form.Item name="username" rules={[{required: false, message: 'Please enter the camera username'}]} hasFeedback>
           <Input placeholder='Enter camera username'/>
@@ -59,7 +71,8 @@ class CamerasAdmin extends React.Component {
     super(props);
 
     this.state={
-      visible: false
+      visible: false,
+      time_zone: moment.tz.guess()
     }
   }
 
@@ -140,6 +153,25 @@ class CamerasAdmin extends React.Component {
     }
   };
 
+  handleCreateSelectItems = () => {
+    if (this.state.visible == true) {
+      let timezoneNames = moment.tz.names();
+      let items = [];
+      for (var i = 0; i < timezoneNames.length; i++) {
+        if (!items.includes(timezoneNames[i])) {
+          if (timezoneNames[i] !== "US/Pacific-New") {
+            items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
+          }
+        }
+      }
+      return items;
+    }
+  }
+
+  handleUpdateTimeZone = (fieldValue) => {
+    this.setState({time_zone: fieldValue});
+  }
+
   render(){
     const data = [];
     if (!isEmpty(this.props.cameras)) {
@@ -186,6 +218,9 @@ class CamerasAdmin extends React.Component {
             fullRtspUrl={this.state.fullRtspUrl}
             addCameraError={this.props.addCameraError}
             addCameraInProcess={this.props.addCameraInProcess}
+            createSelectItems={this.handleCreateSelectItems}
+            updateTimeZone={this.handleUpdateTimeZone}
+            currentTimeZone={this.state.time_zone}
           />
           <EditableTable
             data={data}
@@ -213,6 +248,9 @@ class CamerasAdmin extends React.Component {
             fullRtspUrl={this.state.fullRtspUrl}
             addCameraError={this.props.addCameraError}
             addCameraInProcess={this.props.addCameraInProcess}
+            createSelectItems={this.handleCreateSelectItems}
+            updateTimeZone={this.handleUpdateTimeZone}
+            currentTimeZone={this.state.time_zone}
           />
         </div>
       )
@@ -268,24 +306,52 @@ const EditableCell = ({
     }
   };
 
+  const handleCreateSelectItems = () => {
+    let timezoneNames = moment.tz.names();
+    let items = [];
+    for (var i = 0; i < timezoneNames.length; i++) {
+      if (!items.includes(timezoneNames[i])) {
+        if (timezoneNames[i] !== "US/Pacific-New") {
+          items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
+        }
+      }
+    }
+    return items;
+  }
+
   let childNode = children;
 
   if (editable) {
     childNode = editing ? (
-      <Form.Item
-        style={{
-          margin: 0,
-        }}
-        name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
-      >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
+      dataIndex == 'time_zone' ?
+        <Form.Item name="time_zone" rules={[{required: true, message: 'Please enter your time zone'}]} style={{ margin: 0 }} hasFeedback>
+          <Select
+            ref={inputRef}
+            showSearch
+            placeholder="Enter Time Zone"
+            optionFilterProp="children"
+            onChange={save}
+            defaultOpen={true}
+            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+          >
+            {handleCreateSelectItems()}
+          </Select>
+        </Form.Item>
+      :
+        <Form.Item
+          style={{
+            margin: 0,
+          }}
+          name={dataIndex}
+          rules={[
+            {
+              required: true,
+              message: `${title} is required.`,
+            },
+          ]}
+        >
+          <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+        </Form.Item>
     ) : (
       <div
         className="editable-cell-value-wrap"
@@ -568,6 +634,9 @@ const styles={
   },
   error: {
     color: 'red'
+  },
+  timeZone: {
+    width: '80%'
   }
 };
 

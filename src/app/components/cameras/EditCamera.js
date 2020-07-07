@@ -169,7 +169,6 @@ class EditCamera extends Component {
             </Form.Item>
             <Form.Item label="Camera Time Zone" name="time_zone" {...formItemLayout}>
               <Select
-                style={styles.timeZone}
                 showSearch
                 placeholder="Enter Time Zone"
                 optionFilterProp="children"

@@ -6,6 +6,7 @@ import { isEmpty } from '../../redux/helperFunctions';
 import { Form, Input, Button, Table, InputNumber, Popconfirm, Select, message, Modal } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import moment from 'moment-timezone';
 
 const UsersForm = ({handleSubmit, form}) => {
   return (
@@ -23,7 +24,7 @@ const UsersForm = ({handleSubmit, form}) => {
   );
 };
 
-const AddUserForm = ({visible, onCancel, onCreate, form, addUserInProcess}) => {
+const AddUserForm = ({visible, onCancel, onCreate, form, addUserInProcess, createSelectItems, updateTimeZone, currentTimeZone}) => {
   const layout = {
     wrapperCol: {
       span: 16,
@@ -39,7 +40,7 @@ const AddUserForm = ({visible, onCancel, onCreate, form, addUserInProcess}) => {
       cancelText='Cancel'
       confirmLoading={addUserInProcess}
     >
-      <Form ref={form} {...layout}>
+      <Form ref={form} initialValues={{time_zone: currentTimeZone}} {...layout}>
         <Form.Item name="email" rules={[{required: true, pattern: new RegExp("^.+@[^\.].*\.[a-z]{2,}$"), message: "Please enter a valid email address."}]} hasFeedback>
           <Input placeholder='Email'/>
         </Form.Item>
@@ -51,6 +52,17 @@ const AddUserForm = ({visible, onCancel, onCreate, form, addUserInProcess}) => {
         </Form.Item>
         <Form.Item name="last_name" rules={[{required: false, message: 'Please enter the user last name'}]} hasFeedback>
           <Input placeholder='Last Name'/>
+        </Form.Item>
+        <Form.Item name="time_zone" rules={[{required: true, message: 'Please enter your time zone'}]} hasFeedback>
+          <Select
+            showSearch
+            placeholder="Enter Time Zone"
+            optionFilterProp="children"
+            onChange={updateTimeZone}
+            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+          >
+            {createSelectItems()}
+          </Select>
         </Form.Item>
         <p>Number of Licenses to Add:</p>
         <Form.Item name="number_to_add" rules={[{type: 'number', message: 'Please enter a valid integer'}]} hasFeedback>
@@ -67,7 +79,8 @@ class UsersAdmin extends Component {
 
     this.state={
       visible: false,
-      addUserError: ''
+      addUserError: '',
+      time_zone: moment.tz.guess()
     }
   }
 
@@ -129,6 +142,25 @@ class UsersAdmin extends Component {
     this.formRef = formRef;
   };
 
+  handleCreateSelectItems = () => {
+    if (this.state.visible == true) {
+      let timezoneNames = moment.tz.names();
+      let items = [];
+      for (var i = 0; i < timezoneNames.length; i++) {
+        if (!items.includes(timezoneNames[i])) {
+          if (timezoneNames[i] !== "US/Pacific-New") {
+            items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
+          }
+        }
+      }
+      return items;
+    }
+  }
+
+  handleUpdateTimeZone = (fieldValue) => {
+    this.setState({time_zone: fieldValue});
+  }
+
   render(){
     const data = [];
     if (!isEmpty(this.props.userData)) {
@@ -139,6 +171,7 @@ class UsersAdmin extends Component {
           email: this.props.userData[i]['email'],
           first_name: this.props.userData[i]['first_name'],
           last_name: this.props.userData[i]['last_name'],
+          time_zone: this.props.userData[i]['time_zone'],
           enabled: this.props.userData[i]['enabled'].toString(),
           user_privileges_id: this.props.userData[i]['user_privileges_id'],
           mute: this.props.userData[i]['mute'].toString()
@@ -160,6 +193,9 @@ class UsersAdmin extends Component {
             onCreate={this.handleCreate}
             addUserError={this.props.addUserError}
             addUserInProcess={this.props.addUserInProcess}
+            createSelectItems={this.handleCreateSelectItems}
+            updateTimeZone={this.handleUpdateTimeZone}
+            currentTimeZone={this.state.time_zone}
           />
           <EditableTable
             data={data}
@@ -185,6 +221,9 @@ class UsersAdmin extends Component {
             onCreate={this.handleCreate}
             addUserError={this.props.addUserError}
             addUserInProcess={this.props.addUserInProcess}
+            createSelectItems={this.handleCreateSelectItems}
+            updateTimeZone={this.handleUpdateTimeZone}
+            currentTimeZone={this.state.time_zone}
           />
         </div>
       )
@@ -280,6 +319,45 @@ class EditableTable extends React.Component {
         sorter: (a, b) => { return a.last_name.localeCompare(b.last_name)},
         sortDirections: ['descend', 'ascend'],
         width: 200
+      },
+      {
+        title: 'Time Zone',
+        dataIndex: 'time_zone',
+        ...this.getColumnSearchProps('time_zone'),
+        sorter: (a, b) => { return a.time_zone.localeCompare(b.time_zone)},
+        sortDirections: ['descend', 'ascend'],
+        width: 200,
+        render: (text, record) => {
+          const { editingKey } = this.state;
+          const editable = this.isEditing(record);
+          return editable ? (
+            <EditableContext.Consumer>
+              {() => (
+                <Form.Item name="time_zone" rules={[{required: true, message: 'Please enter your time zone'}]} style={{ margin: 0 }} hasFeedback>
+                  <Select
+                    showSearch
+                    placeholder="Enter Time Zone"
+                    optionFilterProp="children"
+                    onChange={this.handleUpdateTimeZone}
+                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  >
+                    {this.handleCreateSelectItems()}
+                  </Select>
+                </Form.Item>
+              )}
+            </EditableContext.Consumer>
+          ) : (
+            <EditableContext.Consumer>
+              {() => (
+                <span>
+                  <span>
+                    {text}
+                  </span>
+                </span>
+              )}
+            </EditableContext.Consumer>
+          );
+        },
       },
       {
         title: 'Enabled',
@@ -405,6 +483,23 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: '' });
   };
 
+  handleCreateSelectItems = () => {
+    let timezoneNames = moment.tz.names();
+    let items = [];
+    for (var i = 0; i < timezoneNames.length; i++) {
+      if (!items.includes(timezoneNames[i])) {
+        if (timezoneNames[i] !== "US/Pacific-New") {
+          items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
+        }
+      }
+    }
+    return items;
+  }
+
+  handleUpdateTimeZone = (fieldValue) => {
+    this.setState({time_zone: fieldValue});
+  }
+
   save(record) {
     let key = record.key;
     this.form.validateFields().then(row => {
@@ -480,6 +575,9 @@ const styles={
   formstyles: {
     width: 650,
     margin: '0 auto'
+  },
+  timeZone: {
+    width: '80%'
   }
 };
 

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, Form, Input, message } from 'antd';
+import { Button, Modal, Form, Input, Select, message } from 'antd';
 
 import { addCamera } from '../../redux/cameras/actions';
+import moment from 'moment-timezone';
 
-const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess}) =>{
+const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess, createSelectItems, updateTimeZone, currentTimeZone}) =>{
   const layout = {
     wrapperCol: {
       span: 16,
@@ -20,7 +21,7 @@ const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess}) 
       cancelText='Cancel'
       confirmLoading={addCameraInProcess}
     >
-      <Form ref={form} {...layout}>
+      <Form ref={form} initialValues={{time_zone: currentTimeZone}} {...layout}>
         <Form.Item name="name" rules={[{required: true, message: 'Please input the camera name'}]} hasFeedback>
           <Input placeholder='Enter camera name'/>
         </Form.Item>
@@ -34,6 +35,17 @@ const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess}) 
           hasFeedback
         >
           <Input placeholder='Enter Camera URL'/>
+        </Form.Item>
+        <Form.Item name="time_zone" rules={[{required: true, message: 'Please enter your time zone'}]} hasFeedback>
+          <Select
+            showSearch
+            placeholder="Enter Time Zone"
+            optionFilterProp="children"
+            onChange={updateTimeZone}
+            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+          >
+            {createSelectItems()}
+          </Select>
         </Form.Item>
         <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>Username:</p>
         <Form.Item name="username" rules={[{required: false, message: 'Please enter the camera username'}]} hasFeedback>
@@ -50,7 +62,8 @@ const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess}) 
 
 class AddCameraModal extends Component {
   state = {
-    fullRtspUrl: null
+    fullRtspUrl: null,
+    time_zone: this.props.user.time_zone
   };
 
   UNSAFE_componentWillReceiveProps = (nextProps) => {
@@ -84,6 +97,7 @@ class AddCameraModal extends Component {
                                      this.props.selectedCameraGroup,
                                      values.name,
                                      values.rtspUrl.trim(),
+                                     this.state.time_zone,
                                      values.username,
                                      values.password);
       });
@@ -118,6 +132,23 @@ class AddCameraModal extends Component {
     }
   }
 
+  handleCreateSelectItems = () => {
+    let timezoneNames = moment.tz.names();
+    let items = [];
+    for (var i = 0; i < timezoneNames.length; i++) {
+      if (!items.includes(timezoneNames[i])) {
+        if (timezoneNames[i] !== "US/Pacific-New") {
+          items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
+        }
+      }
+    }
+    return items;
+  }
+
+  handleUpdateTimeZone = (fieldValue) => {
+    this.setState({time_zone: fieldValue});
+  }
+
   render() {
     return (
       <div>
@@ -130,6 +161,9 @@ class AddCameraModal extends Component {
           fullRtspUrl={this.state.fullRtspUrl}
           addCameraError={this.props.addCameraError}
           addCameraInProcess={this.props.addCameraInProcess}
+          createSelectItems={this.handleCreateSelectItems}
+          updateTimeZone={this.handleUpdateTimeZone}
+          currentTimeZone={this.state.time_zone}
         />
       </div>
     );
@@ -149,6 +183,9 @@ const styles = {
   },
   error: {
     color: 'red'
+  },
+  timeZone: {
+    width: '80%'
   }
 };
 
@@ -166,7 +203,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addCamera: (user, cameraGroup, name, rtspUrl, username, password) => dispatch(addCamera(user, cameraGroup, name, rtspUrl, username, password))
+    addCamera: (user, cameraGroup, name, rtspUrl, time_zone, username, password) => dispatch(addCamera(user, cameraGroup, name, rtspUrl, time_zone, username, password))
   }
 }
 

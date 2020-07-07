@@ -149,7 +149,8 @@ export function updateUser(user, values) {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}`;
     const data = {
       first_name: values.firstName,
-      last_name: values.lastName
+      last_name: values.lastName,
+      time_zone: values.time_zone
     };
 
     axios.patch(url, data, config)

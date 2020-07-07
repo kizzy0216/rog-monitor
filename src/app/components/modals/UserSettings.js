@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import store from '../../redux/store';
-import { Modal, Form, Input, Button, message } from 'antd';
+import { Modal, Form, Input, Button, Select, message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import moment from 'moment-timezone';
 const FormItem = Form.Item;
 
 import { updateUser } from '../../redux/users/actions';
 
 import CustomInput from '../../components/formitems/CustomInput';
 
-const UserSettingsForm = ({onCancel, visible, onCreate, updateUser, form, userData, updateUserSuccess}) => {
+const UserSettingsForm = ({onCancel, visible, onCreate, updateUser, form, userData, updateUserSuccess, createSelectItems, updateTimeZone}) => {
   const formItemLayout = {
     labelCol: {
       xs: { span: 6 },
@@ -31,7 +32,8 @@ const UserSettingsForm = ({onCancel, visible, onCreate, updateUser, form, userDa
         initialValues={{
           firstName: userData.firstName,
           lastName: userData.lastName,
-          email: userData.email
+          email: userData.email,
+          time_zone: userData.time_zone
         }}
         ref={form}
       >
@@ -44,6 +46,17 @@ const UserSettingsForm = ({onCancel, visible, onCreate, updateUser, form, userDa
         <FormItem label='Email' name="email" {...formItemLayout}>
           <Input placeholder="Email" style={styles.input} disabled />
         </FormItem>
+        <Form.Item label="Time Zone" name="time_zone" rules={[{required: true, message: 'Please enter your time zone'}]} hasFeedback {...formItemLayout}>
+          <Select
+            showSearch
+            placeholder="Enter Time Zone"
+            optionFilterProp="children"
+            onChange={updateTimeZone}
+            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+          >
+            {createSelectItems()}
+          </Select>
+        </Form.Item>
       </Form>
     </Modal>
   );
@@ -54,13 +67,15 @@ class UserSettings extends Component {
     super(props);
     this.state = {
       visible: false,
+      time_zone: this.props.user.time_zone
     }
   }
 
   userData = {
     firstName: this.props.user.first_name,
     lastName: this.props.user.last_name,
-    email: this.props.user.email
+    email: this.props.user.email,
+    time_zone: this.props.user.time_zone
   };
 
   cancelSaveButton = () => {
@@ -78,6 +93,25 @@ class UserSettings extends Component {
       this.props.updateUser(this.props.user, values);
     });
   };
+
+  handleCreateSelectItems = () => {
+    if (this.state.visible == true) {
+      let timezoneNames = moment.tz.names();
+      let items = [];
+      for (var i = 0; i < timezoneNames.length; i++) {
+        if (!items.includes(timezoneNames[i])) {
+          if (timezoneNames[i] !== "US/Pacific-New") {
+            items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
+          }
+        }
+      }
+      return items;
+    }
+  }
+
+  handleUpdateTimeZone = (fieldValue) => {
+    this.setState({time_zone: fieldValue});
+  }
 
   UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.updateUserError && this.props.updateUserError !== nextProps.updateUserError) {
@@ -108,6 +142,8 @@ class UserSettings extends Component {
           userData={this.userData}
           updateUserInProcess={this.props.updateUserInProcess}
           updateUserSuccess={this.props.updateUserSuccess}
+          createSelectItems={this.handleCreateSelectItems}
+          updateTimeZone={this.handleUpdateTimeZone}
         />
       </div>
     );
@@ -120,6 +156,9 @@ const styles = {
   },
   error: {
     color: 'red',
+    textAlign: 'center'
+  },
+  input: {
     textAlign: 'center'
   }
 };

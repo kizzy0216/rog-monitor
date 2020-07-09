@@ -67,17 +67,21 @@ body{
 }
 .ant-modal-header{
   border-bottom: none !important;
+  margin-bottom: -24px;
 }
 .ant-modal-title{
   font-size: 24px !important;
   padding: 16px 16px !important;
 }
 .ant-modal-body{
-  padding: 5px !important;
+  /* padding: 5px !important; */
 }
 .ant-modal-body input{
   text-align: center;
   border-radius: 0px;
+}
+.ant-modal-confirm-body > .anticon + .ant-modal-confirm-title + .ant-modal-confirm-content{
+  margin-left: 0px;
 }
 .ant-modal-body .ant-select-selection__placeholder{
   text-align: center;
@@ -120,6 +124,7 @@ body{
 .ant-modal-footer{
   text-align: center !important;
   border-top: none !important;
+  margin-top: -24px;
 }
 .ant-modal-footer .ant-btn, .ant-modal-footer .ant-btn:hover, .ant-modal-footer .ant-btn:focus, .ant-modal-footer .ant-btn:visited{
   background-color: transparent !important;

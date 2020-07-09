@@ -34,26 +34,26 @@ const auth = (state = initialState, action) => {
           ...state,
           registerSuccess: false
         }
-        case types.RESET_PASSWORD_IN_PROCESS:
-          return {
-            ...state,
-            resetPasswordInProcess: action.resetPasswordInProcess
-          }
-        case types.RESET_PASSWORD_ERROR:
-          return {
-            ...state,
-            resetPasswordError: action.resetPasswordError
-          }
-        case types.RESET_PASSWORD_SUCCESS:
-          return {
-            ...state,
-            resetPasswordSuccess: true
-          }
-          case types.RESET_RESET_PASSWORD_SUCCESS:
-            return {
-              ...state,
-              resetPasswordSuccess: false
-            }
+      case types.RESET_PASSWORD_IN_PROCESS:
+        return {
+          ...state,
+          resetPasswordInProcess: action.resetPasswordInProcess
+        }
+      case types.RESET_PASSWORD_ERROR:
+        return {
+          ...state,
+          resetPasswordError: action.resetPasswordError
+        }
+      case types.RESET_PASSWORD_SUCCESS:
+        return {
+          ...state,
+          resetPasswordSuccess: true
+        }
+      case types.RESET_RESET_PASSWORD_SUCCESS:
+        return {
+          ...state,
+          resetPasswordSuccess: false
+        }
       case types.LOGIN_IN_PROCESS:
         return {
           ...state,
@@ -99,41 +99,54 @@ const auth = (state = initialState, action) => {
           ...state,
           getInvitationError: action.getInvitationError
         }
-        case types.SEND_PASSWORD_RESET_REQUEST_IN_PROCESS:
-          return {
-            ...state,
-            sendPasswordResetRequestInProcess: action.sendPasswordResetRequestInProcess
-          }
-        case types.SEND_PASSWORD_RESET_REQUEST_SUCCESS:
-          return {
-            ...state,
-            sendPasswordResetRequestSuccess: action.sendPasswordResetRequestSuccess
-          }
-        case types.SEND_PASSWORD_RESET_REQUEST_ERROR:
-          return {
-            ...state,
-            sendPasswordResetRequestError: action.sendPasswordResetRequestError
-          }
-        case types.GET_PASSWORD_RESET_REQUEST_IN_PROCESS:
-          return {
-            ...state,
-            getPasswordResetRequestInProcess: action.getPasswordResetRequestInProcess
-          }
-        case types.GET_PASSWORD_RESET_REQUEST_SUCCESS:
-          return {
-            ...state,
-            request: action.request
-          }
-        case types.GET_PASSWORD_RESET_REQUEST_ERROR:
-          return {
-            ...state,
-            getPasswordResetRequestError: action.getPasswordResetRequestError
-          }
+      case types.SEND_PASSWORD_RESET_REQUEST_IN_PROCESS:
+        return {
+          ...state,
+          sendPasswordResetRequestInProcess: action.sendPasswordResetRequestInProcess
+        }
+      case types.SEND_PASSWORD_RESET_REQUEST_SUCCESS:
+        return {
+          ...state,
+          sendPasswordResetRequestSuccess: action.sendPasswordResetRequestSuccess
+        }
+      case types.SEND_PASSWORD_RESET_REQUEST_ERROR:
+        return {
+          ...state,
+          sendPasswordResetRequestError: action.sendPasswordResetRequestError
+        }
+      case types.GET_PASSWORD_RESET_REQUEST_IN_PROCESS:
+        return {
+          ...state,
+          getPasswordResetRequestInProcess: action.getPasswordResetRequestInProcess
+        }
+      case types.GET_PASSWORD_RESET_REQUEST_SUCCESS:
+        return {
+          ...state,
+          request: action.request
+        }
+      case types.GET_PASSWORD_RESET_REQUEST_ERROR:
+        return {
+          ...state,
+          getPasswordResetRequestError: action.getPasswordResetRequestError
+        }
 
-        case types.TOGGLE_MUTE:
-          const newState = {...state}
-          newState.user.mute = action.mute
-          return newState
+      case types.TOGGLE_MUTE:
+        const newState = {...state}
+        newState.user.mute = action.mute
+        return newState
+
+      case types.GENERATE_OTP_SUCCESS:
+        return {
+          ...state,
+          generateOTPSuccess: action.generateOTPSuccess,
+          generatedOTP: action.generatedOTP
+        }
+
+      case types.GENERATE_OTP_ERROR:
+        return {
+          ...state,
+          generateOTPError: action.generateOTPError
+        }
 
       default:
         return state

@@ -189,6 +189,59 @@ export function resetResetPasswordSuccess() {
   }
 }
 
+export function generateOTPSuccess(generateOTPSuccess, generatedOTP) {
+  return {
+    type: types.GENERATE_OTP_SUCCESS,
+    generateOTPSuccess: generateOTPSuccess,
+    generatedOTP: generatedOTP
+  }
+};
+
+export function generateOTPError(generateOTPError) {
+  return {
+    type: types.GENERATE_OTP_ERROR,
+    generateOTPError: generateOTPError
+  }
+}
+
+export function generateOTP(user) {
+  return (dispatch) => {
+    const jwt = sessionStorage.getItem('jwt');
+    if (jwt) {
+      let url = `${process.env.REACT_APP_ROG_API_URL}/generate-otp`;
+      axios.get(url, {headers: {Authorization: 'Bearer'+' '+jwt}})
+        .then(response => {
+          dispatch(generateOTPSuccess(true, response.data.otp));
+        })
+        .catch(error => {
+          let errMessage = 'Error generating OTP. Please try again later';
+          if (error.response != undefined) {
+            errMessage = error.response;
+            if (typeof error === 'object') {
+              if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+                if (typeof error.response.data === 'object') {
+                  if ('Error' in error.response.data) {
+                    errMessage = error.response.data['Error'];
+                  }
+                } else {
+                  errMessage = error.response.data;
+                }
+              }
+            }
+          }
+          dispatch(generateOTPError(errMessage));
+        })
+        .finally(() => {
+          dispatch(generateOTPSuccess(false, ''));
+          dispatch(generateOTPError(''));
+        });
+    } else {
+      dispatch(loginMissing());
+    }
+
+  }
+}
+
 export function checkLogin() {
   return (dispatch) => {
     const jwt = sessionStorage.getItem('jwt');

@@ -74,7 +74,7 @@ class AppRouter extends Component {
           </Header>
           <Layout>
             <Sider collapsed={this.state.collapsed} collapsedWidth={0} style={styles.sider}>
-              <SideMenu />
+              <SideMenu user={this.props.user} />
             </Sider>
 
             <Content style={styles.content}>

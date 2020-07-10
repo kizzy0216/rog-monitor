@@ -2,14 +2,23 @@ import React from 'react';
 import { Menu } from 'antd';
 
 import LogoutItem from './LogoutItem';
+import { QrcodeOutlined } from '@ant-design/icons';
 
 import UserSettings from '../../components/modals/UserSettings';
 import AddCameraGroupModal from  '../../components/modals/AddCameraGroupModal';
+import GenerateOTP from  '../../components/modals/GenerateOTP';
 import CameraGroupInvitesModal from '../../components/modals/CameraGroupInvitesModal';
 import CameraLicensesModal from '../../components/modals/CameraLicensesModal';
 
-const SideMenu = () => (
+const SideMenu = (props) => (
   <Menu>
+    {props.user.user_privileges_id == 0 || props.user.user_privileges_id == 3 ?
+      <Menu.Item key='0'>
+        <GenerateOTP linkText='Generate OTP' />
+      </Menu.Item>
+    :
+      ''
+    }
     <Menu.Item key='1'>
       <UserSettings />
     </Menu.Item>
@@ -29,3 +38,5 @@ const SideMenu = () => (
 );
 
 export default SideMenu;
+
+// this.props.user.user_privileges_id == 0

@@ -20,5 +20,8 @@ export default {
   sendpasswordResetRequestError: '',
   getpasswordResetRequestInProcess: false,
   getpasswordResetRequestSuccess: false,
-  getpasswordResetRequestError: ''
+  getpasswordResetRequestError: '',
+  generatedOTP: '',
+  generateOTPError: '',
+  generateOTPSuccess: false
 }

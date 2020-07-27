@@ -51,8 +51,6 @@ const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentPropert
   );
 };
 
-// TODO: get existing camera group and camera information and use it to populate a dropdown for the user to select
-
 class Alerts extends Component {
   constructor(props) {
     super(props);
@@ -113,6 +111,10 @@ class Alerts extends Component {
 
   render() {
     if (this.props.alerts.length) {
+      let cameraGroupsTags = {};
+      for (var i = 0; i < this.props.cameraGroups.length; i++) {
+        cameraGroupsTags[this.props.cameraGroups[i].uuid] = isEmpty(this.props.cameraGroups[i].tag_options) ? ["Clear", "Contacted Police", "Contacted Fire Dept", "Contacted Ambulance"] : this.props.cameraGroups[i].tag_options;
+      }
       var alerts = this.props.alerts.sort((a,b)=>{
         return moment(a.time) - moment(b.time)
       }).reverse();
@@ -149,7 +151,7 @@ class Alerts extends Component {
           <Row type='flex' justify='start'>
             {alerts.map(alert=> (
               <Col key={`alert-${alert.id}`} xs={24} sm={12} md={8} lg={6}>
-                <AlertCard {...alert} />
+                <AlertCard {...alert} cameraGroupsTags={cameraGroupsTags} />
               </Col>
             ))}
           </Row>
@@ -228,4 +230,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Alerts);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Alerts));

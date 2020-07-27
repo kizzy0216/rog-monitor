@@ -516,6 +516,7 @@ export function editCameraGroup(user, cameraGroup, cameraGroupData) {
         cameraGroup.name = cameraGroupData.name;
         cameraGroup.away_mode = cameraGroupData.away_mode;
         cameraGroup.armed = cameraGroupData.armed;
+        cameraGroup.tag_options = cameraGroupData.tag_options;
         dispatch(fetchCameraGroups(user));
         dispatch(selectCameraGroup(user, cameraGroup));
         dispatch(editCameraGroupSuccess(true));

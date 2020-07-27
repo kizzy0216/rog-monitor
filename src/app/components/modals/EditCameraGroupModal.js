@@ -4,9 +4,10 @@ import { Modal, Form, Input, Button, Popconfirm, message, Switch } from 'antd';
 import { EnvironmentOutlined, DeleteOutlined, DisconnectOutlined, LinkOutlined, SafetyOutlined, HomeOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import CustomInput from '../../components/formitems/CustomInput';
 import { enableCameraGroup, disableCameraGroup, removeCameraGroup, editCameraGroup } from '../../redux/cameraGroups/actions';
+import AlertTagOptions from '../alerts/AlertTagOptions';
 
 const FormItem = Form.Item;
-const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, form, cameraGroup, cameraGroupName, editCameraGroupInProcess, editCameraGroupSuccess, removeCameraGroupInProcess, removeCameraGroupSuccess, user, enableCameraGroup, disableCameraGroup, enableCameraGroupInProcess, disableCameraGroupInProcess, cameraGroupAwayMode, toggleCameraGroupAwayMode, cameraGroupArmed, toggleCameraGroupArmed}) => {
+const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, form, cameraGroup, cameraGroupName, editCameraGroupInProcess, editCameraGroupSuccess, removeCameraGroupInProcess, removeCameraGroupSuccess, user, enableCameraGroup, disableCameraGroup, enableCameraGroupInProcess, disableCameraGroupInProcess, cameraGroupAwayMode, toggleCameraGroupAwayMode, cameraGroupArmed, toggleCameraGroupArmed, tag_options, editInputConfirm, editInputChange, inputChange, inputConfirm, closeTag, inputValue, editInputIndex, editInputValue, inputVisible, editTag, showInput}) => {
   const formItemLayout = {
     labelCol: {
       xs: { span: 6 },
@@ -66,6 +67,9 @@ const EditCameraGroupForm = ({onCancel, visible, onCreate, removeCameraGroup, fo
             <Button type="danger" icon={<DeleteOutlined />} loading={removeCameraGroupInProcess} disabled={removeCameraGroupInProcess}>Remove Camera Group</Button>
           </Popconfirm>
         </FormItem>
+        <FormItem label="Alert Tag Options" name="tag_options" {...formItemLayout}>
+          <AlertTagOptions cameraGroup={cameraGroup} tag_options={tag_options} editInputChange={editInputChange} editInputConfirm={editInputConfirm} inputChange={inputChange} inputConfirm={inputConfirm} closeTag={closeTag} inputValue={inputValue} editInputIndex={editInputIndex} editInputValue={editInputValue} inputVisible={inputVisible} editTag={editTag} showInput={showInput} />
+        </FormItem>
       </Form>
     </Modal>
   );
@@ -78,7 +82,12 @@ class EditCameraGroupModal extends Component {
       visible: false,
       error: false,
       away_mode: this.props.selectedCameraGroup.away_mode,
-      armed: this.props.selectedCameraGroup.armed
+      armed: this.props.selectedCameraGroup.armed,
+      tag_options: this.props.selectedCameraGroup.tag_options,
+      inputVisible: false,
+      inputValue: '',
+      editInputIndex: -1,
+      editInputValue: '',
     }
   }
 
@@ -110,6 +119,9 @@ class EditCameraGroupModal extends Component {
       if (this.state.away_mode !== this.props.selectedCameraGroup.away_mode) {
         settings.away_mode = this.state.away_mode;
       }
+      if (this.state.tag_options !== this.props.selectedCameraGroup.tag_options) {
+        settings.tag_options = this.state.tag_options;
+      }
       this.props.editCameraGroup(this.props.user, this.props.selectedCameraGroup, settings);
     });
   };
@@ -127,6 +139,55 @@ class EditCameraGroupModal extends Component {
       this.setState({away_mode: false});
     }
     this.setState({armed: fieldValue});
+  }
+
+  showInput = () => {
+    this.setState({ inputVisible: true }, () => document.getElementsByClassName('tag-input')[0].focus());
+  };
+
+  handleCloseTag = removedTag => {
+    const tag_options = this.state.tag_options.filter(tag => tag !== removedTag);
+    this.setState({ tag_options });
+  };
+
+  handleInputChange = e => {
+    this.setState({ inputValue: e.target.value });
+  };
+
+  handleInputConfirm = () => {
+    const { inputValue } = this.state;
+    let { tag_options } = this.state;
+    if (inputValue && tag_options.indexOf(inputValue) === -1) {
+      tag_options = [...tag_options, inputValue];
+    }
+    this.setState({
+      tag_options,
+      inputVisible: false,
+      inputValue: '',
+    });
+  };
+
+  handleEditInputChange = e => {
+    this.setState({ editInputValue: e.target.value });
+  };
+
+  handleEditInputConfirm = () => {
+    this.setState(({ tag_options, editInputIndex, editInputValue }) => {
+      const newTags = [...tag_options];
+      newTags[editInputIndex] = editInputValue;
+      return {
+        tag_options: newTags,
+        editInputIndex: -1,
+        editInputValue: '',
+      };
+    });
+  };
+
+  handleEditTag = e => {
+    this.setState({ editInputIndex: index, editInputValue: tag }, () => {
+      this.editInput.focus();
+    });
+    e.preventDefault();
   }
 
   render() {
@@ -159,6 +220,18 @@ class EditCameraGroupModal extends Component {
           disableCameraGroup={this.props.disableCameraGroup}
           enableCameraGroupInProcess={this.props.enableCameraGroupInProcess}
           disableCameraGroupInProcess={this.props.disableCameraGroupInProcess}
+          tag_options={this.state.tag_options}
+          editInputConfirm={this.handleEditInputConfirm}
+          editInputChange={this.handleEditInputChange}
+          inputConfirm={this.handleInputConfirm}
+          inputChange={this.handleInputChange}
+          closeTag={this.handleCloseTag}
+          inputValue={this.state.inputValue}
+          editInputIndex={this.state.editInputIndex}
+          editInputValue={this.state.editInputValue}
+          inputVisible={this.state.inputVisible}
+          editTag={this.handleEditTag}
+          showInput={this.showInput}
         />
       </div>
     );

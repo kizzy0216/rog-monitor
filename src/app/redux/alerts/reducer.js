@@ -156,6 +156,24 @@ const alerts = (state = initialState, action) => {
           shareAlertInProcess: action.shareAlertInProcess,
           shareAlertInProcessUuid: action.shareAlertInProcessUuid
         }
+      case types.UPDATE_ALERT_TAGS_IN_PROCESS:
+        return {
+          ...state,
+          updateAlertTagsInProcess: action.updateAlertTagsInProcess,
+          updateAlertTagsInProcessUuid: action.updateAlertTagsInProcessUuid
+        }
+      case types.UPDATE_ALERT_TAGS_ERROR:
+        return {
+          ...state,
+          updateAlertTagsError: action.updateAlertTagsError,
+          updateAlertTagsErrorUuid: action.updateAlertTagsErrorUuid
+        }
+      case types.UPDATE_ALERT_TAGS_SUCCESS:
+        return {
+          ...state,
+          tags: action.tags,
+          updateAlertTagsSuccessUuid: action.updateAlertTagsSuccessUuid
+        }
       default:
         return state;
     }

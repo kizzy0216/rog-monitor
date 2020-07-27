@@ -5,7 +5,7 @@ import { Card, Row, Col, Tooltip, Tag, Select, message } from 'antd';
 import { ShareAltOutlined, PlusOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
 import axios from 'axios';
-import { helperFunctions } from '../../redux/helperFunctions';
+import { isEmpty } from '../../redux/helperFunctions';
 import { deleteAlert, updateAlertTags } from '../../redux/alerts/actions';
 import ExpandAlertModal from '../modals/ExpandAlertModal';
 import ShareUserAlertModal from '../modals/ShareUserAlertModal';

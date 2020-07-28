@@ -162,10 +162,10 @@ class EditCamera extends Component {
               <Input style={styles.input} type='text' disabled />
             </Form.Item>
             <Form.Item label='Username' name="username" {...formItemLayout}>
-              <Input style={styles.input} type='text' placeholder="Camera Username" />
+              <Input style={styles.input} type='text' placeholder="Camera Username" disabled />
             </Form.Item>
             <Form.Item label='Password' name="password" {...formItemLayout}>
-              <Input style={styles.input} type='password' placeholder="********" />
+              <Input style={styles.input} type='password' placeholder="********" disabled />
             </Form.Item>
             <Form.Item label="Camera Time Zone" name="time_zone" {...formItemLayout}>
               <Select

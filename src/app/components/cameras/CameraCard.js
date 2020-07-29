@@ -67,14 +67,14 @@ static getDerivedStateFromProps(nextProps, prevState) {
           {!myRole.includes(0) ?
               (<Col span={12} style={styles.cameraConnectionSwitch}>
                 <div style={{height: 24}}>
-                {this.props.enabled && this.props.cameraConnectionVerified && this.props.armed &&
-                  <span style={{color: 'rgba(0, 0, 0)', verticalAlign: 'middle'}}> (Armed)</span>
+                {this.props.enabled && this.props.cameraConnectionVerified ?
+                  this.props.armed &&
+                    <span style={{color: 'rgba(0, 0, 0)', verticalAlign: 'middle'}}> (Armed)</span>
+                  :
+                    <span style={{color: 'rgba(0, 0, 0, 0.25)', verticalAlign: 'middle'}}> (Disconnected)</span>
                 }
                 {this.props.enabled && this.props.cameraConnectionVerified && !this.props.armed &&
                   <span style={{color: 'rgba(0, 0, 0)', verticalAlign: 'middle'}}> (Disarmed)</span>
-                }
-                {!this.props.enabled || !this.props.cameraConnectionVerified &&
-                  <span style={{color: 'rgba(0, 0, 0, 0.25)', verticalAlign: 'middle'}}> (Disconnected)</span>
                 }
                 </div>
               </Col>)

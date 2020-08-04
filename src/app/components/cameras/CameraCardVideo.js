@@ -64,6 +64,10 @@ class CameraCardImg extends Component {
     );
   }
 
+  handleError = () => {
+    this.setState({image: noImage});
+  }
+
   render() {
     if (this.props.data.enabled) {
       return (

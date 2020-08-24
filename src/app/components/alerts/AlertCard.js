@@ -141,11 +141,11 @@ class AlertCard extends Component {
                 ))}
               </Select>
             )}
-            {/*!this.state.inputVisible && (
+            {!this.state.inputVisible && (
               <Tag className="site-tag-plus" onClick={this.showInput}>
                 <PlusOutlined /> New Tag
               </Tag>
-            )*/}
+            )}
           </Col>
         </Row>
       </Card>

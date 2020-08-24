@@ -16,7 +16,7 @@ class AlertCard extends Component {
 
     this.state = {
       shareUserAlertModalVisible: false,
-      tags: isEmpty(props.tags) ? [] : props.tags,
+      tags: isEmpty(props.tags) ? {} : props.tags,
       inputVisible: false,
       inputValue: '',
     }

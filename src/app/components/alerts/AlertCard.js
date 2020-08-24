@@ -16,7 +16,7 @@ class AlertCard extends Component {
 
     this.state = {
       shareUserAlertModalVisible: false,
-      tags: isEmpty(props.tags) ? [] : props.tags,
+      tags: isEmpty(props.tags) ? {} : props.tags,
       inputVisible: false,
       inputValue: '',
     }
@@ -84,6 +84,7 @@ class AlertCard extends Component {
     } else if (this.props.trigger_type == "LD") {
       trigger_type = "Loitering";
     }
+    const tags = isEmpty(this.state.tags) ? {} : this.state.tags;
     const tag_options = this.props.cameraGroupsTags[this.props.camera_groups_uuid];
     return (
       <Card style={styles.alertCard}>
@@ -119,10 +120,10 @@ class AlertCard extends Component {
         </Row>
         <Row type='flex' fustify='space-between'>
           <Col xs={24} style={styles.tags}>
-            {"new" in this.state.tags ?
-              <Tag closable={true} onClose={() => this.props.updateAlertTags(this.props.user, this.props.uuid, Object.keys(this.state.tags), this.props.cameraGroupsTags[this.props.camera_groups_uuid])}>New</Tag>
+            {"new" in tags ?
+              <Tag closable={true} onClose={() => this.props.updateAlertTags(this.props.user, this.props.uuid, Object.keys(tags), this.props.cameraGroupsTags[this.props.camera_groups_uuid])}>New</Tag>
             :
-              <Tag closable={false} visible={true}>Viewed{Object.keys(this.state.tags).length > 1 && <span> and More</span>}</Tag>
+              <Tag closable={false} visible={true}>Viewed{Object.keys(tags).length > 1 && <span> and More</span>}</Tag>
             }
             {this.state.inputVisible && (
               <Select

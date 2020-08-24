@@ -108,7 +108,7 @@ class AlertCard extends Component {
           <Col style={styles.alertDateTime} xs={14} sm={14} md={14}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)} { this.props.cameras_time_zone}</Col>
           <Col style={styles.cameraNameCameraGroup} xs={18}>{this.props.cameras_name} at {this.props.camera_groups_name}</Col>
           <Col style={styles.shareAlertButton} xs={4}>
-            <Tooltip title='Share CameraGroup' placement="topRight">
+            <Tooltip title='Share Alert' placement="topRight">
               <ShareAltOutlined style={styles.share} onClick={this.toggleShareUserAlertModalVisibility}/>
             </Tooltip>
             <ShareUserAlertModal

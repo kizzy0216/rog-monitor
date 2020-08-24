@@ -5,6 +5,7 @@ import moment from 'moment';
 import {Modal, Row, Col, Form} from 'antd';
 import noImage from '../../../assets/img/no-image.jpg';
 import AlertTags from '../alerts/AlertTags';
+import { isEmpty } from '../../redux/helperFunctions';
 import { updateAlertTags } from '../../redux/alerts/actions';
 
 const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cameraName, cameraGroupName, timestamp, timezone, formatDatetime, loadError, imgLoadError, uuid, tags, cameraGroupsTags, cameraGroupUuid}) => {
@@ -45,7 +46,8 @@ class ExpandAlertModal extends Component {
     super(props);
     this.state = {
       visable: false,
-      imgLoadError: false
+      imgLoadError: false,
+      cameraGroupsTags: isEmpty(props.cameraGroupsTags[props.camera_groups_uuid]) ? ["Clear", "Contacted Police", "Contacted Fire Dept", "Contacted Ambulance"] : this.props.cameraGroupsTags[this.props.camera_groups_uuid]
     }
   }
 
@@ -55,7 +57,7 @@ class ExpandAlertModal extends Component {
   }
 
   showModal = () => {
-    this.props.updateAlertTags(this.props.user, this.props.uuid, Object.keys(this.props.tags), this.props.cameraGroupsTags[this.props.camera_groups_uuid]);
+    this.props.updateAlertTags(this.props.user, this.props.uuid, Object.keys(this.props.tags), this.state.cameraGroupsTags);
     this.setState({visible: true});
   };
 
@@ -97,7 +99,7 @@ class ExpandAlertModal extends Component {
           imgLoadError={this.state.imgLoadError}
           uuid={this.props.uuid}
           tags={this.props.tags}
-          cameraGroupsTags={this.props.cameraGroupsTags}
+          cameraGroupsTags={this.state.cameraGroupsTags}
           cameraGroupUuid={this.props.camera_groups_uuid}
         />
       </div>

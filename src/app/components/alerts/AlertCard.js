@@ -84,7 +84,7 @@ class AlertCard extends Component {
     } else if (this.props.trigger_type == "LD") {
       trigger_type = "Loitering";
     }
-    const tag_options = this.props.cameraGroupsTags[this.props.camera_groups_uuid];
+    const tag_options = isEmpty(this.props.cameraGroupsTags[this.props.camera_groups_uuid]) ? [] : this.props.cameraGroupsTags[this.props.camera_groups_uuid];
     return (
       <Card style={styles.alertCard}>
         <div style={styles.alertCardImgContainer}>

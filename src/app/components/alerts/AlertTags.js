@@ -44,7 +44,7 @@ class AlertTags extends Component {
     if (inputValue && tags.indexOf(inputValue) === -1) {
       tags = [...tags, inputValue, "add_"+inputValue];
     }
-    this.props.updateAlertTags(this.props.user, this.props.uuid, tags, this.props.cameraGroupsTags[this.props.cameraGroupUuid]);
+    this.props.updateAlertTags(this.props.user, this.props.uuid, tags, this.props.cameraGroupsTags);
     this.setState({
       inputVisible: false,
       inputValue: '',
@@ -79,7 +79,7 @@ class AlertTags extends Component {
   render() {
     const { inputVisible, inputValue, editInputIndex, editInputValue } = this.state;
     const tags = isEmpty(this.props.tags) ? [] : this.props.tags;
-    const tag_options = this.props.cameraGroupsTags[this.props.cameraGroupUuid];
+    const tag_options = isEmpty(this.props.cameraGroupsTags[this.props.cameraGroupUuid]) ? ["Clear", "Contacted Police", "Contacted Fire Dept", "Contacted Ambulance"] : this.props.cameraGroupsTags[this.props.cameraGroupUuid];
     return (
       <div>
         {Object.keys(tags).map((tag, index) => {

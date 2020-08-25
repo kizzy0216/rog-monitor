@@ -64,6 +64,10 @@ class CameraCardImg extends Component {
     );
   }
 
+  handleError = () => {
+    this.setState({image: noImage});
+  }
+
   render() {
     if (this.props.data.enabled) {
       return (
@@ -73,7 +77,7 @@ class CameraCardImg extends Component {
             hideControls={['volume', 'seekbar', 'timer', 'playbackrates']}
             preload='none'
             bigPlayButton={true}
-            autoPlay={true}
+            autoPlay={false}
             height='170'
             poster={this.state.image}
             src={this.state.live_view_url}

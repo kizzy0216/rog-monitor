@@ -94,6 +94,41 @@ function shareAlertInProcess(bool, alertUuid) {
   }
 }
 
+function newAlert(alert, mute) {
+  if (mute === false) {
+    var audio = new Audio(newAlertSound);
+    audio.play();
+  }
+  return {
+    type: types.NEW_ALERT,
+    alert
+  }
+}
+
+function updateAlertTagsInProcess(alertUuid, bool) {
+  return {
+    type: types.UPDATE_ALERT_TAGS_IN_PROCESS,
+    updateAlertTagsInProcessUuid: alertUuid,
+    updateAlertTagsInProcess: bool
+  }
+}
+
+function updateAlertTagsError(alertUuid, errMessage) {
+  return {
+    type: types.UPDATE_ALERT_TAGS_ERROR,
+    updateAlertTagsError: errMessage,
+    updateAlertTagsErrorUuid: alertUuid
+  }
+}
+
+function updateAlertTagsSuccess(alertUuid, tags) {
+  return {
+    type: types.UPDATE_ALERT_TAGS_SUCCESS,
+    tags: tags,
+    updateAlertTagsSuccessUuid: alertUuid
+  }
+}
+
 export function updateSelectedFilterType(int) {
   return {
     type: types.UPDATE_SELECTED_FILTER_TYPE,
@@ -112,17 +147,6 @@ export function clearAlertData() {
     type: types.CLEAR_ALERT_DATA,
     alerts: initialState.alerts,
     newAlerts: initialState.newAlerts
-  }
-}
-
-function newAlert(alert, mute) {
-  if (mute === false) {
-    var audio = new Audio(newAlertSound);
-    audio.play();
-  }
-  return {
-    type: types.NEW_ALERT,
-    alert
   }
 }
 
@@ -457,5 +481,50 @@ export function shareUserAlert(user, alertUuid, data) {
 export function clearNewAlerts() {
   return (dispatch) => {
     dispatch(clearAllAlerts());
+  }
+}
+
+export function updateAlertTags(user, alertUuid, tags, tag_options = ["Clear", "Contacted Police", "Contacted Fire Dept", "Contacted Ambulance"]) {
+  return (dispatch) => {
+    dispatch(updateAlertTagsInProcess(user, alertUuid, true));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts/${alertUuid}`;
+    let config = {headers: {Authorization: 'Bearer '+user.jwt}};
+    let dict = {};
+    for (var i = 0; i < tags.length; i++) {
+      if (tag_options.indexOf(tags[i]) > -1) {
+        dict[tags[i]] = 1;
+      } else {
+        dict[tags[i]] = 0;
+      }
+    }
+    let data = {
+      tags: dict
+    }
+    axios.patch(url, data, config)
+    .then(response => {
+      dispatch(updateAlertTagsSuccess(alertUuid, response.data.tags));
+    })
+    .catch(error => {
+      let errMessage = 'Error updating tags';
+      if (error.response != undefined) {
+        errMessage = error.response;
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
+            }
+          }
+        }
+      }
+      dispatch(updateAlertTagsError(alertUuid, errMessage));
+    })
+    .finally(() => {
+      dispatch(updateAlertTagsInProcess(user, alertUuid, false));
+      dispatch(updateAlertTagsError(alertUuid, ''));
+    })
   }
 }

@@ -4,8 +4,11 @@ import {connect} from 'react-redux';
 import moment from 'moment';
 import {Modal, Row, Col, Form} from 'antd';
 import noImage from '../../../assets/img/no-image.jpg';
+import AlertTags from '../alerts/AlertTags';
+import { isEmpty } from '../../redux/helperFunctions';
+import { updateAlertTags } from '../../redux/alerts/actions';
 
-const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cameraName, cameraGroupName, timestamp, timezone, formatDatetime, loadError, imgLoadError}) => {
+const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cameraName, cameraGroupName, timestamp, timezone, formatDatetime, loadError, imgLoadError, uuid, tags, cameraGroupsTags, cameraGroupUuid}) => {
   return (
     <Modal
       visible={visible}
@@ -14,6 +17,14 @@ const ExpandAlertForm = ({onCancel, visible, showAlert, alertImg, alertType, cam
       footer={[null, null]}
       width="90vw"
     >
+      <Row type='flex' justify='space-between' style={{paddingBottom: 14}}>
+        <AlertTags
+          uuid={uuid}
+          tags={tags}
+          cameraGroupUuid={cameraGroupUuid}
+          cameraGroupsTags={cameraGroupsTags}
+        />
+      </Row>
       <Row>
         {imgLoadError ?
           <img src={noImage} style={styles.expandedImg} />
@@ -35,7 +46,8 @@ class ExpandAlertModal extends Component {
     super(props);
     this.state = {
       visable: false,
-      imgLoadError: false
+      imgLoadError: false,
+      cameraGroupsTags: isEmpty(props.cameraGroupsTags[props.camera_groups_uuid]) ? ["Clear", "Contacted Police", "Contacted Fire Dept", "Contacted Ambulance"] : this.props.cameraGroupsTags[this.props.camera_groups_uuid]
     }
   }
 
@@ -44,9 +56,8 @@ class ExpandAlertModal extends Component {
     return `${dt.format('L')} ${dt.format('LTS')}`;
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {}
-
   showModal = () => {
+    this.props.updateAlertTags(this.props.user, this.props.uuid, Object.keys(this.props.tags), this.state.cameraGroupsTags);
     this.setState({visible: true});
   };
 
@@ -59,12 +70,12 @@ class ExpandAlertModal extends Component {
   }
 
   render() {
-    let trigger_type = this.props.data.trigger_type;
-    if (this.props.data.trigger_type == 'RA') {
+    let trigger_type = this.props.trigger_type;
+    if (this.props.trigger_type == 'RA') {
       trigger_type = 'Restricted Area';
-    } else if (this.props.data.trigger_type == "VW") {
+    } else if (this.props.trigger_type == "VW") {
       trigger_type = "Virtual Wall";
-    } else if (this.props.data.trigger_type == "LD") {
+    } else if (this.props.trigger_type == "LD") {
       trigger_type = "Loitering";
     }
     return (
@@ -72,20 +83,24 @@ class ExpandAlertModal extends Component {
         {this.state.imgLoadError ?
           <img src={noImage} style={styles.alertCardImg} />
         :
-          <img src={this.props.data.alert_image_url +'?auth='+ this.props.data.user.jwt} onError={this.handleLoadError} style={styles.alertCardImg} onClick={this.showModal} />
+          <img src={this.props.alert_image_url +'?auth='+ this.props.user.jwt} onError={this.handleLoadError} style={styles.alertCardImg} onClick={this.showModal} />
         }
         <ExpandAlertForm
           onCancel={this.handleCancel}
-          alertImg={this.props.data.alert_image_url +'?auth='+ this.props.data.user.jwt}
+          alertImg={this.props.alert_image_url +'?auth='+ this.props.user.jwt}
           visible={this.state.visible}
           alertType={trigger_type}
-          cameraName={this.props.data.cameras_name}
-          cameraGroupName={this.props.data.camera_groups_name}
-          timestamp={this.props.data.time}
-          timezone={this.props.data.cameras_time_zone}
+          cameraName={this.props.cameras_name}
+          cameraGroupName={this.props.camera_groups_name}
+          timestamp={this.props.time}
+          timezone={this.props.cameras_time_zone}
           formatDatetime={this.formatDatetime}
           loadError={this.handleLoadError}
           imgLoadError={this.state.imgLoadError}
+          uuid={this.props.uuid}
+          tags={this.props.tags}
+          cameraGroupsTags={this.state.cameraGroupsTags}
+          cameraGroupUuid={this.props.camera_groups_uuid}
         />
       </div>
     );
@@ -133,7 +148,9 @@ const mapStateToProps = (state) => {
   return {}
 };
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    updateAlertTags: (user, alertUuid, tags, tag_options) => dispatch(updateAlertTags(user, alertUuid, tags, tag_options))
+  }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExpandAlertModal);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ExpandAlertModal));

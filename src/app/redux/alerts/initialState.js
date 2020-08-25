@@ -1,6 +1,7 @@
 export default {
   alerts: [],
   newAlerts: [],
+  tags: {},
   pagination: {page_number: 1},
   fetchInProcess: false,
   fetchError: false,
@@ -18,5 +19,11 @@ export default {
   shareAlertInProcess: false,
   shareAlertErrorUuid: null,
   shareAlertInProcessUuid: null,
-  shareAlertSuccessUuid: null
+  shareAlertSuccessUuid: null,
+  updateAlertTagsInProcess: false,
+  updateAlertTagsInProcessUuid: null,
+  updateAlertTagsError: '',
+  updateAlertTagsErrorUuid: null,
+  updateAlertTagsSuccess: false,
+  updateAlertTagsSuccessUuid: null
 }

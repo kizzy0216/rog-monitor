@@ -40,7 +40,7 @@ const SharedUserAlertForm = ({visible, onCancel, onCreate, form, alert, shareAle
             message: "Please enter a valid U.S. phone number without dashes."
           }]}
         >
-          <Input type="tel" style={styles.emailInput} prefix={<PhoneOutlined />} placeholder='Enter Phone Number'/>
+          <Input type="tel" style={styles.emailInput} prefix={<PhoneOutlined />} placeholder='To Text the Alert Enter Phone Number'/>
         </FormItem>
         <FormItem>
           <Button key='submit' type='primary' size='large' onClick={onCreate} disabled={shareAlertInProcess}>

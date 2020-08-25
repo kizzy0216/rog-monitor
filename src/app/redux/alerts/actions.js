@@ -484,7 +484,7 @@ export function clearNewAlerts() {
   }
 }
 
-export function updateAlertTags(user, alertUuid, tags, tag_options) {
+export function updateAlertTags(user, alertUuid, tags, tag_options = ["Clear", "Contacted Police", "Contacted Fire Dept", "Contacted Ambulance"]) {
   return (dispatch) => {
     dispatch(updateAlertTagsInProcess(user, alertUuid, true));
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts/${alertUuid}`;

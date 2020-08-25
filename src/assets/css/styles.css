@@ -44,7 +44,7 @@ body{
 }
 .ant-btn{
   border-radius: 0px !important;
-  border: none !important;
+  border: none;
 }
 .removeCameraGroupButton.ant-btn-danger{
   background: #f0f2f5;
@@ -227,7 +227,7 @@ body{
   user-select: none;
 }
 .tag-input {
-  width: 78px;
+  width: 200px;
   margin-right: 8px;
   vertical-align: top;
 }

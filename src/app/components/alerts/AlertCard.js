@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Tooltip, Tag, Select, message } from 'antd';
+import { Card, Row, Col, Tooltip, Tag, Select, message, Button } from 'antd';
 import { ShareAltOutlined, PlusOutlined } from '@ant-design/icons';
 import moment from 'moment-timezone';
 import axios from 'axios';
@@ -84,7 +84,7 @@ class AlertCard extends Component {
     } else if (this.props.trigger_type == "LD") {
       trigger_type = "Loitering";
     }
-    const tag_options = isEmpty(this.props.cameraGroupsTags[this.props.camera_groups_uuid]) ? [] : this.props.cameraGroupsTags[this.props.camera_groups_uuid];
+    const tag_options = isEmpty(this.props.cameraGroupsTags[this.props.camera_groups_uuid]) ? ["Clear", "Contacted Police", "Contacted Fire Dept", "Contacted Ambulance"] : this.props.cameraGroupsTags[this.props.camera_groups_uuid];
     return (
       <Card style={styles.alertCard}>
         <div style={styles.alertCardImgContainer}>
@@ -105,18 +105,17 @@ class AlertCard extends Component {
         </div>
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={8} sm={8} md={8}>{trigger_type}</Col>
-          <Col style={styles.alertDateTime} xs={14} sm={14} md={14}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)} { this.props.cameras_time_zone}</Col>
-          <Col style={styles.cameraNameCameraGroup} xs={18}>{this.props.cameras_name}</Col>
-          <Col style={styles.cameraNameCameraGroup} xs={18}>{this.props.camera_groups_name}</Col>
-          <Col style={styles.shareAlertButton} xs={4}>
-            <Tooltip title='Share Alert' placement="topRight">
-              <ShareAltOutlined style={styles.share} onClick={this.toggleShareUserAlertModalVisibility}/>
-            </Tooltip>
+          <Col style={styles.alertDateTime} xs={14} sm={14} md={14}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)}</Col>
+          <Col style={styles.shareAlertButton} xs={8} sm={8} md={8}>
+            <Button type='default' size='small'  style={styles.share} onClick={this.toggleShareUserAlertModalVisibility}><ShareAltOutlined /><span> Share Alert</span></Button>
             <ShareUserAlertModal
               visible={this.state.shareUserAlertModalVisible}
               alert={this.props}
               toggleShareUserAlertModalVisibility={this.toggleShareUserAlertModalVisibility.bind(this)} />
           </Col>
+          <Col style={styles.alertDateTime} xs={14} sm={14} md={14}>{this.props.cameras_time_zone}</Col>
+          <Col style={styles.cameraNameCameraGroup} xs={24}>{this.props.cameras_name}</Col>
+          <Col style={styles.cameraNameCameraGroup} xs={24}>{this.props.camera_groups_name}</Col>
         </Row>
         <Row type='flex' fustify='space-between'>
           <Col xs={24} style={styles.tags}>
@@ -144,7 +143,7 @@ class AlertCard extends Component {
             )}
             {!this.state.inputVisible && (
               <Tag className="site-tag-plus" onClick={this.showInput}>
-                <PlusOutlined /> New Tag
+                <PlusOutlined /> Select Tag
               </Tag>
             )}
           </Col>
@@ -172,15 +171,22 @@ const styles = {
     marginRight: 10,
     textAlign: 'right'
   },
+  share: {
+    backgroundColor: '#fafafa',
+    color: 'rgba(0, 0, 0, 0.65)',
+    border: '1px solid #d9d9d9'
+  },
   shareAlertButton: {
-    paddingTop: 7,
-    marginRight: 10,
-    textAlign: 'right'
+    marginTop: 7,
+    marginLeft: 10,
+    textAlign: 'left'
   },
   cameraNameCameraGroup: {
     paddingTop: 7,
-    marginLeft: 10,
-    textAlign: 'left'
+    paddingLeft: 10,
+    textAlign: 'left',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden'
   },
   alertDelete: {
     fontSize: 12,

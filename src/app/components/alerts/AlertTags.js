@@ -154,7 +154,7 @@ class AlertTags extends Component {
         )}
         {!inputVisible && (
           <Tag className="site-tag-plus" onClick={this.showInput}>
-            <PlusOutlined /> New Tag
+            <PlusOutlined /> Select Tag
           </Tag>
         )}
       </div>

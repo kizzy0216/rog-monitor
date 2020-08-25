@@ -122,7 +122,7 @@ class AlertCard extends Component {
             {"new" in this.state.tags ?
               <Tag closable={true} onClose={() => this.props.updateAlertTags(this.props.user, this.props.uuid, Object.keys(this.state.tags), this.props.cameraGroupsTags[this.props.camera_groups_uuid])}>New</Tag>
             :
-              <Tag closable={false} visible={true}>Viewed{Object.keys(this.state.tags).length > 1 && <span> and More</span>}</Tag>
+              <Tag closable={false} visible={true}>Viewed</Tag>
             }
             {this.state.inputVisible && (
               <Select

@@ -46,7 +46,7 @@ if ((window.location.protocol + '//' + window.location.host) == 'https://dev.mon
 
 function renderApp() {
   if (!isChrome) {
-    alert("At this time, ROG Security only supports the Google Chrome web browser.");
+    alert("ROG supports Google Chrome. Other web browsers are not currently supported.");
   }
   console.log("Version 2.1");
   registerServiceWorker();

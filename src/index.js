@@ -31,6 +31,8 @@ const rrfProps = {
 
 firebase.initializeApp(config);
 
+const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+
 if ((window.location.protocol + '//' + window.location.host) == 'https://dev.monitor.gorog.co' || (window.location.protocol + '//' + window.location.host) == 'https://stage.monitor.gorog.co') {
   var credentials = window.prompt("Enter Realm Password");
   if (!credentials|| credentials !== 'GoRogTeam!') {
@@ -43,6 +45,9 @@ if ((window.location.protocol + '//' + window.location.host) == 'https://dev.mon
 }
 
 function renderApp() {
+  if (!isChrome) {
+    alert("At this time, ROG Security only supports the Google Chrome web browser.");
+  }
   console.log("Version 2.1");
   registerServiceWorker();
   // unregister();

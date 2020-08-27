@@ -167,7 +167,7 @@ class EditableTable extends React.Component {
     super(props);
     this.columns = [
       {
-        title: 'Uuid',
+        title: 'Camera Group Uuid',
         dataIndex: 'uuid',
         width: 200,
         editable: false,

@@ -1,6 +1,7 @@
 export default {
   cameraGroups: [],
   cameraGroupsAdmin: [],
+  tag_options: [],
   selectedCameraGroup: {id: null, name: null, cameras: [], userCameraGroupPrivileges: []},
   fetchInProcess: false,
   fetchError: false,

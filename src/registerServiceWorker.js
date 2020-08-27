@@ -31,7 +31,7 @@ export function registerServiceWorker() {
       return;
     }
 
-    window.addEventListener('load', () => {
+    window.addEventListener('load', function(e) {
       const swUrl = `${process.env.PUBLIC_URL}/notification-service-worker.js`;
       if (isLocalhost) {
         // This is running on localhost. Lets check if a service worker still exists or not.

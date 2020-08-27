@@ -9,6 +9,7 @@ import { fetchUserCameraGroupInvites } from '../invites/actions';
 import {loginInProcess, loginError, loginSuccess, trackEventAnalytics, login, toggleMute} from '../auth/actions';
 import {listenForNewAlerts} from '../alerts/actions';
 import {isEmpty} from '../helperFunctions';
+import { message } from 'antd';
 
 export function addUserError(error) {
   return {
@@ -104,6 +105,9 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
         const user = {
           ...response.data,
           jwt: jwt
+        }
+        if (isEmpty(user.time_zone)) {
+          message.warning("ROG works best when you define your default time zone.", 10);
         }
         sessionStorage.setItem('jwt', jwt);
         sessionStorage.setItem('email', email);

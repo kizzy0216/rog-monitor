@@ -11,6 +11,7 @@ import App401 from './app/App401.js';
 import {registerServiceWorker, unregister} from './registerServiceWorker';
 import firebase from 'firebase/app';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
+import { message } from 'antd';
 
 const config = {
   projectId: "rog-2-0",
@@ -46,7 +47,7 @@ if ((window.location.protocol + '//' + window.location.host) == 'https://dev.mon
 
 function renderApp() {
   if (!isChrome) {
-    alert("ROG supports Google Chrome. Other web browsers are not currently supported.");
+    message.warning("ROG supports Google Chrome. Other web browsers are not currently supported.", 10);
   }
   console.log("Version 2.1");
   registerServiceWorker();

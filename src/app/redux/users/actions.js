@@ -106,8 +106,8 @@ export function readUser(jwt, jwtTokenRefresh, email, password) {
           ...response.data,
           jwt: jwt
         }
-        if (isEmpty(user.time_zone)) {
-          message.warning("ROG works best when you define your default time zone.", 10);
+        if (isEmpty(user.time_zone === 'UTC')) {
+          message.warning("ROG works best when you define your default time zone. Default is UTC.", 10);
         }
         sessionStorage.setItem('jwt', jwt);
         sessionStorage.setItem('email', email);

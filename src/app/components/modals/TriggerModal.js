@@ -90,7 +90,7 @@ const AddTriggerForm = ({
                     <Select
                       placeholder="Shared or Private"
                       style={styles.triggerTimeWindowSelect}
-                      defaultValue={false}
+                      defaultValue={true}
                       disabled={selectedTriggerSharedDisabled}
                       onChange={checkShared}
                     >
@@ -123,6 +123,7 @@ const AddTriggerForm = ({
                       placeholder="Shared or Private"
                       style={styles.triggerTimeWindowSelect}
                       disabled={sharedTriggerSilenceWindowDisabled}
+                      defaultValue={true}
                     >
                       <Select.Option key={0} value={false}>Private</Select.Option>
                       <Select.Option key={1} value={true}>Shared</Select.Option>
@@ -248,7 +249,7 @@ const AddTriggerForm = ({
                         placeholder="Shared or Private"
                         style={styles.triggerTimeWindowSelect}
                         onChange={checkShared}
-                        defaultValue={false}
+                        defaultValue={true}
                       >
                         <Select.Option key={0} value={false}>Private</Select.Option>
                         <Select.Option key={1} value={true}>Shared</Select.Option>
@@ -278,6 +279,7 @@ const AddTriggerForm = ({
                       <Select
                         placeholder="Shared or Private"
                         style={styles.triggerTimeWindowSelect}
+                        defaultValue={true}
                         onChange={updateTriggerSilenceWindowPermissionsChange}
                       >
                         <Select.Option key={0} value={false}>Private</Select.Option>

@@ -42,6 +42,7 @@ class CameraOptionButtons extends Component {
   }
 
   render() {
+    let timeZone = typeof this.props.updatedTimeZone !== 'undefined' ? this.props.updatedTimeZone : this.props.user.time_zone;
     return (
       <Col xs={{span: 10}} sm={{span: 6, offset: 12}} type="flex" align="right" justify="right" style={styles.optionsContainer}>
         <Col xs={{span: 4}} style={styles.optionWrapper}>
@@ -50,6 +51,7 @@ class CameraOptionButtons extends Component {
           </Tooltip>
           <AddCameraModal
             user={this.props.user}
+            time_zone={timeZone}
             selectedCameraGroup={this.props.selectedCameraGroup}
             visible={this.state.addCameraModalVisible}
             toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)} />
@@ -106,7 +108,9 @@ const styles = {
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    updatedTimeZone: state.users.userData.time_zone
+  }
 };
 
 const mapDispatchToProps = (dispatch) => {

@@ -42,7 +42,7 @@ const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess, c
             placeholder="Enter Time Zone"
             optionFilterProp="children"
             onChange={updateTimeZone}
-            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
           >
             {createSelectItems()}
           </Select>
@@ -61,12 +61,21 @@ const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess, c
 };
 
 class AddCameraModal extends Component {
-  state = {
-    fullRtspUrl: null,
-    time_zone: this.props.user.time_zone
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      fullRtspUrl: null,
+      time_zone: props.time_zone
+    };
+  }
 
   UNSAFE_componentWillReceiveProps = (nextProps) => {
+    if (this.props.time_zone !== nextProps.time_zone) {
+      this.setState({time_zone: nextProps.time_zone});
+      if (typeof this.form !== 'undefined') {
+        this.form.setFieldsValue({time_zone: nextProps.time_zone});
+      }
+    }
     if (nextProps.addCameraSuccess && this.props.addCameraSuccess !== nextProps.addCameraSuccess) {
       this.resetFields();
       this.props.toggleAddCameraModalVisibility();
@@ -78,6 +87,8 @@ class AddCameraModal extends Component {
       message.error('Camera stream could not connect.', 10);
     }
   };
+
+
 
   resetFields = () => {
     this.form.resetFields();
@@ -151,21 +162,19 @@ class AddCameraModal extends Component {
 
   render() {
     return (
-      <div>
-        <AddCameraForm
-          form={this.saveFormRef}
-          visible={this.props.visible}
-          onCancel={this.handleCancel}
-          onCreate={this.handleCreate}
-          testLiveView={this.testLiveView}
-          fullRtspUrl={this.state.fullRtspUrl}
-          addCameraError={this.props.addCameraError}
-          addCameraInProcess={this.props.addCameraInProcess}
-          createSelectItems={this.handleCreateSelectItems}
-          updateTimeZone={this.handleUpdateTimeZone}
-          currentTimeZone={this.state.time_zone}
-        />
-      </div>
+      <AddCameraForm
+        form={this.saveFormRef}
+        visible={this.props.visible}
+        onCancel={this.handleCancel}
+        onCreate={this.handleCreate}
+        testLiveView={this.testLiveView}
+        fullRtspUrl={this.state.fullRtspUrl}
+        addCameraError={this.props.addCameraError}
+        addCameraInProcess={this.props.addCameraInProcess}
+        createSelectItems={this.handleCreateSelectItems}
+        updateTimeZone={this.handleUpdateTimeZone}
+        currentTimeZone={this.state.time_zone}
+      />
     );
   }
 }

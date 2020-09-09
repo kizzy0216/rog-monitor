@@ -52,7 +52,7 @@ const UserSettingsForm = ({onCancel, visible, onCreate, updateUser, form, userDa
             placeholder="Enter Time Zone"
             optionFilterProp="children"
             onChange={updateTimeZone}
-            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
           >
             {createSelectItems()}
           </Select>
@@ -119,7 +119,12 @@ class UserSettings extends Component {
     }
     if (nextProps.updateUserSuccess && this.props.updateUserSuccess !== nextProps.updateUserSuccess) {
       message.success('Settings Saved.');
-      this.userData = nextProps.userData
+      this.userData = {
+        firstName: nextProps.user.first_name,
+        lastName: nextProps.user.last_name,
+        email: nextProps.user.email,
+        time_zone: nextProps.user.time_zone
+      };
     }
   }
 

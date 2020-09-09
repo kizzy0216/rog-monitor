@@ -159,7 +159,7 @@ export function updateUser(user, values) {
 
     axios.patch(url, data, config)
       .then((response) => {
-        dispatch(updateUserData(response));
+        dispatch(updateUserData(response.data.user));
         dispatch(updateUserSuccess(true));
         dispatch(updateUserInProgress(false));
       })

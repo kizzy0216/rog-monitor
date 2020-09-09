@@ -88,8 +88,6 @@ class AddCameraModal extends Component {
     }
   };
 
-
-
   resetFields = () => {
     this.form.resetFields();
     this.setState({fullRtspUrl: null});

@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { Row, Col, Button, DatePicker, Select, Form, Input } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import * as alertActions from '../../redux/alerts/actions';
+import moment from 'moment';
 
 const { RangePicker } = DatePicker;
 
@@ -96,7 +97,16 @@ class AlertFilters extends Component {
               {required: true, message: "This field is required"}
             ]}
           >
-            <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+            <RangePicker
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              ranges={{
+                Today: [moment().startOf('day'), moment().endOf('day')],
+                'This Week': [moment().startOf('week'), moment().endOf('week')],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'This Year': [moment().startOf('year'), moment().endOf('year')]
+              }}
+            />
           </Form.Item>
         )
         break;

@@ -175,6 +175,7 @@ class Alerts extends Component {
       if (this.props.selectedFilterType === 4 && typeof this.form !== 'undefined') {
         this.form.setFieldsValue({filter_type: 4});
       }
+      let time_zone = typeof this.form !== 'undefined' ? this.form.getFieldsValue()['time_zone'] : null
       return (
         <div>
           <Row type='flex' justify='center' style={styles.alertOptions}>
@@ -206,7 +207,7 @@ class Alerts extends Component {
           <Row type='flex' justify='start'>
             {alerts.map(alert=> (
               <Col key={`alert-${alert.id}`} xs={24} sm={12} md={8} lg={6}>
-                <AlertCard {...alert} cameraGroupsTags={cameraGroupsTags} filter_time_zone={this.form.getFieldsValue()['time_zone']} />
+                <AlertCard {...alert} cameraGroupsTags={cameraGroupsTags} filter_time_zone={time_zone} />
               </Col>
             ))}
           </Row>

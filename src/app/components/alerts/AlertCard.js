@@ -19,10 +19,16 @@ class AlertCard extends Component {
       tags: isEmpty(props.tags) ? [] : props.tags,
       inputVisible: false,
       inputValue: '',
+      time_zone: this.props.cameras_time_zone
     }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (typeof this.props.filter_time_zone !== 'undefined') {
+      if (this.props.filter_time_zone !== this.state.time_zone) {
+        this.setState({time_zone: this.props.filter_time_zone});
+      }
+    }
     if (this.props.updateAlertTagsError && this.props.updateAlertTagsErrorUuid == this.props.uuid && this.props.updateAlertTagsError !== prevProps.updateAlertTagsError) {
       message.error(this.props.updateAlertTagsError, 10);
     }
@@ -95,7 +101,7 @@ class AlertCard extends Component {
             cameras_name={this.props.cameras_name}
             camera_groups_name={this.props.camera_groups_name}
             time={this.props.time}
-            cameras_time_zone={this.props.cameras_time_zone}
+            cameras_time_zone={this.state.time_zone}
             uuid={this.props.uuid}
             tags={this.state.tags}
             updatedTags={this.props.updatedTags}
@@ -105,7 +111,7 @@ class AlertCard extends Component {
         </div>
         <Row type='flex' justify='space-between'>
           <Col style={styles.alertType} xs={8} sm={8} md={8}>{trigger_type}</Col>
-          <Col style={styles.alertDateTime} xs={14} sm={14} md={14}>{this.formatDatetime(this.props.time, this.props.cameras_time_zone)}</Col>
+          <Col style={styles.alertDateTime} xs={14} sm={14} md={14}>{this.formatDatetime(this.props.time, this.state.time_zone)}</Col>
           <Col style={styles.shareAlertButton} xs={8} sm={8} md={8}>
             <Button type='default' size='small'  style={styles.share} onClick={this.toggleShareUserAlertModalVisibility}><ShareAltOutlined /><span> Share Alert</span></Button>
             <ShareUserAlertModal
@@ -113,7 +119,7 @@ class AlertCard extends Component {
               alert={this.props}
               toggleShareUserAlertModalVisibility={this.toggleShareUserAlertModalVisibility.bind(this)} />
           </Col>
-          <Col style={styles.alertDateTime} xs={14} sm={14} md={14}>{this.props.cameras_time_zone}</Col>
+          <Col style={styles.alertDateTime} xs={14} sm={14} md={14}>{this.state.time_zone}</Col>
           <Col style={styles.cameraNameCameraGroup} xs={24}>{this.props.cameras_name}</Col>
           <Col style={styles.cameraNameCameraGroup} xs={24}>{this.props.camera_groups_name}</Col>
         </Row>

@@ -130,7 +130,7 @@ class Alerts extends Component {
 
   handleFilterTypeChange = (e) => {
     if (this.form.getFieldsValue().hasOwnProperty('filter_parameter') && typeof this.form.getFieldsValue()['filter_parameter'] !== 'undefined') {
-      this.form.resetFields(['filter_parameter']);
+      this.form.resetFields(['filter_parameter', 'time_zone']);
     }
     this.props.actions.updateSelectedFilterType(parseInt(e));
   }

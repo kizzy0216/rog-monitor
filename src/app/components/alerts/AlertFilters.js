@@ -132,7 +132,6 @@ class AlertFilters extends Component {
             <Form.Item
               name="time_zone"
               rules={[{required: false, message: 'Please enter your time zone'}]}
-              // initialValue={this.state.time_zone}
               hasFeedback
               style={{display: 'inline-block', width: 171}}
             >

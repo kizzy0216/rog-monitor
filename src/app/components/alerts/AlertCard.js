@@ -24,7 +24,7 @@ class AlertCard extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (typeof this.props.filter_time_zone !== 'undefined') {
+    if (typeof this.props.filter_time_zone !== 'undefined' && !isEmpty(this.props.filter_time_zone)) {
       if (this.props.filter_time_zone !== this.state.time_zone) {
         this.setState({time_zone: this.props.filter_time_zone});
       }

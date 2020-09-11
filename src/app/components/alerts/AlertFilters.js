@@ -23,9 +23,7 @@ class AlertFilters extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      time_zone: this.props.time_zone
-    }
+    this.state = {}
   }
 
   handleCreateSelectItems = () => {

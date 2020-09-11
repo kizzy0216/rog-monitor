@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { Row, Col, Button, DatePicker, Select, Form, Input } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import * as alertActions from '../../redux/alerts/actions';
+import moment from 'moment-timezone';
 
 const { RangePicker } = DatePicker;
 
@@ -13,7 +14,7 @@ const rangeConfig = {
     {
       type: 'array',
       required: true,
-      message: 'Please select a time!',
+      message: 'Please select a time!'
     },
   ],
 };
@@ -22,7 +23,26 @@ class AlertFilters extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {}
+    this.state = {
+      time_zone: this.props.time_zone
+    }
+  }
+
+  handleCreateSelectItems = () => {
+    let timezoneNames = moment.tz.names();
+    let items = [];
+    for (var i = 0; i < timezoneNames.length; i++) {
+      if (!items.includes(timezoneNames[i])) {
+        if (timezoneNames[i] !== "US/Pacific-New") {
+          items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
+        }
+      }
+    }
+    return items;
+  }
+
+  handleUpdateTimeZone = (fieldValue) => {
+    this.setState({time_zone: fieldValue});
   }
 
   render() {
@@ -88,16 +108,45 @@ class AlertFilters extends Component {
         break;
       case 3:
         return (
-          <Form.Item
-            {...rangeConfig}
-            hasFeedback
-            name="filter_parameter"
-            rules={[
-              {required: true, message: "This field is required"}
-            ]}
-          >
-            <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-          </Form.Item>
+          <div>
+            <Form.Item
+              {...rangeConfig}
+              hasFeedback
+              name="filter_parameter"
+              rules={[
+                {required: true, message: "This field is required"}
+              ]}
+              style={{display: 'inline-block', width: 346}}
+            >
+              <RangePicker
+                showTime
+                format="YYYY-MM-DD HH:mm:ss"
+                ranges={{
+                  Today: [moment().tz('UTC').startOf('day'), moment().tz('UTC').endOf('day')],
+                  'This Week': [moment().tz('UTC').startOf('week'), moment().tz('UTC').endOf('week')],
+                  'This Month': [moment().tz('UTC').startOf('month'), moment().tz('UTC').endOf('month')],
+                  'This Year': [moment().tz('UTC').startOf('year'), moment().tz('UTC').endOf('year')]
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="time_zone"
+              rules={[{required: false, message: 'Please enter your time zone'}]}
+              // initialValue={this.state.time_zone}
+              hasFeedback
+              style={{display: 'inline-block', width: 171}}
+            >
+              <Select
+                showSearch
+                placeholder="Select Time Zone"
+                optionFilterProp="children"
+                onChange={this.handleUpdateTimeZone}
+                filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              >
+                {this.handleCreateSelectItems()}
+              </Select>
+            </Form.Item>
+          </div>
         )
         break;
       default:

@@ -11,7 +11,7 @@ import * as alertActions from '../redux/alerts/actions';
 import { fetchCameraGroups } from '../redux/cameraGroups/actions';
 import {isEmpty} from '../redux/helperFunctions';
 
-const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentProperties, selectedFilterType, form}) => {
+const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentProperties, selectedFilterType, form, time_zone}) => {
   return (
     <Form
       layout="inline"
@@ -40,7 +40,8 @@ const AlertSortingForm = ({AlertFilterChange, FilterTypeChange, ComponentPropert
         </Select>
       </Form.Item>
       <AlertFilters
-        data = {ComponentProperties}
+        data={ComponentProperties}
+        time_zone={time_zone}
       />
       {selectedFilterType !== 4 &&
         <Form.Item>
@@ -62,7 +63,17 @@ class Alerts extends Component {
 
     this.state = {
       videoSource: null,
-      open: true
+      open: true,
+      time_zone: typeof props.updatedTimeZone !== 'undefined' ? props.updatedTimeZone : props.timeZone
+    }
+  }
+
+  UNSAFE_componentWillReceiveProps = (nextProps) => {
+    if (!isEmpty(nextProps.updatedTimeZone) && nextProps.timeZone !== nextProps.updatedTimeZone) {
+      this.setState({time_zone: nextProps.updatedTimeZone});
+      if (typeof this.form !== 'undefined') {
+        this.form.setFieldsValue({time_zone: nextProps.updatedTimeZone});
+      }
     }
   }
 
@@ -75,28 +86,71 @@ class Alerts extends Component {
   }
 
   handlePaginationChange = (page, pageSize) => {
-    if (page > this.props.pagination.current_page) {
-      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.alerts[0].next_page, page, pageSize, this.props.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
+    if (this.props.selectedFilterType === 3) {
+      var dateTimes = [];
+      if (isEmpty(this.form.getFieldsValue()['time_zone'])) {
+        dateTimes[0] = this.form.getFieldsValue()['filter_parameter'][0].clone().format('YYYY-MM-DD HH:mm:ss');
+        dateTimes[1] = this.form.getFieldsValue()['filter_parameter'][1].clone().format('YYYY-MM-DD HH:mm:ss');
+      } else {
+        dateTimes[0] = this.form.getFieldsValue()['filter_parameter'][0].clone().tz(this.form.getFieldsValue()['time_zone']).format('YYYY-MM-DD HH:mm:ss');
+        dateTimes[1] = this.form.getFieldsValue()['filter_parameter'][1].clone().tz(this.form.getFieldsValue()['time_zone']).format('YYYY-MM-DD HH:mm:ss');
+      }
+    }
+    if (typeof dateTimes !== 'undefined') {
+      var filter_parameter = dateTimes;
     } else {
-      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.alerts[0].previous_page, page, pageSize, this.props.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
+      var filter_parameter = this.form.getFieldsValue()['filter_parameter'];
+    }
+    if (page > this.props.pagination.current_page) {
+      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.alerts[0].next_page, page, pageSize, this.props.selectedFilterType, filter_parameter);
+    } else {
+      this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, this.props.alerts[0].previous_page, page, pageSize, this.props.selectedFilterType, filter_parameter);
     }
   }
 
   handleOnPageSizeChange = (current, size) => {
+    if (this.props.selectedFilterType === 3) {
+      var dateTimes = [];
+      if (isEmpty(this.form.getFieldsValue()['time_zone'])) {
+        dateTimes[0] = this.form.getFieldsValue()['filter_parameter'][0].clone().format('YYYY-MM-DD HH:mm:ss');
+        dateTimes[1] = this.form.getFieldsValue()['filter_parameter'][1].clone().format('YYYY-MM-DD HH:mm:ss');
+      } else {
+        dateTimes[0] = this.form.getFieldsValue()['filter_parameter'][0].clone().tz(this.form.getFieldsValue()['time_zone']).format('YYYY-MM-DD HH:mm:ss');
+        dateTimes[1] = this.form.getFieldsValue()['filter_parameter'][1].clone().tz(this.form.getFieldsValue()['time_zone']).format('YYYY-MM-DD HH:mm:ss');
+      }
+    }
+    if (typeof dateTimes !== 'undefined') {
+      var filter_parameter = dateTimes;
+    } else {
+      var filter_parameter = this.form.getFieldsValue()['filter_parameter'];
+    }
     var current_page = (isEmpty(this.props.alerts[0])) ? ">" : this.props.alerts[0].current_page;
-    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current_page, current, size, this.props.selectedFilterType, this.form.getFieldsValue()['filter_parameter']);
+    this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current_page, current, size, this.props.selectedFilterType, filter_parameter);
   }
 
   handleFilterTypeChange = (e) => {
     if (this.form.getFieldsValue().hasOwnProperty('filter_parameter') && typeof this.form.getFieldsValue()['filter_parameter'] !== 'undefined') {
-      this.form.resetFields(['filter_parameter']);
+      this.form.resetFields(['filter_parameter', 'time_zone']);
     }
     this.props.actions.updateSelectedFilterType(parseInt(e));
   }
 
   handleAlertFilterChange = (e) => {
+    if (this.props.selectedFilterType === 3) {
+      var dateTimes = [];
+      if (isEmpty(this.form.getFieldsValue()['time_zone'])) {
+        dateTimes[0] = this.form.getFieldsValue()['filter_parameter'][0].clone().format('YYYY-MM-DD HH:mm:ss');
+        dateTimes[1] = this.form.getFieldsValue()['filter_parameter'][1].clone().format('YYYY-MM-DD HH:mm:ss');
+      } else {
+        dateTimes[0] = this.form.getFieldsValue()['filter_parameter'][0].clone().tz(this.form.getFieldsValue()['time_zone']).format('YYYY-MM-DD HH:mm:ss');
+        dateTimes[1] = this.form.getFieldsValue()['filter_parameter'][1].clone().tz(this.form.getFieldsValue()['time_zone']).format('YYYY-MM-DD HH:mm:ss');
+      }
+    }
     var current_page = (isEmpty(this.props.alerts[0])) ? ">" : this.props.alerts[0].current_page;
     this.form.validateFields().then(values => {
+      if (typeof dateTimes !== 'undefined') {
+        values.filter_parameter = dateTimes;
+      }
       this.props.actions.fetchAlertsWithPaginationAndFilters(this.props.user, current_page, this.props.pagination.current_page, this.props.pagination.per_page, this.props.selectedFilterType, values.filter_parameter);
       if (this.props.selectedFilterType === 4) {
         this.props.actions.markUserAlertsViewed(this.props.user);
@@ -131,6 +185,7 @@ class Alerts extends Component {
                 FilterTypeChange={this.handleFilterTypeChange}
                 cameraGroups={this.props.cameraGroups}
                 selectedFilterType={this.props.selectedFilterType}
+                time_zone={this.state.time_zone}
               />
             </Col>
             <Col xs={{span: 12}}>
@@ -151,7 +206,7 @@ class Alerts extends Component {
           <Row type='flex' justify='start'>
             {alerts.map(alert=> (
               <Col key={`alert-${alert.id}`} xs={24} sm={12} md={8} lg={6}>
-                <AlertCard {...alert} cameraGroupsTags={cameraGroupsTags} />
+                <AlertCard {...alert} cameraGroupsTags={cameraGroupsTags} filter_time_zone={this.form.getFieldsValue()['time_zone']} />
               </Col>
             ))}
           </Row>
@@ -168,6 +223,7 @@ class Alerts extends Component {
                 FilterTypeChange={this.handleFilterTypeChange}
                 cameraGroups={this.props.cameraGroups}
                 selectedFilterType={this.props.selectedFilterType}
+                time_zone={this.state.time_zone}
               />
             </Col>
             <Col xs={{span: 12}}></Col>
@@ -219,7 +275,9 @@ const mapStateToProps = (state) => {
     fetchInProcess: state.alerts.fetchInProcess,
     deleteInProcess: state.alerts.deleteInProcess,
     pagination: state.alerts.pagination,
-    selectedFilterType: state.alerts.selectedFilterType
+    selectedFilterType: state.alerts.selectedFilterType,
+    timeZone: state.auth.user.time_zone,
+    updatedTimeZone: state.users.userData.time_zone
   }
 }
 

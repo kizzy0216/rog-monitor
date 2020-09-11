@@ -171,7 +171,7 @@ const styles = {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    userData: state.users.userData.data,
+    userData: state.users.userData,
     updateUserInProgress: state.users.updateUserInProgress,
     updateUserError: state.users.updateUserError,
     updateUserSuccess: state.users.updateUserSuccess,

@@ -312,9 +312,46 @@ export function storeUserDevice(user, token, messaging) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/devices`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    // Opera 8.0+
+    var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    // Firefox 1.0+
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+    // Safari 3.0+ "[object HTMLElementConstructor]"
+    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+    // Internet Explorer 6-11
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+    // Edge 20+
+    var isEdge = !isIE && !!window.StyleMedia;
+    // Chrome 1 - 79
+    var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+    // Edge (based on chromium) detection
+    var isEdgeChromium = isChrome && (navigator.userAgent.indexOf("Edg") != -1);
+    // Blink engine detection
+    var isBlink = (isChrome || isOpera) && !!window.CSS;
+
+    var webBrowserDevice = '';
+    if (isOpera) {
+      webBrowserDevice = 'Opera Version: '+ navigator.appVersion;
+    } else if (isFirefox) {
+      webBrowserDevice = 'Firefox Version: '+ navigator.appVersion;
+    } else if (isSafari) {
+      webBrowserDevice = 'Safari Version: '+ navigator.appVersion;
+    } else if (isIE) {
+      webBrowserDevice = 'IE Version: '+ navigator.appVersion;
+    } else if (isEdge) {
+      webBrowserDevice = 'Edge Version: '+ navigator.appVersion;
+    } else if (isChrome) {
+      webBrowserDevice = 'Chrome Version: '+ navigator.appVersion;
+    } else if (isEdgeChromium) {
+      webBrowserDevice = 'EdgeChromium Version: '+ navigator.appVersion;
+    } else if (isBlink) {
+      webBrowserDevice = 'Blink Version: '+ navigator.appVersion;
+    }
+
     let data ={
       device_token: token,
-      device_name: 'Web Browser Device'
+      device_name: webBrowserDevice
     }
     axios.post(url, data, config)
       .then((response) => {

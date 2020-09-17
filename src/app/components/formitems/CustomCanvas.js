@@ -355,7 +355,13 @@ class CustomCanvas extends Component {
     }
 
     window.addEventListener("resize", function() {
-        location.reload(true);
+      location.reload(true);
+    });
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener("resize", function() {
+      location.reload(true);
     });
   }
 

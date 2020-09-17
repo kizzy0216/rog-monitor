@@ -20,13 +20,11 @@ class CameraList extends Component {
       cameraGroupButtonsVisible: false,
       addCameraGroupModalVisible: false
     }
-  }
-
-  UNSAFE_componentWillMount() {
     if (this.props.cameraGroups.length == 0){
       this.props.actions.fetchCameraGroups(this.props.user);
     }
   }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.cameraGroups.length > 0) {
       if (isEmpty(nextProps.selectedCameraGroup.name) && isEmpty(this.props.selectedCameraGroup.name)){

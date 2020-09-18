@@ -82,7 +82,7 @@ class CameraList extends Component {
               <Select style={styles.select} defaultValue={this.props.selectedCameraGroup.name}
                       onSelect={(value, option) => this.selectCameraGroup(this.props.user, option.props.cameragroup)}>
                 {this.props.cameraGroups.map(cameraGroup => (
-                  <Select.Option key={`cameragroup-${cameraGroup.id}`} value={cameraGroup.name} cameragroup={cameraGroup}>{cameraGroup.name}</Select.Option>
+                  <Select.Option key={`cameragroup-${cameraGroup.id}`} value={cameraGroup.uuid} cameragroup={cameraGroup}>{cameraGroup.name}</Select.Option>
                 ))}
               </Select>
             </Col>

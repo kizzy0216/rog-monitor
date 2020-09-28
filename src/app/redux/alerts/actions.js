@@ -399,7 +399,9 @@ export function countNewAlerts(user) {
     axios.get(url, config)
       .then((response) => {
         // call action-reducer function to push new count data to the components
-        dispatch(updateNewAlertCount(response.data['Count']));
+        if (!isEmpty(response.data)) {
+          dispatch(updateNewAlertCount(response.data['Count']));
+        }
       });
   }
 }

@@ -7,7 +7,7 @@ import './assets/css/styles.css';
 
 import store from './app/redux/store';
 import App from './app/App.js';
-import App401 from './app/App401.js';
+import App403 from './app/App403.js';
 import {registerServiceWorker, unregister} from './registerServiceWorker';
 import firebase from 'firebase/app';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
@@ -37,7 +37,7 @@ const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome
 if ((window.location.protocol + '//' + window.location.host) == 'https://dev.monitor.gorog.co' || (window.location.protocol + '//' + window.location.host) == 'https://stage.monitor.gorog.co') {
   var credentials = window.prompt("Enter Realm Password");
   if (!credentials|| credentials !== 'GoRogTeam!') {
-    render401();
+    render403();
   } else {
       renderApp();
   }
@@ -62,12 +62,12 @@ function renderApp() {
   ReactDOM.render(<ReduxApp />, document.getElementById('root'));
 }
 
-function render401() {
+function render403() {
   registerServiceWorker();
   // unregister();
   const ErrorApp = () => (
     <Provider store={store}>
-      <App401 />
+      <App403 />
     </Provider>
   )
   ReactDOM.render(<ErrorApp />, document.getElementById('root'));

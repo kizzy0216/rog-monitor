@@ -92,7 +92,7 @@ class CustomCanvas extends Component {
             }
           }
         }
-      });
+      }, {passive: true});
 
       document.getElementById('next_button').addEventListener('click', function (options) {
         if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
@@ -121,7 +121,7 @@ class CustomCanvas extends Component {
             }
           }
         }
-      });
+      }, {passive: true});
     } else {
       nThis.props.clearTriggerSpecificTimeWindows();
       fabricCanvas.on('mouse:down', function (options) {
@@ -354,15 +354,15 @@ class CustomCanvas extends Component {
       this.drawPolygon();
     }
 
-    window.addEventListener("resize", function() {
-      location.reload(true);
-    });
+    window.addEventListener("resize", this.reloadPage, {capture: true, passive: true});
   }
 
   componentWillUnmount(){
-    window.removeEventListener("resize", function() {
-      location.reload(true);
-    });
+    window.removeEventListener("resize", this.reloadPage, {capture: true, passive: true});
+  }
+
+  reloadPage = () => {
+    location.reload(true);
   }
 
   loadPolygons = (nThis, fabricCanvas, triggerPolygonAtrributes) => {

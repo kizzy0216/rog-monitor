@@ -26,4 +26,6 @@ export default {
   addCameraInProcess: false,
   addCameraError: '',
   addCameraSuccess: false,
+  editUrlError: '',
+  editUrlInProcess: false
 }

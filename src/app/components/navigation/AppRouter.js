@@ -31,6 +31,7 @@ import SystemConfigurationAdmin from '../../screens/admin/SystemConfigurationAdm
 import LiveViewAdmin from '../../screens/admin/LiveViewAdmin';
 import StagesLinkView from '../../screens/StagesLinkView';
 import RecoConnectivityLogsAdmin from '../../screens/admin/RecoConnectivityLogsAdmin';
+import urlsAdmin from '../../screens/admin/UrlsAdmin';
 
 import { muteSound } from '../../redux/users/actions';
 
@@ -89,6 +90,7 @@ class AppRouter extends Component {
                     <Route path='/users-admin' component={UsersAdmin} />
                     <Route path='/camera-groups-admin' component={CameraGroupsAdmin} />
                     <Route path='/cameras-admin' component={CamerasAdmin} />
+                    <Route path='/urls-admin' component={urlsAdmin} />
                     <Route path='/triggers-admin' component={TriggersAdmin} />
                     <Route path='/alerts-admin' component={AlertsAdmin} />
                     <Route path='/invitations-admin' component={InvitationsAdmin} />

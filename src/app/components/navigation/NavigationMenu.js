@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Menu, Badge, notification, Tooltip } from 'antd';
-import { VideoCameraOutlined, AlertOutlined, DatabaseOutlined, EllipsisOutlined, MailOutlined, UserOutlined, IdcardOutlined, TeamOutlined, RadiusUpleftOutlined, CloudServerOutlined, MobileOutlined, ClusterOutlined, CloudSyncOutlined } from '@ant-design/icons';
+import { VideoCameraOutlined, AlertOutlined, DatabaseOutlined, EllipsisOutlined, MailOutlined, UserOutlined, IdcardOutlined, TeamOutlined, RadiusUpleftOutlined, CloudServerOutlined, MobileOutlined, ClusterOutlined, CloudSyncOutlined, LinkOutlined } from '@ant-design/icons';
 
 import { fetchAlerts, clearNewAlerts, markUserAlertsViewed, countNewAlerts } from '../../redux/alerts/actions';
 import { isEmpty } from '../../redux/helperFunctions';
@@ -96,6 +96,9 @@ class NavigationMenu extends Component {
             </Menu.Item>
             <Menu.Item key='/cameras-admin'>
               <VideoCameraOutlined className='nav-icon' /> Cameras
+            </Menu.Item>
+            <Menu.Item key='/urls-admin'>
+              <LinkOutlined className='nav-icon' /> Camera Urls
             </Menu.Item>
             <Menu.Item key='/triggers-admin'>
               <RadiusUpleftOutlined className='nav-icon' /> Triggers

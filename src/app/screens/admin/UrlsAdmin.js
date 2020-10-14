@@ -1,12 +1,11 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as camerasActions from '../../redux/cameras/actions';
+import * as actions from '../../redux/cameras/actions';
 import { Table, Input, Button, Popconfirm, Form, InputNumber, message, Radio, Modal, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { isEmpty } from '../../redux/helperFunctions';
 import Highlighter from 'react-highlight-words';
-import moment from 'moment-timezone';
 
 const UrlsForm = ({handleSubmit, form}) => {
   return (

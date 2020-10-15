@@ -416,7 +416,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(camerasActions, dispatch)
+    actions: bindActionCreators(actions, dispatch)
   }
 };
 

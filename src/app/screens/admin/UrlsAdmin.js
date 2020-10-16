@@ -344,7 +344,6 @@ class EditableTable extends React.Component {
       ...row,
     });
     this.setState({ dataSource: newData });
-    console.log(newData[index]);
     this.props.actions.updateUrlsAdmin(this.props.user, newData[index]);
   };
 

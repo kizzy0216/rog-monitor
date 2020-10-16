@@ -110,6 +110,30 @@ const cameras = (state = initialState, action) => {
           editCameraError: action.editCameraError
         }
 
+      case types.EDIT_URL_IN_PROCESS:
+        return{
+          ...state,
+          editUrlInProcess: action.editUrlInProcess
+        }
+
+      case types.EDIT_URL_SUCCESS:
+        return {
+          ...state,
+          editUrlSuccess: action.editUrlSuccess
+        }
+
+      case types.EDIT_URL_ERROR:
+        return {
+          ...state,
+          editUrlError: action.editUrlError
+        }
+
+      case types.READ_URLS_SUCCESS_ADMIN:
+        return {
+          ...state,
+          urlsAdmin: action.urlsAdmin
+        }
+
       case types.UPDATE_CAMERA:
         return {
           ...state,

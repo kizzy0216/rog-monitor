@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actions from '../../redux/cameras/actions';
+import * as camerasActions from '../../redux/cameras/actions';
 import { Table, Input, Button, Popconfirm, Form, InputNumber, message, Radio, Modal, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { isEmpty } from '../../redux/helperFunctions';
@@ -56,7 +56,7 @@ class UrlsAdmin extends React.Component {
       for (var i = 0; i < this.props.urls.length; i++) {
         data[i] = {
           key: this.props.urls[i]['url_uuid'],
-          cameras_uuid: this.props.urls[i]['cameras_uuid'],
+          cameras_uuid: this.state.cameras_uuid,
           url_uuid: this.props.urls[i]['url_uuid'],
           url_set_uuid: this.props.urls[i]['url_set_uuid'],
           url_type_id: this.props.urls[i]['url_type_id'],
@@ -377,7 +377,7 @@ class EditableTable extends React.Component {
         bordered
         dataSource={dataSource}
         columns={columns}
-        scroll={{ x:2500, y: 500 }}
+        scroll={{ x:2700, y: 500 }}
       />
     );
   }
@@ -416,7 +416,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(camerasActions, dispatch)
   }
 };
 

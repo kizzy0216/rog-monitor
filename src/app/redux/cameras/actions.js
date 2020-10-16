@@ -134,6 +134,34 @@ function editCameraError(message) {
   }
 }
 
+function editUrlInProcess(bool) {
+  return {
+    type: types.EDIT_CAMERA_IN_PROCESS,
+    editUrlInProcess: bool
+  }
+}
+
+function editUrlSuccess(bool) {
+  return {
+    type: types.EDIT_CAMERA_SUCCESS,
+    editUrlSuccess: bool
+  }
+}
+
+function editUrlError(message) {
+  return {
+    type: types.EDIT_CAMERA_ERROR,
+    editUrlError: message
+  }
+}
+
+function readUrlsSuccessAdmin(urlsAdmin) {
+  return {
+    type: types.READ_URLS_SUCCESS_ADMIN,
+    urlsAdmin
+  }
+}
+
 function imageUpdateSuccess(bool, uuid) {
   return {
     type: types.IMAGE_UPDATE_SUCCESS,
@@ -671,6 +699,78 @@ export function deleteCameraAdmin(user, values) {
         }
       }
       dispatch(editCameraError(errMessage));
+    })
+  }
+}
+
+export function readUrlsAdmin(user, values) {
+  return (dispatch) => {
+    dispatch(fetchSuccessAdmin([]));
+    dispatch(editUrlError(""));
+    let url = `${process.env.REACT_APP_ROG_API_URL}/cameras/${values.cameras_uuid}/urls`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+
+    axios.get(url, config)
+    .then((response) => {
+      if (!isEmpty(response.data)) {
+        dispatch(readUrlsSuccessAdmin(response.data));
+      } else if (isEmpty(response.data)) {
+        dispatch(editUrlError("No urls found."));
+        dispatch(editUrlError(""));
+      }
+    })
+    .catch((error) => {
+      let errMessage = 'Error fetching urls. Please try again later.';
+      if (error.response != undefined) {
+        errMessage = error.response;
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
+            }
+          }
+        }
+      }
+      dispatch(editUrlError(errMessage));
+    })
+  }
+}
+
+export function updateUrlsAdmin(user, values) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/cameras/${values.cameras_uuid}/urls`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data = JSON.parse(JSON.stringify(values));
+    delete data.key;
+    delete data.cameras_uuid;
+    delete data.inserted_at;
+    delete data.updated_at;
+
+    axios.patch(url, data, config)
+    .then((response) => {
+      dispatch(readUrlsAdmin(user, values));
+    })
+    .catch((error) => {
+      let errMessage = 'Error updating url. Please try again later.';
+      if (error.response != undefined) {
+        errMessage = error.response;
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
+            }
+          }
+        }
+      }
+      dispatch(editUrlError(errMessage));
     })
   }
 }

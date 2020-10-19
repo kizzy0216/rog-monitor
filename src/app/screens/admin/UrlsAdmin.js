@@ -55,20 +55,20 @@ class UrlsAdmin extends React.Component {
     if (!isEmpty(this.props.urls)) {
       for (var i = 0; i < this.props.urls.length; i++) {
         data[i] = {
-          key: this.props.urls[i]['url_uuid'],
-          cameras_uuid: this.state.cameras_uuid,
-          url_uuid: this.props.urls[i]['url_uuid'],
-          url_set_uuid: this.props.urls[i]['url_set_uuid'],
-          url_type_id: this.props.urls[i]['url_type_id'],
-          enabled: this.props.urls[i]['enabled'],
-          reco_active: this.props.urls[i]['reco_active'],
-          url: this.props.urls[i]['url'],
-          synched_at: this.props.urls[i]['synched_at'],
-          url_id: this.props.urls[i]['url_id'],
-          verified: this.props.urls[i]['verified'],
-          alt_chart_id: this.props.urls[i]['alt_chart_id'],
-          inserted_at: this.props.urls[i]['inserted_at'],
-          updated_at: this.props.urls[i]['updated_at']
+          key: this.props.urls[i]['url_uuid'].toString(),
+          cameras_uuid: this.state.cameras_uuid.toString(),
+          url_uuid: this.props.urls[i]['url_uuid'].toString(),
+          url_set_uuid: this.props.urls[i]['url_set_uuid'].toString(),
+          url_type_id: this.props.urls[i]['url_type_id'].toString(),
+          enabled: this.props.urls[i]['enabled'].toString(),
+          reco_active: this.props.urls[i]['reco_active'].toString(),
+          url: this.props.urls[i]['url'].toString(),
+          synched_at: this.props.urls[i]['synched_at'].toString(),
+          url_id: this.props.urls[i]['url_id'].toString(),
+          verified: this.props.urls[i]['verified'].toString(),
+          alt_chart_id: this.props.urls[i]['alt_chart_id'].toString(),
+          inserted_at: this.props.urls[i]['inserted_at'].toString(),
+          updated_at: this.props.urls[i]['updated_at'].toString()
         }
       }
 
@@ -145,19 +145,6 @@ const EditableCell = ({
       console.log('Save failed:', errInfo);
     }
   };
-
-  const handleCreateSelectItems = () => {
-    let timezoneNames = moment.tz.names();
-    let items = [];
-    for (var i = 0; i < timezoneNames.length; i++) {
-      if (!items.includes(timezoneNames[i])) {
-        if (timezoneNames[i] !== "US/Pacific-New") {
-          items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
-        }
-      }
-    }
-    return items;
-  }
 
   let childNode = children;
 

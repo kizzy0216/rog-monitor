@@ -716,6 +716,9 @@ export function readUrlsAdmin(user, values) {
         if (isEmpty(response.data.synched_at)) {
           response.data.synched_at = '';
         }
+        if (isEmpty(response.data.reco_active)) {
+          response.data.reco_active = false;
+        }
         dispatch(readUrlsSuccessAdmin(response.data));
       } else if (isEmpty(response.data)) {
         dispatch(editUrlError("No urls found."));
@@ -752,7 +755,13 @@ export function updateUrlsAdmin(user, values) {
     delete data.cameras_uuid;
     delete data.inserted_at;
     delete data.updated_at;
-
+    for (var i = 0; i < values.length; i++) {
+      if (values[i] === "true") {
+        values[i] = true;
+      } else if (values[i] === "false") {
+        values[i] = false;
+      }
+    }
     axios.patch(url, data, config)
     .then((response) => {
       dispatch(readUrlsAdmin(user, values));

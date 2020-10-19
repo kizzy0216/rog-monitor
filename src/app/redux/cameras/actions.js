@@ -713,6 +713,9 @@ export function readUrlsAdmin(user, values) {
     axios.get(url, config)
     .then((response) => {
       if (!isEmpty(response.data)) {
+        if (isEmpty(response.data.synched_at)) {
+          response.data.synched_at = '';
+        }
         dispatch(readUrlsSuccessAdmin(response.data));
       } else if (isEmpty(response.data)) {
         dispatch(editUrlError("No urls found."));

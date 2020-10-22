@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import * as camerasActions from '../../redux/cameras/actions';
 import { Table, Input, Button, Popconfirm, Form, InputNumber, message, Radio, Modal, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import S3Keywords from '../../components/formitems/S3Keywords';
 import { isEmpty } from '../../redux/helperFunctions';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment-timezone';

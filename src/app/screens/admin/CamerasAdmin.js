@@ -197,7 +197,7 @@ class CamerasAdmin extends React.Component {
           away_mode: this.props.cameras[i]['away_mode'].toString(),
           enabled: this.props.cameras[i]['enabled'].toString(),
           magic_camera_box: this.props.cameras[i]['magic_camera_box'].toString(),
-          s3_keywords: this.props.cameras[i]['s3_keywords'].toString()
+          s3_keywords: isEmpty(this.props.cameras[i]['s3_keywords']) ? null : this.props.cameras[i]['s3_keywords'].toString()
         }
       }
 

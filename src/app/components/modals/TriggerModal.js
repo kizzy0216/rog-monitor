@@ -30,7 +30,7 @@ const AddTriggerForm = ({
            footer={[null, null]}
            width="50%"
     >
-      <Form ref={form}>
+      <Form ref={form} initialValues={{sharedTrigger: true, sharedTriggerSilenceWindow: true}}>
         <Form.Item style={styles.triggersHideShow} key={canvasKey}>
           {triggerImg === null &&
             <img src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />
@@ -90,7 +90,6 @@ const AddTriggerForm = ({
                     <Select
                       placeholder="Shared or Private"
                       style={styles.triggerTimeWindowSelect}
-                      defaultValue={true}
                       disabled={selectedTriggerSharedDisabled}
                       onChange={checkShared}
                     >
@@ -123,7 +122,6 @@ const AddTriggerForm = ({
                       placeholder="Shared or Private"
                       style={styles.triggerTimeWindowSelect}
                       disabled={sharedTriggerSilenceWindowDisabled}
-                      defaultValue={true}
                     >
                       <Select.Option key={0} value={false}>Private</Select.Option>
                       <Select.Option key={1} value={true}>Shared</Select.Option>
@@ -249,7 +247,6 @@ const AddTriggerForm = ({
                         placeholder="Shared or Private"
                         style={styles.triggerTimeWindowSelect}
                         onChange={checkShared}
-                        defaultValue={true}
                       >
                         <Select.Option key={0} value={false}>Private</Select.Option>
                         <Select.Option key={1} value={true}>Shared</Select.Option>
@@ -279,7 +276,6 @@ const AddTriggerForm = ({
                       <Select
                         placeholder="Shared or Private"
                         style={styles.triggerTimeWindowSelect}
-                        defaultValue={true}
                         onChange={updateTriggerSilenceWindowPermissionsChange}
                       >
                         <Select.Option key={0} value={false}>Private</Select.Option>

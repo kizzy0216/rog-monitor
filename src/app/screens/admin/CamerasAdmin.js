@@ -196,7 +196,8 @@ class CamerasAdmin extends React.Component {
           latitude: this.props.cameras[i]['latitude'],
           away_mode: this.props.cameras[i]['away_mode'].toString(),
           enabled: this.props.cameras[i]['enabled'].toString(),
-          magic_camera_box: this.props.cameras[i]['magic_camera_box'].toString()
+          magic_camera_box: this.props.cameras[i]['magic_camera_box'].toString(),
+          s3_keywords: this.props.cameras[i]['s3_keywords'].toString()
         }
       }
 
@@ -320,7 +321,6 @@ const EditableCell = ({
   }
 
   let childNode = children;
-
   if (editable) {
     childNode = editing ? (
       dataIndex == 'time_zone' ?
@@ -495,6 +495,12 @@ class EditableTable extends React.Component {
         editable: false
       },
       {
+        title: 'S3 Keywords',
+        dataIndex: 's3_keywords',
+        width: 300,
+        editable: true
+      },
+      {
         title: 'Operation',
         dataIndex: 'operation',
         width: 200,
@@ -611,7 +617,7 @@ class EditableTable extends React.Component {
         bordered
         dataSource={dataSource}
         columns={columns}
-        scroll={{ x:5200, y: 500 }}
+        scroll={{ x:5500, y: 500 }}
       />
     );
   }

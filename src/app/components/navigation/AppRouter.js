@@ -16,8 +16,7 @@ import SideMenu from './SideMenu'
 
 import Alerts from '../../screens/Alerts';
 import CameraList from '../../screens/CameraList';
-import CameraDetails from '../../screens/CameraDetails';
-import CameraCreate from '../../screens/CameraCreate';
+import CameraDetails from '../../screens/CameraDetails'
 import RecosAdmin from '../../screens/admin/RecosAdmin';
 import UsersAdmin from '../../screens/admin/UsersAdmin';
 import CameraGroupsAdmin from '../../screens/admin/CameraGroupsAdmin';
@@ -83,7 +82,6 @@ class AppRouter extends Component {
                   <Switch>
                     <Route path='/cameras' component={CameraList} />
                     <Route path='/cameras/:uuid' component={CameraDetails} />
-                    <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
                     <Route path='/alerts' component={Alerts} />
                     <Route path='/recos-admin' component={RecosAdmin} />
                     <Route path='/reco-connectivity-logs-admin' component={RecoConnectivityLogsAdmin} />
@@ -105,7 +103,6 @@ class AppRouter extends Component {
                   <Switch>
                     <Route path='/cameras' component={CameraList} />
                     <Route path='/cameras/:uuid' component={CameraDetails} />
-                    <Route path='/cameras/new/:cameraGroupUuid' component={CameraCreate} />
                     <Route path='/alerts' component={Alerts} />
                     <Route exact path='/stages_link_view' component={StagesLinkView} />
                     <Redirect to='/cameras' />

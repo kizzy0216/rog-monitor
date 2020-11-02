@@ -94,11 +94,13 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 <EditCamera data={this.props} myRole={myRole} />
               </Col>
             }
-            <Col span={2} style={styles.triggermodalButton}>
-              <TriggerModal
-                data={this.props}
-              />
-            </Col>
+            {this.props.enabled && this.props.cameraConnectionVerified&& this.props.armed &&
+              <Col span={2} style={styles.triggermodalButton}>
+                <TriggerModal
+                  data={this.props}
+                />
+              </Col>
+            }
           </Col>
         </Row>
       </Card>

@@ -4,7 +4,7 @@ import { Button, Modal, Form, Input, Select, message } from 'antd';
 
 import { addCamera } from '../../redux/cameras/actions';
 import moment from 'moment-timezone';
-
+// TODO: if the camera is a ROG verify camera, use this RTSP url: rtsp://172.31.19.237:8554/rog
 const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess, createSelectItems, updateTimeZone, currentTimeZone}) =>{
   const layout = {
     wrapperCol: {

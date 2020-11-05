@@ -55,20 +55,20 @@ class UrlsAdmin extends React.Component {
     if (!isEmpty(this.props.urls)) {
       for (var i = 0; i < this.props.urls.length; i++) {
         data[i] = {
-          key: !isEmpty(this.props.urls[i]['url_uuid']) ? this.props.urls[i]['url_uuid'].toString() : null,
-          cameras_uuid: !isEmpty(this.state.cameras_uuid) ? this.state.cameras_uuid.toString() : null,
-          url_uuid: !isEmpty(this.props.urls[i]['url_uuid']) ? this.props.urls[i]['url_uuid'].toString() : null,
-          url_set_uuid: !isEmpty(this.props.urls[i]['url_set_uuid']) ? this.props.urls[i]['url_set_uuid'].toString() : null,
-          url_type_id: !isEmpty(this.props.urls[i]['url_type_id']) ? this.props.urls[i]['url_type_id'].toString() : null,
+          key: this.props.urls[i]['url_uuid'],
+          cameras_uuid: this.state.cameras_uuid,
+          url_uuid: this.props.urls[i]['url_uuid'],
+          url_set_uuid: this.props.urls[i]['url_set_uuid'],
+          url_type_id: this.props.urls[i]['url_type_id'],
           enabled: !isEmpty(this.props.urls[i]['enabled']) ? this.props.urls[i]['enabled'].toString() : null,
           reco_active: !isEmpty(this.props.urls[i]['reco_active']) ? this.props.urls[i]['reco_active'].toString() : null,
-          url: !isEmpty(this.props.urls[i]['url']) ? this.props.urls[i]['url'].toString() : null,
-          synched_at: !isEmpty(this.props.urls[i]['synched_at']) ? this.props.urls[i]['synched_at'].toString() : null,
-          url_id: !isEmpty(this.props.urls[i]['url_id']) ? this.props.urls[i]['url_id'].toString() : null,
+          url: this.props.urls[i]['url'],
+          synched_at: this.props.urls[i]['synched_at'],
+          url_id: this.props.urls[i]['url_id'],
           verified: !isEmpty(this.props.urls[i]['verified']) ? this.props.urls[i]['verified'].toString() : null,
-          alt_chart_id: !isEmpty(this.props.urls[i]['alt_chart_id']) ? this.props.urls[i]['alt_chart_id'].toString() : null,
-          inserted_at: !isEmpty(this.props.urls[i]['inserted_at']) ? this.props.urls[i]['inserted_at'].toString() : null,
-          updated_at: !isEmpty(this.props.urls[i]['updated_at']) ? this.props.urls[i]['updated_at'].toString() : null
+          alt_chart_id: this.props.urls[i]['alt_chart_id'],
+          inserted_at: this.props.urls[i]['inserted_at'],
+          updated_at: this.props.urls[i]['updated_at']
         }
       }
 

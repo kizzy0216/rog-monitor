@@ -67,13 +67,8 @@ class UrlsAdmin extends React.Component {
           url_id: this.props.urls[i]['url_id'],
           verified: !isEmpty(this.props.urls[i]['verified']) ? this.props.urls[i]['verified'].toString() : null,
           alt_chart_id: this.props.urls[i]['alt_chart_id'],
-<<<<<<< Updated upstream
           inserted_at: this.props.urls[i]['inserted_at'],
           updated_at: this.props.urls[i]['updated_at']
-=======
-          inserted_at: !isEmpty(this.props.urls[i]['inserted_at']) ? this.props.urls[i]['inserted_at'].toString() : null,
-          updated_at: !isEmpty(this.props.urls[i]['updated_at']) ? this.props.urls[i]['updated_at'].toString() : null
->>>>>>> Stashed changes
         }
       }
 

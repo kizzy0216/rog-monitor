@@ -786,3 +786,9 @@ export function updateUrlsAdmin(user, values) {
     })
   }
 }
+
+export function readAllIntegrationTemplates(user) {
+  return (dispatch) => {
+    // code...
+  }
+}

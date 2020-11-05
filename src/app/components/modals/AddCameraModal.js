@@ -1,11 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, Form, Input, Select, message } from 'antd';
-
-import { addCamera } from '../../redux/cameras/actions';
+import { Button, Modal, Form, Input, Select, message, Switch } from 'antd';
+import { NodeExpandOutlined, NodeCollapseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { addCamera, readAllIntegrationTemplates } from '../../redux/cameras/actions';
 import moment from 'moment-timezone';
 // TODO: if the camera is a ROG verify camera, use this RTSP url: rtsp://172.31.19.237:8554/rog
-const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess, createSelectItems, updateTimeZone, currentTimeZone}) =>{
+const AddCameraForm = ({
+  visible,
+  onCancel,
+  onCreate,
+  form,
+  addCameraInProcess,
+  createSelectItems,
+  updateTimeZone,
+  currentTimeZone,
+  toggleIntegration,
+  existingIntegration,
+  updateIntegrationTemplate,
+  selectedIntegrationTemplate,
+  integrationTemplateFields
+}) =>{
   const layout = {
     wrapperCol: {
       span: 16,
@@ -55,6 +69,52 @@ const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess, c
         <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
           <Input type='password' placeholder='Enter camera password'/>
         </Form.Item>
+        <Form.Item name="integration_toggle">
+          <Switch onChange={toggleIntegration} defaultChecked={existingIntegration} loading={false} checkedChildren={<NodeExpandOutlined />} unCheckedChildren={<NodeCollapseOutlined />}></Switch>
+        </Form.Item>
+        {/* TODO: insert logic here to control the 3rd party integration visability */}
+        <Form.Item name="integration_template">
+          <Select defaultValue={selectedIntegrationTemplate} onChange={updateIntegrationTemplate}></Select>
+        </Form.Item>
+        {/* TODO: for this part of the form, we need to iterate through the template and dynamically generate the form fields */}
+        {selectedIntegrationTemplate &&
+          <Form.List
+            name="integration_settings"
+            rules={[
+              {
+                validator: async (_, names) => {
+                  if (!names) { //put validator conditionals here separated by &&, || (and, or)
+                    return Promise.reject(new Error('Error Message'));
+                  }
+                },
+              },
+            ]}
+          >
+            {(integrationTemplateFields, { add, move, remove }, { errors }) => (
+              <div>
+                {fields.map((field, index) => (
+                  <Form.Item
+                    {...field}
+                    label={index}
+                    key={field.key}
+                    validateTrigger={['onChange', 'onBlur']}
+                    rules={[
+                      {
+                        required: false,
+                        whitespace: true,
+                        message: "Error Message",
+                      },
+                    ]}
+                    noStyle
+                    hasFeedback
+                  >
+                    <Input style={{ width: '60%' }} />
+                  </Form.Item>
+                ))}
+              </div>
+            )}
+          </Form.List>
+        }
       </Form>
     </Modal>
   );
@@ -65,7 +125,12 @@ class AddCameraModal extends Component {
     super(props);
     this.state = {
       fullRtspUrl: null,
-      time_zone: props.time_zone
+      time_zone: props.time_zone,
+      toggleIntegration: null,
+      existingIntegration: null,
+      updateIntegrationTemplate: null,
+      selectedIntegrationTemplate: null,
+      integrationTemplateFields: null
     };
   }
 
@@ -94,7 +159,7 @@ class AddCameraModal extends Component {
   };
 
   handleCancel = () => {
-    this.resetFields();
+    this.form.resetFields();
     this.props.toggleAddCameraModalVisibility();
   };
 
@@ -102,6 +167,7 @@ class AddCameraModal extends Component {
     const form = this.form;
     form.validateFields().then(values => {
       this.setState({fullRtspUrl: null}, () => {
+        // TODO: add new parameters into this function if external integration toggle is active.
         this.props.addCamera(this.props.user,
                                      this.props.selectedCameraGroup,
                                      values.name,
@@ -158,6 +224,14 @@ class AddCameraModal extends Component {
     this.setState({time_zone: fieldValue});
   }
 
+  handleToggleIntegration = () => {
+    this.readAllIntegrationTemplates(this.props.user);
+  }
+
+  handleUpdateIntegrationTemplate = () => {
+    // code...
+  }
+
   render() {
     return (
       <AddCameraForm
@@ -172,6 +246,11 @@ class AddCameraModal extends Component {
         createSelectItems={this.handleCreateSelectItems}
         updateTimeZone={this.handleUpdateTimeZone}
         currentTimeZone={this.state.time_zone}
+        toggleIntegration={this.handleToggleIntegration}
+        existingIntegration={this.state.existingIntegration}
+        updateIntegrationTemplate={this.handleUpdateIntegrationTemplate}
+        selectedIntegrationTemplate={this.state.selectedIntegrationTemplate}
+        integrationTemplateFields={this.state.integrationTemplateFields}
       />
     );
   }
@@ -210,7 +289,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addCamera: (user, cameraGroup, name, rtspUrl, time_zone, username, password) => dispatch(addCamera(user, cameraGroup, name, rtspUrl, time_zone, username, password))
+    addCamera: (user, cameraGroup, name, rtspUrl, time_zone, username, password) => dispatch(addCamera(user, cameraGroup, name, rtspUrl, time_zone, username, password)),
+    readAllIntegrationTemplates: (user) => dispatch(readAllIntegrationTemplates(user))
   }
 }
 

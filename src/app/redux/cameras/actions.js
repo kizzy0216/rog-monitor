@@ -774,6 +774,8 @@ export function updateUrlsAdmin(user, values) {
         values[i] = true;
       } else if (values[i] === "false") {
         values[i] = false;
+      } else if (values[i] === null) {
+        delete values[i];
       }
     }
     axios.patch(url, data, config)

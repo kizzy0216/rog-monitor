@@ -210,6 +210,20 @@ function fetchSuccessAdmin(camerasAdmin) {
   }
 }
 
+function readAllIntegrationTemplatesSuccess(integrationList) {
+  return {
+    type: types.READ_ALL_INTEGRATION_TEMPLATES_SUCCESS,
+    integrationList
+  }
+}
+
+function readAllIntegrationTemplatesError(readAllIntegrationTemplatesError) {
+  return {
+    type: types.READ_ALL_INTEGRATION_TEMPLATES_ERROR,
+    readAllIntegrationTemplatesError
+  }
+}
+
 export function fetchCameraGroupCameras(user, cameraGroup) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras`;
@@ -787,8 +801,34 @@ export function updateUrlsAdmin(user, values) {
   }
 }
 
-export function readAllIntegrationTemplates(user) {
+export function readAllIntegrationTemplates(users) {
   return (dispatch) => {
-    // code...
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${users.uuid}/integrations`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+    .then((response) => {
+      dispatch(readAllIntegrationTemplatesSuccess(response.data));
+    })
+    .catch((error) => {
+      let errMessage = 'Error getting templates. Please try again later.';
+      if (error.response != undefined) {
+        errMessage = error.response;
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
+            }
+          }
+        }
+      }
+      dispatch(readAllIntegrationTemplatesError(errMessage));
+    })
+    .finally(() => {
+      dispatch(readAllIntegrationTemplatesError(''));
+    })
   }
 }

@@ -4,7 +4,9 @@ import { Button, Modal, Form, Input, Select, message, Switch } from 'antd';
 import { NodeExpandOutlined, NodeCollapseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { addCamera, readAllIntegrationTemplates } from '../../redux/cameras/actions';
 import moment from 'moment-timezone';
+import {isEmpty} from '../../redux/helperFunctions';
 // TODO: if the camera is a ROG verify camera, use this RTSP url: rtsp://172.31.19.237:8554/rog
+const { Option } = Select;
 const AddCameraForm = ({
   visible,
   onCancel,
@@ -15,10 +17,12 @@ const AddCameraForm = ({
   updateTimeZone,
   currentTimeZone,
   toggleIntegration,
-  existingIntegration,
   updateIntegrationTemplate,
   selectedIntegrationTemplate,
-  integrationTemplateFields
+  integrationTemplateFields,
+  integrationActive,
+  integrationList,
+  loadTemplateFields
 }) =>{
   const layout = {
     wrapperCol: {
@@ -69,51 +73,20 @@ const AddCameraForm = ({
         <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
           <Input type='password' placeholder='Enter camera password'/>
         </Form.Item>
-        <Form.Item name="integration_toggle">
-          <Switch onChange={toggleIntegration} defaultChecked={existingIntegration} loading={false} checkedChildren={<NodeExpandOutlined />} unCheckedChildren={<NodeCollapseOutlined />}></Switch>
+        <Form.Item name="integration_toggle" label="External Integration" style={{width: 215, textAlign: 'right', margin: '0 auto', marginBottom: 14}}>
+          <Switch onChange={toggleIntegration} checkedChildren={<NodeExpandOutlined />} unCheckedChildren={<NodeCollapseOutlined />} checked={integrationActive}></Switch>
         </Form.Item>
-        {/* TODO: insert logic here to control the 3rd party integration visability */}
-        <Form.Item name="integration_template">
-          <Select defaultValue={selectedIntegrationTemplate} onChange={updateIntegrationTemplate}></Select>
-        </Form.Item>
-        {/* TODO: for this part of the form, we need to iterate through the template and dynamically generate the form fields */}
-        {selectedIntegrationTemplate &&
-          <Form.List
-            name="integration_settings"
-            rules={[
-              {
-                validator: async (_, names) => {
-                  if (!names) { //put validator conditionals here separated by &&, || (and, or)
-                    return Promise.reject(new Error('Error Message'));
-                  }
-                },
-              },
-            ]}
-          >
-            {(integrationTemplateFields, { add, move, remove }, { errors }) => (
-              <div>
-                {fields.map((field, index) => (
-                  <Form.Item
-                    {...field}
-                    label={index}
-                    key={field.key}
-                    validateTrigger={['onChange', 'onBlur']}
-                    rules={[
-                      {
-                        required: false,
-                        whitespace: true,
-                        message: "Error Message",
-                      },
-                    ]}
-                    noStyle
-                    hasFeedback
-                  >
-                    <Input style={{ width: '60%' }} />
-                  </Form.Item>
-                ))}
-              </div>
-            )}
-          </Form.List>
+        {integrationActive &&
+          <Form.Item name="integration_template">
+            <Select onChange={updateIntegrationTemplate} placeholder="Select Template">
+              {integrationList.map((values) => (
+                <Option key={values.uuid} value={values.uuid}>{values.name}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+        }
+        {integrationActive && !isEmpty(integrationTemplateFields) &&
+          loadTemplateFields(integrationTemplateFields)
         }
       </Form>
     </Modal>
@@ -126,15 +99,17 @@ class AddCameraModal extends Component {
     this.state = {
       fullRtspUrl: null,
       time_zone: props.time_zone,
-      toggleIntegration: null,
-      existingIntegration: null,
-      updateIntegrationTemplate: null,
+      integrationActive: false,
+      integrationList: this.props.integrationList,
       selectedIntegrationTemplate: null,
       integrationTemplateFields: null
     };
   }
 
   UNSAFE_componentWillReceiveProps = (nextProps) => {
+    if (nextProps.integrationList !== this.state.integrationList) {
+      this.setState({integrationList: nextProps.integrationList});
+    }
     if (this.props.time_zone !== nextProps.time_zone) {
       this.setState({time_zone: nextProps.time_zone});
       if (typeof this.form !== 'undefined') {
@@ -160,12 +135,14 @@ class AddCameraModal extends Component {
 
   handleCancel = () => {
     this.form.resetFields();
+    this.setState({integrationActive: false});
     this.props.toggleAddCameraModalVisibility();
   };
 
   handleCreate = () => {
     const form = this.form;
     form.validateFields().then(values => {
+      this.setState({integrationActive: false});
       this.setState({fullRtspUrl: null}, () => {
         // TODO: add new parameters into this function if external integration toggle is active.
         this.props.addCamera(this.props.user,
@@ -224,12 +201,41 @@ class AddCameraModal extends Component {
     this.setState({time_zone: fieldValue});
   }
 
-  handleToggleIntegration = () => {
-    this.readAllIntegrationTemplates(this.props.user);
+  handleToggleIntegration = (fieldValue) => {
+    if (fieldValue === true) {
+      this.props.readAllIntegrationTemplates(this.props.user);
+    }
+    this.setState({integrationActive: fieldValue});
   }
 
-  handleUpdateIntegrationTemplate = () => {
-    // code...
+  handleUpdateIntegrationTemplate = (fieldValue) => {
+    for (var i = 0; i < this.state.integrationList.length; i++) {
+      if (this.state.integrationList[i].uuid === fieldValue) {
+        this.setState({
+          selectedIntegrationTemplate: fieldValue,
+          integrationTemplateFields: this.state.integrationList[i]
+        });
+        break;
+      }
+    }
+  }
+
+  handleLoadTemplateFields = (integrationTemplateFields) => {
+    let domTemplate = [];
+    let templateFields = JSON.parse(integrationTemplateFields['template']);
+    for (var key in templateFields) {
+      if (templateFields.hasOwnProperty(key)) {
+        domTemplate.push(
+          <div key={key+'3'}>
+            <p key={key+'2'} style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>{key}:</p>
+            <Form.Item name={key} key={key+'1'} initialValue={templateFields[key]}>
+              <Input key={key} placeholder={key} />
+            </Form.Item>
+          </div>
+        );
+      }
+    }
+    return domTemplate;
   }
 
   render() {
@@ -247,10 +253,12 @@ class AddCameraModal extends Component {
         updateTimeZone={this.handleUpdateTimeZone}
         currentTimeZone={this.state.time_zone}
         toggleIntegration={this.handleToggleIntegration}
-        existingIntegration={this.state.existingIntegration}
+        integrationActive={this.state.integrationActive}
+        integrationList={this.state.integrationList}
         updateIntegrationTemplate={this.handleUpdateIntegrationTemplate}
         selectedIntegrationTemplate={this.state.selectedIntegrationTemplate}
         integrationTemplateFields={this.state.integrationTemplateFields}
+        loadTemplateFields={this.handleLoadTemplateFields}
       />
     );
   }
@@ -283,7 +291,8 @@ const mapStateToProps = (state) => {
     addedCameraData: state.cameras.addedCameraData,
     cameraArmed: state.cameras.cameraArmed,
     cameraConnectionUuid: state.cameras.cameraConnectionUuid,
-    cameraConnectionFail: state.cameras.cameraConnectionFail
+    cameraConnectionFail: state.cameras.cameraConnectionFail,
+    integrationList: state.cameras.integrationList
   }
 }
 

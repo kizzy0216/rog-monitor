@@ -340,7 +340,6 @@ export function addCamera(user, cameraGroup, time_zone, values) {
     };
     delete values.name;
     data = Object.assign({}, data, values);
-    console.log(data);
 
     if (values.username !== null && typeof values.username !== 'undefined' && values.password !== null && typeof values.password !== 'undefined') {
       data.username = values.username;
@@ -355,7 +354,6 @@ export function addCamera(user, cameraGroup, time_zone, values) {
         dispatch(fetchCameraGroupCameras(user, cameraGroup));
         dispatch(fetchUserCameraLicenses(user));
         dispatch(addCameraSuccess(true));
-        // dispatch(checkCameraConnection(user, response.data.uuid));
       })
       .catch((error) => {
         console.log(error);

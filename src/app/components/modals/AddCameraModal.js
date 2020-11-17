@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Button, Modal, Form, Input, Select, message, Switch } from 'antd';
 import { NodeExpandOutlined, NodeCollapseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { addCamera, readAllIntegrationTemplates } from '../../redux/cameras/actions';
+import ExternalIntegration from '../formitems/ExternalIntegration';
 import moment from 'moment-timezone';
 import {isEmpty} from '../../redux/helperFunctions';
 // TODO: if the camera is a ROG verify camera, use this RTSP url: rtsp://172.31.19.237:8554/rog
@@ -16,13 +17,13 @@ const AddCameraForm = ({
   createSelectItems,
   updateTimeZone,
   currentTimeZone,
-  toggleIntegration,
-  updateIntegrationTemplate,
   selectedIntegrationTemplate,
   integrationTemplateFields,
   integrationActive,
   integrationList,
-  loadTemplateFields
+  setFormFieldsValue,
+  resetFields,
+  fieldsReset
 }) =>{
   const layout = {
     wrapperCol: {
@@ -73,23 +74,7 @@ const AddCameraForm = ({
         <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
           <Input type='password' placeholder='Enter camera password'/>
         </Form.Item>
-        <Form.Item name="external_integration" label="External Integration" style={{width: 215, textAlign: 'right', margin: '0 auto', marginBottom: 14}}>
-          <Switch onChange={toggleIntegration} checkedChildren={<NodeExpandOutlined />} unCheckedChildren={<NodeCollapseOutlined />} checked={integrationActive}></Switch>
-        </Form.Item>
-        {integrationActive &&
-          <Form.Item name="integration_template">
-            <Select onChange={updateIntegrationTemplate} placeholder="Select Template">
-              {integrationList.map((values) => (
-                <Option key={values.uuid} value={values.uuid}>{values.name}</Option>
-              ))}
-            </Select>
-          </Form.Item>
-        }
-        {integrationActive && !isEmpty(integrationTemplateFields) &&
-          <div>
-            {loadTemplateFields(integrationTemplateFields)}
-          </div>
-        }
+        <ExternalIntegration setFormFieldsValue={setFormFieldsValue} resetFields={resetFields} fieldsReset={fieldsReset} />
       </Form>
     </Modal>
   );
@@ -104,7 +89,8 @@ class AddCameraModal extends Component {
       integrationActive: false,
       integrationList: this.props.integrationList,
       selectedIntegrationTemplate: null,
-      integrationTemplateFields: null
+      integrationTemplateFields: null,
+      resetFields: false
     };
   }
 
@@ -136,7 +122,8 @@ class AddCameraModal extends Component {
       fullRtspUrl: null,
       integrationActive: false,
       integrationTemplateFields: null,
-      selectedIntegrationTemplate: null
+      selectedIntegrationTemplate: null,
+      resetFields: true
     });
   };
 
@@ -145,7 +132,8 @@ class AddCameraModal extends Component {
     this.setState({
       integrationActive: false,
       integrationTemplateFields: null,
-      selectedIntegrationTemplate: null
+      selectedIntegrationTemplate: null,
+      resetFields: true
     });
     this.props.toggleAddCameraModalVisibility();
   };
@@ -163,6 +151,7 @@ class AddCameraModal extends Component {
         this.state.time_zone,
         values
       );
+      this.setState({resetFields: true});
     });
   };
 
@@ -211,56 +200,12 @@ class AddCameraModal extends Component {
     this.setState({time_zone: fieldValue});
   }
 
-  handleToggleIntegration = (fieldValue) => {
-    if (fieldValue === true) {
-      this.props.readAllIntegrationTemplates(this.props.user);
-    } else {
-
-    }
-    this.setState({integrationActive: fieldValue});
+  handleSetFormFieldsValue = (field) => {
+    this.form.setFieldsValue(field);
   }
 
-  handleUpdateIntegrationTemplate = (fieldValue) => {
-    for (var i = 0; i < this.state.integrationList.length; i++) {
-      if (this.state.integrationList[i].uuid === fieldValue) {
-        let templateFields = JSON.parse(this.state.integrationList[i]['template']);
-        for (var key in templateFields) {
-          if (templateFields.hasOwnProperty(key)) {
-            let field = {};
-            field[key] = templateFields[key];
-            this.form.setFieldsValue(field);
-          }
-        }
-        this.setState({
-          selectedIntegrationTemplate: fieldValue,
-          integrationTemplateFields: this.state.integrationList[i]
-        });
-        break;
-      }
-    }
-  }
-
-  handleLoadTemplateFields = (integrationTemplateFields) => {
-    let domTemplate = [];
-    let templateFields = JSON.parse(integrationTemplateFields['template']);
-    for (var key in templateFields) {
-      if (templateFields.hasOwnProperty(key)) {
-        domTemplate.push(
-          <div key={this.guid()} id={key}>
-            <p key={this.guid()} style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>{key}:</p>
-            <Form.Item key={this.guid()} name={key} initialValue={templateFields[key]}>
-              <Input key={this.guid()} placeholder={key} />
-            </Form.Item>
-          </div>
-        );
-      }
-    }
-    domTemplate.push(
-      <Form.Item key={this.guid()} name="external_stream" initialValue={integrationTemplateFields['external_stream']} hidden={true}>
-        <Input key={this.guid()} hidden={true} />
-      </Form.Item>
-    )
-    return domTemplate;
+  handleFieldsReset = () => {
+    this.setState({resetFields: false});
   }
 
   guid = () => {
@@ -286,13 +231,13 @@ class AddCameraModal extends Component {
         createSelectItems={this.handleCreateSelectItems}
         updateTimeZone={this.handleUpdateTimeZone}
         currentTimeZone={this.state.time_zone}
-        toggleIntegration={this.handleToggleIntegration}
         integrationActive={this.state.integrationActive}
         integrationList={this.state.integrationList}
-        updateIntegrationTemplate={this.handleUpdateIntegrationTemplate}
         selectedIntegrationTemplate={this.state.selectedIntegrationTemplate}
         integrationTemplateFields={this.state.integrationTemplateFields}
-        loadTemplateFields={this.handleLoadTemplateFields}
+        setFormFieldsValue={this.handleSetFormFieldsValue}
+        resetFields={this.state.resetFields}
+        fieldsReset={this.handleFieldsReset}
       />
     );
   }

@@ -441,7 +441,7 @@ class AddTriggerModal extends Component {
       }
       for (var i = 0; i < nextProps.data.cameraGroup.cameras.length; i++) {
         if (nextProps.data.uuid == nextProps.data.cameraGroup.cameras[i].uuid) {
-          this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url});
+          this.setState({image: nextProps.data.cameraGroup.cameras[i].thumbnail_url+'?auth='+ this.props.data.user.jwt});
         }
       }
     }

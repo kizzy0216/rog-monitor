@@ -136,6 +136,7 @@ const styles = {
 }
 const mapStateToProps = (state) => {
   return {
+    user: state.auth.user,
     polygonData: state.triggers.polygonData,
     refreshCameraImage: state.cameras.refreshCameraImage,
     refreshCameraUuid: state.cameras.refreshCameraUuid,

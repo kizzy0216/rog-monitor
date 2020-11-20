@@ -15,8 +15,12 @@ class ExternalIntegration extends Component {
       integrationList: null,
       selectedIntegrationTemplate: null,
       integrationTemplateFields: null,
-      resetFields: false
+      resetFields: false,
+      externalIntegrationData: typeof props.externalIntegrationData === 'undefined' ? null : props.externalIntegrationData
     };
+    if (!isEmpty(this.state.externalIntegrationData)) {
+      this.state['integrationActive'] = true;
+    }
   }
 
   static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -24,11 +28,15 @@ class ExternalIntegration extends Component {
     if (nextProps.integrationList !== prevState.integrationList) {
       nextState['integrationList'] = nextProps.integrationList;
     }
+    if (typeof nextProps.externalIntegrationData !== 'undefined' && nextProps.externalIntegrationData !== prevState.externalIntegrationData) {
+      nextState['externalIntegrationData'] = nextProps.externalIntegrationData;
+    }
     if (nextProps.resetFields === true) {
       nextState['integrationActive'] = false;
       nextState['integrationList'] = null;
       nextState['selectedIntegrationTemplate'] = null;
       nextState['integrationTemplateFields'] = null;
+      nextState['externalIntegrationData'] = null;
       nextProps.fieldsReset();
     }
     return nextState
@@ -68,24 +76,31 @@ class ExternalIntegration extends Component {
 
   handleLoadTemplateFields = (integrationTemplateFields) => {
     let domTemplate = [];
-    let templateFields = JSON.parse(integrationTemplateFields['template']);
-    for (var key in templateFields) {
-      if (templateFields.hasOwnProperty(key)) {
-        domTemplate.push(
-          <div key={this.guid()} id={key}>
-            <p key={this.guid()} style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>{key}:</p>
-            <Form.Item key={this.guid()} name={key} initialValue={templateFields[key]}>
-              <Input key={this.guid()} placeholder={key} />
-            </Form.Item>
-          </div>
-        );
-      }
+    let templateFields = null;
+    if (integrationTemplateFields.hasOwnProperty('template')) {
+      templateFields = JSON.parse(integrationTemplateFields['template']);
+    } else {
+      templateFields = integrationTemplateFields;
     }
-    domTemplate.push(
-      <Form.Item key={this.guid()} name="external_stream" initialValue={integrationTemplateFields['external_stream']} hidden={true}>
-        <Input key={this.guid()} hidden={true} />
-      </Form.Item>
-    )
+    if (!isEmpty(templateFields)) {
+      for (var key in templateFields) {
+        if (templateFields.hasOwnProperty(key) && key !== 'external_stream') {
+          domTemplate.push(
+            <div key={this.guid()} id={key}>
+              <p key={this.guid()} style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>{key}:</p>
+              <Form.Item key={this.guid()} name={key} initialValue={templateFields[key]}>
+                <Input key={this.guid()} placeholder={key} />
+              </Form.Item>
+            </div>
+          );
+        }
+      }
+      domTemplate.push(
+        <Form.Item key={this.guid()} name="external_stream" initialValue={integrationTemplateFields['external_stream']} hidden={true}>
+          <Input key={this.guid()} hidden={true} />
+        </Form.Item>
+      )
+    }
     return domTemplate;
   }
 
@@ -106,16 +121,20 @@ class ExternalIntegration extends Component {
       </Form.Item>
     );
     if (this.state.integrationActive) {
-      domRender.push(
-        <Form.Item key={this.guid()} name="integration_template">
-          <Select key={this.guid()} onChange={this.handleUpdateIntegrationTemplate} placeholder="Select Template">
-            {this.state.integrationList.map((values) => (
-              <Option key={values.uuid} value={values.uuid}>{values.name}</Option>
-            ))}
-          </Select>
-        </Form.Item>
-      );
-      if (!isEmpty(this.state.integrationTemplateFields)) {
+      if (isEmpty(this.state.externalIntegrationData)) {
+        domRender.push(
+          <Form.Item key={this.guid()} name="integration_template">
+            <Select key={this.guid()} onChange={this.handleUpdateIntegrationTemplate} placeholder="Select Template">
+              {this.state.integrationList.map((values) => (
+                <Option key={values.uuid} value={values.uuid}>{values.name}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+        );
+      }
+      if (!isEmpty(this.state.externalIntegrationData)) {
+        domRender.push(this.handleLoadTemplateFields(this.state.externalIntegrationData));
+      } else if (!isEmpty(this.state.integrationTemplateFields)) {
         domRender.push(this.handleLoadTemplateFields(this.state.integrationTemplateFields));
       }
     }

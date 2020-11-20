@@ -74,7 +74,7 @@ const AddCameraForm = ({
         <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
           <Input type='password' placeholder='Enter camera password'/>
         </Form.Item>
-        <ExternalIntegration setFormFieldsValue={setFormFieldsValue} resetFields={resetFields} fieldsReset={fieldsReset} />
+        <ExternalIntegration setFormFieldsValue={setFormFieldsValue} resetFields={resetFields} fieldsReset={fieldsReset} disabled={false} />
       </Form>
     </Modal>
   );

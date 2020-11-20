@@ -16,7 +16,7 @@ class ExternalIntegration extends Component {
       selectedIntegrationTemplate: null,
       integrationTemplateFields: null,
       resetFields: false,
-      externalIntegrationData: typeof props.externalIntegrationData === 'undefined' ? null : props.externalIntegrationData
+      externalIntegrationData: typeof props.externalIntegrationData === 'undefined' ? null : props.externalIntegrationData,
     };
     if (!isEmpty(this.state.externalIntegrationData)) {
       this.state['integrationActive'] = true;
@@ -31,7 +31,7 @@ class ExternalIntegration extends Component {
     if (typeof nextProps.externalIntegrationData !== 'undefined' && nextProps.externalIntegrationData !== prevState.externalIntegrationData) {
       nextState['externalIntegrationData'] = nextProps.externalIntegrationData;
     }
-    if (nextProps.resetFields === true) {
+    if (nextProps.resetFields === true && isEmpty(nextProps.externalIntegrationData)) {
       nextState['integrationActive'] = false;
       nextState['integrationList'] = null;
       nextState['selectedIntegrationTemplate'] = null;
@@ -89,7 +89,7 @@ class ExternalIntegration extends Component {
             <div key={this.guid()} id={key}>
               <p key={this.guid()} style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>{key}:</p>
               <Form.Item key={this.guid()} name={key} initialValue={templateFields[key]}>
-                <Input key={this.guid()} placeholder={key} />
+                <Input key={this.guid()} placeholder={key} disabled={this.props.disabled} />
               </Form.Item>
             </div>
           );
@@ -117,14 +117,14 @@ class ExternalIntegration extends Component {
     let domRender = [];
     domRender.push(
       <Form.Item key={this.guid()} name="external_integration" label="External Integration" style={{width: 215, textAlign: 'right', margin: '0 auto', marginBottom: 14}}>
-        <Switch key={this.guid()} onChange={this.handleToggleIntegration} checkedChildren={<NodeExpandOutlined />} unCheckedChildren={<NodeCollapseOutlined />} checked={this.state.integrationActive}></Switch>
+        <Switch key={this.guid()} onChange={this.handleToggleIntegration} checkedChildren={<NodeExpandOutlined />} unCheckedChildren={<NodeCollapseOutlined />} checked={this.state.integrationActive} disabled={this.props.disabled}></Switch>
       </Form.Item>
     );
     if (this.state.integrationActive) {
       if (isEmpty(this.state.externalIntegrationData)) {
         domRender.push(
           <Form.Item key={this.guid()} name="integration_template">
-            <Select key={this.guid()} onChange={this.handleUpdateIntegrationTemplate} placeholder="Select Template">
+            <Select key={this.guid()} onChange={this.handleUpdateIntegrationTemplate} placeholder="Select Template" disabled={this.props.disabled}>
               {this.state.integrationList.map((values) => (
                 <Option key={values.uuid} value={values.uuid}>{values.name}</Option>
               ))}

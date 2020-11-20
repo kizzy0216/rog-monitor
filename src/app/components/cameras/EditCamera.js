@@ -30,7 +30,12 @@ class EditCamera extends Component {
       fullRtspUrl: null,
       away_mode: this.props.data.away_mode,
       enabled: this.props.data.enabled,
-      external_integration: this.props.data.external_integration
+      external_integration: this.props.data.external_integration,
+      integrationActive: false,
+      integrationList: null,
+      selectedIntegrationTemplate: null,
+      integrationTemplateFields: null,
+      resetFields: false
     }
   }
 
@@ -237,8 +242,10 @@ class EditCamera extends Component {
                 </Popconfirm>
               </Form.Item>
             }
-            {this.props.myRole.includes(0) &&
-              <ExternalIntegration setFormFieldsValue={this.handleSetFormFieldsValue} resetFields={this.resetFields} fieldsReset={this.handleFieldsReset} externalIntegrationData={this.state.external_integration} />
+            {this.props.myRole.includes(0) ?
+              <ExternalIntegration setFormFieldsValue={this.handleSetFormFieldsValue} resetFields={this.state.resetFields} fieldsReset={this.handleFieldsReset} externalIntegrationData={this.state.external_integration} disabled={false} />
+            :
+              <ExternalIntegration setFormFieldsValue={this.handleSetFormFieldsValue} resetFields={this.resetFields} fieldsReset={this.handleFieldsReset} externalIntegrationData={this.state.external_integration} disabled={true} />
             }
           </Form>
           {this.props.myRole.includes(0) &&

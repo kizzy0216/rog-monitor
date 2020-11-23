@@ -9,7 +9,7 @@ import AddCameraModal from '../../components/modals/AddCameraModal';
 import { fetchUserCameraLicenses } from '../../redux/users/actions';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment-timezone';
-// TODO: Make use of the AddCameraModal component
+
 const UsersForm = ({handleSubmit, form}) => {
   return (
     <Form layout={'inline'} onFinish={handleSubmit} style={styles.formstyles} ref={form}>

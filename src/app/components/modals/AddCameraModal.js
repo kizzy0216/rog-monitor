@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, Form, Input, Select, message, Switch } from 'antd';
 import { NodeExpandOutlined, NodeCollapseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { addCamera, readAllIntegrationTemplates } from '../../redux/cameras/actions';
+import { addCamera, readAllIntegrationTemplates, createCameraAdmin } from '../../redux/cameras/actions';
 import ExternalIntegration from '../formitems/ExternalIntegration';
 import moment from 'moment-timezone';
 import {isEmpty} from '../../redux/helperFunctions';
@@ -145,13 +145,19 @@ class AddCameraModal extends Component {
         values.external_integration = false;
       }
       values.rtspUrl = values.rtspUrl.trim();
-      this.props.addCamera(
-        this.props.user,
-        this.props.selectedCameraGroup,
-        this.state.time_zone,
-        values
-      );
+      if (typeof this.props.admin !== 'undefined' && this.props.admin) {
+        values.camera_groups_uuid = this.props.selectedCameraGroup.uuid;
+        this.props.createCameraAdmin(this.props.user, values);
+      } else {
+        this.props.addCamera(
+          this.props.user,
+          this.props.selectedCameraGroup,
+          this.state.time_zone,
+          values
+        );
+      }
       this.setState({resetFields: true});
+      this.props.toggleAddCameraModalVisibility();
     });
   };
 
@@ -278,7 +284,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addCamera: (user, cameraGroup, name, rtspUrl, time_zone, username, password) => dispatch(addCamera(user, cameraGroup, name, rtspUrl, time_zone, username, password)),
-    readAllIntegrationTemplates: (user) => dispatch(readAllIntegrationTemplates(user))
+    readAllIntegrationTemplates: (user) => dispatch(readAllIntegrationTemplates(user)),
+    createCameraAdmin: (user, values) => dispatch(createCameraAdmin(user, values))
   }
 }
 

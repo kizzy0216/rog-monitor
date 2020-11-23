@@ -563,9 +563,26 @@ export function createCameraAdmin(user, values) {
       if (!isEmpty(response.data)) {
         let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${values.camera_groups_uuid}/cameras`;
         let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-        values.camera_groups_name = response.data.name;
-        let data = JSON.parse(JSON.stringify(values));
-        delete data.camera_groups_uuid;
+        
+        let index = values.rtspUrl.indexOf(":");
+        let protocol = values.rtspUrl.substr(0, index + 3).toLowerCase();
+        let urlAddress = values.rtspUrl.substr(index + 3);
+        let lowerCaseUrl = (protocol + urlAddress);
+
+        let data = {
+          camera_groups_name: response.data.name,
+          camera_url: lowerCaseUrl,
+          camera_name: values.name,
+          external_integration: values.external_integration,
+          time_zone
+        };
+        delete values.name;
+        data = Object.assign({}, data, values);
+
+        if (values.username !== null && typeof values.username !== 'undefined' && values.password !== null && typeof values.password !== 'undefined') {
+          data.username = values.username;
+          data.password = values.password;
+        }
 
         axios.post(url, data, config)
         .then((response) => {

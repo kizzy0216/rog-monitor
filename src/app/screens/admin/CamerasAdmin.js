@@ -5,9 +5,11 @@ import * as camerasActions from '../../redux/cameras/actions';
 import { Table, Input, Button, Popconfirm, Form, InputNumber, message, Radio, Modal, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { isEmpty } from '../../redux/helperFunctions';
+import AddCameraModal from '../../components/modals/AddCameraModal';
+import { fetchUserCameraLicenses } from '../../redux/users/actions';
 import Highlighter from 'react-highlight-words';
 import moment from 'moment-timezone';
-
+// TODO: Make use of the AddCameraModal component
 const UsersForm = ({handleSubmit, form}) => {
   return (
     <Form layout={'inline'} onFinish={handleSubmit} style={styles.formstyles} ref={form}>
@@ -21,58 +23,14 @@ const UsersForm = ({handleSubmit, form}) => {
   );
 };
 
-const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess, createSelectItems, updateTimeZone, currentTimeZone}) => {
-  const layout = {
-    wrapperCol: {
-      span: 16,
-      offset: 4
-    }
-  };
-  return (
-    <Modal title='Add a Camera'
-      visible={visible}
-      onCancel={onCancel}
-      onOk={onCreate}
-      okText='Add'
-      cancelText='Cancel'
-      confirmLoading={addCameraInProcess}
-    >
-      <Form ref={form} initialValues={{time_zone: currentTimeZone}} {...layout}>
-        <Form.Item name="camera_name" rules={[{required: true, message: 'Please input the camera name'}]} hasFeedback>
-          <Input placeholder='Enter camera name'/>
-        </Form.Item>
-        <Form.Item name="camera_url" rules={[{required: true, message: 'Please enter the camera URL'}]} hasFeedback>
-          <Input placeholder='Enter Camera URL'/>
-        </Form.Item>
-        <Form.Item name="time_zone" rules={[{required: true, message: 'Please enter your time zone'}]} hasFeedback>
-          <Select
-            showSearch
-            placeholder="Enter Time Zone"
-            optionFilterProp="children"
-            onChange={updateTimeZone}
-            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-          >
-            {createSelectItems()}
-          </Select>
-        </Form.Item>
-        <Form.Item name="username" rules={[{required: false, message: 'Please enter the camera username'}]} hasFeedback>
-          <Input placeholder='Enter camera username'/>
-        </Form.Item>
-        <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
-          <Input type='password' placeholder='Enter camera password'/>
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
-};
-
 class CamerasAdmin extends React.Component {
   constructor(props) {
     super(props);
 
     this.state={
       visible: false,
-      time_zone: moment.tz.guess()
+      time_zone: moment.tz.guess(),
+      addCameraModalVisible: false
     }
   }
 
@@ -97,26 +55,6 @@ class CamerasAdmin extends React.Component {
     this.form = form;
   };
 
-  addCameraFormRef = formRef => {
-    this.formRef = formRef;
-  };
-
-  showModal = () => {
-    if (typeof this.state.camera_groups_uuid !== "undefined") {
-      this.setState({ visible: true });
-    }
-  };
-
-  handleCancel = () => {
-    this.resetFields();
-    this.setState({ visible: false });
-  };
-
-  resetFields = () => {
-    this.formRef.resetFields();
-    this.setState({fullRtspUrl: null});
-  };
-
   getFullRtspUrl = (camera_url, username, password) => {
     let index = camera_url.indexOf(":");
     let protocol = camera_url.substr(0, index + 3).toLowerCase();
@@ -124,34 +62,6 @@ class CamerasAdmin extends React.Component {
     let lowerCaseUrl = (protocol + `${username}:${password}@` + urlAddress);
     return lowerCaseUrl;
   }
-
-  testLiveView = () => {
-    let isChrome = window.chrome || window.chrome.webstore;
-    let isFirefox = typeof InstallTrigger !== 'undefined';
-    let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-    if (!isChrome && !isFirefox && !isOpera) {
-      alert('Sorry, live video requires the desktop Chrome, Firefox, or Opera web browser.');
-    } else {
-      const form = this.formRef;
-      form.validateFields(['camera_url', 'username', 'password']).then(values => {
-        this.setState({fullRtspUrl: null}, () => {
-          this.setState({fullRtspUrl: this.getFullRtspUrl(values.camera_url, values.username, values.password)});
-        });
-      })
-    }
-  }
-
-  handleCreate = () => {
-    if (typeof this.state.camera_groups_uuid !== "undefined") {
-      const form = this.formRef;
-      form.validateFields().then(values => {
-        values.camera_groups_uuid = this.state.camera_groups_uuid;
-        this.props.actions.createCameraAdmin(this.props.user, values);
-        this.setState({ visible: false });
-        form.resetFields();
-      });
-    }
-  };
 
   handleCreateSelectItems = () => {
     if (this.state.visible == true) {
@@ -168,12 +78,29 @@ class CamerasAdmin extends React.Component {
     }
   }
 
-  handleUpdateTimeZone = (fieldValue) => {
-    this.setState({time_zone: fieldValue});
+  toggleAddCameraModalVisibility = () => {
+    let licensesAvailable = this.countAvailableCameraLicenses();
+    if (licensesAvailable >= 1 && typeof this.state.camera_groups_uuid !== "undefined") {
+      this.setState({addCameraModalVisible: !this.state.addCameraModalVisible})
+    } else if (typeof this.state.camera_groups_uuid === "undefined") {
+      message.error("Camera Groups UUID Not Specified", 10);
+    } else if (this.state.addCameraModalVisible === true) {
+      this.setState({addCameraModalVisible: false})
+    } else {
+      message.error("You have reached your license limit. Please send an email requesting additional licenses to hello@gorog.co", 10);
+    }
+  }
+
+  countAvailableCameraLicenses = () => {
+    this.props.fetchUserCameraLicenses(this.props.user)
+    let count = 0;
+    this.props.user.cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid == null ? count++ : count)
+    return count;
   }
 
   render(){
     const data = [];
+    let cameraGroup = {uuid: this.state.camera_groups_uuid};
     if (!isEmpty(this.props.cameras)) {
       for (var i = 0; i < this.props.cameras.length; i++) {
         data[i] = {
@@ -207,22 +134,16 @@ class CamerasAdmin extends React.Component {
             form={this.cameraGroupFormRef}
             handleSubmit={this.handleSubmit}
           />
-          <Button onClick={this.showModal} type="primary" style={{ marginBottom: 16 }}>
+          <Button onClick={this.toggleAddCameraModalVisibility} type="primary" style={{ marginBottom: 16 }}>
             Add a Camera
           </Button>
-          <AddCameraForm
-            form={this.addCameraFormRef}
-            visible={this.state.visible}
-            onCancel={this.handleCancel}
-            onCreate={this.handleCreate}
-            testLiveView={this.testLiveView}
-            fullRtspUrl={this.state.fullRtspUrl}
-            addCameraError={this.props.addCameraError}
-            addCameraInProcess={this.props.addCameraInProcess}
-            createSelectItems={this.handleCreateSelectItems}
-            updateTimeZone={this.handleUpdateTimeZone}
-            currentTimeZone={this.state.time_zone}
-          />
+          <AddCameraModal
+            user={this.props.user}
+            time_zone={this.state.time_zone}
+            selectedCameraGroup={cameraGroup}
+            visible={this.state.addCameraModalVisible}
+            toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)}
+            admin={true} />
           <EditableTable
             data={data}
             user={this.props.user}
@@ -237,22 +158,16 @@ class CamerasAdmin extends React.Component {
             form={this.cameraGroupFormRef}
             handleSubmit={this.handleSubmit}
           />
-          <Button onClick={this.showModal} type="primary" style={{ marginBottom: 16 }}>
+          <Button onClick={this.toggleAddCameraModalVisibility} type="primary" style={{ marginBottom: 16 }}>
             Add a Camera
           </Button>
-          <AddCameraForm
-            form={this.addCameraFormRef}
-            visible={this.state.visible}
-            onCancel={this.handleCancel}
-            onCreate={this.handleCreate}
-            testLiveView={this.testLiveView}
-            fullRtspUrl={this.state.fullRtspUrl}
-            addCameraError={this.props.addCameraError}
-            addCameraInProcess={this.props.addCameraInProcess}
-            createSelectItems={this.handleCreateSelectItems}
-            updateTimeZone={this.handleUpdateTimeZone}
-            currentTimeZone={this.state.time_zone}
-          />
+          <AddCameraModal
+            user={this.props.user}
+            time_zone={this.state.time_zone}
+            selectedCameraGroup={cameraGroup}
+            visible={this.state.addCameraModalVisible}
+            toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)}
+            admin={true} />
         </div>
       )
     }
@@ -565,7 +480,7 @@ class EditableTable extends React.Component {
         highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
         searchWords={[this.state.searchText]}
         autoEscape
-        textToHighlight={text.toString()}
+        textToHighlight={isEmpty(text) ? null : text.toString()}
       />
     ),
   });
@@ -659,7 +574,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(camerasActions, dispatch)
+    actions: bindActionCreators(camerasActions, dispatch),
+    fetchUserCameraLicenses: (user) => dispatch(fetchUserCameraLicenses(user)),
   }
 };
 

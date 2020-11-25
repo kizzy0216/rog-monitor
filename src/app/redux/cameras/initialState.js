@@ -28,5 +28,7 @@ export default {
   addCameraError: '',
   addCameraSuccess: false,
   editUrlError: '',
-  editUrlInProcess: false
+  editUrlInProcess: false,
+  integrationList: [],
+  readAllIntegrationTemplatesError: false
 }

@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch, Popconfirm, Tooltip } from 'antd';
 import { SettingOutlined, SafetyOutlined, HomeOutlined, LinkOutlined, DisconnectOutlined, DeleteOutlined } from '@ant-design/icons';
+import { editCamera, deleteCamera } from '../../redux/cameras/actions';
+import {isEmpty} from '../../redux/helperFunctions';
 import moment from 'moment-timezone';
 import RefreshPreviewImage from '../buttons/RefreshPreviewImage';
-import { editCamera, deleteCamera } from '../../redux/cameras/actions';
+import ExternalIntegration from '../formitems/ExternalIntegration';
 import loading from '../../../assets/img/TempCameraImage.jpeg';
 
 const formItemLayout = {
@@ -27,7 +29,28 @@ class EditCamera extends Component {
       time_zone: this.props.data.time_zone,
       fullRtspUrl: null,
       away_mode: this.props.data.away_mode,
-      enabled: this.props.data.enabled
+      enabled: this.props.data.enabled,
+      external_integration: this.props.data.external_integration,
+      integrationActive: false,
+      integrationList: null,
+      selectedIntegrationTemplate: null,
+      integrationTemplateFields: null,
+      resetFields: false
+    }
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps){
+    if (this.props.data.uuid === nextProps.data.uuid) {
+      if (this.state.flag == true) {
+        if (nextProps.editCameraError !== '' && this.props.editCameraError !== nextProps.editCameraError) {
+          message.error(nextProps.editCameraError, 10);
+          this.setState({flag: false});
+        }
+        if (nextProps.editCameraSuccess === true) {
+          // message.success("Camera Updated");
+          this.setState({flag: false});
+        }
+      }
     }
   }
 
@@ -41,6 +64,7 @@ class EditCamera extends Component {
   handleCancel = () => {
     this.setState({visible: false});
     this.setState({fullRtspUrl: null});
+    this.resetFields();
   };
   handleCreate = (e) => {
     const form = this.form;
@@ -49,10 +73,18 @@ class EditCamera extends Component {
       values.away_mode = this.state.away_mode;
       values.enabled = this.state.enabled;
       delete values.camera_url;
+      if (typeof values.external_integration === 'undefined') {
+        if (isEmpty(this.state.external_integration)) {
+          values.external_integration = false;
+        } else {
+          values.external_integration = true;
+        }
+      }
       this.props.editCamera(this.props.user, this.props.data.uuid, values);
       this.setState({visible: false});
       this.setState({flag: true});
       this.setState({fullRtspUrl: null});
+      this.resetFields();
     });
   };
 
@@ -102,19 +134,22 @@ class EditCamera extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps){
-    if (this.props.data.uuid === nextProps.data.uuid) {
-      if (this.state.flag == true) {
-        if (nextProps.editCameraError !== '' && this.props.editCameraError !== nextProps.editCameraError) {
-          message.error(nextProps.editCameraError, 10);
-          this.setState({flag: false});
-        }
-        if (nextProps.editCameraSuccess === true) {
-          // message.success("Camera Updated");
-          this.setState({flag: false});
-        }
-      }
-    }
+  resetFields = () => {
+    this.form.resetFields();
+    this.setState({
+      integrationActive: false,
+      integrationTemplateFields: null,
+      selectedIntegrationTemplate: null,
+      resetFields: true
+    });
+  };
+
+  handleSetFormFieldsValue = (field) => {
+    this.form.setFieldsValue(field);
+  }
+
+  handleFieldsReset = () => {
+    this.setState({resetFields: false});
   }
 
   saveFormRef = (form) => {
@@ -206,6 +241,11 @@ class EditCamera extends Component {
                   />
                 </Popconfirm>
               </Form.Item>
+            }
+            {this.props.myRole.includes(0) ?
+              <ExternalIntegration setFormFieldsValue={this.handleSetFormFieldsValue} resetFields={this.state.resetFields} fieldsReset={this.handleFieldsReset} externalIntegrationData={this.state.external_integration} disabled={false} />
+            :
+              <ExternalIntegration setFormFieldsValue={this.handleSetFormFieldsValue} resetFields={this.resetFields} fieldsReset={this.handleFieldsReset} externalIntegrationData={this.state.external_integration} disabled={true} />
             }
           </Form>
           {this.props.myRole.includes(0) &&

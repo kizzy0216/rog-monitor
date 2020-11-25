@@ -42,7 +42,6 @@ class AddCameraGroupModal extends Component {
   UNSAFE_componentWillReceiveProps = (nextProps) => {
     if (nextProps.addCameraGroupSuccess && this.props.addCameraGroupSuccess !== nextProps.addCameraGroupSuccess) {
       if (this.props.linkText === "Add CameraGroup") {
-        this.resetFields();
         this.setState({visible: false});
       }
     }
@@ -83,7 +82,7 @@ class AddCameraGroupModal extends Component {
     const form = this.form;
     form.validateFields().then(values => {
       this.props.addNewCameraGroup(this.props.user, values);
-    });
+    }).then(this.resetFields);
   };
 
   saveFormRef = (form) => {

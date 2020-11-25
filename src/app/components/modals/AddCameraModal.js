@@ -1,11 +1,30 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, Form, Input, Select, message } from 'antd';
-
-import { addCamera } from '../../redux/cameras/actions';
+import { Button, Modal, Form, Input, Select, message, Switch } from 'antd';
+import { NodeExpandOutlined, NodeCollapseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { addCamera, readAllIntegrationTemplates, createCameraAdmin } from '../../redux/cameras/actions';
+import ExternalIntegration from '../formitems/ExternalIntegration';
 import moment from 'moment-timezone';
-
-const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess, createSelectItems, updateTimeZone, currentTimeZone}) =>{
+import {isEmpty} from '../../redux/helperFunctions';
+// TODO: if the camera is a ROG verify camera, use this RTSP url: rtsp://172.31.19.237:8554/rog
+const { Option } = Select;
+const AddCameraForm = ({
+  visible,
+  onCancel,
+  onCreate,
+  form,
+  addCameraInProcess,
+  createSelectItems,
+  updateTimeZone,
+  currentTimeZone,
+  selectedIntegrationTemplate,
+  integrationTemplateFields,
+  integrationActive,
+  integrationList,
+  setFormFieldsValue,
+  resetFields,
+  fieldsReset
+}) =>{
   const layout = {
     wrapperCol: {
       span: 16,
@@ -55,6 +74,7 @@ const AddCameraForm = ({visible, onCancel, onCreate, form, addCameraInProcess, c
         <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
           <Input type='password' placeholder='Enter camera password'/>
         </Form.Item>
+        <ExternalIntegration setFormFieldsValue={setFormFieldsValue} resetFields={resetFields} fieldsReset={fieldsReset} disabled={false} />
       </Form>
     </Modal>
   );
@@ -65,11 +85,19 @@ class AddCameraModal extends Component {
     super(props);
     this.state = {
       fullRtspUrl: null,
-      time_zone: props.time_zone
+      time_zone: props.time_zone,
+      integrationActive: false,
+      integrationList: this.props.integrationList,
+      selectedIntegrationTemplate: null,
+      integrationTemplateFields: null,
+      resetFields: false
     };
   }
 
   UNSAFE_componentWillReceiveProps = (nextProps) => {
+    if (nextProps.integrationList !== this.state.integrationList) {
+      this.setState({integrationList: nextProps.integrationList});
+    }
     if (this.props.time_zone !== nextProps.time_zone) {
       this.setState({time_zone: nextProps.time_zone});
       if (typeof this.form !== 'undefined') {
@@ -90,26 +118,46 @@ class AddCameraModal extends Component {
 
   resetFields = () => {
     this.form.resetFields();
-    this.setState({fullRtspUrl: null});
+    this.setState({
+      fullRtspUrl: null,
+      integrationActive: false,
+      integrationTemplateFields: null,
+      selectedIntegrationTemplate: null,
+      resetFields: true
+    });
   };
 
   handleCancel = () => {
-    this.resetFields();
+    this.form.resetFields();
+    this.setState({
+      integrationActive: false,
+      integrationTemplateFields: null,
+      selectedIntegrationTemplate: null,
+      resetFields: true
+    });
     this.props.toggleAddCameraModalVisibility();
   };
 
   handleCreate = () => {
     const form = this.form;
     form.validateFields().then(values => {
-      this.setState({fullRtspUrl: null}, () => {
-        this.props.addCamera(this.props.user,
-                                     this.props.selectedCameraGroup,
-                                     values.name,
-                                     values.rtspUrl.trim(),
-                                     this.state.time_zone,
-                                     values.username,
-                                     values.password);
-      });
+      if (typeof values.external_integration === 'undefined') {
+        values.external_integration = false;
+      }
+      values.rtspUrl = values.rtspUrl.trim();
+      if (typeof this.props.admin !== 'undefined' && this.props.admin) {
+        values.camera_groups_uuid = this.props.selectedCameraGroup.uuid;
+        this.props.createCameraAdmin(this.props.user, values);
+      } else {
+        this.props.addCamera(
+          this.props.user,
+          this.props.selectedCameraGroup,
+          this.state.time_zone,
+          values
+        );
+      }
+      this.setState({resetFields: true});
+      this.props.toggleAddCameraModalVisibility();
     });
   };
 
@@ -147,7 +195,7 @@ class AddCameraModal extends Component {
     for (var i = 0; i < timezoneNames.length; i++) {
       if (!items.includes(timezoneNames[i])) {
         if (timezoneNames[i] !== "US/Pacific-New") {
-          items.push(<Select.Option key={timezoneNames[i]} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
+          items.push(<Select.Option key={this.guid()} value={timezoneNames[i]}>{timezoneNames[i]}</Select.Option>);
         }
       }
     }
@@ -156,6 +204,23 @@ class AddCameraModal extends Component {
 
   handleUpdateTimeZone = (fieldValue) => {
     this.setState({time_zone: fieldValue});
+  }
+
+  handleSetFormFieldsValue = (field) => {
+    this.form.setFieldsValue(field);
+  }
+
+  handleFieldsReset = () => {
+    this.setState({resetFields: false});
+  }
+
+  guid = () => {
+    let s4 = () => {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
   render() {
@@ -172,6 +237,13 @@ class AddCameraModal extends Component {
         createSelectItems={this.handleCreateSelectItems}
         updateTimeZone={this.handleUpdateTimeZone}
         currentTimeZone={this.state.time_zone}
+        integrationActive={this.state.integrationActive}
+        integrationList={this.state.integrationList}
+        selectedIntegrationTemplate={this.state.selectedIntegrationTemplate}
+        integrationTemplateFields={this.state.integrationTemplateFields}
+        setFormFieldsValue={this.handleSetFormFieldsValue}
+        resetFields={this.state.resetFields}
+        fieldsReset={this.handleFieldsReset}
       />
     );
   }
@@ -204,13 +276,16 @@ const mapStateToProps = (state) => {
     addedCameraData: state.cameras.addedCameraData,
     cameraArmed: state.cameras.cameraArmed,
     cameraConnectionUuid: state.cameras.cameraConnectionUuid,
-    cameraConnectionFail: state.cameras.cameraConnectionFail
+    cameraConnectionFail: state.cameras.cameraConnectionFail,
+    integrationList: state.cameras.integrationList
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addCamera: (user, cameraGroup, name, rtspUrl, time_zone, username, password) => dispatch(addCamera(user, cameraGroup, name, rtspUrl, time_zone, username, password))
+    addCamera: (user, cameraGroup, name, rtspUrl, time_zone, username, password) => dispatch(addCamera(user, cameraGroup, name, rtspUrl, time_zone, username, password)),
+    readAllIntegrationTemplates: (user) => dispatch(readAllIntegrationTemplates(user)),
+    createCameraAdmin: (user, values) => dispatch(createCameraAdmin(user, values))
   }
 }
 

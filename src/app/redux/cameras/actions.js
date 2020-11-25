@@ -210,6 +210,20 @@ function fetchSuccessAdmin(camerasAdmin) {
   }
 }
 
+function readAllIntegrationTemplatesSuccess(integrationList) {
+  return {
+    type: types.READ_ALL_INTEGRATION_TEMPLATES_SUCCESS,
+    integrationList
+  }
+}
+
+function readAllIntegrationTemplatesError(readAllIntegrationTemplatesError) {
+  return {
+    type: types.READ_ALL_INTEGRATION_TEMPLATES_ERROR,
+    readAllIntegrationTemplatesError
+  }
+}
+
 export function fetchCameraGroupCameras(user, cameraGroup) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras`;
@@ -306,27 +320,30 @@ export function updatePreviewImage(user, cameraGroup, cameraUuid) {
   }
 }
 
-export function addCamera(user, cameraGroup, name, rtspUrl, time_zone, username, password) {
+export function addCamera(user, cameraGroup, time_zone, values) {
   return (dispatch) => {
     dispatch(addCameraError(''));
     dispatch(addCameraInProcess(true));
 
-    let index = rtspUrl.indexOf(":");
-    let protocol = rtspUrl.substr(0, index + 3).toLowerCase();
-    let urlAddress = rtspUrl.substr(index + 3);
+    let index = values.rtspUrl.indexOf(":");
+    let protocol = values.rtspUrl.substr(0, index + 3).toLowerCase();
+    let urlAddress = values.rtspUrl.substr(index + 3);
     let lowerCaseUrl = (protocol + urlAddress);
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras`;
     let data = {
       camera_groups_name: cameraGroup.name,
       camera_url: lowerCaseUrl,
-      camera_name: name,
+      camera_name: values.name,
+      external_integration: values.external_integration,
       time_zone
     };
+    delete values.name;
+    data = Object.assign({}, data, values);
 
-    if (username !== null && typeof username !== 'undefined' && password !== null && typeof password !== 'undefined') {
-      data.username = username;
-      data.password = password;
+    if (values.username !== null && typeof values.username !== 'undefined' && values.password !== null && typeof values.password !== 'undefined') {
+      data.username = values.username;
+      data.password = values.password;
     }
 
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
@@ -337,9 +354,9 @@ export function addCamera(user, cameraGroup, name, rtspUrl, time_zone, username,
         dispatch(fetchCameraGroupCameras(user, cameraGroup));
         dispatch(fetchUserCameraLicenses(user));
         dispatch(addCameraSuccess(true));
-        // dispatch(checkCameraConnection(user, response.data.uuid));
       })
       .catch((error) => {
+        console.log(error);
         let errMessage = 'Error creating camera. Please try again later.';
         if (error.response != undefined) {
           errMessage = error.response;
@@ -546,9 +563,26 @@ export function createCameraAdmin(user, values) {
       if (!isEmpty(response.data)) {
         let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${values.camera_groups_uuid}/cameras`;
         let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-        values.camera_groups_name = response.data.name;
-        let data = JSON.parse(JSON.stringify(values));
-        delete data.camera_groups_uuid;
+        
+        let index = values.rtspUrl.indexOf(":");
+        let protocol = values.rtspUrl.substr(0, index + 3).toLowerCase();
+        let urlAddress = values.rtspUrl.substr(index + 3);
+        let lowerCaseUrl = (protocol + urlAddress);
+
+        let data = {
+          camera_groups_name: response.data.name,
+          camera_url: lowerCaseUrl,
+          camera_name: values.name,
+          external_integration: values.external_integration,
+          time_zone
+        };
+        delete values.name;
+        data = Object.assign({}, data, values);
+
+        if (values.username !== null && typeof values.username !== 'undefined' && values.password !== null && typeof values.password !== 'undefined') {
+          data.username = values.username;
+          data.password = values.password;
+        }
 
         axios.post(url, data, config)
         .then((response) => {
@@ -785,6 +819,38 @@ export function updateUrlsAdmin(user, values) {
         }
       }
       dispatch(editUrlError(errMessage));
+    })
+  }
+}
+
+export function readAllIntegrationTemplates(users) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${users.uuid}/integrations`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+    .then((response) => {
+      dispatch(readAllIntegrationTemplatesSuccess(response.data));
+    })
+    .catch((error) => {
+      let errMessage = 'Error getting templates. Please try again later.';
+      if (error.response != undefined) {
+        errMessage = error.response;
+        if (typeof error === 'object') {
+          if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data')) {
+            if (typeof error.response.data === 'object') {
+              if ('Error' in error.response.data) {
+                errMessage = error.response.data['Error'];
+              }
+            } else {
+              errMessage = error.response.data;
+            }
+          }
+        }
+      }
+      dispatch(readAllIntegrationTemplatesError(errMessage));
+    })
+    .finally(() => {
+      dispatch(readAllIntegrationTemplatesError(''));
     })
   }
 }

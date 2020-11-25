@@ -175,6 +175,18 @@ const cameras = (state = initialState, action) => {
           camerasAdmin: action.camerasAdmin
         }
 
+      case types.READ_ALL_INTEGRATION_TEMPLATES_SUCCESS:
+        return {
+          ...state,
+          integrationList: action.integrationList
+        }
+
+      case types.READ_ALL_INTEGRATION_TEMPLATES_ERROR:
+        return {
+          ...state,
+          readAllIntegrationTemplatesError: action.readAllIntegrationTemplatesError
+        }
+
       default:
         return state;
     }

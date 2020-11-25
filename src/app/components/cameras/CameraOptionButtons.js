@@ -54,7 +54,8 @@ class CameraOptionButtons extends Component {
             time_zone={timeZone}
             selectedCameraGroup={this.props.selectedCameraGroup}
             visible={this.state.addCameraModalVisible}
-            toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)} />
+            toggleAddCameraModalVisibility={this.toggleAddCameraModalVisibility.bind(this)}
+            admin={false} />
         </Col>
         <Col xs={{span: 4}} style={styles.optionWrapper}>
           <Tooltip title='Share CameraGroup' placement="topRight">

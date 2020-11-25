@@ -5,6 +5,7 @@ import { LoadingOutlined, LockOutlined } from '@ant-design/icons';
 const { Header, Content } = Layout;
 
 import logoFull from '../../assets/img/logo-full.png';
+import googleChromeLogo from '../../assets/img/Google_Chrome_logo.png';
 
 import { login } from '../redux/auth/actions';
 import RegisterBtn from '../components/navigation/RegisterBtn';
@@ -65,16 +66,20 @@ class Login extends Component {
                     <h2>As easy as drawing a box</h2>
                   </Col>
                 </Row>
-                <Row type='flex' justify='center' align='middle'>
-                  <Col sm={{span: 24}}>
-                    {/* insert image here */}
-                  </Col>
-                </Row>
                 <Row type='flex' justify='center' align='bottom'>
                   <Col sm={{span: 24}} style={styles.downloadBtnContainer}>
                     <div style={styles.howItWorksLink}>
                       <a href='https://www.gorog.co' target="_blank">Learn how it works.</a>
                     </div>
+                  </Col>
+                </Row>
+                <Row type='flex' justify='center' align='middle' style={{marginTop: 250}}>
+                  <Col sm={{span: 24}} style={{textAlign: 'center'}}>
+                    <img style={{maxWidth: 300}} src={googleChromeLogo} />
+                    <p style={{marginTop: 10}}>
+                      Designed For Use In Chrome Browser<br/>
+                      [Issues May Arise If Other Internet Browsers Used]
+                    </p>
                   </Col>
                 </Row>
               </Col>

@@ -325,19 +325,29 @@ export function addCamera(user, cameraGroup, time_zone, values) {
     dispatch(addCameraError(''));
     dispatch(addCameraInProcess(true));
 
-    let index = values.rtspUrl.indexOf(":");
-    let protocol = values.rtspUrl.substr(0, index + 3).toLowerCase();
-    let urlAddress = values.rtspUrl.substr(index + 3);
-    let lowerCaseUrl = (protocol + urlAddress);
-
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras`;
-    let data = {
-      camera_groups_name: cameraGroup.name,
-      camera_url: lowerCaseUrl,
-      camera_name: values.name,
-      external_integration: values.external_integration,
-      time_zone
-    };
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    let data = {};
+    if (values.rog_verify) {
+      data = {
+        camera_groups_name: cameraGroup.name,
+        camera_name: values.name,
+        external_integration: values.external_integration,
+        time_zone
+      };
+    } else {
+      let index = values.rtspUrl.indexOf(":");
+      let protocol = values.rtspUrl.substr(0, index + 3).toLowerCase();
+      let urlAddress = values.rtspUrl.substr(index + 3);
+      let lowerCaseUrl = (protocol + urlAddress);
+      data = {
+        camera_groups_name: cameraGroup.name,
+        camera_url: lowerCaseUrl,
+        camera_name: values.name,
+        external_integration: values.external_integration,
+        time_zone
+      };
+    }
     delete values.name;
     data = Object.assign({}, data, values);
 
@@ -346,7 +356,6 @@ export function addCamera(user, cameraGroup, time_zone, values) {
       data.password = values.password;
     }
 
-    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
     axios.post(url, data, config)
       .then((response) => {
         dispatch(fetchSuccess(user));
@@ -557,25 +566,34 @@ export function createCameraAdmin(user, values) {
   return (dispatch) => {
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${values.camera_groups_uuid}`;
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-
+    let data={};
     axios.get(url, config)
     .then((response) => {
       if (!isEmpty(response.data)) {
         let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${values.camera_groups_uuid}/cameras`;
         let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
-        
-        let index = values.rtspUrl.indexOf(":");
-        let protocol = values.rtspUrl.substr(0, index + 3).toLowerCase();
-        let urlAddress = values.rtspUrl.substr(index + 3);
-        let lowerCaseUrl = (protocol + urlAddress);
 
-        let data = {
-          camera_groups_name: response.data.name,
-          camera_url: lowerCaseUrl,
-          camera_name: values.name,
-          external_integration: values.external_integration,
-          time_zone
-        };
+        if (values.rog_verify) {
+          data = {
+            camera_groups_name: response.data.name,
+            camera_name: values.name,
+            external_integration: values.external_integration,
+            time_zone
+          };
+        } else {
+          let index = values.rtspUrl.indexOf(":");
+          let protocol = values.rtspUrl.substr(0, index + 3).toLowerCase();
+          let urlAddress = values.rtspUrl.substr(index + 3);
+          let lowerCaseUrl = (protocol + urlAddress);
+          data = {
+            camera_groups_name: response.data.name,
+            camera_url: lowerCaseUrl,
+            camera_name: values.name,
+            external_integration: values.external_integration,
+            time_zone
+          };
+        }
+
         delete values.name;
         data = Object.assign({}, data, values);
 

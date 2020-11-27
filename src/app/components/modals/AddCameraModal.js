@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, Form, Input, Select, message, Switch } from 'antd';
-import { NodeExpandOutlined, NodeCollapseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons';
 import { addCamera, readAllIntegrationTemplates, createCameraAdmin } from '../../redux/cameras/actions';
 import ExternalIntegration from '../formitems/ExternalIntegration';
 import moment from 'moment-timezone';
@@ -23,7 +23,9 @@ const AddCameraForm = ({
   integrationList,
   setFormFieldsValue,
   resetFields,
-  fieldsReset
+  fieldsReset,
+  rogVerify,
+  toggleRogVerify
 }) =>{
   const layout = {
     wrapperCol: {
@@ -40,20 +42,14 @@ const AddCameraForm = ({
       cancelText='Cancel'
       confirmLoading={addCameraInProcess}
     >
-      <Form ref={form} initialValues={{time_zone: currentTimeZone}} {...layout}>
+      <Form ref={form} initialValues={{time_zone: currentTimeZone, rog_verify: rogVerify}} {...layout}>
+        <Form.Item name="rog_verify">
+          <span style={{verticalAlign: 'middle'}}>ROG Protect </span>
+          <Switch id="rogVerify" onChange={toggleRogVerify} checkedChildren={<RightCircleOutlined />} unCheckedChildren={<LeftCircleOutlined />} checked={rogVerify} />
+          <span style={{verticalAlign: 'middle'}}> ROG Verify</span>
+        </Form.Item>
         <Form.Item name="name" rules={[{required: true, message: 'Please input the camera name'}]} hasFeedback>
           <Input placeholder='Enter camera name'/>
-        </Form.Item>
-        <Form.Item
-          name="rtspUrl"
-          rules={[{
-            required: true,
-            pattern: new RegExp("^(rtsp:\/\/)+(?!.+@+.+:)"),
-            message: "Please enter an RTSP URL without embedded credentials."
-          }]}
-          hasFeedback
-        >
-          <Input placeholder='Enter Camera URL'/>
         </Form.Item>
         <Form.Item name="time_zone" rules={[{required: true, message: 'Please enter your time zone'}]} hasFeedback>
           <Select
@@ -66,14 +62,37 @@ const AddCameraForm = ({
             {createSelectItems()}
           </Select>
         </Form.Item>
-        <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>Username:</p>
-        <Form.Item name="username" rules={[{required: false, message: 'Please enter the camera username'}]} hasFeedback>
-          <Input placeholder='Enter camera username'/>
-        </Form.Item>
-        <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>Password:</p>
-        <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
-          <Input type='password' placeholder='Enter camera password'/>
-        </Form.Item>
+        {rogVerify ?
+          <div>
+            <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>S3 Keywords:</p>
+            <Form.Item name="s3_keywords" rules={[{required: true, message: 'Please input the camera keywords'}]} hasFeedback>
+              <Input placeholder='keyword1,keyword2'/>
+            </Form.Item>
+          </div>
+        :
+          <div>
+            <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>Camera Rtsp Url:</p>
+            <Form.Item
+              name="rtspUrl"
+              rules={[{
+                required: true,
+                pattern: new RegExp("^(rtsp:\/\/)+(?!.+@+.+:)"),
+                message: "Please enter an RTSP URL without embedded credentials."
+              }]}
+              hasFeedback
+            >
+              <Input placeholder='Enter Camera URL'/>
+            </Form.Item>
+            <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>Username:</p>
+            <Form.Item name="username" rules={[{required: false, message: 'Please enter the camera username'}]} hasFeedback>
+              <Input placeholder='Enter camera username'/>
+            </Form.Item>
+            <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>Password:</p>
+            <Form.Item name="password" rules={[{required: false, message: 'Please enter the camera password'}]} hasFeedback>
+              <Input type='password' placeholder='Enter camera password'/>
+            </Form.Item>
+          </div>
+        }
         <ExternalIntegration setFormFieldsValue={setFormFieldsValue} resetFields={resetFields} fieldsReset={fieldsReset} disabled={false} />
       </Form>
     </Modal>
@@ -90,7 +109,8 @@ class AddCameraModal extends Component {
       integrationList: this.props.integrationList,
       selectedIntegrationTemplate: null,
       integrationTemplateFields: null,
-      resetFields: false
+      resetFields: false,
+      rog_verify: false
     };
   }
 
@@ -144,7 +164,9 @@ class AddCameraModal extends Component {
       if (typeof values.external_integration === 'undefined') {
         values.external_integration = false;
       }
-      values.rtspUrl = values.rtspUrl.trim();
+      if (values.hasOwnProperty(values, 'rtspUrl')) {
+        values.rtspUrl = values.rtspUrl.trim();
+      }
       if (typeof this.props.admin !== 'undefined' && this.props.admin) {
         values.camera_groups_uuid = this.props.selectedCameraGroup.uuid;
         this.props.createCameraAdmin(this.props.user, values);
@@ -159,10 +181,6 @@ class AddCameraModal extends Component {
       this.setState({resetFields: true});
       this.props.toggleAddCameraModalVisibility();
     });
-  };
-
-  saveFormRef = (form) => {
-    this.form = form;
   };
 
   getFullRtspUrl = (rtspUrl, username, password) => {
@@ -202,6 +220,20 @@ class AddCameraModal extends Component {
     return items;
   }
 
+  guid = () => {
+    let s4 = () => {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+
+  handleToggleRogVerify = (fieldValue) => {
+    this.setState({rog_verify: fieldValue});
+    this.form.setFieldsValue({rog_verify: fieldValue});
+  }
+
   handleUpdateTimeZone = (fieldValue) => {
     this.setState({time_zone: fieldValue});
   }
@@ -214,14 +246,9 @@ class AddCameraModal extends Component {
     this.setState({resetFields: false});
   }
 
-  guid = () => {
-    let s4 = () => {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  }
+  saveFormRef = (form) => {
+    this.form = form;
+  };
 
   render() {
     return (
@@ -244,6 +271,8 @@ class AddCameraModal extends Component {
         setFormFieldsValue={this.handleSetFormFieldsValue}
         resetFields={this.state.resetFields}
         fieldsReset={this.handleFieldsReset}
+        rogVerify={this.state.rog_verify}
+        toggleRogVerify={this.handleToggleRogVerify}
       />
     );
   }

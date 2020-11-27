@@ -64,7 +64,7 @@ const AddCameraForm = ({
         </Form.Item>
         {rogVerify ?
           <div>
-            <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>S3 Keywords:</p>
+            <p style={{margin: '0 auto', marginBottom: 14, marginTop: -10}}>Camera File Keywords:</p>
             <Form.Item name="s3_keywords" rules={[{required: true, message: 'Please input the camera keywords'}]} hasFeedback>
               <Input placeholder='keyword1,keyword2'/>
             </Form.Item>

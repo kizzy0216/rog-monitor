@@ -231,3 +231,13 @@ body{
   margin-right: 8px;
   vertical-align: top;
 }
+
+
+/* ADD CAMERA MODAL STYLING */
+#rogVerify.ant-switch {
+  background-color: orange;
+  opacity: 1;
+}
+#rogVerify.ant-switch.ant-switch-checked {
+  background-color: #1890ff;
+}

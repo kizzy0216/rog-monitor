@@ -178,8 +178,6 @@ class AddCameraModal extends Component {
           values
         );
       }
-      this.setState({resetFields: true});
-      this.props.toggleAddCameraModalVisibility();
     });
   };
 

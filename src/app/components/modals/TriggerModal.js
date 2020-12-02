@@ -447,6 +447,11 @@ class AddTriggerModal extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.data.s3_keywords.length === 0) {
+      this.setState({rogProtect: true});
+    } else {
+      this.setState({rogProtect: false});
+    }
     if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
       if (nextProps.polygonData !== undefined && !isEmpty(nextProps.polygonData) && this.props.polygonData !== nextProps.polygonData) {
         this.canvasKey++;

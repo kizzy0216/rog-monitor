@@ -12,7 +12,58 @@ import loading from '../../../assets/img/TempCameraImage.jpeg';
 import noImage from '../../../assets/img/no-image.jpg';
 
 const AddTriggerForm = ({
-  onCancel, triggers, sliderValue, loiteringSeconds, deleteStatus, deleteButton, triggerInProcess, triggerExtras, deleteTrigger, visible, saveCancel, form, cameraName, triggerPointDirection, handleSaveCancel, triggerImg, handleVisibility, visibility, showTrigger, canvasMode, onImgLoad, imageDimensions, convertToMilitaryFormat, currentTriggerDetails, direction, fetchTriggerInProcess, newLoiteringTrigger, updateDataStart, updateDataStop, updateDataDaysOfWeek, changeTimeWindow, resetData, checkForWindow, time_zone, saveData, timeWindows, cameraGroupOwner, selectedTriggerShared, addNewTimeWindow, getTriggerSpecificTimeWindows, setTriggerTimeWindows, deleteTriggerTimeWindow, cameraWideDisabled, cameraWide, toggleCameraWide, canvasKey, sharedTriggerSilenceWindowDisabled, checkShared, updateTriggerSilenceWindowPermissionsChange, selectedTriggerSharedDisabled, imgLoadFail
+  onCancel,
+  triggers,
+  sliderValue,
+  loiteringSeconds,
+  deleteStatus,
+  deleteButton,
+  triggerInProcess,
+  triggerExtras,
+  deleteTrigger,
+  visible,
+  saveCancel,
+  form,
+  cameraName,
+  triggerPointDirection,
+  handleSaveCancel,
+  triggerImg,
+  handleVisibility,
+  visibility,
+  showTrigger,
+  canvasMode,
+  onImgLoad,
+  imageDimensions,
+  convertToMilitaryFormat,
+  currentTriggerDetails,
+  direction,
+  fetchTriggerInProcess,
+  newLoiteringTrigger,
+  updateDataStart,
+  updateDataStop,
+  updateDataDaysOfWeek,
+  changeTimeWindow,
+  resetData,
+  checkForWindow,
+  time_zone,
+  saveData,
+  timeWindows,
+  cameraGroupOwner,
+  selectedTriggerShared,
+  addNewTimeWindow,
+  getTriggerSpecificTimeWindows,
+  setTriggerTimeWindows,
+  deleteTriggerTimeWindow,
+  cameraWideDisabled,
+  cameraWide,
+  toggleCameraWide,
+  canvasKey,
+  sharedTriggerSilenceWindowDisabled,
+  checkShared,
+  updateTriggerSilenceWindowPermissionsChange,
+  selectedTriggerSharedDisabled,
+  imgLoadFail,
+  rogProtect
 }) => {
   const formItemLayout = {
     labelCol: {
@@ -209,10 +260,14 @@ const AddTriggerForm = ({
                     <div style={styles.triggerType}>
                       <Button type="secondary" onClick={() => showTrigger('RA')}>Restricted Area</Button>
                       <br/>
-                      <Button type="secondary" onClick={() => showTrigger('VW')}>Virtual Wall</Button>
-                      <br/>
-                      <Button type="secondary" onClick={() => showTrigger('LD')}>Loitering</Button>
-                      <br/>
+                      {rogProtect &&
+                        <div>
+                          <Button type="secondary" onClick={() => showTrigger('VW')}>Virtual Wall</Button>
+                          <br/>
+                          <Button type="secondary" onClick={() => showTrigger('LD')}>Loitering</Button>
+                          <br/>
+                        </div>
+                      }
                     </div>
                   }
                   trigger="click"
@@ -381,7 +436,8 @@ class AddTriggerModal extends Component {
       image: null,
       sharedTriggerSilenceWindowDisabled: false,
       currentTriggerShared: null,
-      currentTriggerSharedDisabled: false
+      currentTriggerSharedDisabled: false,
+      rogProtect: props.data.s3_keywords.length === 0 ? true : false
     }
 
     this.onImgLoad = this.onImgLoad.bind(this);
@@ -982,6 +1038,7 @@ class AddTriggerModal extends Component {
           checkShared={this.handleCheckShared}
           updateTriggerSilenceWindowPermissionsChange={this.handleUpdateTriggerSilenceWindowPermissionsChange}
           imgLoadFail={this.handleImgLoadFail}
+          rogProtect={this.state.rogProtect}
         />
       </div>
     );

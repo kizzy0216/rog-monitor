@@ -417,10 +417,9 @@ const AddTriggerForm = ({
 class AddTriggerModal extends Component {
   constructor(props) {
     super(props);
+    let rogProtect = true;
     if (typeof props.data.s3_keywords !== 'undefined') {
       let rogProtect = props.data.s3_keywords.length === 0 ? true : false
-    } else {
-      let rogProtect = true
     }
     this.state = {
       visible: false,

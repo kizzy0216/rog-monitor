@@ -418,7 +418,7 @@ class AddTriggerModal extends Component {
   constructor(props) {
     super(props);
     let rogProtect = true;
-    if (typeof props.data.s3_keywords !== 'undefined' && props.data.hasOwnProperty('s3_keywords')) {
+    if (typeof props.data.s3_keywords !== 'undefined' && props.data.s3_keywords.hasOwnProperty('length')) {
       let rogProtect = props.data.s3_keywords.length === 0 ? true : false
     }
     this.state = {
@@ -451,7 +451,7 @@ class AddTriggerModal extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (typeof nextProps.data.s3_keywords !== 'undefined' && nextProps.data.hasOwnProperty('s3_keywords')) {
+    if (typeof nextProps.data.s3_keywords== 'undefined' && nextProps.data.s3_keywords.hasOwnProperty('length')) {
       if (nextProps.data.s3_keywords.length === 0) {
         this.setState({rogProtect: true});
       } else {

@@ -417,6 +417,11 @@ const AddTriggerForm = ({
 class AddTriggerModal extends Component {
   constructor(props) {
     super(props);
+    if (typeof props.data.s3_keywords !== 'undefined') {
+      let rogProtect = props.data.s3_keywords.length === 0 ? true : false
+    } else {
+      let rogProtect = true
+    }
     this.state = {
       visible: false,
       error: false,
@@ -437,7 +442,7 @@ class AddTriggerModal extends Component {
       sharedTriggerSilenceWindowDisabled: false,
       currentTriggerShared: null,
       currentTriggerSharedDisabled: false,
-      rogProtect: props.data.s3_keywords.length === 0 ? true : false
+      rogProtect: rogProtect
     }
 
     this.onImgLoad = this.onImgLoad.bind(this);
@@ -447,10 +452,12 @@ class AddTriggerModal extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.data.s3_keywords.length === 0) {
-      this.setState({rogProtect: true});
-    } else {
-      this.setState({rogProtect: false});
+    if (typeof nextProps.data.s3_keywords !== 'undefined') {
+      if (nextProps.data.s3_keywords.length === 0) {
+        this.setState({rogProtect: true});
+      } else {
+        this.setState({rogProtect: false});
+      }
     }
     if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
       if (nextProps.polygonData !== undefined && !isEmpty(nextProps.polygonData) && this.props.polygonData !== nextProps.polygonData) {

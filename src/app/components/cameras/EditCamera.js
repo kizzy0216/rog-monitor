@@ -21,6 +21,10 @@ const formItemLayout = {
 class EditCamera extends Component {
   constructor(props) {
     super(props);
+    let rogVerify = false;
+    if (typeof this.props.data.s3_keywords !== 'undefined' && this.props.data.s3_keywords.hasOwnProperty('length')) {
+      rogVerify = this.props.data.s3_keywords.length === 0 ? true : false;
+    }
     this.state = {
       visible: false,
       popconfirmvisible: false,
@@ -35,7 +39,8 @@ class EditCamera extends Component {
       integrationList: null,
       selectedIntegrationTemplate: null,
       integrationTemplateFields: null,
-      resetFields: false
+      resetFields: false,
+      rogVerify: rogVerify
     }
   }
 
@@ -198,17 +203,17 @@ class EditCamera extends Component {
             <Form.Item label="Camera UUID" name="camera_uuid" {...formItemLayout}>
               <Input style={styles.input} type='text' disabled />
             </Form.Item>
-            <Form.Item label='URL' name="camera_url" {...formItemLayout} hidden={this.props.data.s3_keywords.length > 0}>
+            <Form.Item label='URL' name="camera_url" {...formItemLayout} hidden={!this.state.rogVerify}>
               <Input style={styles.input} type='text' disabled />
             </Form.Item>
-            <Form.Item label='Username' name="username" {...formItemLayout} hidden={this.props.data.s3_keywords.length > 0}>
+            <Form.Item label='Username' name="username" {...formItemLayout} hidden={!this.state.rogVerify}>
               <Input style={styles.input} type='text' placeholder="Camera Username" disabled />
             </Form.Item>
-            <Form.Item label='Password' name="password" {...formItemLayout} hidden={this.props.data.s3_keywords.length > 0}>
+            <Form.Item label='Password' name="password" {...formItemLayout} hidden={!this.state.rogVerify}>
               <Input style={styles.input} type='password' placeholder="********" disabled />
             </Form.Item>
-            <Form.Item label='S3 Keywords' name="3_keywords" {...formItemLayout} hidden={this.props.data.s3_keywords.length === 0}>
-              <Input style={styles.input} type='text' placeholder="{xxx,xxxx}" disabled />
+            <Form.Item label='S3 Keywords' name="3_keywords" {...formItemLayout} hidden={this.state.rogVerify}>
+              <Input style={styles.input} type='text' placeholder="{xxx,xxxx}" disabled={!isEmpty(this.props.data.s3_keywords)} />
             </Form.Item>
             <Form.Item label="Camera Time Zone" name="time_zone" {...formItemLayout}>
               <Select

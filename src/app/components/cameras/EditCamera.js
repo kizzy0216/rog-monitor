@@ -22,7 +22,7 @@ class EditCamera extends Component {
   constructor(props) {
     super(props);
     let rogVerify = false;
-    if (typeof this.props.data.s3_keywords !== 'undefined' && this.props.data.s3_keywords.hasOwnProperty('length')) {
+    if (typeof props.data.s3_keywords !== 'undefined' && props.data.s3_keywords !== null && props.data.s3_keywords.hasOwnProperty('length')) {
       rogVerify = this.props.data.s3_keywords.length === 0 ? true : false;
     }
     this.state = {

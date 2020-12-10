@@ -11,7 +11,9 @@ class AlertTagOptions extends Component {
   constructor(props){
     super(props);
 
-    this.state={}
+    this.state={
+      tag_options: typeof props.tag_options !== 'undefined' ? props.tag_options : []
+    }
   }
 
   saveInputRef = input => {
@@ -23,10 +25,10 @@ class AlertTagOptions extends Component {
   };
 
   render() {
-    const { tag_options, inputVisible, inputValue, editInputIndex, editInputValue, editInputChange, editInputConfirm, editTag, closeTag, inputChange, inputConfirm, showInput } = this.props;
+    const { inputVisible, inputValue, editInputIndex, editInputValue, editInputChange, editInputConfirm, editTag, closeTag, inputChange, inputConfirm, showInput } = this.props;
     return (
       <div>
-        {tag_options.map((tag, index) => {
+        {this.state.tag_options.map((tag, index) => {
           if (editInputIndex === index) {
             return (
               <Input

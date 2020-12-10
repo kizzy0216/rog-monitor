@@ -81,9 +81,9 @@ class EditCameraGroupModal extends Component {
     this.state = {
       visible: false,
       error: false,
-      away_mode: this.props.selectedCameraGroup.away_mode,
-      armed: this.props.selectedCameraGroup.armed,
-      tag_options: this.props.selectedCameraGroup.tag_options,
+      away_mode: props.selectedCameraGroup.away_mode,
+      armed: props.selectedCameraGroup.armed,
+      tag_options: props.selectedCameraGroup.tag_options,
       inputVisible: false,
       inputValue: '',
       editInputIndex: -1,

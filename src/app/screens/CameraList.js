@@ -74,7 +74,7 @@ class CameraList extends Component {
   }
 
   render() {
-    if (this.props.cameraGroups.length > 0 && !isEmpty(this.props.selectedCameraGroup.name)) {
+    if (this.props.cameraGroups.length > 0 && typeof this.props.selectedCameraGroup.tag_options !== 'undefined' && !isEmpty(this.props.selectedCameraGroup.name)) {
       return (
         <div>
           <Row type='flex' style={styles.cameraOptions}>

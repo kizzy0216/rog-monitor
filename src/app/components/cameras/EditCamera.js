@@ -40,7 +40,8 @@ class EditCamera extends Component {
       selectedIntegrationTemplate: null,
       integrationTemplateFields: null,
       resetFields: false,
-      rogVerify: rogVerify
+      rogVerify: rogVerify,
+      rekognition_threshold: this.props.data.rekognition_threshold
     }
   }
 
@@ -71,6 +72,9 @@ class EditCamera extends Component {
     this.setState({fullRtspUrl: null});
     this.resetFields();
   };
+  checkNumberIfFloat(value) {
+     return Number(value) === value && value % 1 !== 0;
+  }
   handleCreate = (e) => {
     const form = this.form;
     form.validateFields().then(values => {
@@ -191,7 +195,8 @@ class EditCamera extends Component {
               username: this.props.data.username,
               away_mode: away_mode,
               time_zone: this.props.data.time_zone,
-              s3_keywords: this.props.data.s3_keywords
+              s3_keywords: this.props.data.s3_keywords,
+              rekognition_threshold: this.state.rekognition_threshold
             }}
           >
             <Form.Item label='Camera Name' name="name" {...formItemLayout}>
@@ -206,6 +211,9 @@ class EditCamera extends Component {
             <Form.Item label='URL' name="camera_url" {...formItemLayout} hidden={!this.state.rogVerify}>
               <Input style={styles.input} type='text' disabled />
             </Form.Item>
+            <Form.Item label="Rekognition Threshold" name="rekognition_threshold"  {...formItemLayout}>
+              <Input style={styles.input} type='number' placeholder="0" />
+            </Form.Item>
             <Form.Item label='Username' name="username" {...formItemLayout} hidden={!this.state.rogVerify}>
               <Input style={styles.input} type='text' placeholder="Camera Username" disabled />
             </Form.Item>
@@ -213,7 +221,7 @@ class EditCamera extends Component {
               <Input style={styles.input} type='password' placeholder="********" disabled />
             </Form.Item>
             <Form.Item label='S3 Keywords' name="s3_keywords" {...formItemLayout} hidden={this.state.rogVerify}>
-              <Input style={styles.input} type='text' placeholder="{xxx,xxxx}" disabled={!isEmpty(this.props.data.s3_keywords)} />
+              <Input style={styles.input} type='text' placeholder="xxx,xxxx" disabled={!isEmpty(this.props.data.s3_keywords)} />
             </Form.Item>
             <Form.Item label="Camera Time Zone" name="time_zone" {...formItemLayout}>
               <Select

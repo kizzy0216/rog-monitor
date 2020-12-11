@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Modal, Form, Input, Button, message, TimePicker, Select, Switch, Popconfirm, Tooltip } from 'antd';
+import { Row, Modal, Form, Input, InputNumber, Button, message, TimePicker, Select, Switch, Popconfirm, Tooltip } from 'antd';
 import { SettingOutlined, SafetyOutlined, HomeOutlined, LinkOutlined, DisconnectOutlined, DeleteOutlined } from '@ant-design/icons';
 import { editCamera, deleteCamera } from '../../redux/cameras/actions';
 import {isEmpty} from '../../redux/helperFunctions';
@@ -212,7 +212,7 @@ class EditCamera extends Component {
               <Input style={styles.input} type='text' disabled />
             </Form.Item>
             <Form.Item label="Rekognition Threshold" name="rekognition_threshold"  {...formItemLayout}>
-              <Input style={styles.input} type='number' placeholder="0" />
+              <InputNumber style={styles.input} type='number' min={0} max={100} placeholder="0" />
             </Form.Item>
             <Form.Item label='Username' name="username" {...formItemLayout} hidden={!this.state.rogVerify}>
               <Input style={styles.input} type='text' placeholder="Camera Username" disabled />

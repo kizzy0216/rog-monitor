@@ -211,9 +211,6 @@ class EditCamera extends Component {
             <Form.Item label='URL' name="camera_url" {...formItemLayout} hidden={!this.state.rogVerify}>
               <Input style={styles.input} type='text' disabled />
             </Form.Item>
-            <Form.Item label="Rekognition Threshold" name="rekognition_threshold"  {...formItemLayout}>
-              <InputNumber style={styles.input} type='number' min={0} max={100} placeholder="0" />
-            </Form.Item>
             <Form.Item label='Username' name="username" {...formItemLayout} hidden={!this.state.rogVerify}>
               <Input style={styles.input} type='text' placeholder="Camera Username" disabled />
             </Form.Item>
@@ -234,6 +231,9 @@ class EditCamera extends Component {
               >
                 {this.handleCreateSelectItems()}
               </Select>
+            </Form.Item>
+            <Form.Item label="Rekognition Threshold" name="rekognition_threshold"  {...formItemLayout}>
+              <InputNumber style={styles.input} type='number' min={0} max={100} placeholder="0" />
             </Form.Item>
             {/*<Form.Item label="Away Mode" name="away_mode" {...formItemLayout}>
               <Switch

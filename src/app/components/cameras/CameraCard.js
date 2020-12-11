@@ -21,7 +21,8 @@ class CameraCard extends Component {
 
     this.state = {
       flag: false,
-      live_view_url: props.live_view_url
+      live_view_url: props.live_view_url,
+      thumbnail_url: props.thumbnail_url
     }
   }
 
@@ -33,7 +34,10 @@ class CameraCard extends Component {
 static getDerivedStateFromProps(nextProps, prevState) {
   for (var i = 0; i < nextProps.cameraGroup.cameras.length; i++) {
     if (nextProps.cameraGroup.cameras[i].uuid == nextProps.uuid) {
-      return {live_view_url: nextProps.cameraGroup.cameras[i].live_view_url}
+      return {
+        live_view_url: nextProps.cameraGroup.cameras[i].live_view_url,
+        thumbnail_url: nextProps.cameraGroup.cameras[i].thumbnail_url
+      }
     }
   }
 }
@@ -67,14 +71,13 @@ static getDerivedStateFromProps(nextProps, prevState) {
           {!myRole.includes(0) ?
               (<Col span={12} style={styles.cameraConnectionSwitch}>
                 <div style={{height: 24}}>
-                {this.props.enabled && this.props.cameraConnectionVerified ?
-                  this.props.armed &&
+                {this.props.enabled ?
+                  this.props.armed ?
                     <span style={{color: 'rgba(0, 0, 0)', verticalAlign: 'middle'}}> (Armed)</span>
                   :
-                    <span style={{color: 'rgba(0, 0, 0, 0.25)', verticalAlign: 'middle'}}> (Disconnected)</span>
-                }
-                {this.props.enabled && this.props.cameraConnectionVerified && !this.props.armed &&
-                  <span style={{color: 'rgba(0, 0, 0)', verticalAlign: 'middle'}}> (Disarmed)</span>
+                    <span style={{color: 'rgba(0, 0, 0)', verticalAlign: 'middle'}}> (Disarmed)</span>
+                :
+                  <span style={{color: 'rgba(0, 0, 0, 0.25)', verticalAlign: 'middle'}}> (Disconnected)</span>
                 }
                 </div>
               </Col>)
@@ -94,7 +97,7 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 <EditCamera data={this.props} myRole={myRole} />
               </Col>
             }
-            {this.props.enabled && this.props.cameraConnectionVerified&& this.props.armed &&
+            {this.props.enabled && this.state.thumbnail_url &&
               <Col span={2} style={styles.triggermodalButton}>
                 <TriggerModal
                   data={this.props}

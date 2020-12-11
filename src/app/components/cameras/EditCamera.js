@@ -212,7 +212,7 @@ class EditCamera extends Component {
             <Form.Item label='Password' name="password" {...formItemLayout} hidden={!this.state.rogVerify}>
               <Input style={styles.input} type='password' placeholder="********" disabled />
             </Form.Item>
-            <Form.Item label='S3 Keywords' name="3_keywords" {...formItemLayout} hidden={this.state.rogVerify}>
+            <Form.Item label='S3 Keywords' name="s3_keywords" {...formItemLayout} hidden={this.state.rogVerify}>
               <Input style={styles.input} type='text' placeholder="{xxx,xxxx}" disabled={!isEmpty(this.props.data.s3_keywords)} />
             </Form.Item>
             <Form.Item label="Camera Time Zone" name="time_zone" {...formItemLayout}>

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import loading from '../../../assets/img/TempCameraImage.jpeg'
-import noImage from '../../../assets/img/no-image.jpg'
-import connectError from '../../../assets/img/connectError.gif'
+import loading from '../../../assets/img/TempCameraImage.jpeg';
+import noImage from '../../../assets/img/no-image.jpg';
+import connectError from '../../../assets/img/connectError.gif';
+import {isEmpty} from '../../redux/helperFunctions';
 
 class CameraCardImg extends Component {
 

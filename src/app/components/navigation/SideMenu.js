@@ -23,7 +23,7 @@ const SideMenu = (props) => (
       <UserSettings />
     </Menu.Item>
     <Menu.Item key='2'>
-      <AddCameraGroupModal linkText='Add CameraGroup' />
+      <AddCameraGroupModal linkText='Add Camera Group' />
     </Menu.Item>
     <Menu.Item key='3'>
       <CameraLicensesModal />

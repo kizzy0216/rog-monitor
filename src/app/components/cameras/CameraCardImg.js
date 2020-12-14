@@ -31,10 +31,10 @@ class CameraCardImg extends Component {
     } else if (typeof nextProps.data.refreshCameraImage !== 'undefined' && nextProps.data.refreshCameraUuid == nextProps.data.uuid) {
       this.setState({image: nextProps.data.refreshCameraImage+'?auth='+ this.props.data.user.jwt});
       this.key = this.uuidv4;
-    } else if (nextProps.data.refreshCameraError && nextProps.data.refreshCameraErrorUuid === nextProps.data.uuid) {
+    } else if (nextProps.data.refreshCameraError && nextProps.data.refreshCameraErrorUuid === nextProps.data.uuid && isEmpty(this.props.data.s3_keywords)) {
       this.setState({image: connectError});
       this.key = this.uuidv4;
-    } else if (!nextProps.data.cameraConnectionVerified && nextProps.data.cameraConnectionVerifiedUuid === nextProps.data.uuid) {
+    } else if (!nextProps.data.cameraConnectionVerified && nextProps.data.cameraConnectionVerifiedUuid === nextProps.data.uuid && isEmpty(this.props.data.s3_keywords)) {
       this.setState({image: connectError});
       this.key = this.uuidv4;
     } else {

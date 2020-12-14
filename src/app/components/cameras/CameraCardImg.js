@@ -17,7 +17,7 @@ class CameraCardImg extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    if (!this.props.data.cameraConnectionVerified && this.props.cameraConnectionVerifiedUuid === this.props.data.uuid) {
+    if (!this.props.data.cameraConnectionVerified && this.props.cameraConnectionVerifiedUuid === this.props.data.uuid && isEmpty(this.props.data.s3_keywords)) {
       this.setState({image: connectError});
     } else if (this.props.data.thumbnail_url) {
       this.setState({image: this.props.data.thumbnail_url+'?auth='+ this.props.data.user.jwt});

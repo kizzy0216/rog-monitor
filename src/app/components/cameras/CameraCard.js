@@ -11,6 +11,7 @@ import TriggerModal from '../modals/TriggerModal';
 import CameraCardImg from './CameraCardImg';
 import CameraCardVideo from './CameraCardVideo';
 import ToggleCameraArmed from '../buttons/ToggleCameraArmed';
+import CameraReport from '../modals/CameraReport';
 import {isEmpty} from '../../redux/helperFunctions';
 
 class CameraCard extends Component {
@@ -97,12 +98,18 @@ static getDerivedStateFromProps(nextProps, prevState) {
                 <EditCamera data={this.props} myRole={myRole} />
               </Col>
             }
+
             {this.props.enabled && this.state.thumbnail_url &&
-              <Col span={2} style={styles.triggermodalButton}>
-                <TriggerModal
-                  data={this.props}
-                />
-              </Col>
+              <div>
+                <Col span={2} style={styles.triggermodalButton}>
+                  <TriggerModal
+                    data={this.props}
+                  />
+                </Col>
+                <Col span={5} style={styles.cameraReportButton}>
+                  <CameraReport data={this.props} />
+                </Col>
+              </div>
             }
           </Col>
         </Row>
@@ -131,6 +138,11 @@ const styles = {
     float: 'right',
     marginLeft: 10,
     marginTop: 5
+  },
+  cameraReportButton: {
+    float: 'right',
+    marginTop: 3,
+    marginRight: 10
   },
   cameraConnectionSwitch: {
     textAlign: 'left',

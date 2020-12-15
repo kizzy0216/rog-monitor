@@ -232,7 +232,7 @@ class EditCamera extends Component {
                 {this.handleCreateSelectItems()}
               </Select>
             </Form.Item>
-            <Form.Item label="Rekognition Threshold" name="rekognition_threshold"  {...formItemLayout}>
+            <Form.Item label="Confidence Threshold" name="rekognition_threshold"  {...formItemLayout}>
               <InputNumber style={styles.input} type='number' min={0} max={100} placeholder="0" />
             </Form.Item>
             {/*<Form.Item label="Away Mode" name="away_mode" {...formItemLayout}>

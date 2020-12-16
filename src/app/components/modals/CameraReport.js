@@ -1,11 +1,13 @@
-import React, {Component} from 'react';
+import React, {Component, useRef} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {Modal, Row} from 'antd';
+import ReactToPrint from 'react-to-print';
 import { LineChartOutlined, PieChartOutlined } from '@ant-design/icons';
 import noImage from '../../../assets/img/no-image.jpg';
 
 const LineChart = ({onCancel, lineVisible, reportImg, lineChartLoadError, lineImgLoadError}) => {
+  const componentRef = useRef();
   return (
     <Modal
       visible={lineVisible}
@@ -15,6 +17,12 @@ const LineChart = ({onCancel, lineVisible, reportImg, lineChartLoadError, lineIm
       width="90vw"
     >
       <Row>
+        <ReactToPrint
+          trigger={() => <button>Print this out!</button>}
+          content={() => componentRef.current}
+        />
+      </Row>
+      <Row ref={componentRef}>
         {lineImgLoadError ?
           <img src={noImage} style={styles.expandedImg} />
         :
@@ -26,6 +34,7 @@ const LineChart = ({onCancel, lineVisible, reportImg, lineChartLoadError, lineIm
 };
 
 const PieChart = ({onCancel, pieVisible, reportImg, pieChartLoadError, pieImgLoadError}) => {
+  const componentRef = useRef();
   return (
     <Modal
       visible={pieVisible}
@@ -35,6 +44,12 @@ const PieChart = ({onCancel, pieVisible, reportImg, pieChartLoadError, pieImgLoa
       width="90vw"
     >
       <Row>
+        <ReactToPrint
+          trigger={() => <button>Print this out!</button>}
+          content={() => componentRef.current}
+        />
+      </Row>
+      <Row ref={componentRef}>
         {pieImgLoadError ?
           <img src={noImage} style={styles.expandedImg} />
         :

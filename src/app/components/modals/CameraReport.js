@@ -84,14 +84,14 @@ class CameraReport extends Component {
         <PieChartOutlined onClick={this.showPieChart} />
         <LineChart
           onCancel={this.handleCancel}
-          reportImg={`${process.env.REACT_APP_REPORT_IMG_URL}/${this.props.data.uuid}/_daily_chart.png`}
+          reportImg={`${process.env.REACT_APP_REPORT_IMG_URL}/${this.props.data.uuid}_daily_chart.png`}
           lineVisible={this.state.lineVisible}
           lineChartLoadError={this.handleLineChartLoadError}
           lineImgLoadError={this.state.lineImgLoadError}
         />
         <PieChart
           onCancel={this.handleCancel}
-          reportImg={`${process.env.REACT_APP_REPORT_IMG_URL}/${this.props.data.uuid}/_daily_pie.png`}
+          reportImg={`${process.env.REACT_APP_REPORT_IMG_URL}/${this.props.data.uuid}_daily_pie.png`}
           pieVisible={this.state.pieVisable}
           pieChartLoadError={this.handlePieChartLoadError}
           pieImgLoadError={this.state.pieImgLoadError}

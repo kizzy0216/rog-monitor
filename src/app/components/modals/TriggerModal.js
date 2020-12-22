@@ -451,6 +451,7 @@ class AddTriggerModal extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
+    // console.log(nextProps);
     if (typeof nextProps.data.s3_keywords !== 'undefined' && nextProps.data.s3_keywords !== null && nextProps.data.s3_keywords.hasOwnProperty('length')) {
       if (nextProps.data.s3_keywords.length === 0) {
         this.setState({rogProtect: true});
@@ -527,6 +528,21 @@ class AddTriggerModal extends Component {
     currentTriggerCamerasUuid: null
   };
 
+  resetTriggerDetails = () => {
+    this.triggerDetails = {
+      polygonPoints: [],
+      currentBaseTriggerUuid: null,
+      currentBaseTriggerType: '',
+      currentBaseTriggerDirection: '',
+      currentBaseTriggerTargetType: null,
+      currentBaseTriggerDuration: null,
+      currentBaseTriggerVertices: null,
+      currentTriggerShared: null,
+      currentTriggerUsersUuid: null,
+      currentTriggerCamerasUuid: null
+    };
+  }
+
   sliderValue = (value) => {
     this.setState({
       loiteringSeconds: value,
@@ -591,7 +607,7 @@ class AddTriggerModal extends Component {
       this.setState({currentTriggerShared: null});
       this.setState({currentTriggerSharedDisabled: false});
       this.setState({sharedTriggerSilenceWindowDisabled: false});
-      this.triggerDetails.currentBaseTriggerUuid = null;
+      this.resetTriggerDetails;
       this.fetchTriggers(true);
     }
   };
@@ -601,13 +617,12 @@ class AddTriggerModal extends Component {
     this.setState({visible: false});
     this.setState({cameraWideDisabled: false});
     this.setState({cameraWide: false});
-    this.triggerDetails.currentBaseTriggerType = '';
-    this.triggerDetails.currentBaseTriggerUuid = null;
+    this.resetTriggerDetails;
   };
 
   handleVisibleChange = (visibility) => {
     if (visibility === true) {
-      this.triggerDetails.currentBaseTriggerUuid = null;
+      this.resetTriggerDetails;
       this.setState({visibility});
       this.setState({canvasMode: false});
       this.setState({triggers: false});
@@ -616,9 +631,8 @@ class AddTriggerModal extends Component {
       this.setState({currentTriggerSharedDisabled: false});
       this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week']);
       this.setState({cameraWide: false});
-      this.triggerDetails.currentBaseTriggerType = '';
     } else {
-      this.triggerDetails.currentBaseTriggerUuid = null;
+      this.resetTriggerDetails;
       this.setState({deleteButton: false});
       this.setState({visibility});
       this.setState({canvasMode: false});
@@ -630,7 +644,6 @@ class AddTriggerModal extends Component {
       this.setState({currentTriggerSharedDisabled: false});
       this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week']);
       this.setState({cameraWide: false});
-      this.triggerDetails.currentBaseTriggerType = '';
       this.handleSaveCancel('cancel');
     }
   };
@@ -685,7 +698,6 @@ class AddTriggerModal extends Component {
     if (event === 'cancel') {
       this.setState({saveCancel: false});
       this.setState({canvasMode: false});
-      this.triggerDetails.currentTriggerType = '';
     }
     if (event === 'save') {
       if (this.triggerDetails.polygonPoints.length !== 0) {
@@ -727,9 +739,6 @@ class AddTriggerModal extends Component {
         }).catch(err => {
           return message.error(err, 10);
         }).finally(() => {
-          this.triggerDetails.polygonPoints.length = 0;
-          this.triggerDetails.currentBaseTriggerType = '';
-          this.triggerDetails.currentBaseTriggerDirection = '';
           this.setState({saveCancel: false});
           this.setState({canvasMode: false});
           this.setState({newLoiteringTrigger: false});
@@ -738,7 +747,7 @@ class AddTriggerModal extends Component {
         message.error('please draw a trigger to save', 10);
       }
     }
-    this.triggerDetails.currentBaseTriggerUuid = null;
+    this.resetTriggerDetails;
     this.fetchTriggers(true);
   };
 
@@ -746,6 +755,7 @@ class AddTriggerModal extends Component {
     if (checked === true) {
       this.setState({triggers: true});
       this.setState({deleteButton: false});
+      this.setState({canvasMode: false});
       this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['uuid']);
     } else {
       this.setState({canvasMode: false});
@@ -758,9 +768,7 @@ class AddTriggerModal extends Component {
     if (this.triggerDetails.currentBaseTriggerUuid !== 0 && this.triggerDetails.currentBaseTriggerType !== '') {
       this.triggerDetails['uuid'] = this.props.data.uuid;
       this.props.deleteTrigger(this.props.data.user, this.props.data.camera_groups_uuid, this.triggerDetails['uuid'], this.triggerDetails.currentBaseTriggerUuid);
-      this.triggerDetails.currentBaseTriggerUuid = null;
-      this.triggerDetails.currentBaseTriggerType = '';
-      this.triggerDetails.currentTriggerShared = null;
+      this.resetTriggerDetails;
       this.setState({currentTriggerShared: null});
       this.setState({currentTriggerSharedDisabled: false});
       this.form.resetFields(['sharedTrigger', 'sharedTriggerSilenceWindow', 'start_at', 'end_at', 'days_of_week']);

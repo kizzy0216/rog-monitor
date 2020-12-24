@@ -20,21 +20,7 @@ class CameraOptionButtons extends Component {
   }
 
   toggleAddCameraModalVisibility = () => {
-    let licensesAvailable = this.countAvailableCameraLicenses();
-    if (licensesAvailable >= 1) {
-      this.setState({addCameraModalVisible: !this.state.addCameraModalVisible})
-    } else if (this.state.addCameraModalVisible === true) {
-      this.setState({addCameraModalVisible: false})
-    } else {
-      message.error("You have reached your license limit. Please send an email requesting additional licenses to hello@gorog.co", 10);
-    }
-  }
-
-  countAvailableCameraLicenses = () => {
-    this.props.fetchUserCameraLicenses(this.props.user)
-    let count = 0;
-    this.props.user.cameraLicenses.map(cameraLicense => cameraLicense.cameras_uuid == null ? count++ : count)
-    return count;
+    this.setState({addCameraModalVisible: !this.state.addCameraModalVisible});
   }
 
   toggleShareCameraGroupModalVisibility = () => {

@@ -451,7 +451,6 @@ class AddTriggerModal extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    // console.log(nextProps);
     if (typeof nextProps.data.s3_keywords !== 'undefined' && nextProps.data.s3_keywords !== null && nextProps.data.s3_keywords.hasOwnProperty('length')) {
       if (nextProps.data.s3_keywords.length === 0) {
         this.setState({rogProtect: true});

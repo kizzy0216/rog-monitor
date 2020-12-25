@@ -17,8 +17,6 @@ class CustomCanvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      canvas: null,
-      image: this.props.image,
       width: this.props.width,
       height: this.props.height
     }
@@ -44,10 +42,10 @@ class CustomCanvas extends Component {
         if (fabricCanvas.getActiveObject() !== undefined && fabricCanvas.getActiveObject() !== null) {
           fabricCanvas.getObjects().forEach((entry) => {
             if (entry.type === 'RA') {
-              entry.setColor('#FF0000');
+              entry.set('fill', '#FF0000');
             }
             if (entry.type === 'LD') {
-              entry.setColor('#0092f8');
+              entry.set('fill', '#0092f8');
             }
             if (entry.type === 'VW' && fabricCanvas.getActiveObject().uuid === entry.uuid) {
               entry.set({fill: '#36d850', stroke: '#36d850'});
@@ -56,7 +54,7 @@ class CustomCanvas extends Component {
             }
           });
 
-          fabricCanvas.getActiveObject().setColor('#36d850');
+          fabricCanvas.getActiveObject().set('fill', '#36d850');
           for (var i = 0; i < nThis.props.polygonData.length; i++) {
             if (fabricCanvas.getActiveObject().uuid == nThis.props.polygonData[i].base_trigger.uuid) {
               nThis.props.triggerExtras(nThis.props.polygonData[i]);
@@ -71,10 +69,10 @@ class CustomCanvas extends Component {
           fabricCanvas.setActiveObject(nThis.prevItem(fabricCanvas.getObjects()), fabricCanvas.getActiveObject());
           fabricCanvas.getObjects().forEach((entry) => {
             if (entry.type === 'RA') {
-              entry.setColor('#FF0000');
+              entry.set('fill', '#FF0000');
             }
             if (entry.type === 'LD') {
-              entry.setColor('#0092f8');
+              entry.set('fill', '#0092f8');
             }
             if (entry.type === 'VW' && fabricCanvas.getActiveObject().uuid === entry.uuid) {
               entry.set({fill: '#36d850', stroke: '#36d850'});
@@ -82,7 +80,7 @@ class CustomCanvas extends Component {
               entry.set({fill: '#FF0000', stroke: '#FF0000'});
             }
           });
-          fabricCanvas.getActiveObject().setColor('#36d850');
+          fabricCanvas.getActiveObject().set('fill', '#36d850');
           fabricCanvas.renderAll();
           for (var i = 0; i < nThis.props.polygonData.length; i++) {
             if (fabricCanvas.getActiveObject().uuid == nThis.props.polygonData[i].base_trigger.uuid) {
@@ -100,10 +98,10 @@ class CustomCanvas extends Component {
           fabricCanvas.getObjects().forEach((entry) => {
 
             if (entry.type === 'RA') {
-              entry.setColor('#FF0000');
+              entry.set('fill', '#FF0000');
             }
             if (entry.type === 'LD') {
-              entry.setColor('#0092f8');
+              entry.set('fill', '#0092f8');
             }
             if (entry.type === 'VW' && fabricCanvas.getActiveObject().uuid === entry.uuid) {
               entry.set({fill: '#36d850', stroke: '#36d850'});
@@ -111,7 +109,7 @@ class CustomCanvas extends Component {
               entry.set({fill: '#FF0000', stroke: '#FF0000'});
             }
           });
-          fabricCanvas.getActiveObject().setColor('#36d850');
+          fabricCanvas.getActiveObject().set('fill', '#36d850');
           fabricCanvas.renderAll();
           for (var i = 0; i < nThis.props.polygonData.length; i++) {
             if (fabricCanvas.getActiveObject().uuid == nThis.props.polygonData[i].base_trigger.uuid) {
@@ -305,10 +303,6 @@ class CustomCanvas extends Component {
         }
       });
 
-
-      fabricCanvas.on('mouse:up', function (options) {
-      });
-
       fabricCanvas.on('mouse:move', function (options) {
         if (nThis.activeLine && nThis.activeLine.class === "line") {
           const pointer = fabricCanvas.getPointer(options.e);
@@ -324,8 +318,6 @@ class CustomCanvas extends Component {
           nThis.activeShape.set({
             points: points
           });
-
-          fabricCanvas.renderAll();
         }
         fabricCanvas.renderAll();
       });
@@ -345,8 +337,6 @@ class CustomCanvas extends Component {
           nThis.activeShape.set({
             points: points
           });
-
-          // fabricCanvas.renderAll();
         }
         fabricCanvas.renderAll();
       });
@@ -634,12 +624,6 @@ const styles = {
   prevNext: {
     textAlign: 'center',
     fontSize: 24
-  },
-  prevButton: {
-
-  },
-  nextButton: {
-
   }
 };
 

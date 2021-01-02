@@ -80,6 +80,7 @@ const AddTriggerForm = ({
            onCancel={onCancel}
            footer={[null, null]}
            width="50%"
+           destroyOnClose
     >
       <Form ref={form} initialValues={{sharedTrigger: true, sharedTriggerSilenceWindow: true}}>
         <Form.Item style={styles.triggersHideShow} key={canvasKey}>

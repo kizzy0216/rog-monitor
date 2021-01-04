@@ -243,9 +243,15 @@ function setupFirebaseCloudMessaging(user){
               console.log(error);
             }
             alert(errMessage);
+            dispatch(loginSuccess(user));
+            dispatch(loginInProcess(false));
           });
       } else {
-        console.log('Unable to get permission to notify.');
+        let errMessage = 'Unable to get permission to notify.';
+        console.log(errMessage);
+        alert(errMessage);
+        dispatch(loginSuccess(user));
+        dispatch(loginInProcess(false));
       }
     });
   }

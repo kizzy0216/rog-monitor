@@ -378,7 +378,6 @@ const AddTriggerForm = ({
                         span={8}
                         style={{margin: '0 auto'}}
                         onChange={updateDataStop}
-                        // onOpenChange={(open: false), checkForWindow}
                         onOpenChange={checkForWindow}
                         allowClear={true}
                         placeholder="End Time"

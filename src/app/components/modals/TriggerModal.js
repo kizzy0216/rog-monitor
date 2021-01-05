@@ -423,9 +423,9 @@ class AddTriggerModal extends Component {
   constructor(props) {
     super(props);
     let rogProtect = true;
-    // if (typeof props.data.s3_keywords !== 'undefined' && props.data.s3_keywords !== null && props.data.s3_keywords.hasOwnProperty('length')) {
-    //   rogProtect = props.data.s3_keywords.length === 0 ? true : false
-    // }
+    if (typeof props.data.s3_keywords !== 'undefined' && props.data.s3_keywords !== null && props.data.s3_keywords.hasOwnProperty('length')) {
+      let rogProtect = props.data.s3_keywords.length === 0 ? true : false
+    }
     this.state = {
       visible: false,
       error: false,
@@ -456,13 +456,13 @@ class AddTriggerModal extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    // if (typeof nextProps.data.s3_keywords !== 'undefined' && nextProps.data.s3_keywords !== null && nextProps.data.s3_keywords.hasOwnProperty('length')) {
-    //   if (nextProps.data.s3_keywords.length === 0) {
-    //     this.setState({rogProtect: true});
-    //   } else {
-    //     this.setState({rogProtect: false});
-    //   }
-    // }
+    if (typeof nextProps.data.s3_keywords !== 'undefined' && nextProps.data.s3_keywords !== null && nextProps.data.s3_keywords.hasOwnProperty('length')) {
+      if (nextProps.data.s3_keywords.length === 0) {
+        this.setState({rogProtect: true});
+      } else {
+        this.setState({rogProtect: false});
+      }
+    }
     if (this.props.polygonData !== undefined && !isEmpty(this.props.polygonData)) {
       if (nextProps.polygonData !== undefined && !isEmpty(nextProps.polygonData) && this.props.polygonData !== nextProps.polygonData) {
         this.canvasKey++;

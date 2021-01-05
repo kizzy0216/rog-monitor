@@ -105,7 +105,7 @@ const AddTriggerForm = ({
               setTriggerTimeWindows={setTriggerTimeWindows}
             />
           }
-          {canvasMode && (currentTriggerDetails.currentBaseTriggerType === 'LD') && saveCancel &&
+          {canvasMode && (currentTriggerDetails.currentBaseTriggerType === 'LD') && (saveCancel || deleteButton) &&
             <Row>
               <Col span={4} style={styles.LDtimeLeft}>
                 {convertToMilitaryFormat(loiteringSeconds)}

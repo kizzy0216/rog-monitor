@@ -82,7 +82,7 @@ const AddTriggerForm = ({
            width="50%"
            destroyOnClose
     >
-      <Form ref={form} initialValues={{sharedTrigger: true, sharedTriggerSilenceWindow: true}}>
+      <Form ref={form} initialValues={{sharedTrigger: true, sharedTriggerSilenceWindow: true}} preserve={false}>
         <Form.Item style={styles.triggersHideShow} key={canvasKey}>
           {triggerImg === null &&
             <img src={loading} style={styles.image} onLoad={onImgLoad} onReset={onImgLoad} />

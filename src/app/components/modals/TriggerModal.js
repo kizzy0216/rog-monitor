@@ -105,7 +105,7 @@ const AddTriggerForm = ({
               setTriggerTimeWindows={setTriggerTimeWindows}
             />
           }
-          {canvasMode && (currentTriggerDetails.currentBaseTriggerType === 'LD') &&
+          {canvasMode && (currentTriggerDetails.currentBaseTriggerType === 'LD') && saveCancel &&
             <Row>
               <Col span={4} style={styles.LDtimeLeft}>
                 {convertToMilitaryFormat(loiteringSeconds)}
@@ -206,7 +206,8 @@ const AddTriggerForm = ({
                       span={8}
                       style={{margin: '0 auto'}}
                       onChange={updateDataStart}
-                      onOpenChange={(open: false), checkForWindow}
+                      // onOpenChange={(open: false), checkForWindow}
+                      onOpenChange={checkForWindow}
                       allowClear={true}
                       placeholder="Start Time"
                       format={'HH:mm'}
@@ -217,7 +218,8 @@ const AddTriggerForm = ({
                       span={8}
                       style={{margin: '0 auto'}}
                       onChange={updateDataStop}
-                      onOpenChange={(open: false), checkForWindow}
+                      // onOpenChange={(open: false), checkForWindow}
+                      onOpenChange={checkForWindow}
                       allowClear={true}
                       placeholder="End Time"
                       format={'HH:mm'}
@@ -236,14 +238,14 @@ const AddTriggerForm = ({
                   </Form.Item>
                 </Row>
                 <Row>
-                <Col span={8}>
-                  <Button type="danger" icon={<DeleteOutlined />} onClick={deleteTriggerTimeWindow}>Delete Disarm Window</Button>
-                </Col>
+                  <Col span={8}>
+                    <Button type="danger" icon={<DeleteOutlined />} onClick={deleteTriggerTimeWindow}>Delete Disarm Window</Button>
+                  </Col>
                   <Col span={8}>
                     <Button type="danger" icon={<CloseOutlined />} onClick={resetData}>Clear Form</Button>
                   </Col>
                   <Col span={8}>
-                    <Button type="primary" icon=<SaveOutlined /> onClick={saveData}>Save Disarm Window</Button>
+                    <Button type="primary" icon={<SaveOutlined />} onClick={saveData}>Save Disarm Window</Button>
                   </Col>
                 </Row>
                 <div>&nbsp;</div>
@@ -365,7 +367,8 @@ const AddTriggerForm = ({
                         span={8}
                         style={{margin: '0 auto'}}
                         onChange={updateDataStart}
-                        onOpenChange={(open: false), checkForWindow}
+                        // onOpenChange={(open: false), checkForWindow}
+                        onOpenChange={checkForWindow}
                         allowClear={true}
                         placeholder="Start Time"
                         format={'HH:mm'}
@@ -376,7 +379,8 @@ const AddTriggerForm = ({
                         span={8}
                         style={{margin: '0 auto'}}
                         onChange={updateDataStop}
-                        onOpenChange={(open: false), checkForWindow}
+                        // onOpenChange={(open: false), checkForWindow}
+                        onOpenChange={checkForWindow}
                         allowClear={true}
                         placeholder="End Time"
                         format={'HH:mm'}

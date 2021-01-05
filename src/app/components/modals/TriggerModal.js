@@ -367,7 +367,6 @@ const AddTriggerForm = ({
                         span={8}
                         style={{margin: '0 auto'}}
                         onChange={updateDataStart}
-                        // onOpenChange={(open: false), checkForWindow}
                         onOpenChange={checkForWindow}
                         allowClear={true}
                         placeholder="Start Time"

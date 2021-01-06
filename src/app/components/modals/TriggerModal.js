@@ -696,6 +696,7 @@ class AddTriggerModal extends Component {
 
   handleSaveCancel = (event) => {
     if (event === 'cancel') {
+      this.triggerDetails['uuid'] = this.props.data.uuid;
       this.setState({saveCancel: false});
       this.setState({canvasMode: false});
     }

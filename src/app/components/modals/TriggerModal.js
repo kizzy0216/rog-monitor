@@ -722,18 +722,19 @@ class AddTriggerModal extends Component {
               }
             }
           });
+          
           switch (this.state.triggerType) {
             case 'RA':
-              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], null, null, values.trigger_windows, values.sharedTrigger);
+              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[this.triggerDetails.polygonPoints.length - 1], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], null, null, values.trigger_windows, values.sharedTrigger);
               break;
 
             case 'LD':
-              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], this.state.loiteringSeconds, null, values.trigger_windows, values.sharedTrigger);
+              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[this.triggerDetails.polygonPoints.length - 1], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], this.state.loiteringSeconds, null, values.trigger_windows, values.sharedTrigger);
               this.setState({loiteringSeconds: 0});
               break;
 
             case 'VW':
-              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[0], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], null, this.triggerDetails.currentBaseTriggerDirection, values.trigger_windows, values.sharedTrigger);
+              this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[this.triggerDetails.polygonPoints.length - 1], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], null, this.triggerDetails.currentBaseTriggerDirection, values.trigger_windows, values.sharedTrigger);
               break;
           }
         }).catch(err => {

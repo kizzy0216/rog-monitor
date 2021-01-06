@@ -106,9 +106,9 @@ static getDerivedStateFromProps(nextProps, prevState) {
                     data={this.props}
                   />
                 </Col>
-                {/*<Col span={5} style={styles.cameraReportButton}>
+                <Col span={2} style={styles.cameraReportButton}>
                   <CameraReport data={this.props} />
-                </Col>*/}
+                </Col>
               </div>
             }
           </Col>

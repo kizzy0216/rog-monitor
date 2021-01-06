@@ -1,12 +1,22 @@
 import React, {Component, useRef} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {Modal, Row} from 'antd';
+import {Modal, Row, Button} from 'antd';
 import ReactToPrint from 'react-to-print';
-import { LineChartOutlined, PieChartOutlined } from '@ant-design/icons';
+import { LineChartOutlined } from '@ant-design/icons';
 import noImage from '../../../assets/img/no-image.jpg';
 
-const LineChart = ({onCancel, lineVisible, reportImg, lineChartLoadError, lineImgLoadError}) => {
+const CameraReportModal = ({
+  onCancel,
+  lineVisible,
+  lineImg,
+  lineChartLoadError,
+  lineImgLoadError,
+  pieVisible,
+  pieImg,
+  pieChartLoadError,
+  pieImgLoadError
+}) => {
   const componentRef = useRef();
   return (
     <Modal
@@ -15,47 +25,30 @@ const LineChart = ({onCancel, lineVisible, reportImg, lineChartLoadError, lineIm
       onCancel={onCancel}
       footer={[null, null]}
       width="90vw"
+      destroyOnClose
     >
       <Row>
         <ReactToPrint
-          trigger={() => <button>Print this out!</button>}
+          trigger={() => <Button type='primary' style={styles.printButton}>Print Report</Button>}
           content={() => componentRef.current}
         />
       </Row>
-      <Row ref={componentRef}>
-        {lineImgLoadError ?
-          <img src={noImage} style={styles.expandedImg} />
-        :
-          <img src={reportImg} onError={lineChartLoadError} style={styles.expandedImg} />
-        }
-      </Row>
-    </Modal>
-  );
-};
-
-const PieChart = ({onCancel, pieVisible, reportImg, pieChartLoadError, pieImgLoadError}) => {
-  const componentRef = useRef();
-  return (
-    <Modal
-      visible={pieVisible}
-      style={styles.modal}
-      onCancel={onCancel}
-      footer={[null, null]}
-      width="90vw"
-    >
-      <Row>
-        <ReactToPrint
-          trigger={() => <button>Print this out!</button>}
-          content={() => componentRef.current}
-        />
-      </Row>
-      <Row ref={componentRef}>
-        {pieImgLoadError ?
-          <img src={noImage} style={styles.expandedImg} />
-        :
-          <img src={reportImg} onError={pieChartLoadError} style={styles.expandedImg} />
-        }
-      </Row>
+      <div ref={componentRef} style={styles.reportContainer}>
+        <Row>
+          {pieImgLoadError ?
+            <img src={noImage} style={styles.expandedPie} />
+          :
+            <img src={pieImg} onError={pieChartLoadError} style={styles.expandedPie} />
+          }
+        </Row>
+        <Row>
+          {lineImgLoadError ?
+            <img src={noImage} style={styles.expandedLine} />
+          :
+            <img src={lineImg} onError={lineChartLoadError} style={styles.expandedLine} />
+          }
+        </Row>
+      </div>
     </Modal>
   );
 };
@@ -95,18 +88,14 @@ class CameraReport extends Component {
   render() {
     return (
       <div>
-        <LineChartOutlined style={{marginRight: 10}} onClick={this.showLineChart} />
-        <PieChartOutlined onClick={this.showPieChart} />
-        <LineChart
+        <LineChartOutlined onClick={this.showLineChart} />
+        <CameraReportModal
           onCancel={this.handleCancel}
-          reportImg={`${process.env.REACT_APP_REPORT_IMG_URL}/${this.props.data.uuid}_daily_chart.png`}
+          lineImg={`${process.env.REACT_APP_REPORT_IMG_URL}/${this.props.data.uuid}_daily_chart.png`}
           lineVisible={this.state.lineVisible}
           lineChartLoadError={this.handleLineChartLoadError}
           lineImgLoadError={this.state.lineImgLoadError}
-        />
-        <PieChart
-          onCancel={this.handleCancel}
-          reportImg={`${process.env.REACT_APP_REPORT_IMG_URL}/${this.props.data.uuid}_daily_pie.png`}
+          pieImg={`${process.env.REACT_APP_REPORT_IMG_URL}/${this.props.data.uuid}_daily_pie.png`}
           pieVisible={this.state.pieVisable}
           pieChartLoadError={this.handlePieChartLoadError}
           pieImgLoadError={this.state.pieImgLoadError}
@@ -122,34 +111,21 @@ const styles = {
     wordBreak: 'break-word',
     top: '25px'
   },
-  reportCardImg: {
-    position: 'absolute',
-    maxWidth: '100%',
-    maxHeight: '100%',
-    width: 'auto',
-    height: 'auto',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    margin: 'auto'
+  reportContainer: {
+    marginTop: 10,
   },
-  reportType: {
-    fontSize: 14,
-    paddingTop: 5
-  },
-  reportDateTime: {
-    fontSize: 14,
-    paddingTop: 5
-  },
-  reportTimeZone: {
-    fontSize: 14,
-    paddingTop: 5
-  },
-  expandedImg: {
-    maxWidth: '80vw',
-    width: '100%',
+  expandedPie: {
+    maxWidth: '90vw',
+    maxHeight: '45vh',
     margin: '0 auto'
+  },
+  expandedLine: {
+    maxWidth: '90vw',
+    maxHeight: '45vh',
+    margin: '0 auto'
+  },
+  printButton: {
+    marginTop: -10
   }
 };
 

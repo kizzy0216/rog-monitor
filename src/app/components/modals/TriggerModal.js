@@ -723,6 +723,7 @@ class AddTriggerModal extends Component {
               }
             }
           });
+          
           switch (this.state.triggerType) {
             case 'RA':
               this.props.createTrigger(this.props.data.user, this.triggerDetails.polygonPoints[this.triggerDetails.polygonPoints.length - 1], this.state.triggerType, this.props.data.cameraGroup, this.triggerDetails['uuid'], null, null, values.trigger_windows, values.sharedTrigger);

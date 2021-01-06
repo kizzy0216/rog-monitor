@@ -177,8 +177,6 @@ export function createTrigger(user, triggerCoordinates, triggerType, cameraGroup
         console.log("One of the fields is null in an added trigger silence window");
         return false;
       }
-      timeWindows[i].shared = timeWindows[i].sharedTriggerSilenceWindow;
-      delete timeWindows[i].sharedTriggerSilenceWindow;
     }
 
     let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras/${cameraUuid}/triggers`;

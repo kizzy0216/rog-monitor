@@ -709,7 +709,6 @@ class AddTriggerModal extends Component {
           delete values.days_of_week;
           delete values.time_window_select;
           delete values.camera_wide;
-          delete values.shared
           delete values.sharedTriggerSilenceWindow;
           values.trigger_windows = [];
           this.props.triggerTimeWindows.forEach(function(trigger_window, index) {

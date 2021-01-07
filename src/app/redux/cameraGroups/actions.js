@@ -262,7 +262,7 @@ export function addNewCameraGroup(user, cameraGroup) {
     let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
 
     let data = {
-      camera_group_name: cameraGroup.name
+      camera_group_name: cameraGroup.name.trim()
     };
 
     axios.post(url, data, config)

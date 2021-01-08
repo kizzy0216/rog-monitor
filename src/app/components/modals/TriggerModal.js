@@ -469,7 +469,7 @@ class AddTriggerModal extends Component {
           this.setTriggerTimeWindows(nextProps.polygonData, this.triggerDetails.currentBaseTriggerUuid);
         }
       }
-      if (nextProps.createTriggerSuccess !== this.props.createTriggerSuccess && this.triggerDetails['uuid'] !== undefined) {
+      if (this.state.visible && nextProps.createTriggerSuccess !== this.props.createTriggerSuccess && this.triggerDetails['uuid'] !== undefined) {
         this.setState({canvasMode: false});
         this.setState({triggers: true});
         this.setState({deleteButton: false});
@@ -477,7 +477,7 @@ class AddTriggerModal extends Component {
         this.triggerDetails['uuid'] = undefined;
         this.setState({saveCancel: false});
       }
-      if (nextProps.deleteTriggerSuccess !== this.props.deleteTriggerSuccess && this.triggerDetails['uuid'] !== undefined) {
+      if (this.state.visible && nextProps.deleteTriggerSuccess !== this.props.deleteTriggerSuccess && this.triggerDetails['uuid'] !== undefined) {
         this.setState({canvasMode: false});
         this.props.fetchTriggers(this.props.data.user, this.props.data.cameraGroup, this.triggerDetails['uuid']);
         this.triggerDetails['uuid'] = undefined;

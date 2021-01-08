@@ -510,16 +510,22 @@ class CustomCanvas extends Component {
   }
 
   nextItem(arr) {
+    const uuid = arr[this.i].uuid;
+    while(uuid == arr[this.i].uuid){
       this.i = this.i + 1; // increase i by one
       this.i = this.i % arr.length; // if we've gone too high, start from `0` again
-      return arr[this.i]; // give us back the item of where we are now
+    }
+    return arr[this.i]; // give us back the item of where we are now
   }
   prevItem(arr) {
+    const uuid = arr[this.i].uuid;
+    while(uuid == arr[this.i].uuid){
       if (this.i === 0) { // i would become 0
-          this.i = arr.length; // so put it at the other end of the array
+        this.i = arr.length; // so put it at the other end of the array
       }
       this.i = this.i - 1; // decrease by one
-      return arr[this.i]; // give us back the item of where we are now
+    }
+    return arr[this.i]; // give us back the item of where we are now
   }
 
   static lineObject(points, color) {

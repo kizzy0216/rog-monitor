@@ -600,7 +600,9 @@ class CustomCanvas extends Component {
   }
 
   canvas() {
-    let canvas = new fabric.Canvas('canvas');
+    let canvas = new fabric.Canvas('canvas',{
+      perPixelTargetFind: true
+    });
     canvas.backgroundColor = 'transparent';
     canvas.setHeight(this.props.height);
     canvas.setWidth(this.props.width);

@@ -244,7 +244,7 @@ export function fetchCameraGroups(user) {
             for (var i = 0; i < response.data.length; i++) {
               if (sessionStorage.getItem('selectedCameraGroupUuid') === response.data[i].uuid) {
                 dispatch(selectCameraGroup(user, response.data[i]));
-              } else{
+              } else {
                 dispatch(fetchCameraGroup(user, response.data[i]));
               }
             }

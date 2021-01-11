@@ -6,6 +6,7 @@ import newAlertSound from '../../../assets/audio/newAlert.mp3';
 import { updateUserData, storeUserDevice } from '../users/actions';
 import * as types from './actionTypes';
 import {isEmpty} from '../helperFunctions';
+import moment from 'moment';
 
 function fetchInProcess(bool) {
   return {
@@ -486,6 +487,20 @@ export function clearNewAlerts() {
   }
 }
 
+function updateTimeAsLocal(tags, tag_options, timezone){
+  var updatedTags = tags;
+  for (var i in updatedTags) {
+    if (tag_options.indexOf(updatedTags[i]) == -1) {
+      var time_str = i.substring(i.indexOf('at: ') + 4, i.length);
+      var converted_time = moment.utc(time_str, "MM/DD/YYYY, hh:mm:ss").tz(timezone).format("MM/DD/YYYY, hh:mm:ss");
+      var new_str = i.replace(time_str, converted_time);
+      updatedTags[new_str] = updatedTags[i];
+      delete updatedTags[i];
+    }
+  }
+  return updatedTags;
+}
+
 export function updateAlertTags(user, alertUuid, tags, tag_options = ["Clear", "Contacted Police", "Contacted Fire Dept", "Contacted Ambulance"]) {
   return (dispatch) => {
     dispatch(updateAlertTagsInProcess(user, alertUuid, true));
@@ -504,7 +519,8 @@ export function updateAlertTags(user, alertUuid, tags, tag_options = ["Clear", "
     }
     axios.patch(url, data, config)
     .then(response => {
-      dispatch(updateAlertTagsSuccess(alertUuid, response.data.tags));
+      const tags = updateTimeAsLocal(response.data.tags, tag_options, user.time_zone);
+      dispatch(updateAlertTagsSuccess(alertUuid, tags));
     })
     .catch(error => {
       let errMessage = 'Error updating tags';

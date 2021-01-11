@@ -16,6 +16,12 @@ class AlertTagOptions extends Component {
     }
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if(nextProps.nextProps !== 'undefined' && this.props.tag_options != nextProps.tag_options){
+      this.setState({tag_options: nextProps.tag_options});
+    }
+  }
+
   saveInputRef = input => {
     this.input = input;
   };

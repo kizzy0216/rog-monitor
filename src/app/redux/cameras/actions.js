@@ -238,6 +238,24 @@ export function fetchCameraGroupCameras(user, cameraGroup) {
       })
       .catch((error) => {
         cameraGroup.cameras = [];
+      });
+  }
+}
+
+export function fetchSelectedCameraGroupCameras(user, cameraGroup) {
+  return (dispatch) => {
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/camera-groups/${cameraGroup.uuid}/cameras`;
+    let config = {headers: {Authorization: 'Bearer '+sessionStorage.getItem('jwt')}};
+    axios.get(url, config)
+      .then((response) => {
+        if (isEmpty(response.data) === false) {
+          cameraGroup.cameras = response.data;
+        } else {
+          cameraGroup.cameras = [];
+        }
+      })
+      .catch((error) => {
+        cameraGroup.cameras = [];
       })
       .finally(() =>{
         dispatch(getUserCameraGroupPrivileges(user, cameraGroup));
@@ -313,7 +331,7 @@ export function updatePreviewImage(user, cameraGroup, cameraUuid) {
         dispatch(imageUpdateSuccess(false, cameraUuid));
       })
       .finally(() => {
-        dispatch(fetchCameraGroupCameras(user, cameraGroup));
+        dispatch(fetchSelectedCameraGroupCameras(user, cameraGroup));
         dispatch(imageUpdateInProgress(false, cameraUuid));
         dispatch(imageUpdateSuccess(false, cameraUuid));
       })
@@ -360,7 +378,7 @@ export function addCamera(user, cameraGroup, time_zone, values) {
       .then((response) => {
         dispatch(fetchSuccess(user));
         dispatch(fetchCameraGroups(user));
-        dispatch(fetchCameraGroupCameras(user, cameraGroup));
+        dispatch(fetchSelectedCameraGroupCameras(user, cameraGroup));
         dispatch(fetchUserCameraLicenses(user));
         dispatch(addCameraSuccess(true));
       })
@@ -423,7 +441,7 @@ export function editCamera(user, cameraUuid, cameraData) {
       .then((response) => {
         dispatch(updateCamera(response.data));
         dispatch(fetchCameraGroups(user));
-        dispatch(fetchCameraGroupCameras(user, cameraGroup));
+        dispatch(fetchSelectedCameraGroupCameras(user, cameraGroup));
         dispatch(editCameraSuccess(true));
         dispatch(editCameraSuccess(false));
       })
@@ -463,7 +481,7 @@ export function deleteCamera(user, cameraGroupsUuid, cameraUuid) {
     axios.delete(url, config)
       .then((response) => {
         dispatch(fetchCameraGroups(user));
-        dispatch(fetchCameraGroupCameras(user, cameraGroup));
+        dispatch(fetchSelectedCameraGroupCameras(user, cameraGroup));
         dispatch(fetchUserCameraLicenses(user));
         dispatch(deleteCameraSuccess(true));
       })
@@ -477,7 +495,7 @@ export function deleteCamera(user, cameraGroupsUuid, cameraUuid) {
                 errMessage = error.response.data['Error'];
                 if (errMessage.includes('Camera Deleted.')){
                   dispatch(fetchCameraGroups(user));
-                  dispatch(fetchCameraGroupCameras(user, cameraGroup));
+                  dispatch(fetchSelectedCameraGroupCameras(user, cameraGroup));
                   dispatch(fetchUserCameraLicenses(user));
                 }
               } else {

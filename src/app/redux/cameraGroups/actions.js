@@ -6,7 +6,7 @@ import initialState from './initialState';
 import * as types from './actionTypes';
 
 import { trackEventAnalytics } from "../auth/actions";
-import {updatePreviewImage, fetchCameraGroupCameras, cameraArmed, cameraConnectionEnabled} from "../cameras/actions";
+import {updatePreviewImage, fetchCameraGroupCameras, fetchSelectedCameraGroupCameras, cameraArmed, cameraConnectionEnabled} from "../cameras/actions";
 import { updateUserData } from "../users/actions";
 import { locale } from 'moment';
 import {isEmpty} from '../helperFunctions';
@@ -192,6 +192,14 @@ export function CameraConnectionFail(bool, uuid) {
 export function selectCameraGroup(user, cameraGroup) {
   return (dispatch) => {
     if (cameraGroup !== undefined){
+      dispatch(fetchSelectedCameraGroupCameras(user, cameraGroup));
+    }
+  }
+}
+
+function fetchCameraGroup(user, cameraGroup) {
+  return (dispatch) => {
+    if (cameraGroup !== undefined){
       dispatch(fetchCameraGroupCameras(user, cameraGroup));
     }
   }
@@ -236,11 +244,15 @@ export function fetchCameraGroups(user) {
             for (var i = 0; i < response.data.length; i++) {
               if (sessionStorage.getItem('selectedCameraGroupUuid') === response.data[i].uuid) {
                 dispatch(selectCameraGroup(user, response.data[i]));
-                break;
+              } else{
+                dispatch(fetchCameraGroup(user, response.data[i]));
               }
             }
           } else {
             dispatch(selectCameraGroup(user, response.data[0]));
+            for (var i = 1; i < response.data.length; i++) {
+              dispatch(fetchCameraGroup(user, response.data[i]));
+            }
           }
         }
       })

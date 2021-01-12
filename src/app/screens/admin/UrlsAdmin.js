@@ -60,12 +60,12 @@ class UrlsAdmin extends React.Component {
           url_uuid: this.props.urls[i]['url_uuid'],
           url_set_uuid: this.props.urls[i]['url_set_uuid'],
           url_type_id: this.props.urls[i]['url_type_id'],
-          enabled: !isEmpty(this.props.urls[i]['enabled']) ? this.props.urls[i]['enabled'].toString() : null,
+          enabled: this.props.urls[i]['enabled'].toString(),
           reco_active: !isEmpty(this.props.urls[i]['reco_active']) ? this.props.urls[i]['reco_active'].toString() : null,
           url: this.props.urls[i]['url'],
           synched_at: this.props.urls[i]['synched_at'],
           url_id: this.props.urls[i]['url_id'],
-          verified: !isEmpty(this.props.urls[i]['verified']) ? this.props.urls[i]['verified'].toString() : null,
+          verified: this.props.urls[i]['verified'].toString(),
           alt_chart_id: this.props.urls[i]['alt_chart_id'],
           inserted_at: this.props.urls[i]['inserted_at'],
           updated_at: this.props.urls[i]['updated_at']
@@ -331,6 +331,8 @@ class EditableTable extends React.Component {
       ...row,
     });
     this.setState({ dataSource: newData });
+    newData[index].enabled = JSON.parse(newData[index].enabled.toLowerCase());
+    newData[index].verified = JSON.parse(newData[index].verified.toLowerCase());
     this.props.actions.updateUrlsAdmin(this.props.user, newData[index]);
   };
 

@@ -331,8 +331,6 @@ class EditableTable extends React.Component {
       ...row,
     });
     this.setState({ dataSource: newData });
-    newData[index].enabled = JSON.parse(newData[index].enabled.toLowerCase());
-    newData[index].verified = JSON.parse(newData[index].verified.toLowerCase());
     this.props.actions.updateUrlsAdmin(this.props.user, newData[index]);
   };
 

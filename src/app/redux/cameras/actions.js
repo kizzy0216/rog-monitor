@@ -825,13 +825,17 @@ export function updateUrlsAdmin(user, values) {
     delete data.cameras_uuid;
     delete data.inserted_at;
     delete data.updated_at;
-    for (var i = 0; i < values.length; i++) {
-      if (values[i] === "true") {
-        values[i] = true;
-      } else if (values[i] === "false") {
-        values[i] = false;
-      } else if (values[i] === null) {
-        delete values[i];
+    for (const key in data) {
+      if (data[key] === "true") {
+        data[key] = true;
+      } else if (data[key] === "false") {
+        data[key] = false;
+      } else if (data[key] === "0") {
+        data[key] = 0;
+      } else if (data[key] === "1") {
+        data[key] = 1;
+      } else if (data[key] === null) {
+        delete data[key];
       }
     }
     axios.patch(url, data, config)

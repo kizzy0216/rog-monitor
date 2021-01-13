@@ -338,7 +338,7 @@ export function fetchAlertsWithPaginationAndFilters(user, nextPage, page=1, page
     dispatch(fetchError(''));
     dispatch(fetchInProcess(true));
 
-    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts-new?page=${nextPage}&per_page=${pageSize}&filter_type=${filter_type}&filter_parameter=${filter_parameter}`;
+    let url = `${process.env.REACT_APP_ROG_API_URL}/users/${user.uuid}/alerts-new?page=${nextPage}&per_page=${pageSize}&filter_type=${filter_type}&filter_parameter=${encodeURIComponent(filter_parameter)}`;
     let config = {headers: {Authorization: 'Bearer '+user.jwt}}
     axios.get(url, config)
       .then((response) => {

@@ -489,13 +489,13 @@ export function clearNewAlerts() {
 
 function updateTimeAsLocal(tags, tag_options, timezone){
   var updatedTags = tags;
-  for (var i in updatedTags) {
-    if (tag_options.indexOf(updatedTags[i]) == -1) {
-      var time_str = i.substring(i.indexOf('at: ') + 4, i.length);
+  for (var key in updatedTags) {
+    if (key.indexOf('at: ') !== -1) {
+      var time_str = key.substring(key.indexOf('at: ') + 4, key.length);
       var converted_time = moment.utc(time_str, "MM/DD/YYYY, hh:mm:ss").tz(timezone).format("MM/DD/YYYY, hh:mm:ss");
-      var new_str = i.replace(time_str, converted_time);
-      updatedTags[new_str] = updatedTags[i];
-      delete updatedTags[i];
+      var new_str = key.replace(time_str, converted_time);
+      updatedTags[new_str] = updatedTags[key];
+      delete updatedTags[key];
     }
   }
   return updatedTags;

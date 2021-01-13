@@ -69,7 +69,7 @@ class NavigationMenu extends Component {
         </Menu.Item>
         {this.props.user.user_privileges_id == 0 ?
           <Menu.SubMenu title={
-            <Tooltip title="Admin Pannel">
+            <Tooltip title="Admin Panel">
               <EllipsisOutlined className='nav-icon' />
             </Tooltip>
           }>

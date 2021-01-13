@@ -59,6 +59,10 @@ class Alerts extends Component {
     props.actions.fetchAlerts(props.user);
     props.actions.markUserAlertsViewed(props.user);
     props.actions.countNewAlerts(props.user);
+    if (props.cameraGroups.length == 0){
+      props.fetchCameraGroups(props.user);
+    }
+    
 
     this.state = {
       videoSource: null,

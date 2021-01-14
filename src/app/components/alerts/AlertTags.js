@@ -78,7 +78,7 @@ class AlertTags extends Component {
   };
 
   formatTimeWithTimezone = (tag) => {
-    const timezone = this.props.userData.time_zone;
+    const timezone = isEmpty(this.props.userData) ? this.props.user.time_zone : this.props.userData.time_zone;
     let formattedTag = tag;
     if (tag.indexOf('at: ') !== -1) {
       var time_str = tag.substring(tag.indexOf('at: ') + 4, tag.length);

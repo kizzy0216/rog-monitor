@@ -487,20 +487,6 @@ export function clearNewAlerts() {
   }
 }
 
-function updateTimeAsLocal(tags, tag_options, timezone){
-  var updatedTags = tags;
-  for (var key in updatedTags) {
-    if (key.indexOf('at: ') !== -1) {
-      var time_str = key.substring(key.indexOf('at: ') + 4, key.length);
-      var converted_time = moment.utc(time_str, "MM/DD/YYYY, hh:mm:ss").tz(timezone).format("MM/DD/YYYY, hh:mm:ss");
-      var new_str = key.replace(time_str, converted_time);
-      updatedTags[new_str] = updatedTags[key];
-      delete updatedTags[key];
-    }
-  }
-  return updatedTags;
-}
-
 export function updateAlertTags(user, alertUuid, tags, tag_options = ["Clear", "Contacted Police", "Contacted Fire Dept", "Contacted Ambulance"]) {
   return (dispatch) => {
     dispatch(updateAlertTagsInProcess(user, alertUuid, true));
@@ -519,8 +505,7 @@ export function updateAlertTags(user, alertUuid, tags, tag_options = ["Clear", "
     }
     axios.patch(url, data, config)
     .then(response => {
-      const tags = updateTimeAsLocal(response.data.tags, tag_options, user.time_zone);
-      dispatch(updateAlertTagsSuccess(alertUuid, tags));
+      dispatch(updateAlertTagsSuccess(alertUuid, response.data.tags));
     })
     .catch(error => {
       let errMessage = 'Error updating tags';

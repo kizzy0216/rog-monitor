@@ -5,6 +5,7 @@ import { Tag, Input, Select, Tooltip, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { updateAlertTags } from '../../redux/alerts/actions';
 import {isEmpty} from '../../redux/helperFunctions';
+import moment from 'moment';
 
 class AlertTags extends Component {
   constructor(props) {
@@ -76,6 +77,17 @@ class AlertTags extends Component {
     this.editInput = input;
   };
 
+  formatTimeWithTimezone = (tag) => {
+    const timezone = this.props.userData.time_zone;
+    let formattedTag = tag;
+    if (tag.indexOf('at: ') !== -1) {
+      var time_str = tag.substring(tag.indexOf('at: ') + 4, tag.length);
+      var converted_time = moment.utc(time_str, "MM/DD/YYYY, HH:mm:ss").tz(timezone).format("MM/DD/YYYY, HH:mm:ss");
+      formattedTag = tag.replace(time_str, converted_time);
+    }
+    return formattedTag;
+  };
+
   render() {
     const { inputVisible, inputValue, editInputIndex, editInputValue } = this.state;
     const tags = isEmpty(this.props.tags) ? [] : this.props.tags;
@@ -103,8 +115,9 @@ class AlertTags extends Component {
               </Select>
             );
           }
+          const formattedTag = this.formatTimeWithTimezone(tag);
 
-          const isLongTag = tag.length > 20;
+          const isLongTag = formattedTag.length > 20;
 
           const tagElem = (
             <Tag
@@ -123,12 +136,12 @@ class AlertTags extends Component {
                   }
                 }}
               >
-                {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                {isLongTag ? `${formattedTag.slice(0, 20)}...` : formattedTag}
               </span>
             </Tag>
           );
           return isLongTag ? (
-            <Tooltip title={tag} key={tag} placement="bottom">
+            <Tooltip title={formattedTag} key={tag} placement="bottom">
               {tagElem}
             </Tooltip>
           ) : (
@@ -167,6 +180,7 @@ const styles = {}
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
+    userData: state.users.userData,
     updateAlertTagsError: state.alerts.updateAlertTagsError,
     updateAlertTagsErrorUuid: state.alerts.updateAlertTagsErrorUuid,
     updateAlertTagsInProcess: state.alerts.updateAlertTagsInProcess,

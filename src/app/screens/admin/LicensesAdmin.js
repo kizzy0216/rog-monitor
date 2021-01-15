@@ -56,7 +56,7 @@ class LicensesAdmin extends React.Component {
     this.licenseForm = form;
   };
 
-  userForm = (form) => {
+  handleUserForm = (form) => {
     this.userForm = form;
   };
 
@@ -86,7 +86,7 @@ class LicensesAdmin extends React.Component {
       return(
         <div>
           <UsersForm
-            form={this.userForm}
+            form={this.handleUserForm}
             handleSubmit={this.handleSubmit}
           />
           <LicenseAddForm
@@ -105,7 +105,7 @@ class LicensesAdmin extends React.Component {
       return(
         <div>
           <UsersForm
-            form={this.userForm}
+            form={this.handleUserForm}
             handleSubmit={this.handleSubmit}
           />
           <LicenseAddForm
@@ -118,7 +118,7 @@ class LicensesAdmin extends React.Component {
       return (
         <div>
           <UsersForm
-            form={this.saveFormRef}
+            form={this.handleUserForm}
             handleSubmit={this.handleSubmit}
           />
         </div>
